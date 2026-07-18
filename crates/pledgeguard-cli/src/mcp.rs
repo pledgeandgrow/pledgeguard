@@ -9,11 +9,11 @@
 //! consistent with this project's preference for a light dependency graph.
 
 use pledgeguard_core::{
-    detectors::builtin_detectors, scan_git_history, verify_findings, Detector, Finding, Scanner,
-    Severity,
+    Detector, Finding, Scanner, Severity, detectors::builtin_detectors, scan_git_history,
+    verify_findings,
 };
 use serde::Deserialize;
-use serde_json::{json, Value};
+use serde_json::{Value, json};
 use std::io::{self, BufRead, Write};
 use std::path::PathBuf;
 
@@ -119,7 +119,10 @@ fn tool_defs() -> Value {
 
 fn handle_tools_call(params: &Value, default_plugin_dirs: &[PathBuf]) -> Value {
     let name = params.get("name").and_then(|v| v.as_str()).unwrap_or("");
-    let args = params.get("arguments").cloned().unwrap_or_else(|| json!({}));
+    let args = params
+        .get("arguments")
+        .cloned()
+        .unwrap_or_else(|| json!({}));
 
     let outcome = match name {
         "scan_path" => run_scan(&args, default_plugin_dirs),
@@ -184,7 +187,10 @@ fn finalize(findings: Vec<Finding>, args: &Value) -> Result<String, String> {
         .get("show_all")
         .and_then(|v| v.as_bool())
         .unwrap_or(false);
-    let verify = args.get("verify").and_then(|v| v.as_bool()).unwrap_or(false);
+    let verify = args
+        .get("verify")
+        .and_then(|v| v.as_bool())
+        .unwrap_or(false);
 
     let mut visible: Vec<Finding> = findings
         .into_iter()
@@ -198,7 +204,8 @@ fn finalize(findings: Vec<Finding>, args: &Value) -> Result<String, String> {
     }
 
     let redacted: Vec<Finding> = visible.iter().map(|f| f.redacted()).collect();
-    serde_json::to_string_pretty(&redacted).map_err(|e| format!("failed to serialize findings: {e}"))
+    serde_json::to_string_pretty(&redacted)
+        .map_err(|e| format!("failed to serialize findings: {e}"))
 }
 
 fn parse_severity(s: &str) -> Severity {
@@ -215,7 +222,9 @@ fn respond(id: Option<Value>, result: Value) {
 }
 
 fn respond_error(id: Option<Value>, code: i64, message: &str) {
-    write_message(json!({ "jsonrpc": "2.0", "id": id, "error": { "code": code, "message": message } }));
+    write_message(
+        json!({ "jsonrpc": "2.0", "id": id, "error": { "code": code, "message": message } }),
+    );
 }
 
 fn write_message(message: Value) {

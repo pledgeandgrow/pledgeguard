@@ -66,8 +66,7 @@ impl Detector for EntropyDetector {
         for caps in self.assignment.captures_iter(line) {
             if let Some(value) = caps.get(2) {
                 let text = value.as_str();
-                if text.len() >= self.min_length
-                    && Self::shannon_entropy(text) >= self.min_entropy
+                if text.len() >= self.min_length && Self::shannon_entropy(text) >= self.min_entropy
                 {
                     out.push(DetectorMatch {
                         start: value.start(),

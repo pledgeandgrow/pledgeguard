@@ -107,7 +107,10 @@ mod tests {
     #[test]
     fn test_aws_key_detected() {
         let detectors = builtin_detectors();
-        let aws = detectors.iter().find(|d| d.id() == "aws-access-key-id").unwrap();
+        let aws = detectors
+            .iter()
+            .find(|d| d.id() == "aws-access-key-id")
+            .unwrap();
         let matches = aws.scan_line("aws_key = AKIAIOSFODNN7EXAMPLE");
         assert_eq!(matches.len(), 1);
         assert_eq!(matches[0].text, "AKIAIOSFODNN7EXAMPLE");
@@ -124,7 +127,10 @@ mod tests {
     #[test]
     fn test_private_key_detected() {
         let detectors = builtin_detectors();
-        let pk = detectors.iter().find(|d| d.id() == "private-key-pem").unwrap();
+        let pk = detectors
+            .iter()
+            .find(|d| d.id() == "private-key-pem")
+            .unwrap();
         let matches = pk.scan_line("-----BEGIN RSA PRIVATE KEY-----");
         assert_eq!(matches.len(), 1);
     }
@@ -137,7 +143,11 @@ mod tests {
                 continue; // entropy detector needs its own targeted tests
             }
             let matches = d.scan_line("this is just a plain sentence with no secrets in it");
-            assert!(matches.is_empty(), "detector {} produced false positive", d.id());
+            assert!(
+                matches.is_empty(),
+                "detector {} produced false positive",
+                d.id()
+            );
         }
     }
 }

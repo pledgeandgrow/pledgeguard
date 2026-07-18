@@ -5,7 +5,7 @@
 //! See <https://docs.oasis-open.org/sarif/sarif/v2.1.0/> for the spec.
 
 use crate::finding::{Finding, Severity};
-use serde_json::{json, Value};
+use serde_json::{Value, json};
 use std::collections::BTreeMap;
 
 /// Converts findings into a SARIF 2.1.0 log document.
@@ -16,7 +16,9 @@ use std::collections::BTreeMap;
 pub fn to_sarif(findings: &[Finding]) -> Value {
     let mut rules: BTreeMap<&str, &str> = BTreeMap::new();
     for f in findings {
-        rules.entry(f.rule_id.as_str()).or_insert(f.description.as_str());
+        rules
+            .entry(f.rule_id.as_str())
+            .or_insert(f.description.as_str());
     }
 
     let rules: Vec<Value> = rules
@@ -135,7 +137,9 @@ mod tests {
             "secrets.env"
         );
 
-        let rules = sarif["runs"][0]["tool"]["driver"]["rules"].as_array().unwrap();
+        let rules = sarif["runs"][0]["tool"]["driver"]["rules"]
+            .as_array()
+            .unwrap();
         assert_eq!(rules.len(), 1);
         assert_eq!(rules[0]["id"], "aws-access-key-id");
     }
@@ -143,7 +147,9 @@ mod tests {
     #[test]
     fn test_to_sarif_dedupes_rules() {
         let sarif = to_sarif(&[sample_finding(), sample_finding()]);
-        let rules = sarif["runs"][0]["tool"]["driver"]["rules"].as_array().unwrap();
+        let rules = sarif["runs"][0]["tool"]["driver"]["rules"]
+            .as_array()
+            .unwrap();
         assert_eq!(rules.len(), 1);
         let results = sarif["runs"][0]["results"].as_array().unwrap();
         assert_eq!(results.len(), 2);

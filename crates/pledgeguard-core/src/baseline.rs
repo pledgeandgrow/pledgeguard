@@ -68,8 +68,7 @@ pub fn load(path: &Path) -> Result<Baseline, std::io::Error> {
 
 /// Save a baseline to a JSON file.
 pub fn save(path: &Path, baseline: &Baseline) -> Result<(), std::io::Error> {
-    let json = serde_json::to_string_pretty(baseline)
-        .map_err(|e| std::io::Error::new(std::io::ErrorKind::Other, e))?;
+    let json = serde_json::to_string_pretty(baseline).map_err(std::io::Error::other)?;
     std::fs::write(path, json)?;
     Ok(())
 }
@@ -128,7 +127,12 @@ mod tests {
     fn test_filter_removes_baseline_entries() {
         let findings = vec![
             mock_finding("aws-access-key-id", "src/a.rs", "AKIAIOSFODNN7EXAMPLE", 10),
-            mock_finding("github-pat", "src/b.rs", "ghp_1234567890abcdef1234567890abcdef1234", 5),
+            mock_finding(
+                "github-pat",
+                "src/b.rs",
+                "ghp_1234567890abcdef1234567890abcdef1234",
+                5,
+            ),
         ];
         let baseline = Baseline {
             version: 1,
@@ -143,7 +147,12 @@ mod tests {
     #[test]
     fn test_filter_line_number_agnostic() {
         // Same rule + path + matched but different line should still be suppressed.
-        let findings = vec![mock_finding("aws-access-key-id", "src/a.rs", "AKIAIOSFODNN7EXAMPLE", 99)];
+        let findings = vec![mock_finding(
+            "aws-access-key-id",
+            "src/a.rs",
+            "AKIAIOSFODNN7EXAMPLE",
+            99,
+        )];
         let baseline = Baseline {
             version: 1,
             entries: vec![BaselineEntry {
@@ -159,7 +168,12 @@ mod tests {
 
     #[test]
     fn test_filter_no_match_returns_all() {
-        let findings = vec![mock_finding("aws-access-key-id", "src/a.rs", "AKIAIOSFODNN7EXAMPLE", 1)];
+        let findings = vec![mock_finding(
+            "aws-access-key-id",
+            "src/a.rs",
+            "AKIAIOSFODNN7EXAMPLE",
+            1,
+        )];
         let baseline = Baseline::default();
         let (remaining, suppressed) = filter(findings, &baseline);
         assert_eq!(remaining.len(), 1);

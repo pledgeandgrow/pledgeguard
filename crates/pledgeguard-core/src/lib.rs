@@ -33,11 +33,14 @@ pub mod sarif;
 pub mod scanner;
 pub mod verify;
 
+pub use baseline::{
+    Baseline, BaselineEntry, filter as baseline_filter, from_findings as baseline_from_findings,
+    load as load_baseline, save as save_baseline,
+};
 pub use detector::{Detector, DetectorMatch, RegexDetector};
 pub use finding::{Finding, Severity, VerificationStatus};
 pub use git_history::scan_git_history;
-pub use plugin::{load_plugins, PluginError, WasmDetector};
+pub use plugin::{PluginError, WasmDetector, load_plugins};
 pub use sarif::to_sarif;
 pub use scanner::{ScanError, ScanOptions, Scanner};
-pub use baseline::{filter as baseline_filter, from_findings as baseline_from_findings, load as load_baseline, save as save_baseline, Baseline, BaselineEntry};
 pub use verify::verify_findings;

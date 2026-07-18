@@ -4,8 +4,8 @@ mod mcp;
 
 use clap::{Parser, ValueEnum};
 use pledgeguard_core::{
-    baseline, detectors::builtin_detectors, scan_git_history, verify_findings, Detector, Finding,
-    Scanner, Severity,
+    Detector, Finding, Scanner, Severity, baseline, detectors::builtin_detectors, scan_git_history,
+    verify_findings,
 };
 use std::path::PathBuf;
 use std::process::ExitCode;
@@ -193,14 +193,16 @@ fn main() -> ExitCode {
             };
             report(
                 findings,
-                format,
-                min_severity.into(),
-                no_redact,
-                fail_on_findings,
-                show_all,
-                verify,
-                baseline_path,
-                save_baseline,
+                ReportOptions {
+                    format,
+                    min_severity: min_severity.into(),
+                    no_redact,
+                    fail_on_findings,
+                    show_all,
+                    verify,
+                    baseline: baseline_path,
+                    save_baseline,
+                },
             )
         }
         Command::History {
@@ -225,23 +227,23 @@ fn main() -> ExitCode {
             };
             report(
                 findings,
-                format,
-                min_severity.into(),
-                no_redact,
-                fail_on_findings,
-                show_all,
-                verify,
-                baseline_path,
-                save_baseline,
+                ReportOptions {
+                    format,
+                    min_severity: min_severity.into(),
+                    no_redact,
+                    fail_on_findings,
+                    show_all,
+                    verify,
+                    baseline: baseline_path,
+                    save_baseline,
+                },
             )
         }
         Command::Mcp { plugin_dirs } => {
             mcp::run(&plugin_dirs);
             ExitCode::SUCCESS
         }
-        Command::InstallPreCommit { force, path } => {
-            install_pre_commit(&path, force)
-        }
+        Command::InstallPreCommit { force, path } => install_pre_commit(&path, force),
     }
 }
 
@@ -253,23 +255,38 @@ fn load_all_detectors(plugin_dirs: &[PathBuf]) -> Vec<Box<dyn Detector>> {
     detectors
 }
 
-fn report(
-    findings: Vec<Finding>,
+struct ReportOptions {
     format: OutputFormat,
     min_severity: Severity,
     no_redact: bool,
     fail_on_findings: bool,
     show_all: bool,
     verify: bool,
-    baseline_path: Option<PathBuf>,
+    baseline: Option<PathBuf>,
     save_baseline: Option<PathBuf>,
-) -> ExitCode {
+}
+
+fn report(findings: Vec<Finding>, opts: ReportOptions) -> ExitCode {
+    let ReportOptions {
+        format,
+        min_severity,
+        no_redact,
+        fail_on_findings,
+        show_all,
+        verify,
+        baseline: baseline_path,
+        save_baseline,
+    } = opts;
     // Save baseline before any filtering, so it captures everything.
     if let Some(ref bp) = save_baseline {
         let bl = baseline::from_findings(&findings);
         match baseline::save(bp, &bl) {
             Ok(()) => {
-                println!("Baseline saved to {} ({} entries).", bp.display(), bl.entries.len());
+                println!(
+                    "Baseline saved to {} ({} entries).",
+                    bp.display(),
+                    bl.entries.len()
+                );
             }
             Err(e) => {
                 eprintln!("failed to save baseline: {e}");
@@ -285,7 +302,10 @@ fn report(
             Ok(bl) => {
                 let (remaining, suppressed) = baseline::filter(findings, &bl);
                 if suppressed > 0 {
-                    eprintln!("{suppressed} finding(s) suppressed by baseline ({}).", bp.display());
+                    eprintln!(
+                        "{suppressed} finding(s) suppressed by baseline ({}).",
+                        bp.display()
+                    );
                 }
                 findings = remaining;
             }
@@ -350,8 +370,8 @@ fn print_table(findings: &[pledgeguard_core::Finding]) {
     }
 
     println!(
-        "{:<10} {:<28} {:<40} {:<9} {:<10} {}:{}",
-        "SEVERITY", "RULE", "MATCH", "COMMIT", "VERIFIED", "FILE", "LINE"
+        "{:<10} {:<28} {:<40} {:<9} {:<10} FILE:LINE",
+        "SEVERITY", "RULE", "MATCH", "COMMIT", "VERIFIED",
     );
     for f in findings {
         let commit = f
@@ -429,13 +449,28 @@ fn install_pre_commit(path: &std::path::Path, force: bool) -> ExitCode {
     }
 
     if let Err(e) = std::fs::create_dir_all(&hooks_dir) {
-        eprintln!("failed to create hooks directory {}: {e}", hooks_dir.display());
+        eprintln!(
+            "failed to create hooks directory {}: {e}",
+            hooks_dir.display()
+        );
         return ExitCode::FAILURE;
     }
 
     if let Err(e) = std::fs::write(&hook_path, PRE_COMMIT_HOOK) {
         eprintln!("failed to write hook file {}: {e}", hook_path.display());
         return ExitCode::FAILURE;
+    }
+
+    // On Windows, also write a pre-commit.bat wrapper that delegates to the
+    // shell script. Git for Windows will use the .bat if core.shell is cmd.exe;
+    // if it's bash (the default), it uses the shell script directly.
+    #[cfg(windows)]
+    {
+        let bat_path = hooks_dir.join("pre-commit.bat");
+        let bat_content = "@echo off\nrem PledgeGuard pre-commit hook (Windows wrapper)\nrem Delegates to the shell script via Git Bash if available.\nwhere bash >nul 2>nul && (\n  bash \"%~dp0pre-commit\"\n  exit /b %errorlevel%\n)\necho PledgeGuard: bash not found on PATH. Install Git for Windows or run pledgeguard manually.\nexit /b 0\n";
+        if let Err(e) = std::fs::write(&bat_path, bat_content) {
+            eprintln!("warning: failed to write Windows .bat wrapper: {e}");
+        }
     }
 
     #[cfg(unix)]
@@ -449,5 +484,7 @@ fn install_pre_commit(path: &std::path::Path, force: bool) -> ExitCode {
     }
 
     println!("Pre-commit hook installed at {}.", hook_path.display());
+    println!("The hook runs `pledgeguard scan --fail-on-findings` before each commit.");
+    println!("To customize, edit the hook file or re-run with --force after editing.");
     ExitCode::SUCCESS
 }

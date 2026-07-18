@@ -28,8 +28,8 @@ fn line_comment_marker(extension: &str) -> Option<&'static str> {
     match extension {
         "py" | "sh" | "bash" | "zsh" | "rb" | "yaml" | "yml" | "toml" | "pl" | "r"
         | "dockerfile" | "makefile" | "ini" | "cfg" | "conf" | "env" => Some("#"),
-        "rs" | "js" | "jsx" | "ts" | "tsx" | "go" | "java" | "c" | "h" | "cpp" | "hpp"
-        | "cc" | "cs" | "swift" | "kt" | "kts" | "scala" | "php" | "dart" | "zig" => Some("//"),
+        "rs" | "js" | "jsx" | "ts" | "tsx" | "go" | "java" | "c" | "h" | "cpp" | "hpp" | "cc"
+        | "cs" | "swift" | "kt" | "kts" | "scala" | "php" | "dart" | "zig" => Some("//"),
         "sql" | "lua" | "hs" | "elm" | "ada" => Some("--"),
         "html" | "htm" | "xml" | "vue" | "svelte" => Some("<!--"),
         _ => None,
@@ -100,7 +100,11 @@ mod tests {
     #[test]
     fn test_code_before_comment_not_flagged() {
         // The match occurs before the comment marker.
-        assert!(!is_in_line_comment("AKIAIOSFODNN7EXAMPLE // example", 0, Some("rs")));
+        assert!(!is_in_line_comment(
+            "AKIAIOSFODNN7EXAMPLE // example",
+            0,
+            Some("rs")
+        ));
     }
 
     #[test]
