@@ -6,6 +6,7 @@
 //! without changing the scanner.
 
 use crate::finding::Severity;
+use smallvec::SmallVec;
 
 /// A single match produced by a [`Detector`] within one line of text.
 #[derive(Debug, Clone)]
@@ -30,7 +31,14 @@ pub trait Detector: Send + Sync {
     fn severity(&self) -> Severity;
 
     /// Scan a single line of text and return all matches found.
-    fn scan_line(&self, line: &str) -> Vec<DetectorMatch>;
+    fn scan_line(&self, line: &str) -> SmallVec<[DetectorMatch; 1]>;
+
+    /// Distinctive substrings that must be present in a line for this detector
+    /// to possibly match. Used by the scanner's Aho-Corasick prefilter to skip
+    /// detectors that cannot match. Return an empty slice to always run.
+    fn prefilter_patterns(&self) -> &[&str] {
+        &[]
+    }
 }
 
 /// A regex-backed [`Detector`]. Most built-in detectors are implemented this way.
@@ -39,6 +47,7 @@ pub struct RegexDetector {
     description: &'static str,
     severity: Severity,
     pattern: regex::Regex,
+    prefilter: &'static [&'static str],
 }
 
 impl RegexDetector {
@@ -55,6 +64,25 @@ impl RegexDetector {
             description,
             severity,
             pattern,
+            prefilter: &[],
+        }
+    }
+
+    pub fn with_prefilter(
+        id: &'static str,
+        description: &'static str,
+        severity: Severity,
+        pattern: &str,
+        prefilter: &'static [&'static str],
+    ) -> Self {
+        let pattern = regex::Regex::new(pattern)
+            .unwrap_or_else(|e| panic!("invalid regex for detector {id}: {e}"));
+        Self {
+            id,
+            description,
+            severity,
+            pattern,
+            prefilter,
         }
     }
 }
@@ -72,7 +100,7 @@ impl Detector for RegexDetector {
         self.severity
     }
 
-    fn scan_line(&self, line: &str) -> Vec<DetectorMatch> {
+    fn scan_line(&self, line: &str) -> SmallVec<[DetectorMatch; 1]> {
         self.pattern
             .find_iter(line)
             .map(|m| DetectorMatch {
@@ -81,5 +109,9 @@ impl Detector for RegexDetector {
                 text: m.as_str().to_string(),
             })
             .collect()
+    }
+
+    fn prefilter_patterns(&self) -> &[&str] {
+        self.prefilter
     }
 }

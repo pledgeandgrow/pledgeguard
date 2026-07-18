@@ -20,6 +20,19 @@ clap = { workspace = true }
 serde = { workspace = true }
 serde_json = { workspace = true }
 anyhow = { workspace = true }
+crossbeam = { workspace = true }
+
+[target.'cfg(not(target_os = "windows"))'.dependencies]
+tikv-jemallocator = { workspace = true }
+
+[features]
+default = []
+profile = ["pprof"]
+pprof = ["dep:pprof"]
+
+[target.'cfg(not(target_os = "windows"))'.dependencies.pprof]
+workspace = true
+optional = true
 
 [dev-dependencies]
 tempfile = "3"

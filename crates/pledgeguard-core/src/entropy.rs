@@ -4,6 +4,7 @@
 use crate::detector::{Detector, DetectorMatch};
 use crate::finding::Severity;
 use regex::Regex;
+use smallvec::SmallVec;
 
 /// Detects generic high-entropy tokens assigned to a variable, e.g.
 /// `api_key = "aG9uZXN0bHkgdGhpcyBpcyBhIHNlY3JldA=="`.
@@ -61,8 +62,8 @@ impl Detector for EntropyDetector {
         Severity::Medium
     }
 
-    fn scan_line(&self, line: &str) -> Vec<DetectorMatch> {
-        let mut out = Vec::new();
+    fn scan_line(&self, line: &str) -> SmallVec<[DetectorMatch; 1]> {
+        let mut out = SmallVec::new();
         for caps in self.assignment.captures_iter(line) {
             if let Some(value) = caps.get(2) {
                 let text = value.as_str();
@@ -77,6 +78,10 @@ impl Detector for EntropyDetector {
             }
         }
         out
+    }
+
+    fn prefilter_patterns(&self) -> &[&str] {
+        &["key", "token", "secret", "passwd", "password", "api_key", "api-key"]
     }
 }
 

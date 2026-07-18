@@ -2,6 +2,11 @@
 
 mod mcp;
 
+// Use jemalloc on non-Windows platforms for better allocation performance.
+#[cfg(not(target_os = "windows"))]
+#[global_allocator]
+static GLOBAL: tikv_jemallocator::Jemalloc = tikv_jemallocator::Jemalloc;
+
 use clap::{Parser, ValueEnum};
 use pledgeguard_core::{
     Detector, Finding, Scanner, Severity, baseline, detectors::builtin_detectors, scan_git_history,

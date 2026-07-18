@@ -24,6 +24,7 @@
 use crate::detector::{Detector, DetectorMatch};
 use crate::finding::Severity;
 use serde::Deserialize;
+use smallvec::SmallVec;
 use std::path::Path;
 use std::sync::Mutex;
 use wasmtime::{Engine, Instance, Memory, Module, Store, TypedFunc};
@@ -151,10 +152,10 @@ impl Detector for WasmDetector {
         self.severity
     }
 
-    fn scan_line(&self, line: &str) -> Vec<DetectorMatch> {
+    fn scan_line(&self, line: &str) -> SmallVec<[DetectorMatch; 1]> {
         let mut state = match self.state.lock() {
             Ok(s) => s,
-            Err(_) => return Vec::new(),
+            Err(_) => return SmallVec::new(),
         };
 
         let bytes = line.as_bytes();
@@ -164,7 +165,7 @@ impl Detector for WasmDetector {
 
         let ptr = match alloc.call(&mut state.store, bytes.len() as i32) {
             Ok(p) => p,
-            Err(_) => return Vec::new(),
+            Err(_) => return SmallVec::new(),
         };
 
         {
@@ -172,24 +173,24 @@ impl Detector for WasmDetector {
             let start = ptr as usize;
             let end = start + bytes.len();
             if end > mem.len() {
-                return Vec::new();
+                return SmallVec::new();
             }
             mem[start..end].copy_from_slice(bytes);
         }
 
         let packed = match scan_line.call(&mut state.store, (ptr, bytes.len() as i32)) {
             Ok(p) => p,
-            Err(_) => return Vec::new(),
+            Err(_) => return SmallVec::new(),
         };
 
         let (out_ptr, out_len) = unpack(packed);
         if out_len == 0 {
-            return Vec::new();
+            return SmallVec::new();
         }
         let raw = state.read_memory(out_ptr, out_len);
         let matches: Vec<RawMatch> = match serde_json::from_slice(&raw) {
             Ok(m) => m,
-            Err(_) => return Vec::new(),
+            Err(_) => return SmallVec::new(),
         };
 
         matches

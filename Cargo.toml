@@ -52,8 +52,30 @@ oxc_allocator = "0.140"
 oxc_parser = "0.140"
 oxc_span = "0.140"
 
+# Performance: multi-pattern prefilter
+aho-corasick = "1"
+memchr = "2"
+
+# Performance: concurrent collections
+dashmap = "6"
+
+# Performance: byte-oriented strings (no UTF-8 validation overhead)
+bstr = "1"
+
+# Performance: stack-allocated small vectors
+smallvec = { version = "1", features = ["write"] }
+
 # Internal crates
 pledgeguard-core = { path = "crates/pledgeguard-core", version = "0.1.0" }
+
+# Performance: global allocator (Linux/macOS only — Windows uses system allocator)
+tikv-jemallocator = "0.5"
+
+# Performance: parallelism
+crossbeam = "0.8"
+
+# Profiling (optional)
+pprof = { version = "0.14", features = ["protobuf-codec", "flamegraph"] }
 
 [profile.release]
 opt-level = 3
