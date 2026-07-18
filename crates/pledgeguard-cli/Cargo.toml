@@ -4,7 +4,11 @@ version.workspace = true
 edition.workspace = true
 license.workspace = true
 authors.workspace = true
+repository.workspace = true
 description = "CLI for PledgeGuard — Rust-native secret scanner"
+keywords = ["security", "secrets", "scanner", "ci", "sast"]
+categories = ["command-line-utilities", "development-tools"]
+readme = "../../README.md"
 
 [[bin]]
 name = "pledgeguard"

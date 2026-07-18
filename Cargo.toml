@@ -10,10 +10,11 @@ version = "0.1.0"
 edition = "2024"
 license = "MIT"
 authors = ["PledgeLabs"]
-repository = "https://github.com/pledgelabs/pledgeguard"
+repository = "https://github.com/pledgeandgrow/pledgeguard"
 description = "Rust-native secret scanner — regex + entropy detection, CI gate, WASM plugins"
 keywords = ["security", "secrets", "scanner", "ci", "sast"]
 categories = ["command-line-utilities", "development-tools"]
+homepage = "https://github.com/pledgeandgrow/pledgeguard"
 
 [workspace.dependencies]
 # Regex + text scanning
@@ -52,7 +53,7 @@ oxc_parser = "0.140"
 oxc_span = "0.140"
 
 # Internal crates
-pledgeguard-core = { path = "crates/pledgeguard-core" }
+pledgeguard-core = { path = "crates/pledgeguard-core", version = "0.1.0" }
 
 [profile.release]
 opt-level = 3
