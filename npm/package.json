@@ -1,5 +1,5 @@
 {
-  "name": "@pledgeandgrow/pledgeguard",
+  "name": "pledgeguard",
   "version": "0.1.0",
   "description": "Rust-native secret scanner — a TruffleHog/Gitleaks alternative",
   "license": "MIT",
@@ -30,12 +30,5 @@
   },
   "engines": {
     "node": ">=16"
-  },
-  "optionalDependencies": {
-    "@pledgeandgrow/pledgeguard-darwin-arm64": "0.1.0",
-    "@pledgeandgrow/pledgeguard-darwin-x64": "0.1.0",
-    "@pledgeandgrow/pledgeguard-linux-arm64": "0.1.0",
-    "@pledgeandgrow/pledgeguard-linux-x64": "0.1.0",
-    "@pledgeandgrow/pledgeguard-win32-x64": "0.1.0"
   }
 }

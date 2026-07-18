@@ -2,6 +2,10 @@
 
 Rust-native secret scanner — a TruffleHog/Gitleaks alternative.
 
+[![CI](https://github.com/pledgeandgrow/pledgeguard/actions/workflows/ci.yml/badge.svg)](https://github.com/pledgeandgrow/pledgeguard/actions/workflows/ci.yml)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Sponsor](https://img.shields.io/badge/Sponsor-%E2%9D%A4-red)](https://github.com/sponsors/pledgeandgrow)
+
 ## Status
 
 **v0.1.0 — all roadmap features implemented.** PledgeGuard is a working secret
@@ -12,6 +16,8 @@ pre-commit hook installer, and AST-based false-positive refinement for JS/TS.
 It is functional and tested but **not yet production-hardened** — detector
 regexes may need tuning for precision/recall on large codebases, and it has
 not been audited against real-world repositories at scale.
+
+> **New here?** Read the **[Tutorial](TUTORIAL.md)** for a hands-on walkthrough.
 
 ## Installation
 
@@ -212,6 +218,13 @@ install-pre-commit options:
 - **Live verification covers 4 providers** — GitHub, Slack, Stripe, npm. AWS keys, PEM keys, JWTs, and connection strings cannot be verified.
 - **Baseline files contain raw secret values** — treat as sensitive.
 - **Early-stage / unaudited** — detector regexes may need tuning; limited real-world testing.
+
+## Sponsors
+
+If PledgeGuard saves you from leaking a secret, consider supporting development:
+
+- **[GitHub Sponsors](https://github.com/sponsors/pledgeandgrow)** — monthly or one-time
+- **[Buy Me a Coffee](https://buymeacoffee.com/pledgeandgrow)** — one-time
 
 ## License
 
