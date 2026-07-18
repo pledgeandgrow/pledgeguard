@@ -1,0 +1,21 @@
+[package]
+name = "pledgeguard-cli"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+authors.workspace = true
+description = "CLI for PledgeGuard — Rust-native secret scanner"
+
+[[bin]]
+name = "pledgeguard"
+path = "src/main.rs"
+
+[dependencies]
+pledgeguard-core = { workspace = true }
+clap = { workspace = true }
+serde = { workspace = true }
+serde_json = { workspace = true }
+anyhow = { workspace = true }
+
+[dev-dependencies]
+tempfile = "3"

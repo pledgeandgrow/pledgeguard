@@ -1,0 +1,64 @@
+[workspace]
+resolver = "2"
+members = [
+    "crates/pledgeguard-core",
+    "crates/pledgeguard-cli",
+]
+
+[workspace.package]
+version = "0.1.0"
+edition = "2024"
+license = "MIT"
+authors = ["PledgeLabs"]
+repository = "https://github.com/pledgelabs/pledgeguard"
+description = "Rust-native secret scanner — regex + entropy detection, CI gate, WASM plugins"
+keywords = ["security", "secrets", "scanner", "ci", "sast"]
+categories = ["command-line-utilities", "development-tools"]
+
+[workspace.dependencies]
+# Regex + text scanning
+regex = "1"
+
+# Serialization
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+
+# Error handling
+anyhow = "1"
+thiserror = "2"
+
+# CLI
+clap = { version = "4", features = ["derive"] }
+
+# Parallelism
+rayon = "1"
+
+# Filesystem walking (respects .gitignore)
+ignore = "0.4"
+
+# Logging
+tracing = "0.1"
+tracing-subscriber = { version = "0.3", features = ["env-filter"] }
+
+# WASM plugin runtime
+wasmtime = "26"
+
+# HTTP client for live provider verification (sync, no async runtime needed)
+ureq = { version = "2", features = ["json"] }
+
+# JS/TS AST parser for false-positive refinement
+oxc_allocator = "0.140"
+oxc_parser = "0.140"
+oxc_span = "0.140"
+
+# Internal crates
+pledgeguard-core = { path = "crates/pledgeguard-core" }
+
+[profile.release]
+opt-level = 3
+lto = "fat"
+codegen-units = 1
+strip = true
+
+[profile.dev]
+opt-level = 1

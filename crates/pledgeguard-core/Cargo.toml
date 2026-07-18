@@ -1,0 +1,23 @@
+[package]
+name = "pledgeguard-core"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+authors.workspace = true
+description = "Detection engine for PledgeGuard — regex + entropy secret detectors"
+
+[dependencies]
+regex = { workspace = true }
+serde = { workspace = true }
+serde_json = { workspace = true }
+thiserror = { workspace = true }
+rayon = { workspace = true }
+ignore = { workspace = true }
+wasmtime = { workspace = true }
+ureq = { workspace = true }
+oxc_allocator = { workspace = true }
+oxc_parser = { workspace = true }
+oxc_span = { workspace = true }
+
+[dev-dependencies]
+tempfile = "3"
