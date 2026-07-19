@@ -320,6 +320,153 @@ pub fn builtin_detectors() -> Vec<Box<dyn Detector>> {
             r#"(?i)heroku[_-]?api[_-]?key\s*[:=]\s*['"]?([A-Fa-f0-9]{32})['"]?"#,
             &["heroku_api_key", "HEROKU_API_KEY"],
         )),
+        Box::new(RegexDetector::with_prefilter(
+            "github-old-pat",
+            "GitHub Legacy Personal Access Token",
+            Severity::High,
+            r#"(?i)github[_-]?(?:token|pat)\s*[:=]\s*['"]?([0-9a-f]{40})['"]?"#,
+            &["github_token", "GITHUB_TOKEN", "github_pat", "GITHUB_PAT"],
+        )),
+        Box::new(RegexDetector::with_prefilter(
+            "bitbucket-client-id",
+            "Bitbucket OAuth Client ID",
+            Severity::Medium,
+            r#"(?i)bitbucket[_-]?client[_-]?id\s*[:=]\s*['"]?([A-Za-z0-9]{32,})['"]?"#,
+            &["bitbucket_client_id", "BITBUCKET_CLIENT_ID"],
+        )),
+        Box::new(RegexDetector::with_prefilter(
+            "bitbucket-client-secret",
+            "Bitbucket OAuth Client Secret",
+            Severity::High,
+            r#"(?i)bitbucket[_-]?client[_-]?secret\s*[:=]\s*['"]?([A-Za-z0-9_\-]{32,})['"]?"#,
+            &["bitbucket_client_secret", "BITBUCKET_CLIENT_SECRET"],
+        )),
+        Box::new(RegexDetector::with_prefilter(
+            "bitbucket-datacenter-token",
+            "Bitbucket Data Center Token",
+            Severity::High,
+            r#"(?i)bitbucket[_-]?(?:dc|datacenter)[_-]?token\s*[:=]\s*['"]?([A-Za-z0-9_\-]{20,})['"]?"#,
+            &["bitbucket_dc_token", "BITBUCKET_DC_TOKEN", "bitbucket_datacenter"],
+        )),
+        Box::new(RegexDetector::with_prefilter(
+            "travis-ci-token",
+            "Travis CI Token",
+            Severity::High,
+            r#"(?i)travis[_-]?ci[_-]?token\s*[:=]\s*['"]?([A-Za-z0-9]{20,})['"]?"#,
+            &["travis_ci_token", "TRAVIS_CI_TOKEN", "travis_token"],
+        )),
+        Box::new(RegexDetector::with_prefilter(
+            "droneci-token",
+            "DroneCI Access Token",
+            Severity::High,
+            r#"(?i)drone(?:ci)?[_-]?token\s*[:=]\s*['"]?([A-Za-z0-9]{20,})['"]?"#,
+            &["drone_token", "DRONE_TOKEN", "droneci_token"],
+        )),
+        Box::new(RegexDetector::with_prefilter(
+            "buildkite-token",
+            "Buildkite API Token",
+            Severity::High,
+            r"\bbk[a-z]_[A-Za-z0-9]{40}\b",
+            &["bkc_", "bku_", "bkr_", "bko_"],
+        )),
+        Box::new(RegexDetector::with_prefilter(
+            "teamcity-token",
+            "TeamCity API Token",
+            Severity::High,
+            r#"(?i)teamcity[_-]?token\s*[:=]\s*['"]?([A-Za-z0-9_\-]{20,})['"]?"#,
+            &["teamcity_token", "TEAMCITY_TOKEN"],
+        )),
+        Box::new(RegexDetector::with_prefilter(
+            "jenkins-token",
+            "Jenkins API Token",
+            Severity::High,
+            r#"(?i)jenkins[_-]?(?:api[_-]?)?token\s*[:=]\s*['"]?([A-Za-z0-9]{32,})['"]?"#,
+            &["jenkins_token", "JENKINS_TOKEN", "jenkins_api_token"],
+        )),
+        Box::new(RegexDetector::with_prefilter(
+            "gocd-token",
+            "GoCD Access Token",
+            Severity::High,
+            r#"(?i)gocd[_-]?token\s*[:=]\s*['"]?([A-Za-z0-9_\-]{20,})['"]?"#,
+            &["gocd_token", "GOCD_TOKEN"],
+        )),
+        Box::new(RegexDetector::with_prefilter(
+            "argocd-token",
+            "ArgoCD API Token",
+            Severity::High,
+            r#"(?i)argocd[_-]?token\s*[:=]\s*['"]?([A-Za-z0-9_\-]{20,})['"]?"#,
+            &["argocd_token", "ARGOCD_TOKEN"],
+        )),
+        Box::new(RegexDetector::with_prefilter(
+            "spinnaker-token",
+            "Spinnaker Token",
+            Severity::High,
+            r#"(?i)spinnaker[_-]?token\s*[:=]\s*['"]?([A-Za-z0-9_\-]{20,})['"]?"#,
+            &["spinnaker_token", "SPINNAKER_TOKEN"],
+        )),
+        Box::new(RegexDetector::with_prefilter(
+            "harness-api-key",
+            "Harness API Key",
+            Severity::High,
+            r#"(?i)harness[_-]?api[_-]?key\s*[:=]\s*['"]?([A-Za-z0-9_\-]{20,})['"]?"#,
+            &["harness_api_key", "HARNESS_API_KEY"],
+        )),
+        Box::new(RegexDetector::with_prefilter(
+            "codecov-token",
+            "Codecov Access Token",
+            Severity::High,
+            r#"(?i)codecov[_-]?token\s*[:=]\s*['"]?([a-f0-9]{32})['"]?"#,
+            &["codecov_token", "CODECOV_TOKEN"],
+        )),
+        Box::new(RegexDetector::with_prefilter(
+            "sonarqube-token",
+            "SonarQube Token",
+            Severity::High,
+            r"\bsqu_[A-Za-z0-9]{40}\b",
+            &["squ_"],
+        )),
+        Box::new(RegexDetector::with_prefilter(
+            "snyk-api-key",
+            "Snyk API Key",
+            Severity::High,
+            r#"(?i)snyk[_-]?api[_-]?key\s*[:=]\s*['"]?([A-Fa-f0-9\-]{36,})['"]?"#,
+            &["snyk_api_key", "SNYK_API_KEY"],
+        )),
+        Box::new(RegexDetector::with_prefilter(
+            "artifactory-api-key",
+            "Artifactory API Key",
+            Severity::High,
+            r"\bAKC[A-Za-z0-9]{70}\b",
+            &["AKC"],
+        )),
+        Box::new(RegexDetector::with_prefilter(
+            "artifactory-reference-token",
+            "Artifactory Reference Token",
+            Severity::High,
+            r"\bcmV[A-Za-z0-9]{60}\b",
+            &["cmV"],
+        )),
+        Box::new(RegexDetector::with_prefilter(
+            "terraform-cloud-token",
+            "Terraform Cloud / HCP API Token",
+            Severity::High,
+            r"\b[a-zA-Z0-9]+\.[a-zA-Z0-9]+\.[a-zA-Z0-9]+\.[a-zA-Z0-9]+\.[a-zA-Z0-9]+\.atlasv1\.[A-Za-z0-9]{70,}\b",
+            &["atlasv1."],
+        )),
+        Box::new(RegexDetector::with_prefilter(
+            "pivotal-tracker-token",
+            "Pivotal Tracker API Token",
+            Severity::High,
+            r#"(?i)pivotal[_-]?tracker[_-]?token\s*[:=]\s*['"]?([A-Za-z0-9]{32})['"]?"#,
+            &["pivotal_tracker_token", "PIVOTAL_TRACKER_TOKEN"],
+        )),
+        Box::new(RegexDetector::with_prefilter(
+            "clojars-token",
+            "Clojars API Token",
+            Severity::High,
+            r"\bCLOJARS_[A-Za-z0-9]{60}\b",
+            &["CLOJARS_"],
+        )),
         // ── Monitoring / Observability ───────────────────────────────────
         Box::new(RegexDetector::with_prefilter(
             "datadog-api-key",
@@ -378,6 +525,69 @@ pub fn builtin_detectors() -> Vec<Box<dyn Detector>> {
             Severity::Critical,
             r#"(?i)tencent[_-]?secret[_-]?id\s*[:=]\s*['"]?(AKID[A-Za-z0-9]{13,40})['"]?"#,
             &["tencent_secret_id", "TENCENT_SECRET_ID", "AKID"],
+        )),
+        Box::new(RegexDetector::with_prefilter(
+            "alibaba-secret-key",
+            "Alibaba Cloud Secret Key",
+            Severity::Critical,
+            r#"(?i)(alibaba|aliyun)[_\-./\s]{0,20}(secret[_-]?key|secretkey)\s*[:=]\s*['"]?([A-Za-z0-9+/]{30})['"]?"#,
+            &["alibaba_secret_key", "ALIBABA_SECRET_KEY", "aliyun_secret_key", "ALIYUN_SECRET_KEY"],
+        )),
+        Box::new(RegexDetector::with_prefilter(
+            "tencent-secret-key",
+            "Tencent Cloud Secret Key",
+            Severity::Critical,
+            r#"(?i)tencent[_-]?secret[_-]?key\s*[:=]\s*['"]?([A-Za-z0-9]{36})['"]?"#,
+            &["tencent_secret_key", "TENCENT_SECRET_KEY"],
+        )),
+        Box::new(RegexDetector::with_prefilter(
+            "ibm-cloud-key",
+            "IBM Cloud API Key",
+            Severity::High,
+            r#"(?i)ibm[_-]?cloud[_-]?(?:api[_-]?)?key\s*[:=]\s*['"]?([A-Za-z0-9_-]{44})['"]?"#,
+            &["ibm_cloud_key", "IBM_CLOUD_KEY", "ibmcloud", "bluemix"],
+        )),
+        Box::new(RegexDetector::with_prefilter(
+            "oracle-cloud-token",
+            "Oracle Cloud (OCI) Token",
+            Severity::High,
+            r#"(?i)oracle[_-]?cloud[_-]?(?:token|key)\s*[:=]\s*['"]?([A-Za-z0-9_\-=/+]{40,})['"]?"#,
+            &["oracle_cloud", "ORACLE_CLOUD", "oci_token", "OCI_TOKEN"],
+        )),
+        Box::new(RegexDetector::with_prefilter(
+            "scaleway-key",
+            "Scaleway API Key",
+            Severity::High,
+            r#"(?i)scaleway[_-]?(?:api[_-]?)?key\s*[:=]\s*['"]?([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})['"]?"#,
+            &["scaleway", "SCALEWAY"],
+        )),
+        Box::new(RegexDetector::with_prefilter(
+            "vultr-api-key",
+            "Vultr API Key",
+            Severity::High,
+            r#"(?i)vultr[_-]?api[_-]?key\s*[:=]\s*['"]?([A-Fa-f0-9]{36})['"]?"#,
+            &["vultr_api_key", "VULTR_API_KEY", "vultr"],
+        )),
+        Box::new(RegexDetector::with_prefilter(
+            "linode-token",
+            "Linode/Akamai API Token",
+            Severity::High,
+            r#"(?i)linode[_-]?(?:api[_-]?)?token\s*[:=]\s*['"]?([0-9a-f]{64})['"]?"#,
+            &["linode_token", "LINODE_TOKEN", "linode"],
+        )),
+        Box::new(RegexDetector::with_prefilter(
+            "cloudflare-ca-key",
+            "Cloudflare Origin CA Key",
+            Severity::High,
+            r"\bv1\.0-[0-9a-f]{24}-[0-9a-f]{146}\b",
+            &["v1.0-"],
+        )),
+        Box::new(RegexDetector::with_prefilter(
+            "cloudflare-global-api-key",
+            "Cloudflare Global API Key",
+            Severity::High,
+            r#"(?i)cloudflare[_-]?global[_-]?api[_-]?key\s*[:=]\s*['"]?([0-9a-f]{37})['"]?"#,
+            &["cloudflare_global_api_key", "CLOUDFLARE_GLOBAL_API_KEY"],
         )),
         // ── Vercel / Netlify / Supabase ──────────────────────────────────
         Box::new(RegexDetector::with_prefilter(
@@ -687,6 +897,234 @@ mod tests {
             .find(|d| d.id() == "gcp-oauth-client-id")
             .unwrap();
         let matches = gcp.scan_line("123456789-abcdefghijklmnopqrstuvwxyz012345.apps.googleusercontent.com");
+        assert_eq!(matches.len(), 1);
+    }
+
+    #[test]
+    fn test_alibaba_secret_key_detected() {
+        let detectors = builtin_detectors();
+        let d = detectors.iter().find(|d| d.id() == "alibaba-secret-key").unwrap();
+        let matches = d.scan_line("alibaba_secret_key = ABCDEF1234567890ABCDEFGHIJKLMN12");
+        assert_eq!(matches.len(), 1);
+    }
+
+    #[test]
+    fn test_tencent_secret_key_detected() {
+        let detectors = builtin_detectors();
+        let d = detectors.iter().find(|d| d.id() == "tencent-secret-key").unwrap();
+        let matches = d.scan_line("tencent_secret_key = ABCDEF1234567890ABCDEFGHIJKLMN1234567890");
+        assert_eq!(matches.len(), 1);
+    }
+
+    #[test]
+    fn test_ibm_cloud_key_detected() {
+        let detectors = builtin_detectors();
+        let d = detectors.iter().find(|d| d.id() == "ibm-cloud-key").unwrap();
+        let matches = d.scan_line("ibm_cloud_key = ABCDEfghIJklMNopQRstUVwxYZ1234567890123456-_");
+        assert_eq!(matches.len(), 1);
+    }
+
+    #[test]
+    fn test_oracle_cloud_token_detected() {
+        let detectors = builtin_detectors();
+        let d = detectors.iter().find(|d| d.id() == "oracle-cloud-token").unwrap();
+        let matches = d.scan_line("oracle_cloud_token = ABCDEfghIJklMNopQRstUVwxYZ1234567890abcd");
+        assert_eq!(matches.len(), 1);
+    }
+
+    #[test]
+    fn test_scaleway_key_detected() {
+        let detectors = builtin_detectors();
+        let d = detectors.iter().find(|d| d.id() == "scaleway-key").unwrap();
+        let matches = d.scan_line("scaleway_key = 12345678-1234-1234-1234-123456789012");
+        assert_eq!(matches.len(), 1);
+    }
+
+    #[test]
+    fn test_vultr_api_key_detected() {
+        let detectors = builtin_detectors();
+        let d = detectors.iter().find(|d| d.id() == "vultr-api-key").unwrap();
+        let matches = d.scan_line("vultr_api_key = ABCDEF1234567890ABCDEF1234567890ABCD");
+        assert_eq!(matches.len(), 1);
+    }
+
+    #[test]
+    fn test_linode_token_detected() {
+        let detectors = builtin_detectors();
+        let d = detectors.iter().find(|d| d.id() == "linode-token").unwrap();
+        let matches = d.scan_line("linode_token = abcdef1234567890abcdef1234567890abcdef1234567890abcdef1234567890");
+        assert_eq!(matches.len(), 1);
+    }
+
+    #[test]
+    fn test_cloudflare_global_api_key_detected() {
+        let detectors = builtin_detectors();
+        let d = detectors.iter().find(|d| d.id() == "cloudflare-global-api-key").unwrap();
+        let matches = d.scan_line("cloudflare_global_api_key = 1234567890abcdef1234567890abcdef1234567");
+        assert_eq!(matches.len(), 1);
+    }
+
+    #[test]
+    fn test_github_old_pat_detected() {
+        let detectors = builtin_detectors();
+        let d = detectors.iter().find(|d| d.id() == "github-old-pat").unwrap();
+        let matches = d.scan_line("github_token = abc123def4567890abc123def4567890abc123de");
+        assert_eq!(matches.len(), 1);
+    }
+
+    #[test]
+    fn test_bitbucket_client_id_detected() {
+        let detectors = builtin_detectors();
+        let d = detectors.iter().find(|d| d.id() == "bitbucket-client-id").unwrap();
+        let matches = d.scan_line("bitbucket_client_id = ABCDEFGHIJKLMNOPQRSTUVWXYZ123456");
+        assert_eq!(matches.len(), 1);
+    }
+
+    #[test]
+    fn test_bitbucket_client_secret_detected() {
+        let detectors = builtin_detectors();
+        let d = detectors.iter().find(|d| d.id() == "bitbucket-client-secret").unwrap();
+        let matches = d.scan_line("bitbucket_client_secret = ABCDEFGHIJKLMNOPQRSTUVWXYZ123456");
+        assert_eq!(matches.len(), 1);
+    }
+
+    #[test]
+    fn test_travis_ci_token_detected() {
+        let detectors = builtin_detectors();
+        let d = detectors.iter().find(|d| d.id() == "travis-ci-token").unwrap();
+        let matches = d.scan_line("travis_ci_token = abcdefghijklmnopqrst");
+        assert_eq!(matches.len(), 1);
+    }
+
+    #[test]
+    fn test_droneci_token_detected() {
+        let detectors = builtin_detectors();
+        let d = detectors.iter().find(|d| d.id() == "droneci-token").unwrap();
+        let matches = d.scan_line("drone_token = abcdefghijklmnopqrst");
+        assert_eq!(matches.len(), 1);
+    }
+
+    #[test]
+    fn test_buildkite_token_detected() {
+        let detectors = builtin_detectors();
+        let d = detectors.iter().find(|d| d.id() == "buildkite-token").unwrap();
+        let matches = d.scan_line("bkc_1234567890abcdef1234567890abcdef12345678");
+        assert_eq!(matches.len(), 1);
+    }
+
+    #[test]
+    fn test_teamcity_token_detected() {
+        let detectors = builtin_detectors();
+        let d = detectors.iter().find(|d| d.id() == "teamcity-token").unwrap();
+        let matches = d.scan_line("teamcity_token = abcdefghijklmnopqrst");
+        assert_eq!(matches.len(), 1);
+    }
+
+    #[test]
+    fn test_jenkins_token_detected() {
+        let detectors = builtin_detectors();
+        let d = detectors.iter().find(|d| d.id() == "jenkins-token").unwrap();
+        let matches = d.scan_line("jenkins_token = abcdefghijklmnopqrstuvwxyz123456");
+        assert_eq!(matches.len(), 1);
+    }
+
+    #[test]
+    fn test_gocd_token_detected() {
+        let detectors = builtin_detectors();
+        let d = detectors.iter().find(|d| d.id() == "gocd-token").unwrap();
+        let matches = d.scan_line("gocd_token = abcdefghijklmnopqrst");
+        assert_eq!(matches.len(), 1);
+    }
+
+    #[test]
+    fn test_argocd_token_detected() {
+        let detectors = builtin_detectors();
+        let d = detectors.iter().find(|d| d.id() == "argocd-token").unwrap();
+        let matches = d.scan_line("argocd_token = abcdefghijklmnopqrst");
+        assert_eq!(matches.len(), 1);
+    }
+
+    #[test]
+    fn test_spinnaker_token_detected() {
+        let detectors = builtin_detectors();
+        let d = detectors.iter().find(|d| d.id() == "spinnaker-token").unwrap();
+        let matches = d.scan_line("spinnaker_token = abcdefghijklmnopqrst");
+        assert_eq!(matches.len(), 1);
+    }
+
+    #[test]
+    fn test_harness_api_key_detected() {
+        let detectors = builtin_detectors();
+        let d = detectors.iter().find(|d| d.id() == "harness-api-key").unwrap();
+        let matches = d.scan_line("harness_api_key = abcdefghijklmnopqrst");
+        assert_eq!(matches.len(), 1);
+    }
+
+    #[test]
+    fn test_codecov_token_detected() {
+        let detectors = builtin_detectors();
+        let d = detectors.iter().find(|d| d.id() == "codecov-token").unwrap();
+        let matches = d.scan_line("codecov_token = abcdef1234567890abcdef1234567890");
+        assert_eq!(matches.len(), 1);
+    }
+
+    #[test]
+    fn test_sonarqube_token_detected() {
+        let detectors = builtin_detectors();
+        let d = detectors.iter().find(|d| d.id() == "sonarqube-token").unwrap();
+        let matches = d.scan_line("squ_1234567890abcdef1234567890abcdef12345678");
+        assert_eq!(matches.len(), 1);
+    }
+
+    #[test]
+    fn test_snyk_api_key_detected() {
+        let detectors = builtin_detectors();
+        let d = detectors.iter().find(|d| d.id() == "snyk-api-key").unwrap();
+        let matches = d.scan_line("snyk_api_key = abcdef12-3456-7890-abcd-ef1234567890");
+        assert_eq!(matches.len(), 1);
+    }
+
+    #[test]
+    fn test_artifactory_api_key_detected() {
+        let detectors = builtin_detectors();
+        let d = detectors.iter().find(|d| d.id() == "artifactory-api-key").unwrap();
+        let key = format!("AKC{}", "A".repeat(70));
+        let matches = d.scan_line(&key);
+        assert_eq!(matches.len(), 1);
+    }
+
+    #[test]
+    fn test_artifactory_reference_token_detected() {
+        let detectors = builtin_detectors();
+        let d = detectors.iter().find(|d| d.id() == "artifactory-reference-token").unwrap();
+        let key = format!("cmV{}", "A".repeat(60));
+        let matches = d.scan_line(&key);
+        assert_eq!(matches.len(), 1);
+    }
+
+    #[test]
+    fn test_terraform_cloud_token_detected() {
+        let detectors = builtin_detectors();
+        let d = detectors.iter().find(|d| d.id() == "terraform-cloud-token").unwrap();
+        let token = format!("app.abc123.def456.ghi789.jkl012.atlasv1.{}", "A".repeat(70));
+        let matches = d.scan_line(&token);
+        assert_eq!(matches.len(), 1);
+    }
+
+    #[test]
+    fn test_pivotal_tracker_token_detected() {
+        let detectors = builtin_detectors();
+        let d = detectors.iter().find(|d| d.id() == "pivotal-tracker-token").unwrap();
+        let matches = d.scan_line("pivotal_tracker_token = abcdefghijklmnopqrstuvwxyz123456");
+        assert_eq!(matches.len(), 1);
+    }
+
+    #[test]
+    fn test_clojars_token_detected() {
+        let detectors = builtin_detectors();
+        let d = detectors.iter().find(|d| d.id() == "clojars-token").unwrap();
+        let key = format!("CLOJARS_{}", "A".repeat(60));
+        let matches = d.scan_line(&key);
         assert_eq!(matches.len(), 1);
     }
 }

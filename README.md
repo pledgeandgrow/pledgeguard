@@ -9,7 +9,7 @@ Rust-native secret scanner — a TruffleHog/Gitleaks alternative.
 ## Status
 
 **v0.2.0 — comprehensive feature set.** PledgeGuard is a working secret
-scanner with 76 built-in detectors, 34 live verification providers, git history
+scanner with 106 built-in detectors, 34 live verification providers, git history
 scanning, WASM plugins, MCP server, 6 output formats (Table/JSON/SARIF/CSV/JUnit/Template),
 baseline/allowlist mode, pre-commit hook installer, AST-based false-positive
 refinement for JS/TS, custom TOML rules with entropy/allowlists/path filters,
@@ -88,16 +88,19 @@ to be inside a git working tree.
 
 ## Built-in detectors
 
-76 detectors covering AWS (Access Key, Secret, Session Token, MWS, Bedrock,
+106 detectors covering AWS (Access Key, Secret, Session Token, MWS, Bedrock,
 Account ID), Azure (Storage, SAS, Client Secret, AD/Entra ID, Batch, Function,
 DevOps PAT, Cosmos DB), Google Cloud (API Key, OAuth, Service Account, Client ID),
-Alibaba, Tencent, DigitalOcean,
-GitHub, GitLab, Bitbucket, Slack, Discord, Telegram, Stripe, Shopify, OpenAI,
-Anthropic, HuggingFace, SendGrid, Mailgun, Mailchimp, Datadog, New Relic,
-PagerDuty, Opsgenie, Auth0, Okta, Vercel, Netlify, Supabase, Cloudflare,
-CircleCI, Heroku, Atlassian, Notion, Linear, Figma, Twitch, Twitter/X,
-Facebook, LinkedIn, npm, PEM private keys, JWTs, PostgreSQL/MySQL/MongoDB/Redis
-connection strings, and generic entropy-based detection.
+Alibaba, Tencent, DigitalOcean, IBM Cloud, Oracle Cloud, Scaleway, Vultr, Linode,
+Cloudflare (API Key, Token, CA Key, Global),
+GitHub, GitLab, Bitbucket (App Password, Client ID/Secret, DataCenter), Slack,
+Discord, Telegram, Stripe, Shopify, OpenAI, Anthropic, HuggingFace, SendGrid,
+Mailgun, Mailchimp, Datadog, New Relic, PagerDuty, Opsgenie, Auth0, Okta, Vercel,
+Netlify, Supabase, CircleCI, Heroku, Travis CI, DroneCI, Buildkite, TeamCity,
+Jenkins, GoCD, ArgoCD, Spinnaker, Harness, Codecov, SonarQube, Snyk, Artifactory,
+Terraform Cloud, Pivotal Tracker, Clojars, Atlassian, Notion, Linear, Figma,
+Twitch, Twitter/X, Facebook, LinkedIn, npm, PEM private keys, JWTs,
+PostgreSQL/MySQL/MongoDB/Redis connection strings, and generic entropy-based detection.
 
 See **[SUPPORT.md](docs/SUPPORT.md)** for the complete list.
 

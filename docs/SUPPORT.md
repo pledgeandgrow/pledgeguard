@@ -6,7 +6,7 @@ This document lists all detectors, verification providers, output formats, scann
 
 ## Built-in Detectors
 
-PledgeGuard ships with **76 regex-based detectors** covering major cloud providers, SaaS platforms, CI/CD systems, and generic secret patterns. Each detector has a prefilter (Aho-Corasick) for fast scanning and a regex for precise matching.
+PledgeGuard ships with **106 regex-based detectors** covering major cloud providers, SaaS platforms, CI/CD systems, and generic secret patterns. Each detector has a prefilter (Aho-Corasick) for fast scanning and a regex for precise matching.
 
 ### Cloud Providers
 
@@ -34,8 +34,17 @@ PledgeGuard ships with **76 regex-based detectors** covering major cloud provide
 | `gcp-oauth-client-id` | GCP OAuth Client ID (xxx.apps.googleusercontent.com) | Medium |
 | `alibaba-access-key-id` | Alibaba Cloud Access Key ID (LTAI prefix) | Critical |
 | `tencent-secret-id` | Tencent Cloud Secret ID (AKID prefix) | Critical |
+| `tencent-secret-key` | Tencent Cloud Secret Key (36-char assignment) | Critical |
+| `alibaba-secret-key` | Alibaba Cloud Secret Key (30-char base64) | Critical |
 | `digitalocean-pat` | DigitalOcean Personal Access Token (dop_v1_ prefix) | High |
 | `digitalocean-spaces-key` | DigitalOcean Spaces Access Key | High |
+| `ibm-cloud-key` | IBM Cloud API Key (44-char assignment) | High |
+| `oracle-cloud-token` | Oracle Cloud (OCI) Token | High |
+| `scaleway-key` | Scaleway API Key (UUID format) | High |
+| `vultr-api-key` | Vultr API Key (36-char hex) | High |
+| `linode-token` | Linode/Akamai API Token (64-char hex) | High |
+| `cloudflare-ca-key` | Cloudflare Origin CA Key (v1.0- prefix) | High |
+| `cloudflare-global-api-key` | Cloudflare Global API Key (37-char hex) | High |
 
 ### Version Control & CI/CD
 
@@ -43,12 +52,33 @@ PledgeGuard ships with **76 regex-based detectors** covering major cloud provide
 |---|---|---|
 | `github-pat` | GitHub Personal Access Token (ghp_/gho_/ghu_/ghs_/ghr_ prefixes) | Critical |
 | `github-fine-grained-pat` | GitHub Fine-Grained PAT (github_pat_ prefix) | Critical |
+| `github-old-pat` | GitHub Legacy PAT (40-char hex assignment) | High |
 | `gitlab-pat` | GitLab Personal Access Token (glpat- prefix) | Critical |
 | `gitlab-pipeline-trigger-token` | GitLab Pipeline Trigger Token (glptt- prefix) | High |
 | `gitlab-runner-registration-token` | GitLab Runner Registration Token (GR1348921 prefix) | High |
 | `bitbucket-app-password` | Bitbucket App Password | High |
+| `bitbucket-client-id` | Bitbucket OAuth Client ID | Medium |
+| `bitbucket-client-secret` | Bitbucket OAuth Client Secret | High |
+| `bitbucket-datacenter-token` | Bitbucket Data Center Token | High |
 | `circleci-api-token` | CircleCI API Token (CCIPVJ_ prefix) | High |
 | `heroku-api-key` | Heroku API Key | High |
+| `travis-ci-token` | Travis CI Token | High |
+| `droneci-token` | DroneCI Access Token | High |
+| `buildkite-token` | Buildkite API Token (bk[cuor]_ prefix) | High |
+| `teamcity-token` | TeamCity API Token | High |
+| `jenkins-token` | Jenkins API Token | High |
+| `gocd-token` | GoCD Access Token | High |
+| `argocd-token` | ArgoCD API Token | High |
+| `spinnaker-token` | Spinnaker Token | High |
+| `harness-api-key` | Harness API Key | High |
+| `codecov-token` | Codecov Access Token | High |
+| `sonarqube-token` | SonarQube Token (squ_ prefix) | High |
+| `snyk-api-key` | Snyk API Key | High |
+| `artifactory-api-key` | Artifactory API Key (AKC prefix, 70 chars) | High |
+| `artifactory-reference-token` | Artifactory Reference Token (cmV prefix, 60 chars) | High |
+| `terraform-cloud-token` | Terraform Cloud / HCP API Token (atlasv1. suffix) | High |
+| `pivotal-tracker-token` | Pivotal Tracker API Token | High |
+| `clojars-token` | Clojars API Token (CLOJARS_ prefix) | High |
 
 ### Communication & Collaboration
 

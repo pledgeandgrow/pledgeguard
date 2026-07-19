@@ -50,20 +50,20 @@ This document lists all secret providers that PledgeGuard **could** support in t
 | Provider / Token Type | Detector | Verifier | Notes |
 |---|---|---|---|
 | Alibaba Cloud Access Key ID | **Supported** | Future | |
-| Alibaba Cloud Secret Key | Future | Future | Gitleaks detects this |
+| Alibaba Cloud Secret Key | **Supported** | Future | 30-char base64 assignment |
 | Tencent Cloud Secret ID | **Supported** | Future | |
-| Tencent Cloud Secret Key | Future | Future | |
+| Tencent Cloud Secret Key | **Supported** | Future | 36-char assignment |
 | DigitalOcean PAT | **Supported** | **Supported** | |
 | DigitalOcean Spaces Key | **Supported** | Future | |
-| IBM Cloud User Key | Future | Future | TruffleHog supports |
-| Oracle Cloud (OCI) | Future | Future | |
-| Scaleway Key | Future | Future | TruffleHog supports |
-| Vultr API Key | Future | Future | TruffleHog supports |
-| Linode/Akamai Token | Future | Future | |
+| IBM Cloud User Key | **Supported** | Future | 44-char assignment |
+| Oracle Cloud (OCI) | **Supported** | Future | |
+| Scaleway Key | **Supported** | Future | UUID format |
+| Vultr API Key | **Supported** | Future | 36-char hex |
+| Linode/Akamai Token | **Supported** | Future | 64-char hex |
 | Cloudflare API Key | **Supported** | Future | |
 | Cloudflare API Token | **Supported** | **Supported** | |
-| Cloudflare CA Key | Future | Future | |
-| Cloudflare Global API Key | Future | Future | |
+| Cloudflare CA Key | **Supported** | Future | v1.0- prefix |
+| Cloudflare Global API Key | **Supported** | Future | 37-char hex |
 
 ---
 
@@ -73,35 +73,35 @@ This document lists all secret providers that PledgeGuard **could** support in t
 |---|---|---|---|
 | GitHub PAT (ghp_) | **Supported** | **Supported** | |
 | GitHub Fine-Grained PAT | **Supported** | **Supported** | |
-| GitHub OAuth Token (gho_) | Future | Future | |
-| GitHub App Token (ghu_/ghs_) | Future | Future | |
-| GitHub Refresh Token (ghr_) | Future | Future | |
-| GitHub Old PAT | Future | Future | Legacy format |
+| GitHub OAuth Token (gho_) | **Supported** | **Supported** | Covered by github-pat detector |
+| GitHub App Token (ghu_/ghs_) | **Supported** | **Supported** | Covered by github-pat detector |
+| GitHub Refresh Token (ghr_) | **Supported** | **Supported** | Covered by github-pat detector |
+| GitHub Old PAT | **Supported** | Future | Legacy 40-char hex format |
 | GitLab PAT (glpat-) | **Supported** | **Supported** | |
 | GitLab Pipeline Trigger Token | **Supported** | Future | |
 | GitLab Runner Registration Token | **Supported** | Future | |
 | Bitbucket App Password | **Supported** | Future | |
-| Bitbucket Client ID | Future | Future | Gitleaks detects |
-| Bitbucket Client Secret | Future | Future | Gitleaks detects |
-| Bitbucket Data Center Token | Future | Future | TruffleHog supports |
+| Bitbucket Client ID | **Supported** | Future | |
+| Bitbucket Client Secret | **Supported** | Future | |
+| Bitbucket Data Center Token | **Supported** | Future | |
 | CircleCI API Token | **Supported** | **Supported** | |
-| Travis CI Token | Future | Future | TruffleHog supports |
-| DroneCI Access Token | Future | Future | TruffleHog + Gitleaks |
-| Buildkite Token | Future | Future | TruffleHog supports |
-| TeamCity Token | Future | Future | |
-| Jenkins API Token | Future | Future | |
-| GoCD Token | Future | Future | |
-| ArgoCD Token | Future | Future | |
-| Spinnaker Token | Future | Future | |
-| Harness API Key | Future | Future | |
-| Codecov Access Token | Future | Future | Gitleaks detects |
-| SonarQube Token | Future | Future | |
-| Snyk API Key | Future | Future | TruffleHog supports |
-| Artifactory API Key | Future | Future | Gitleaks + TruffleHog |
-| Artifactory Reference Token | Future | Future | Gitleaks + TruffleHog |
-| Terraform Cloud Token | Future | Future | TruffleHog supports |
-| Pivotal Tracker Token | Future | Future | TruffleHog supports |
-| Clojars API Token | Future | Future | Gitleaks detects |
+| Travis CI Token | **Supported** | Future | |
+| DroneCI Access Token | **Supported** | Future | |
+| Buildkite Token | **Supported** | Future | bk[cuor]_ prefix |
+| TeamCity Token | **Supported** | Future | |
+| Jenkins API Token | **Supported** | Future | |
+| GoCD Token | **Supported** | Future | |
+| ArgoCD Token | **Supported** | Future | |
+| Spinnaker Token | **Supported** | Future | |
+| Harness API Key | **Supported** | Future | |
+| Codecov Access Token | **Supported** | Future | |
+| SonarQube Token | **Supported** | Future | squ_ prefix |
+| Snyk API Key | **Supported** | Future | |
+| Artifactory API Key | **Supported** | Future | AKC prefix |
+| Artifactory Reference Token | **Supported** | Future | cmV prefix |
+| Terraform Cloud Token | **Supported** | Future | atlasv1. suffix |
+| Pivotal Tracker Token | **Supported** | Future | |
+| Clojars API Token | **Supported** | Future | CLOJARS_ prefix |
 
 ---
 
@@ -542,7 +542,7 @@ Beyond the current scanning sources (working tree, stdin, git history, Docker, G
 
 | Metric | Current | Future (Total Potential) |
 |---|---|---|
-| **Detectors** | 76 | 300+ |
+| **Detectors** | 106 | 300+ |
 | **Verification providers** | 34 | 150+ |
 | **Scanning sources** | 10 | 25+ |
 | **Output formats** | 6 | 6 (competitive) |
