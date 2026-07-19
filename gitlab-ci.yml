@@ -1,0 +1,26 @@
+# PledgeGuard — GitLab CI template
+# Add this to your .gitlab-ci.yml to scan for secrets in every push/merge request.
+
+pledgeguard:scan:
+  stage: test
+  image:
+    name: pledgeguard/pledgeguard:latest
+    entrypoint: [""]
+  script:
+    - pledgeguard scan . --fail-on-findings --format json --report-file pledgeguard-report.json
+  artifacts:
+    when: always
+    reports:
+      dotenv: pledgeguard-report.json
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "push" || $CI_PIPELINE_SOURCE == "merge_request_event"
+
+pledgeguard:history:
+  stage: test
+  image:
+    name: pledgeguard/pledgeguard:latest
+    entrypoint: [""]
+  script:
+    - pledgeguard history . --fail-on-findings
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"

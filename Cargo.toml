@@ -65,6 +65,9 @@ bstr = "1"
 # Performance: stack-allocated small vectors
 smallvec = { version = "1", features = ["write"] }
 
+# Custom config file parsing
+toml = "0.8"
+
 # Internal crates
 pledgeguard-core = { path = "crates/pledgeguard-core", version = "0.1.0" }
 

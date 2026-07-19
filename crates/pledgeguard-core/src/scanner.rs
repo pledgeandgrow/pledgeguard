@@ -112,9 +112,10 @@ impl Scanner {
         let prefilter = if patterns.is_empty() {
             None
         } else {
-            use aho_corasick::AhoCorasickBuilder;
+            use aho_corasick::{AhoCorasickBuilder, MatchKind};
             match AhoCorasickBuilder::new()
                 .ascii_case_insensitive(true)
+                .match_kind(MatchKind::LeftmostLongest)
                 .build(&patterns)
             {
                 Ok(ac) => Some((ac, pattern_to_detector)),
@@ -141,6 +142,9 @@ impl Scanner {
         let mut seen = std::collections::HashSet::new();
 
         // Aho-Corasick scans all patterns in a single pass (SIMD-accelerated).
+        // LeftmostLongest ensures longer patterns (e.g. "INTKEY_") are preferred
+        // over shorter ones (e.g. "key") at the same starting position, so
+        // custom detector prefilters aren't masked by built-in ones.
         for mat in ac.find_iter(line_bytes) {
             let pat_idx = mat.pattern();
             let det_idx = mapping[pat_idx.as_usize()];

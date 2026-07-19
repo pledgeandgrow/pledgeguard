@@ -21,6 +21,7 @@
 
 pub mod ast;
 pub mod baseline;
+pub mod config;
 pub mod context;
 pub mod detector;
 pub mod detectors;
@@ -37,6 +38,7 @@ pub use baseline::{
     Baseline, BaselineEntry, filter as baseline_filter, from_findings as baseline_from_findings,
     load as load_baseline, save as save_baseline,
 };
+pub use config::{Config, ConfigError, CustomRule, load_config};
 pub use detector::{Detector, DetectorMatch, RegexDetector};
 pub use finding::{Finding, Severity, VerificationStatus};
 pub use git_history::scan_git_history;

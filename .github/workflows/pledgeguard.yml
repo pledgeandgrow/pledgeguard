@@ -1,0 +1,35 @@
+name: pledgeguard
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  scan:
+    name: Scan for secrets
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # Full history for git history scanning
+
+      - name: Install PledgeGuard
+        run: |
+          curl -sSL https://github.com/pledgeandgrow/pledgeguard/releases/latest/download/pledgeguard-linux-amd64 -o /usr/local/bin/pledgeguard
+          chmod +x /usr/local/bin/pledgeguard
+
+      - name: Scan working tree
+        run: pledgeguard scan . --fail-on-findings --format sarif --report-file pledgeguard-results.sarif
+        continue-on-error: true
+
+      - name: Scan git history
+        run: pledgeguard history . --fail-on-findings
+        continue-on-error: true
+
+      - name: Upload SARIF results
+        uses: github/codeql-action/upload-sarif@v3
+        if: always()
+        with:
+          sarif_file: pledgeguard-results.sarif

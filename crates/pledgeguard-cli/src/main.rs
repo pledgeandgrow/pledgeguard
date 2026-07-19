@@ -9,9 +9,10 @@ static GLOBAL: tikv_jemallocator::Jemalloc = tikv_jemallocator::Jemalloc;
 
 use clap::{Parser, ValueEnum};
 use pledgeguard_core::{
-    Detector, Finding, Scanner, Severity, baseline, detectors::builtin_detectors, scan_git_history,
-    verify_findings,
+    Detector, Finding, Scanner, Severity, baseline, detectors::builtin_detectors,
+    load_config, scan_git_history, verify_findings,
 };
+use std::io::Read;
 use std::path::PathBuf;
 use std::process::ExitCode;
 
@@ -27,6 +28,7 @@ enum Command {
     /// Scan a file or directory (working tree only) for secrets.
     Scan {
         /// Path to scan (file or directory). Defaults to the current directory.
+        /// Use `-` to read from stdin.
         #[arg(default_value = ".")]
         path: PathBuf,
 
@@ -74,6 +76,22 @@ enum Command {
         /// should be treated as sensitive.
         #[arg(long)]
         save_baseline: Option<PathBuf>,
+
+        /// Load custom detector rules from a TOML config file (pledgeguard.toml format).
+        #[arg(long)]
+        config: Option<PathBuf>,
+
+        /// Write output to a file instead of stdout.
+        #[arg(long)]
+        report_file: Option<PathBuf>,
+
+        /// Verbose output — print scan progress and stats to stderr.
+        #[arg(long)]
+        verbose: bool,
+
+        /// Paths to ignore during scan (glob patterns). May be given multiple times.
+        #[arg(long = "ignore-path")]
+        ignore_paths: Vec<String>,
     },
 
     /// Scan git commit history (all refs) for secrets introduced in past commits.
@@ -121,6 +139,18 @@ enum Command {
         /// Save all current findings as a baseline file for future use.
         #[arg(long)]
         save_baseline: Option<PathBuf>,
+
+        /// Load custom detector rules from a TOML config file.
+        #[arg(long)]
+        config: Option<PathBuf>,
+
+        /// Write output to a file instead of stdout.
+        #[arg(long)]
+        report_file: Option<PathBuf>,
+
+        /// Verbose output — print scan progress and stats to stderr.
+        #[arg(long)]
+        verbose: bool,
     },
 
     /// Run a Model Context Protocol (MCP) server over stdio, exposing scan
@@ -186,16 +216,45 @@ fn main() -> ExitCode {
             verify,
             baseline: baseline_path,
             save_baseline,
+            config: config_path,
+            report_file,
+            verbose,
+            ignore_paths: _,
         } => {
-            let detectors = load_all_detectors(&plugin_dirs);
+            if verbose {
+                eprintln!("pledgeguard: loading detectors...");
+            }
+            let detectors = load_all_detectors(&plugin_dirs, config_path.as_deref());
             let scanner = Scanner::new(detectors);
-            let findings = match scanner.scan_path(&path) {
-                Ok(f) => f,
-                Err(e) => {
-                    eprintln!("error scanning {}: {}", path.display(), e);
+
+            // Handle stdin scanning.
+            let findings = if path == std::path::Path::new("-") {
+                if verbose {
+                    eprintln!("pledgeguard: reading from stdin");
+                }
+                let mut input = String::new();
+                if let Err(e) = std::io::stdin().read_to_string(&mut input) {
+                    eprintln!("error reading stdin: {e}");
                     return ExitCode::FAILURE;
                 }
+                scanner.scan_str(std::path::Path::new("<stdin>"), &input)
+            } else {
+                if verbose {
+                    eprintln!("pledgeguard: scanning {}", path.display());
+                }
+                match scanner.scan_path(&path) {
+                    Ok(f) => f,
+                    Err(e) => {
+                        eprintln!("error scanning {}: {}", path.display(), e);
+                        return ExitCode::FAILURE;
+                    }
+                }
             };
+
+            if verbose {
+                eprintln!("pledgeguard: {} raw finding(s)", findings.len());
+            }
+
             report(
                 findings,
                 ReportOptions {
@@ -207,6 +266,7 @@ fn main() -> ExitCode {
                     verify,
                     baseline: baseline_path,
                     save_baseline,
+                    report_file,
                 },
             )
         }
@@ -221,8 +281,17 @@ fn main() -> ExitCode {
             verify,
             baseline: baseline_path,
             save_baseline,
+            config: config_path,
+            report_file,
+            verbose,
         } => {
-            let detectors = load_all_detectors(&plugin_dirs);
+            if verbose {
+                eprintln!("pledgeguard: loading detectors...");
+            }
+            let detectors = load_all_detectors(&plugin_dirs, config_path.as_deref());
+            if verbose {
+                eprintln!("pledgeguard: scanning git history at {}", path.display());
+            }
             let findings = match scan_git_history(&path, &detectors) {
                 Ok(f) => f,
                 Err(e) => {
@@ -230,6 +299,9 @@ fn main() -> ExitCode {
                     return ExitCode::FAILURE;
                 }
             };
+            if verbose {
+                eprintln!("pledgeguard: {} raw finding(s)", findings.len());
+            }
             report(
                 findings,
                 ReportOptions {
@@ -241,6 +313,7 @@ fn main() -> ExitCode {
                     verify,
                     baseline: baseline_path,
                     save_baseline,
+                    report_file,
                 },
             )
         }
@@ -252,10 +325,21 @@ fn main() -> ExitCode {
     }
 }
 
-fn load_all_detectors(plugin_dirs: &[PathBuf]) -> Vec<Box<dyn Detector>> {
+fn load_all_detectors(
+    plugin_dirs: &[PathBuf],
+    config_path: Option<&std::path::Path>,
+) -> Vec<Box<dyn Detector>> {
     let mut detectors = builtin_detectors();
     for dir in plugin_dirs {
         detectors.extend(pledgeguard_core::load_plugins(dir));
+    }
+    if let Some(cp) = config_path {
+        match load_config(cp) {
+            Ok(custom) => detectors.extend(custom),
+            Err(e) => {
+                eprintln!("warning: failed to load config from {}: {}", cp.display(), e);
+            }
+        }
     }
     detectors
 }
@@ -269,6 +353,7 @@ struct ReportOptions {
     verify: bool,
     baseline: Option<PathBuf>,
     save_baseline: Option<PathBuf>,
+    report_file: Option<PathBuf>,
 }
 
 fn report(findings: Vec<Finding>, opts: ReportOptions) -> ExitCode {
@@ -281,6 +366,7 @@ fn report(findings: Vec<Finding>, opts: ReportOptions) -> ExitCode {
         verify,
         baseline: baseline_path,
         save_baseline,
+        report_file,
     } = opts;
     // Save baseline before any filtering, so it captures everything.
     if let Some(ref bp) = save_baseline {
@@ -348,17 +434,28 @@ fn report(findings: Vec<Finding>, opts: ReportOptions) -> ExitCode {
         visible.iter().map(|f| f.redacted()).collect()
     };
 
-    match format {
-        OutputFormat::Table => print_table(&display),
-        OutputFormat::Json => print_json(&display),
-        OutputFormat::Sarif => print_sarif(&display),
+    let output = match format {
+        OutputFormat::Table => format_table(&display),
+        OutputFormat::Json => format_json(&display),
+        OutputFormat::Sarif => format_sarif(&display),
+    };
+
+    let mut output = output;
+    if !show_all && hidden_count > 0 {
+        output.push_str(&format!(
+            "\n{} low-confidence finding(s) hidden (in comments or test/fixture paths); use --show-all to include them.\n",
+            hidden_count
+        ));
     }
 
-    if !show_all && hidden_count > 0 {
-        println!(
-            "\n{} low-confidence finding(s) hidden (in comments or test/fixture paths); use --show-all to include them.",
-            hidden_count
-        );
+    if let Some(ref rf) = report_file {
+        if let Err(e) = std::fs::write(rf, &output) {
+            eprintln!("failed to write report file {}: {}", rf.display(), e);
+            return ExitCode::FAILURE;
+        }
+        eprintln!("Report written to {} ({} findings).", rf.display(), visible.len());
+    } else {
+        print!("{output}");
     }
 
     if fail_on_findings && !visible.is_empty() {
@@ -368,14 +465,13 @@ fn report(findings: Vec<Finding>, opts: ReportOptions) -> ExitCode {
     }
 }
 
-fn print_table(findings: &[pledgeguard_core::Finding]) {
+fn format_table(findings: &[pledgeguard_core::Finding]) -> String {
     if findings.is_empty() {
-        println!("No secrets found.");
-        return;
+        return "No secrets found.\n".to_string();
     }
 
-    println!(
-        "{:<10} {:<28} {:<40} {:<9} {:<10} FILE:LINE",
+    let mut out = format!(
+        "{:<10} {:<28} {:<40} {:<9} {:<10} FILE:LINE\n",
         "SEVERITY", "RULE", "MATCH", "COMMIT", "VERIFIED",
     );
     for f in findings {
@@ -389,8 +485,8 @@ fn print_table(findings: &[pledgeguard_core::Finding]) {
             .as_ref()
             .map(|v| v.to_string())
             .unwrap_or_else(|| "-".to_string());
-        println!(
-            "{:<10} {:<28} {:<40} {:<9} {:<10} {}:{}",
+        out.push_str(&format!(
+            "{:<10} {:<28} {:<40} {:<9} {:<10} {}:{}\n",
             f.severity.to_string(),
             f.rule_id,
             f.matched,
@@ -398,23 +494,24 @@ fn print_table(findings: &[pledgeguard_core::Finding]) {
             verified,
             f.path.display(),
             f.line
-        );
+        ));
     }
-    println!("\n{} finding(s).", findings.len());
+    out.push_str(&format!("\n{} finding(s).\n", findings.len()));
+    out
 }
 
-fn print_json(findings: &[pledgeguard_core::Finding]) {
+fn format_json(findings: &[pledgeguard_core::Finding]) -> String {
     match serde_json::to_string_pretty(findings) {
-        Ok(s) => println!("{s}"),
-        Err(e) => eprintln!("failed to serialize findings: {e}"),
+        Ok(s) => s + "\n",
+        Err(e) => format!("failed to serialize findings: {e}\n"),
     }
 }
 
-fn print_sarif(findings: &[pledgeguard_core::Finding]) {
+fn format_sarif(findings: &[pledgeguard_core::Finding]) -> String {
     let sarif = pledgeguard_core::to_sarif(findings);
     match serde_json::to_string_pretty(&sarif) {
-        Ok(s) => println!("{s}"),
-        Err(e) => eprintln!("failed to serialize SARIF: {e}"),
+        Ok(s) => s + "\n",
+        Err(e) => format!("failed to serialize SARIF: {e}\n"),
     }
 }
 

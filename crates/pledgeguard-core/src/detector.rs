@@ -85,6 +85,37 @@ impl RegexDetector {
             prefilter,
         }
     }
+
+    /// Constructor for custom rules from config files where strings are owned.
+    /// Leaks the strings to obtain 'static references (bounded by the number of rules).
+    pub fn with_prefilter_owned(
+        id: String,
+        description: String,
+        severity: Severity,
+        pattern: regex::Regex,
+        prefilter: Vec<String>,
+    ) -> Self {
+        let id: &'static str = Box::leak(id.into_boxed_str());
+        let description: &'static str = Box::leak(description.into_boxed_str());
+        let prefilter: &'static [&'static str] = if prefilter.is_empty() {
+            &[]
+        } else {
+            Box::leak(
+                prefilter
+                    .into_iter()
+                    .map(|s| Box::leak(s.into_boxed_str()) as &'static str)
+                    .collect::<Vec<_>>()
+                    .into_boxed_slice(),
+            )
+        };
+        Self {
+            id,
+            description,
+            severity,
+            pattern,
+            prefilter,
+        }
+    }
 }
 
 impl Detector for RegexDetector {

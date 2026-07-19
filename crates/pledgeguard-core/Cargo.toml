@@ -28,6 +28,7 @@ dashmap = { workspace = true }
 bstr = { workspace = true }
 smallvec = { workspace = true }
 crossbeam = { workspace = true }
+toml = { workspace = true }
 
 [dev-dependencies]
 tempfile = "3"
