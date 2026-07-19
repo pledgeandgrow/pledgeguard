@@ -39,7 +39,10 @@ pub mod junit;
 pub mod plugin;
 pub mod redact;
 pub mod sarif;
+pub mod file_scan;
 pub mod scanner;
+pub mod source_scan;
+pub mod stream_scan;
 pub mod template;
 pub mod verify;
 
@@ -61,5 +64,23 @@ pub use composite::{scan_composite, CompositeRule};
 pub use archive::{is_archive, scan_archive};
 pub use docker::{scan_docker_image, is_docker_image, DockerScanError};
 pub use api_scan::{scan_github_repo, scan_gitlab_repo, GitHubScanConfig, GitLabScanConfig, ApiScanError};
-pub use cloud_scan::{scan_s3_bucket, scan_gcs_bucket, S3ScanConfig, GcsScanConfig, CloudScanError};
-pub use verify::verify_findings;
+pub use cloud_scan::{scan_s3_bucket, scan_gcs_bucket, scan_azure_blob, scan_alibaba_oss, S3ScanConfig, GcsScanConfig, AzureBlobScanConfig, OssScanConfig, CloudScanError};
+pub use source_scan::{
+    scan_confluence, scan_slack, scan_jira, scan_postman, scan_gerrit,
+    scan_buildkite, scan_artifactory, scan_aws_secrets_manager,
+    scan_circleci_artifacts, scan_travis_ci_logs, scan_jenkins_logs, scan_droneci_builds,
+    ConfluenceScanConfig, SlackScanConfig, JiraScanConfig, PostmanScanConfig,
+    GerritScanConfig, BuildkiteScanConfig, ArtifactoryScanConfig,
+    AwsSecretsManagerScanConfig, CircleCiArtifactsScanConfig, TravisCiScanConfig,
+    JenkinsScanConfig, DroneCiScanConfig, SourceScanError,
+};
+pub use file_scan::{
+    scan_helm_chart, scan_terraform_state, scan_k8s_secret,
+    FileScanError,
+};
+pub use stream_scan::{
+    scan_syslog_stream, scan_syslog_file, scan_syslog_stdin,
+    scan_syslog_tcp, scan_vault_tokens_in_logs,
+    SyslogScanConfig, StreamScanError,
+};
+pub use verify::{verify_findings, verify_findings_with_options, VerifyOptions};

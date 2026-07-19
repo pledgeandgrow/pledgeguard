@@ -79,6 +79,12 @@ zip = { version = "2", default-features = false, features = ["deflate"] }
 tar = "0.4"
 flate2 = "1"
 
+# SHA-256 for AWS SigV4 signing
+sha2 = "0.10"
+
+# HMAC-SHA256 for AWS SigV4 signing
+hmac = "0.12"
+
 # Internal crates
 pledgeguard-core = { path = "crates/pledgeguard-core", version = "0.1.0" }
 

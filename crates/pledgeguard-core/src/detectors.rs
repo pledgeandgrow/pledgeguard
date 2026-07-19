@@ -5018,6 +5018,13 @@ pub fn builtin_detectors() -> Vec<Box<dyn Detector>> {
             r#"(?i)abstract[_\-]?(?:api[_\-]?)?key\s*[:=]\s*['"]?([A-Za-z0-9_\-]{20,})['"]?"#,
             &["abstract_api", "ABSTRACT_API", "abstractApi"],
         )),
+        Box::new(RegexDetector::with_prefilter(
+            "pulumi-api-token",
+            "Pulumi API Token",
+            Severity::High,
+            r"\bpul-[A-Za-z0-9]{40}\b",
+            &["pul-"],
+        )),
 
         Box::new(EntropyDetector::default()),
     ]
@@ -11112,6 +11119,15 @@ mod tests {
         let key = "a".repeat(25);
         let line = format!("abstract_api_key = {}", key);
         let matches = d.scan_line(&line);
+        assert_eq!(matches.len(), 1);
+    }
+
+    #[test]
+    fn test_pulumi_api_token_detected() {
+        let detectors = builtin_detectors();
+        let d = detectors.iter().find(|d| d.id() == "pulumi-api-token").unwrap();
+        let key = format!("pul-{}", "a".repeat(40));
+        let matches = d.scan_line(&key);
         assert_eq!(matches.len(), 1);
     }
 }

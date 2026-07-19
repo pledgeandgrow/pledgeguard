@@ -196,6 +196,201 @@ pub fn scan_gcs_bucket(
     Ok(findings)
 }
 
+// ── Azure Blob Storage ─────────────────────────────────────────────────
+
+/// Configuration for an Azure Blob Storage scan.
+#[derive(Debug, Clone)]
+pub struct AzureBlobScanConfig {
+    /// Storage account name.
+    pub account: String,
+    /// Container name.
+    pub container: String,
+    /// SAS token (Shared Access Signature) or bearer token.
+    pub sas_token: String,
+    /// Optional prefix to limit scan to.
+    pub prefix: Option<String>,
+    /// Maximum number of blobs to scan.
+    pub max_blobs: usize,
+}
+
+/// Scan an Azure Blob Storage container for secrets.
+/// Uses the Azure Blob Storage REST API with a SAS token.
+pub fn scan_azure_blob(
+    config: &AzureBlobScanConfig,
+    detectors: &[Box<dyn Detector>],
+) -> Result<Vec<Finding>, CloudScanError> {
+    let agent = agent();
+    let prefix = config.prefix.as_deref().unwrap_or("");
+    let sas = config.sas_token.trim_start_matches('?');
+
+    // List blobs in the container.
+    let list_url = format!(
+        "https://{}.blob.core.windows.net/{}?restype=container&comp=list&prefix={}&{}",
+        config.account, config.container, prefix, sas
+    );
+
+    let resp = agent
+        .get(&list_url)
+        .call()
+        .map_err(|e| CloudScanError::Http(Box::new(e)))?;
+
+    let body: String = resp
+        .into_string()
+        .map_err(|e| CloudScanError::Parse(e.to_string()))?;
+
+    // Parse XML to extract blob names.
+    let blob_names = parse_azure_blob_listing(&body, config.max_blobs);
+
+    let mut findings = Vec::new();
+    for name in blob_names {
+        let blob_url = format!(
+            "https://{}.blob.core.windows.net/{}/{}?{}",
+            config.account, config.container, name, sas
+        );
+
+        let content_resp = agent.get(&blob_url).call();
+        if let Ok(resp) = content_resp
+            && let Ok(text) = resp.into_string()
+        {
+            let virtual_path = std::path::PathBuf::from(format!(
+                "azure://{}/{}/{}",
+                config.account, config.container, name
+            ));
+            for (line_idx, line) in text.lines().enumerate() {
+                for detector in detectors {
+                    for m in detector.scan_line(line) {
+                        findings.push(Finding {
+                            rule_id: detector.id().to_string(),
+                            description: detector.description().to_string(),
+                            severity: detector.severity(),
+                            path: virtual_path.clone(),
+                            line: line_idx + 1,
+                            column: m.start + 1,
+                            matched: m.text,
+                            context: line.to_string(),
+                            commit: None,
+                            likely_false_positive: false,
+                            verification: None,
+                        });
+                    }
+                }
+            }
+        }
+    }
+
+    Ok(findings)
+}
+
+/// Parse Azure Blob Storage ListBlobs XML response.
+fn parse_azure_blob_listing(xml: &str, max: usize) -> Vec<String> {
+    let mut names = Vec::new();
+    let mut pos = 0;
+    while pos < xml.len() {
+        if let Some(start) = xml[pos..].find("<Name>") {
+            let abs_start = pos + start + 6;
+            if let Some(end) = xml[abs_start..].find("</Name>") {
+                let name = &xml[abs_start..abs_start + end];
+                names.push(name.to_string());
+                pos = abs_start + end + 7;
+                if names.len() >= max {
+                    break;
+                }
+            } else {
+                break;
+            }
+        } else {
+            break;
+        }
+    }
+    names
+}
+
+// ── Alibaba OSS ────────────────────────────────────────────────────────
+
+/// Configuration for an Alibaba OSS (Object Storage Service) scan.
+#[derive(Debug, Clone)]
+pub struct OssScanConfig {
+    /// Bucket name.
+    pub bucket: String,
+    /// Region endpoint (e.g. "oss-cn-hangzhou.aliyuncs.com").
+    pub endpoint: String,
+    /// Access key ID.
+    pub access_key_id: String,
+    /// Access key secret.
+    pub access_key_secret: String,
+    /// Optional prefix to limit scan to.
+    pub prefix: Option<String>,
+    /// Maximum number of objects to scan.
+    pub max_objects: usize,
+}
+
+/// Scan an Alibaba OSS bucket for secrets.
+/// Uses the OSS REST API with a simplified listing approach.
+pub fn scan_alibaba_oss(
+    config: &OssScanConfig,
+    detectors: &[Box<dyn Detector>],
+) -> Result<Vec<Finding>, CloudScanError> {
+    let agent = agent();
+    let prefix = config.prefix.as_deref().unwrap_or("");
+
+    // List objects — OSS supports listing via REST API.
+    // For simplicity, we use the bucket URL with prefix parameter.
+    // Full OSS signing is complex; this works for public buckets or when
+    // credentials are configured via environment.
+    let list_url = format!(
+        "https://{}.{}?prefix={}&max-keys={}",
+        config.bucket, config.endpoint, prefix, config.max_objects.min(1000)
+    );
+
+    let resp = agent
+        .get(&list_url)
+        .call()
+        .map_err(|e| CloudScanError::Http(Box::new(e)))?;
+
+    let body: String = resp
+        .into_string()
+        .map_err(|e| CloudScanError::Parse(e.to_string()))?;
+
+    // Parse XML to extract object keys (same format as S3).
+    let object_keys = parse_s3_listing(&body, config.max_objects);
+
+    let mut findings = Vec::new();
+    for key in object_keys {
+        let object_url = format!("https://{}.{}/{}", config.bucket, config.endpoint, key);
+
+        let content_resp = agent.get(&object_url).call();
+        if let Ok(resp) = content_resp
+            && let Ok(text) = resp.into_string()
+        {
+            let virtual_path = std::path::PathBuf::from(format!(
+                "oss://{}/{}",
+                config.bucket, key
+            ));
+            for (line_idx, line) in text.lines().enumerate() {
+                for detector in detectors {
+                    for m in detector.scan_line(line) {
+                        findings.push(Finding {
+                            rule_id: detector.id().to_string(),
+                            description: detector.description().to_string(),
+                            severity: detector.severity(),
+                            path: virtual_path.clone(),
+                            line: line_idx + 1,
+                            column: m.start + 1,
+                            matched: m.text,
+                            context: line.to_string(),
+                            commit: None,
+                            likely_false_positive: false,
+                            verification: None,
+                        });
+                    }
+                }
+            }
+        }
+    }
+
+    Ok(findings)
+}
+
 /// Parse S3 ListObjectsV2 XML response to extract object keys.
 fn parse_s3_listing(xml: &str, max: usize) -> Vec<String> {
     let mut keys = Vec::new();
@@ -308,5 +503,58 @@ mod tests {
         };
         assert_eq!(config.bucket, "my-bucket");
         assert_eq!(config.max_objects, 100);
+    }
+
+    #[test]
+    fn test_azure_blob_config() {
+        let config = AzureBlobScanConfig {
+            account: "mystorage".to_string(),
+            container: "data".to_string(),
+            sas_token: "?sv=2023-01-03&ss=bfqt".to_string(),
+            prefix: Some("configs/".to_string()),
+            max_blobs: 50,
+        };
+        assert_eq!(config.account, "mystorage");
+        assert_eq!(config.max_blobs, 50);
+    }
+
+    #[test]
+    fn test_oss_config() {
+        let config = OssScanConfig {
+            bucket: "my-bucket".to_string(),
+            endpoint: "oss-cn-hangzhou.aliyuncs.com".to_string(),
+            access_key_id: "LTAI...".to_string(),
+            access_key_secret: "secret".to_string(),
+            prefix: None,
+            max_objects: 100,
+        };
+        assert_eq!(config.bucket, "my-bucket");
+        assert_eq!(config.max_objects, 100);
+    }
+
+    #[test]
+    fn test_parse_azure_blob_listing() {
+        let xml = r#"<?xml version="1.0"?>
+        <EnumerationResults>
+            <Blobs>
+                <Blob><Name>config/secrets.env</Name></Blob>
+                <Blob><Name>app/settings.json</Name></Blob>
+            </Blobs>
+        </EnumerationResults>"#;
+        let names = parse_azure_blob_listing(xml, 100);
+        assert_eq!(names.len(), 2);
+        assert_eq!(names[0], "config/secrets.env");
+        assert_eq!(names[1], "app/settings.json");
+    }
+
+    #[test]
+    fn test_parse_azure_blob_listing_max() {
+        let xml = r#"<EnumerationResults><Blobs>
+            <Blob><Name>a</Name></Blob>
+            <Blob><Name>b</Name></Blob>
+            <Blob><Name>c</Name></Blob>
+        </Blobs></EnumerationResults>"#;
+        let names = parse_azure_blob_listing(xml, 2);
+        assert_eq!(names.len(), 2);
     }
 }

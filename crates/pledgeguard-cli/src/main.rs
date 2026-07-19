@@ -10,7 +10,8 @@ static GLOBAL: tikv_jemallocator::Jemalloc = tikv_jemallocator::Jemalloc;
 use clap::{Parser, ValueEnum};
 use pledgeguard_core::{
     Allowlist, Detector, Finding, Scanner, Severity, VerificationStatus, baseline,
-    detectors::builtin_detectors, load_config, scan_git_history, verify_findings,
+    detectors::builtin_detectors, load_config, scan_git_history,
+    verify_findings, verify_findings_with_options, VerifyOptions,
 };
 use std::io::Read;
 use std::path::PathBuf;
@@ -104,6 +105,21 @@ enum Command {
         #[arg(long)]
         only_verified: bool,
 
+        /// Only verify findings whose rule ID is in this list. May be given
+        /// multiple times. If not set, all verifiable rules are checked.
+        #[arg(long = "verify-detector")]
+        verify_detectors: Vec<String>,
+
+        /// Skip verification for findings whose rule ID is in this list.
+        /// Takes precedence over --verify-detectors.
+        #[arg(long = "no-verify-detector")]
+        no_verify_detectors: Vec<String>,
+
+        /// Enable verification caching to avoid repeated API calls for the
+        /// same secret. Recommended for large scans.
+        #[arg(long)]
+        verify_cache: bool,
+
         /// Timeout in seconds for the scan. Currently informational (no hard enforcement).
         #[arg(long, default_value_t = 300)]
         timeout: u64,
@@ -177,9 +193,74 @@ enum Command {
         #[arg(long)]
         only_verified: bool,
 
+        /// Only verify findings whose rule ID is in this list.
+        #[arg(long = "verify-detector")]
+        verify_detectors: Vec<String>,
+
+        /// Skip verification for findings whose rule ID is in this list.
+        #[arg(long = "no-verify-detector")]
+        no_verify_detectors: Vec<String>,
+
+        /// Enable verification caching.
+        #[arg(long)]
+        verify_cache: bool,
+
         /// Timeout in seconds for the scan.
         #[arg(long, default_value_t = 300)]
         timeout: u64,
+    },
+
+    /// Scan a remote source (Confluence, Slack, Jira, S3, GCS, Azure Blob,
+    /// CircleCI, Travis CI, Jenkins, DroneCI, etc.) for secrets via API.
+    ScanSource {
+        /// Source type to scan.
+        #[arg(long, value_enum)]
+        source: ScanSourceType,
+
+        /// API token or credential for the source.
+        #[arg(long)]
+        token: String,
+
+        /// Additional configuration (e.g., bucket name, project slug, base URL).
+        /// Format varies by source type.
+        #[arg(long)]
+        target: Option<String>,
+
+        /// Secondary target (e.g., container name for Azure Blob, repo slug for Travis).
+        #[arg(long)]
+        target2: Option<String>,
+
+        /// Output format.
+        #[arg(long, value_enum, default_value_t = OutputFormat::Table)]
+        format: OutputFormat,
+
+        /// Minimum severity to report.
+        #[arg(long, value_enum, default_value_t = CliSeverity::Low)]
+        min_severity: CliSeverity,
+
+        /// Do not redact secret values in output.
+        #[arg(long)]
+        no_redact: bool,
+
+        /// Exit with non-zero status if any finding is found.
+        #[arg(long)]
+        fail_on_findings: bool,
+
+        /// Verify findings via provider APIs.
+        #[arg(long)]
+        verify: bool,
+
+        /// Only show verified-active findings.
+        #[arg(long)]
+        only_verified: bool,
+
+        /// Write output to a file.
+        #[arg(long)]
+        report_file: Option<PathBuf>,
+
+        /// Verbose output.
+        #[arg(long)]
+        verbose: bool,
     },
 
     /// Run a Model Context Protocol (MCP) server over stdio, exposing scan
@@ -233,6 +314,26 @@ impl From<CliSeverity> for Severity {
     }
 }
 
+#[derive(Copy, Clone, Debug, ValueEnum)]
+enum ScanSourceType {
+    Confluence,
+    Slack,
+    Jira,
+    Postman,
+    Gerrit,
+    Buildkite,
+    Artifactory,
+    AwsSecretsManager,
+    S3,
+    Gcs,
+    AzureBlob,
+    AlibabaOss,
+    Circleci,
+    TravisCi,
+    Jenkins,
+    Droneci,
+}
+
 fn main() -> ExitCode {
     let cli = Cli::parse();
 
@@ -254,6 +355,9 @@ fn main() -> ExitCode {
             ignore_paths,
             enable_rules,
             only_verified,
+            verify_detectors,
+            no_verify_detectors,
+            verify_cache,
             timeout: _,
         } => {
             if verbose {
@@ -310,6 +414,9 @@ fn main() -> ExitCode {
                     baseline: baseline_path,
                     save_baseline,
                     report_file,
+                    verify_detectors,
+                    no_verify_detectors,
+                    use_verify_cache: verify_cache,
                 },
             )
         }
@@ -329,6 +436,9 @@ fn main() -> ExitCode {
             verbose,
             enable_rules,
             only_verified,
+            verify_detectors,
+            no_verify_detectors,
+            verify_cache,
             timeout: _,
         } => {
             if verbose {
@@ -368,6 +478,205 @@ fn main() -> ExitCode {
                     baseline: baseline_path,
                     save_baseline,
                     report_file,
+                    verify_detectors,
+                    no_verify_detectors,
+                    use_verify_cache: verify_cache,
+                },
+            )
+        }
+        Command::ScanSource {
+            source,
+            token,
+            target,
+            target2,
+            format,
+            min_severity,
+            no_redact,
+            fail_on_findings,
+            verify,
+            only_verified,
+            report_file,
+            verbose,
+        } => {
+            let detectors = builtin_detectors();
+            if verbose {
+                eprintln!("pledgeguard: scanning source {:?}", source);
+            }
+
+            let findings = match source {
+                ScanSourceType::Confluence => {
+                    let config = pledgeguard_core::ConfluenceScanConfig {
+                        base_url: target.unwrap_or_default(),
+                        api_token: token,
+                        email: target2.unwrap_or_default(),
+                        space_key: None,
+                        max_pages: 500,
+                    };
+                    pledgeguard_core::scan_confluence(&config, &detectors).unwrap_or_default()
+                }
+                ScanSourceType::Slack => {
+                    let config = pledgeguard_core::SlackScanConfig {
+                        token,
+                        channel_ids: target.unwrap_or_default().split(',').map(String::from).collect(),
+                        max_messages: 1000,
+                    };
+                    pledgeguard_core::scan_slack(&config, &detectors).unwrap_or_default()
+                }
+                ScanSourceType::Jira => {
+                    let config = pledgeguard_core::JiraScanConfig {
+                        base_url: target.unwrap_or_default(),
+                        api_token: token,
+                        email: target2.unwrap_or_default(),
+                        jql: None,
+                        max_issues: 500,
+                    };
+                    pledgeguard_core::scan_jira(&config, &detectors).unwrap_or_default()
+                }
+                ScanSourceType::Postman => {
+                    let config = pledgeguard_core::PostmanScanConfig {
+                        api_key: token,
+                        collection_id: target,
+                        max_collections: 100,
+                    };
+                    pledgeguard_core::scan_postman(&config, &detectors).unwrap_or_default()
+                }
+                ScanSourceType::Gerrit => {
+                    let config = pledgeguard_core::GerritScanConfig {
+                        base_url: target.unwrap_or_default(),
+                        credentials: Some(token),
+                        project: target2,
+                        max_changes: 200,
+                    };
+                    pledgeguard_core::scan_gerrit(&config, &detectors).unwrap_or_default()
+                }
+                ScanSourceType::Buildkite => {
+                    let config = pledgeguard_core::BuildkiteScanConfig {
+                        api_token: token,
+                        org: target.unwrap_or_default(),
+                        pipeline: target2,
+                        max_builds: 100,
+                    };
+                    pledgeguard_core::scan_buildkite(&config, &detectors).unwrap_or_default()
+                }
+                ScanSourceType::Artifactory => {
+                    let config = pledgeguard_core::ArtifactoryScanConfig {
+                        base_url: target.unwrap_or_default(),
+                        api_key: token,
+                        repo: target2,
+                        max_files: 500,
+                    };
+                    pledgeguard_core::scan_artifactory(&config, &detectors).unwrap_or_default()
+                }
+                ScanSourceType::AwsSecretsManager => {
+                    let parts: Vec<&str> = target.as_deref().unwrap_or("").split(':').collect();
+                    let config = pledgeguard_core::AwsSecretsManagerScanConfig {
+                        region: parts.get(1).unwrap_or(&"us-east-1").to_string(),
+                        access_key_id: parts.first().unwrap_or(&"").to_string(),
+                        secret_access_key: token,
+                        name_prefix: target2,
+                        max_secrets: 100,
+                    };
+                    pledgeguard_core::scan_aws_secrets_manager(&config, &detectors).unwrap_or_default()
+                }
+                ScanSourceType::S3 => {
+                    let config = pledgeguard_core::S3ScanConfig {
+                        bucket: target.unwrap_or_default(),
+                        region: target2.unwrap_or_else(|| "us-east-1".to_string()),
+                        access_key_id: std::env::var("AWS_ACCESS_KEY_ID").unwrap_or_default(),
+                        secret_access_key: token,
+                        prefix: None,
+                        max_objects: 1000,
+                    };
+                    pledgeguard_core::scan_s3_bucket(&config, &detectors).unwrap_or_default()
+                }
+                ScanSourceType::Gcs => {
+                    let config = pledgeguard_core::GcsScanConfig {
+                        bucket: target.unwrap_or_default(),
+                        oauth_token: token,
+                        prefix: None,
+                        max_objects: 1000,
+                    };
+                    pledgeguard_core::scan_gcs_bucket(&config, &detectors).unwrap_or_default()
+                }
+                ScanSourceType::AzureBlob => {
+                    let config = pledgeguard_core::AzureBlobScanConfig {
+                        account: target.unwrap_or_default(),
+                        container: target2.unwrap_or_default(),
+                        sas_token: token,
+                        prefix: None,
+                        max_blobs: 500,
+                    };
+                    pledgeguard_core::scan_azure_blob(&config, &detectors).unwrap_or_default()
+                }
+                ScanSourceType::AlibabaOss => {
+                    let config = pledgeguard_core::OssScanConfig {
+                        bucket: target.unwrap_or_default(),
+                        endpoint: target2.unwrap_or_else(|| "oss-cn-hangzhou.aliyuncs.com".to_string()),
+                        access_key_id: std::env::var("ALIBABA_ACCESS_KEY_ID").unwrap_or_default(),
+                        access_key_secret: token,
+                        prefix: None,
+                        max_objects: 1000,
+                    };
+                    pledgeguard_core::scan_alibaba_oss(&config, &detectors).unwrap_or_default()
+                }
+                ScanSourceType::Circleci => {
+                    let config = pledgeguard_core::CircleCiArtifactsScanConfig {
+                        api_token: token,
+                        project_slug: target.unwrap_or_default(),
+                        max_builds: 30,
+                    };
+                    pledgeguard_core::scan_circleci_artifacts(&config, &detectors).unwrap_or_default()
+                }
+                ScanSourceType::TravisCi => {
+                    let config = pledgeguard_core::TravisCiScanConfig {
+                        api_token: token,
+                        repo_slug: target.unwrap_or_default(),
+                        base_url: None,
+                        max_builds: 50,
+                    };
+                    pledgeguard_core::scan_travis_ci_logs(&config, &detectors).unwrap_or_default()
+                }
+                ScanSourceType::Jenkins => {
+                    let config = pledgeguard_core::JenkinsScanConfig {
+                        base_url: target.unwrap_or_default(),
+                        username: target2.unwrap_or_default(),
+                        api_token: token,
+                        job_name: None,
+                        max_builds: 50,
+                    };
+                    pledgeguard_core::scan_jenkins_logs(&config, &detectors).unwrap_or_default()
+                }
+                ScanSourceType::Droneci => {
+                    let config = pledgeguard_core::DroneCiScanConfig {
+                        base_url: target.unwrap_or_default(),
+                        api_token: token,
+                        repo_slug: target2,
+                        max_builds: 50,
+                    };
+                    pledgeguard_core::scan_droneci_builds(&config, &detectors).unwrap_or_default()
+                }
+            };
+
+            if verbose {
+                eprintln!("pledgeguard: {} raw finding(s)", findings.len());
+            }
+
+            report(
+                findings,
+                ReportOptions {
+                    format,
+                    min_severity: min_severity.into(),
+                    no_redact,
+                    fail_on_findings,
+                    show_all: false,
+                    verify,
+                    only_verified,
+                    baseline: None,
+                    save_baseline: None,
+                    report_file,
+                    verify_detectors: vec![],
+                    no_verify_detectors: vec![],
+                    use_verify_cache: false,
                 },
             )
         }
@@ -413,6 +722,9 @@ struct ReportOptions {
     baseline: Option<PathBuf>,
     save_baseline: Option<PathBuf>,
     report_file: Option<PathBuf>,
+    verify_detectors: Vec<String>,
+    no_verify_detectors: Vec<String>,
+    use_verify_cache: bool,
 }
 
 fn report(findings: Vec<Finding>, opts: ReportOptions) -> ExitCode {
@@ -427,6 +739,9 @@ fn report(findings: Vec<Finding>, opts: ReportOptions) -> ExitCode {
         baseline: baseline_path,
         save_baseline,
         report_file,
+        verify_detectors,
+        no_verify_detectors,
+        use_verify_cache,
     } = opts;
     // Save baseline before any filtering, so it captures everything.
     if let Some(ref bp) = save_baseline {
@@ -486,7 +801,17 @@ fn report(findings: Vec<Finding>, opts: ReportOptions) -> ExitCode {
 
     let verify = verify || only_verified;
     if verify {
-        verify_findings(&mut visible);
+        if verify_detectors.is_empty() && no_verify_detectors.is_empty() && !use_verify_cache {
+            verify_findings(&mut visible);
+        } else {
+            let verify_opts = VerifyOptions {
+                verify_detectors,
+                no_verify_detectors,
+                use_cache: use_verify_cache,
+                rate_limit_aware: true,
+            };
+            verify_findings_with_options(&mut visible, &verify_opts);
+        }
     }
 
     if only_verified {
