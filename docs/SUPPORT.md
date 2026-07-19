@@ -6,7 +6,7 @@ This document lists all detectors, verification providers, output formats, scann
 
 ## Built-in Detectors
 
-PledgeGuard ships with **106 regex-based detectors** covering major cloud providers, SaaS platforms, CI/CD systems, and generic secret patterns. Each detector has a prefilter (Aho-Corasick) for fast scanning and a regex for precise matching.
+PledgeGuard ships with **325 regex-based detectors** covering major cloud providers, SaaS platforms, CI/CD systems, and generic secret patterns. Each detector has a prefilter (Aho-Corasick) for fast scanning and a regex for precise matching.
 
 ### Cloud Providers
 
@@ -88,9 +88,27 @@ PledgeGuard ships with **106 regex-based detectors** covering major cloud provid
 | `slack-webhook` | Slack Incoming Webhook URL | High |
 | `discord-bot-token` | Discord Bot Token | High |
 | `discord-webhook` | Discord Webhook URL | Medium |
+| `discord-client-id` | Discord Client ID (18-digit assignment) | Medium |
+| `discord-client-secret` | Discord Client Secret (32-char assignment) | High |
 | `telegram-bot-token` | Telegram Bot Token | High |
+| `microsoft-teams-webhook` | Microsoft Teams Webhook URL | High |
 | `atlassian-api-token` | Atlassian API Token (Jira/Confluence) | High |
+| `atlassian-jira-token` | Atlassian (Jira) API Token | High |
 | `notion-integration-token` | Notion Integration Token | Medium |
+| `gitter-token` | Gitter Access Token | High |
+| `webex-token` | Webex Access Token | High |
+| `intercom-token` | Intercom Access Token | High |
+| `helpscout-token` | HelpScout API Key | High |
+| `helpcrunch-token` | HelpCrunch Secret Key | High |
+| `canny-token` | Canny.io API Key | High |
+| `pipedrive-token` | Pipedrive API Token | High |
+| `beamer-token` | Beamer API Token | High |
+| `frameio-token` | Frame.io API Token (fio- prefix) | High |
+| `zeplin-token` | Zeplin API Token | High |
+| `trello-api-key` | Trello API Key | High |
+| `asana-client-id` | Asana Client ID | Medium |
+| `asana-client-secret` | Asana Client Secret | High |
+| `asana-pat` | Asana Personal Access Token | High |
 
 ### Payments & E-Commerce
 
@@ -99,6 +117,32 @@ PledgeGuard ships with **106 regex-based detectors** covering major cloud provid
 | `stripe-secret-key` | Stripe Secret Key (sk_live_/sk_test_/rk_live_/rk_test_ prefixes) | Critical |
 | `stripe-publishable-key` | Stripe Publishable Key (pk_live_/pk_test_ prefixes) | Low |
 | `shopify-access-token` | Shopify Access Token (shpat_ prefix) | High |
+| `shopify-shared-secret` | Shopify Shared Secret (shpss_ prefix) | High |
+| `shopify-custom-app-token` | Shopify Custom App Token (shpca_ prefix) | High |
+| `shopify-private-app-token` | Shopify Private App Token (shppa_ prefix) | High |
+| `paypal-oauth-token` | PayPal OAuth Token | High |
+| `paypal-client-secret` | PayPal Client Secret (80-char assignment) | High |
+| `square-token` | Square Access Token (sq0atp- prefix) | High |
+| `square-app-token` | Square Application Secret (sq0csp- prefix) | High |
+| `coinbase-access-token` | Coinbase Access Token | High |
+| `razorpay-key` | RazorPay API Key (rzp_ prefix) | High |
+| `paystack-token` | Paystack Secret Key (sk_live_/sk_test_ prefix) | High |
+| `plaid-token` | Plaid Access Token (access-sandbox/production/development- prefix) | High |
+| `plaid-key` | Plaid API Key / Client ID | Medium |
+| `flutterwave-secret-key` | Flutterwave Secret Key (FLWSECK- prefix) | High |
+| `flutterwave-encryption-key` | Flutterwave Encryption Key (FLWSECK_TEST- prefix) | High |
+| `paddle-token` | Paddle API Key | High |
+| `fastspring-token` | FastSpring API Key | High |
+| `sellfy-token` | Sellfy API Key | High |
+| `duffel-token` | Duffel API Token (duffel_ prefix) | High |
+| `easypost-api-token` | EasyPost API Token (EZ prefix) | High |
+| `easypost-test-api-token` | EasyPost Test API Token (EZTK prefix) | Medium |
+| `finicity-api-token` | Finicity API Token | High |
+| `finicity-client-secret` | Finicity Client Secret | High |
+| `freshbooks-token` | Freshbooks Access Token | High |
+| `gocardless-token` | GoCardless API Token | High |
+| `taxjar-api-key` | Taxjar API Key | High |
+| `etsy-api-key` | Etsy API Key | Medium |
 
 ### AI/ML Providers
 
@@ -106,7 +150,21 @@ PledgeGuard ships with **106 regex-based detectors** covering major cloud provid
 |---|---|---|
 | `openai-api-key` | OpenAI API Key (sk- prefix, 48 chars) | Critical |
 | `anthropic-api-key` | Anthropic API Key (sk-ant- prefix) | Critical |
+| `anthropic-admin-key` | Anthropic Admin API Key (sk-ant-admin prefix) | Critical |
 | `huggingface-token` | HuggingFace Access Token (hf_ prefix) | High |
+| `google-gemini-key` | Google Gemini / PaLM API Key (AIza prefix) | High |
+| `cohere-api-key` | Cohere API Key | High |
+| `replicate-api-token` | Replicate API Token (r8_ prefix) | High |
+| `stability-ai-key` | Stability AI API Key | High |
+| `assemblyai-key` | AssemblyAI API Key | High |
+| `clarifai-key` | Clarifai API Key | High |
+| `openrouter-key` | OpenRouter API Key (sk-or- prefix) | High |
+| `together-ai-key` | Together AI API Key | High |
+| `perplexity-api-key` | Perplexity API Key (pplx- prefix) | High |
+| `mistral-api-key` | Mistral API Key | High |
+| `groq-api-key` | Groq API Key (gsk_ prefix) | High |
+| `deepseek-api-key` | DeepSeek API Key | High |
+| `elevenlabs-api-key` | ElevenLabs API Key | High |
 
 ### Email & Messaging
 
@@ -115,22 +173,94 @@ PledgeGuard ships with **106 regex-based detectors** covering major cloud provid
 | `sendgrid-api-key` | SendGrid API Key (SG. prefix) | High |
 | `mailgun-api-key` | Mailgun API Key (key- prefix) | High |
 | `mailchimp-api-key` | Mailchimp API Key (hex-us## format) | High |
+| `postmark-token` | Postmark Server Token (po_ prefix) | High |
+| `mailjet-basic-auth` | Mailjet Basic Auth Token (MJ prefix) | High |
+| `mailjet-sms-token` | Mailjet SMS Token | High |
+| `brevo-token` | SendinBlue / Brevo API Key (xkeysib- prefix) | High |
+| `elastic-email-key` | Elastic Email API Key | High |
+| `pepipost-token` | Pepipost API Token | High |
+| `mailmodo-token` | Mailmodo API Key | High |
+| `verimail-token` | Verimail API Token | High |
+| `zerobounce-token` | ZeroBounce API Key | High |
+| `mailboxlayer-token` | Mailboxlayer Access Key | High |
+| `d7network-token` | D7Networks API Token | High |
+| `sinch-message-token` | Sinch Message Token | High |
+| `messagebird-token` | MessageBird API Key | High |
+| `vonage-api-key` | Vonage / Nexmo API Key | High |
+| `plivo-token` | Plivo Auth Token | High |
+| `postman-api-key` | Postman API Key (PMAK- prefix) | High |
+| `pubnub-key` | PubNub Publish/Subscription Key | High |
+| `pusher-key` | Pusher Channel Key | High |
+| `pushbullet-api-key` | PushBullet API Key | High |
+| `doppler-token` | Doppler API Token (dp.pt. prefix) | High |
 
 ### Monitoring & Observability
 
 | Rule ID | Description | Severity |
 |---|---|---|
 | `datadog-api-key` | Datadog API Key | High |
+| `datadog-access-token` | Datadog Access Token (dt0 format) | High |
 | `new-relic-license-key` | New Relic License Key | High |
+| `new-relic-personal-api-key` | New Relic Personal API Key (NRAK prefix) | High |
 | `pagerduty-api-key` | PagerDuty API Key | High |
 | `opsgenie-api-key` | Opsgenie API Key | High |
+| `sentry-token` | Sentry Auth Token (sntrys_ prefix) | High |
+| `sumologic-key` | SumoLogic Access Key | High |
+| `splunk-observability-token` | Splunk Observability Access Token (SPL prefix) | High |
+| `appoptics-token` | AppOptics / SolarWinds Token | High |
+| `airbrake-key` | Airbrake Project / User Key | High |
+| `logdna-key` | LogDNA Ingestion Key | High |
+| `loggly-token` | Loggly Customer Token | High |
+| `better-stack-key` | Better Stack / Better Uptime API Key | High |
+| `statuspage-api-key` | Statuspage API Key | High |
+| `uptimerobot-api-key` | UptimeRobot API Key | High |
+| `pingdom-token` | Pingdom API Token | High |
+
+### Analytics & Product
+
+| Rule ID | Description | Severity |
+|---|---|---|
+| `posthog-api-key` | PostHog API Key (phc_ prefix) | High |
+| `amplitude-api-key` | Amplitude API Key | High |
+| `segment-api-key` | Segment API Key | High |
+| `mixpanel-token` | Mixpanel Project Token | High |
+| `heap-api-key` | Heap Analytics API Key | High |
+| `pendo-integration-key` | Pendo Integration Key | High |
+| `keenio-key` | Keen.io API Key | High |
+| `fathom-analytics-key` | Fathom Analytics API Key | High |
+| `plausible-analytics-key` | Plausible Analytics API Key | High |
+| `hotjar-token` | Hotjar API Token | High |
+| `fullstory-token` | FullStory API Token | High |
+| `bitly-access-token` | Bitly Access Token | High |
+| `calendly-api-key` | Calendly API Key | High |
+| `calendarific-token` | Calendarific API Token | High |
+| `appfollow-token` | AppFollow API Token | High |
+| `appcues-token` | Appcues API Token | High |
 
 ### Auth & Identity
 
 | Rule ID | Description | Severity |
 |---|---|---|
 | `auth0-api-token` | Auth0 API Token | High |
+| `auth0-management-token` | Auth0 Management API Token | High |
+| `auth0-oauth-token` | Auth0 OAuth Token | High |
 | `okta-api-token` | Okta API Token | High |
+| `onelogin-token` | OneLogin API Token | High |
+| `jumpcloud-token` | JumpCloud API Token | High |
+| `authress-service-client-key` | Authress Service Client Key (sc_ prefix) | High |
+| `keycloak-token` | Keycloak Token | High |
+| `fusionauth-token` | FusionAuth API Token | High |
+| `stytch-token` | Stytch API Token | High |
+| `clerk-token` | Clerk API Token (sk_ prefix) | High |
+| `workos-token` | WorkOS API Token | High |
+| `supabase-service-key` | Supabase Service Key (sbp_ prefix) | High |
+| `supabase-anon-key` | Supabase Anon Key (eyJ JWT format) | Medium |
+| `firebase-token` | Firebase Auth Token | High |
+| `firebase-fcm-key` | Firebase Cloud Messaging Server Key (AAAA prefix) | High |
+| `kubeconfig` | KubeConfig with Client Key Data | High |
+| `hashicorp-vault-token` | HashiCorp Vault Token (hvs./hvb./s. prefix) | High |
+| `onepassword-secret-key` | 1Password Secret Key (a3- format) | High |
+| `onepassword-service-account-token` | 1Password Service Account Token (ops_ prefix) | High |
 
 ### Hosting & Backend
 
@@ -141,18 +271,44 @@ PledgeGuard ships with **106 regex-based detectors** covering major cloud provid
 | `supabase-service-key` | Supabase Service Key (sbp_ prefix) | High |
 | `cloudflare-api-key` | Cloudflare API Key | High |
 | `cloudflare-api-token` | Cloudflare API Token | High |
+| `wpengine-token` | WP Engine API Token | High |
+| `fastly-api-key` | Fastly API Key | High |
+| `akamai-token` | Akamai API Token | High |
+| `equinix-oauth-token` | Equinix OAuth Token | High |
+| `flyio-token` | Fly.io API Token | High |
+| `railway-token` | Railway API Token | High |
+| `render-token` | Render API Token (rnd_ prefix) | High |
+| `koyeb-token` | Koyeb API Token | High |
 
 ### Social & Developer Platforms
 
 | Rule ID | Description | Severity |
 |---|---|---|
 | `twitch-client-secret` | Twitch Client Secret | High |
+| `twitch-access-token` | Twitch Access Token | High |
 | `twitter-bearer-token` | Twitter/X Bearer Token | High |
 | `facebook-app-secret` | Facebook App Secret | High |
+| `facebook-access-token` | Facebook Access Token (EAAD prefix) | High |
+| `facebook-oauth-token` | Facebook OAuth Token | High |
 | `linkedin-client-secret` | LinkedIn Client Secret | High |
 | `linear-api-key` | Linear API Key (lin_api_ prefix) | High |
 | `figma-token` | Figma Access Token | Medium |
+| `figma-personal-access-token` | Figma Personal Access Token (figd_ prefix) | High |
 | `npm-token` | npm Access Token (npm_ prefix) | High |
+| `pypi-token` | PyPI Token (pypi-AgEI prefix) | High |
+| `spotify-key` | Spotify API Key | High |
+| `youtube-api-key` | YouTube API Key (AIza prefix) | High |
+| `flickr-access-token` | Flickr Access Token | High |
+| `dropbox-api-secret` | Dropbox API Secret | High |
+| `dropbox-long-lived-token` | Dropbox Long-Lived Token (sl. prefix) | High |
+| `dropbox-short-lived-token` | Dropbox Short-Lived Token (sl. prefix) | High |
+| `reddit-client-secret` | Reddit Client Secret | High |
+| `reddit-access-token` | Reddit Access Token | High |
+| `instagram-access-token` | Instagram Access Token (IG prefix) | High |
+| `pinterest-token` | Pinterest API Token | High |
+| `tiktok-access-token` | TikTok Access Token | High |
+| `zoom-api-secret` | Zoom API Key/Secret | High |
+| `zapier-webhook-url` | Zapier Webhook URL | High |
 
 ### Database Connection Strings
 
@@ -162,6 +318,100 @@ PledgeGuard ships with **106 regex-based detectors** covering major cloud provid
 | `mysql-connection-string` | MySQL connection string with embedded credentials | High |
 | `mongodb-connection-string` | MongoDB connection string with embedded credentials | High |
 | `redis-connection-string` | Redis connection string with embedded credentials | High |
+| `jdbc-connection-string` | JDBC connection string (MySQL/PostgreSQL/SQL Server) | High |
+| `sqlserver-connection-string` | SQL Server connection string with password | High |
+| `elasticsearch-connection` | Elasticsearch connection with credentials | High |
+| `influxdb-token` | InfluxDB API Token | High |
+| `couchbase-connection-string` | Couchbase connection string with credentials | High |
+| `cassandra-connection` | Cassandra connection with credentials | High |
+| `neo4j-connection-string` | Neo4j connection string with credentials | High |
+| `supabase-db-connection` | Supabase DB connection string | High |
+| `planetscale-token` | PlanetScale API Token (pscale_ prefix) | High |
+| `neon-database-token` | Neon Database API Token | High |
+| `turso-token` | Turso Database API Token | High |
+| `convex-token` | Convex Database Token | High |
+
+### DevOps & Infrastructure
+
+| Rule ID | Description | Severity |
+|---|---|---|
+| `age-secret-key` | Age Encryption Secret Key (AGE-SECRET-KEY-1 prefix) | High |
+| `kubernetes-secret-manifest` | Kubernetes Secret Manifest with base64 data | High |
+| `hashicorp-terraform-token` | HashiCorp Terraform Cloud Token | High |
+| `ansible-vault-password` | Ansible Vault Password | High |
+| `docker-registry-token` | Docker Registry Token | High |
+| `harbor-token` | Harbor Registry API Token | High |
+| `nexus-token` | Nexus Repository Token | High |
+| `confluent-access-token` | Confluent Cloud Access Token | High |
+| `confluent-secret-key` | Confluent Cloud Secret Key | High |
+| `databricks-token` | Databricks API Token (dapi prefix) | High |
+| `snowflake-token` | Snowflake API Token | High |
+| `dynatrace-api-token` | Dynatrace API Token (dt0c01 prefix) | High |
+| `launchdarkly-key` | LaunchDarkly API Key | High |
+| `configcat-key` | ConfigCat API Key | High |
+| `flagsmith-key` | Flagsmith API Key | High |
+
+### Security & API Services
+
+| Rule ID | Description | Severity |
+|---|---|---|
+| `shodan-api-key` | Shodan API Key | High |
+| `abuseipdb-key` | AbuseIPDB API Key | High |
+| `alienvault-otx-key` | AlienVault OTX API Key | High |
+| `virustotal-api-key` | VirusTotal API Key | High |
+| `hunterio-api-key` | Hunter.io API Key | High |
+| `ipstack-key` | IPStack API Key | High |
+| `maxmind-license-key` | MaxMind License Key | High |
+| `cloudsight-key` | CloudSight API Key | High |
+| `rapidapi-key` | RapidAPI Key | High |
+| `scrapingbee-key` | ScrapingBee API Key | High |
+| `ipinfo-token` | ipinfo.io API Token | High |
+
+### Maps & Location
+
+| Rule ID | Description | Severity |
+|---|---|---|
+| `google-maps-api-key` | Google Maps API Key (AIza prefix) | High |
+| `mapbox-token` | MapBox Access Token (pk. prefix) | High |
+| `mapquest-key` | MapQuest API Key | High |
+| `here-maps-key` | Here Maps API Key | High |
+| `opencage-key` | OpenCage Geocoder API Key | High |
+
+### CRM & Business
+
+| Rule ID | Description | Severity |
+|---|---|---|
+| `hubspot-api-key` | HubSpot API Key | High |
+| `hubspot-oauth-token` | HubSpot OAuth Token | High |
+| `salesforce-oauth2-token` | Salesforce OAuth2 Token | High |
+| `zendesk-api-token` | Zendesk API Token | High |
+| `elastic-path-token` | Elastic Path API Token | High |
+| `buttercms-token` | ButterCMS API Token | High |
+| `contentful-delivery-token` | Contentful Delivery API Token | High |
+| `contentful-personal-access-token` | Contentful Personal Access Token (CFPAT- prefix) | High |
+| `sanity-api-token` | Sanity API Token | High |
+| `storyblok-token` | Storyblok API Token | High |
+| `strapi-api-token` | Strapi API Token | High |
+| `airtable-api-key` | Airtable API Key (deprecated, key prefix) | High |
+| `airtable-personal-access-token` | Airtable Personal Access Token (pat prefix) | High |
+| `airtable-oauth-token` | Airtable OAuth Token | High |
+| `algolia-admin-key` | Algolia Admin API Key | High |
+| `lokalise-token` | Lokalise API Token | High |
+
+### Crypto & Web3
+
+| Rule ID | Description | Severity |
+|---|---|---|
+| `bitcoin-private-key-wif` | Bitcoin Private Key (WIF format) | Critical |
+| `ethereum-private-key` | Ethereum Private Key (0x + 64 hex) | Critical |
+| `solana-private-key` | Solana Private Key (base58 88-char) | Critical |
+| `infura-api-key` | Infura API Key | High |
+| `alchemy-api-key` | Alchemy API Key | High |
+| `moralis-api-key` | Moralis API Key | High |
+| `quicknode-token` | QuickNode API Token | High |
+| `bitfinex-api-key` | Bitfinex API Key | High |
+| `bittrex-access-key` | Bittrex Access Key | High |
+| `bittrex-secret-key` | Bittrex Secret Key | High |
 
 ### Cryptographic Keys & Tokens
 

@@ -9,7 +9,7 @@ Rust-native secret scanner — a TruffleHog/Gitleaks alternative.
 ## Status
 
 **v0.2.0 — comprehensive feature set.** PledgeGuard is a working secret
-scanner with 106 built-in detectors, 34 live verification providers, git history
+scanner with 325 built-in detectors, 34 live verification providers, git history
 scanning, WASM plugins, MCP server, 6 output formats (Table/JSON/SARIF/CSV/JUnit/Template),
 baseline/allowlist mode, pre-commit hook installer, AST-based false-positive
 refinement for JS/TS, custom TOML rules with entropy/allowlists/path filters,
@@ -88,19 +88,56 @@ to be inside a git working tree.
 
 ## Built-in detectors
 
-106 detectors covering AWS (Access Key, Secret, Session Token, MWS, Bedrock,
+325 detectors covering AWS (Access Key, Secret, Session Token, MWS, Bedrock,
 Account ID), Azure (Storage, SAS, Client Secret, AD/Entra ID, Batch, Function,
-DevOps PAT, Cosmos DB), Google Cloud (API Key, OAuth, Service Account, Client ID),
-Alibaba, Tencent, DigitalOcean, IBM Cloud, Oracle Cloud, Scaleway, Vultr, Linode,
-Cloudflare (API Key, Token, CA Key, Global),
+DevOps PAT, Cosmos DB), Google Cloud (API Key, OAuth, Service Account, Client ID,
+Gemini/PaLM), Alibaba, Tencent, DigitalOcean, IBM Cloud, Oracle Cloud, Scaleway,
+Vultr, Linode, Cloudflare (API Key, Token, CA Key, Global),
 GitHub, GitLab, Bitbucket (App Password, Client ID/Secret, DataCenter), Slack,
-Discord, Telegram, Stripe, Shopify, OpenAI, Anthropic, HuggingFace, SendGrid,
-Mailgun, Mailchimp, Datadog, New Relic, PagerDuty, Opsgenie, Auth0, Okta, Vercel,
-Netlify, Supabase, CircleCI, Heroku, Travis CI, DroneCI, Buildkite, TeamCity,
-Jenkins, GoCD, ArgoCD, Spinnaker, Harness, Codecov, SonarQube, Snyk, Artifactory,
-Terraform Cloud, Pivotal Tracker, Clojars, Atlassian, Notion, Linear, Figma,
-Twitch, Twitter/X, Facebook, LinkedIn, npm, PEM private keys, JWTs,
-PostgreSQL/MySQL/MongoDB/Redis connection strings, and generic entropy-based detection.
+Discord (Bot Token, Webhook, Client ID/Secret), Telegram, Microsoft Teams,
+Atlassian (API Token, Jira), Notion, Gitter, Webex, Intercom, HelpScout,
+HelpCrunch, Canny, Pipedrive, Beamer, Frame.io, Zeplin, Trello, Asana
+(Client ID/Secret, PAT),
+Stripe (Secret, Publishable, Restricted), Shopify (Access, Shared Secret,
+Custom/Private App), PayPal (OAuth, Client Secret), Square (Token, App Secret),
+Coinbase, RazorPay, Paystack, Plaid (Token, Key), Flutterwave (Secret, Encryption),
+Paddle, FastSpring, Sellfy, Duffel, EasyPost (API, Test), Finicity (Token, Secret),
+Freshbooks, GoCardless, Taxjar, Etsy, PostHog, Amplitude, Segment, Mixpanel, Heap,
+Pendo, Keen.io, Fathom, Plausible, Hotjar, FullStory, Bitly, Calendly,
+Calendarific, AppFollow, Appcues, Mailchimp, OpenAI, Anthropic (API, Admin),
+HuggingFace, Cohere, Replicate, Stability AI, AssemblyAI, Clarifai, OpenRouter,
+Together AI, Perplexity, Mistral, Groq, DeepSeek, ElevenLabs, SendGrid, Mailgun,
+Postmark, Mailjet (Basic, SMS), Brevo/SendinBlue, Elastic Email, Pepipost,
+Mailmodo, Verimail, ZeroBounce, Mailboxlayer, D7Networks, Sinch, MessageBird,
+Vonage/Nexmo, Plivo, Postman, PubNub, Pusher, PushBullet, Doppler, Datadog
+(API Key, Access Token), New Relic (License, Personal API Key), PagerDuty,
+Opsgenie, Sentry, SumoLogic, Splunk Observability, AppOptics, Airbrake, LogDNA,
+Loggly, Better Stack, Statuspage, UptimeRobot, Pingdom, Auth0 (API, Management,
+OAuth), Okta, OneLogin, JumpCloud, Authress, Keycloak, FusionAuth, Stytch, Clerk,
+WorkOS, Supabase (Service Key, Anon Key), Firebase (Token, FCM), KubeConfig,
+HashiCorp Vault, 1Password (Secret Key, Service Account), Vercel, Netlify, Heroku,
+WP Engine, Fastly, Akamai, Equinix, Fly.io, Railway, Render, Koyeb, Twitch
+(Client Secret, Access Token), Twitter/X, Facebook (App Secret, Access Token,
+OAuth), LinkedIn, Linear, Figma (Token, PAT), npm, PyPI, Docker Hub, Spotify,
+YouTube, Flickr, Dropbox (API Secret, Long/Short-Lived Token), Reddit (Client
+Secret, Access Token), Instagram, Pinterest, TikTok, Zoom, Zapier Webhook,
+PostgreSQL, MySQL, MongoDB, Redis, JDBC, SQL Server, Elasticsearch, InfluxDB,
+Couchbase, Cassandra, Neo4j, Supabase DB, PlanetScale, Neon, Turso, Convex,
+Age Secret Key, Kubernetes Secret Manifest, Terraform Cloud, Ansible Vault,
+Docker Registry, Harbor, Nexus, Confluent (Access Token, Secret Key), Databricks,
+Snowflake, Dynatrace, LaunchDarkly, ConfigCat, Flagsmith, Shodan, AbuseIPDB,
+AlienVault OTX, VirusTotal, Hunter.io, IPStack, MaxMind, CloudSight, RapidAPI,
+ScrapingBee, ipinfo.io, Google Maps, MapBox, MapQuest, Here Maps, OpenCage,
+HubSpot (API Key, OAuth), Salesforce OAuth2, Zendesk, Elastic Path, ButterCMS,
+Contentful (Delivery, PAT), Sanity, Storyblok, Strapi, Airtable (API Key, PAT,
+OAuth), Algolia Admin, Lokalise, Bitcoin (WIF), Ethereum, Solana, Infura, Alchemy,
+Moralis, QuickNode, Bitfinex, Bittrex (Access, Secret),
+Auth0, Okta, Vercel, Netlify, Supabase, CircleCI, Heroku, Travis CI, DroneCI,
+Buildkite, TeamCity, Jenkins, GoCD, ArgoCD, Spinnaker, Harness, Codecov,
+SonarQube, Snyk, Artifactory, Terraform Cloud, Pivotal Tracker, Clojars, Linear,
+Figma, Twitch, Twitter/X, Facebook, LinkedIn, npm, PEM private keys, JWTs,
+PostgreSQL/MySQL/MongoDB/Redis connection strings, and generic entropy-based
+detection.
 
 See **[SUPPORT.md](docs/SUPPORT.md)** for the complete list.
 

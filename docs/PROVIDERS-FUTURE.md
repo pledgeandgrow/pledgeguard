@@ -113,27 +113,27 @@ This document lists all secret providers that PledgeGuard **could** support in t
 | Slack Webhook URL | **Supported** | Future | TruffleHog verifies by sending malformed JSON |
 | Discord Bot Token | **Supported** | **Supported** | |
 | Discord Webhook URL | **Supported** | Future | |
-| Discord Client ID | Future | Future | Gitleaks detects |
-| Discord Client Secret | Future | Future | Gitleaks detects |
+| Discord Client ID | **Supported** | Future | 18-digit assignment |
+| Discord Client Secret | **Supported** | Future | 32-char assignment |
 | Telegram Bot Token | **Supported** | **Supported** | |
-| Microsoft Teams Webhook | Future | Future | TruffleHog supports |
+| Microsoft Teams Webhook | **Supported** | Future | webhook.office.com URL |
 | Atlassian API Token | **Supported** | **Supported** | |
-| Atlassian (Jira) Token | Future | Future | TruffleHog has Jira-specific detector |
+| Atlassian (Jira) Token | **Supported** | Future | Jira-specific API token |
 | Notion Integration Token | **Supported** | **Supported** | |
-| Gitter Access Token | Future | Future | Gitleaks detects |
-| Webex Token | Future | Future | TruffleHog supports |
-| Intercom Token | Future | Future | TruffleHog supports |
-| HelpScout Token | Future | Future | TruffleHog supports |
-| HelpCrunch Token | Future | Future | TruffleHog supports |
-| Canny.io Token | Future | Future | TruffleHog supports |
-| Pipedrive Token | Future | Future | TruffleHog supports |
-| Beamer API Token | Future | Future | Gitleaks detects |
-| Frame.io API Token | Future | Future | Gitleaks detects |
-| Zeplin Token | Future | Future | TruffleHog supports |
-| Trello API Key | Future | Future | TruffleHog supports |
-| Asana Client ID | Future | Future | Gitleaks detects |
-| Asana Client Secret | Future | Future | Gitleaks detects |
-| Asana Personal Access Token | Future | Future | TruffleHog supports |
+| Gitter Access Token | **Supported** | Future | 40-char assignment |
+| Webex Token | **Supported** | Future | |
+| Intercom Token | **Supported** | Future | |
+| HelpScout Token | **Supported** | Future | |
+| HelpCrunch Token | **Supported** | Future | |
+| Canny.io Token | **Supported** | Future | |
+| Pipedrive Token | **Supported** | Future | 40-char assignment |
+| Beamer API Token | **Supported** | Future | |
+| Frame.io API Token | **Supported** | Future | fio- prefix |
+| Zeplin Token | **Supported** | Future | |
+| Trello API Key | **Supported** | Future | 32-char assignment |
+| Asana Client ID | **Supported** | Future | |
+| Asana Client Secret | **Supported** | Future | |
+| Asana Personal Access Token | **Supported** | Future | |
 
 ---
 
@@ -145,33 +145,33 @@ This document lists all secret providers that PledgeGuard **could** support in t
 | Stripe Publishable Key | **Supported** | Future | Publishable keys are not secret |
 | Stripe Restricted Key (rk_) | **Supported** | **Supported** | |
 | Shopify Access Token (shpat_) | **Supported** | **Supported** | |
-| Shopify Shared Secret (shpss_) | Future | Future | Gitleaks detects |
-| Shopify Custom App Token (shpca_) | Future | Future | Gitleaks detects |
-| Shopify Private App Token (shppa_) | Future | Future | Gitleaks detects |
-| PayPal OAuth Token | Future | Future | TruffleHog supports |
-| PayPal Client Secret | Future | Future | |
-| Square Token | Future | Future | TruffleHog supports |
-| Square App Token | Future | Future | TruffleHog supports |
-| Coinbase Access Token | Future | Future | TruffleHog + Gitleaks |
-| RazorPay Key | Future | Future | TruffleHog supports |
-| Paystack Token | Future | Future | TruffleHog supports |
-| Plaid Token | Future | Future | TruffleHog supports |
-| Plaid Key | Future | Future | TruffleHog supports |
-| Flutterwave Secret Key | Future | Future | Gitleaks detects |
-| Flutterwave Encryption Key | Future | Future | Gitleaks detects |
-| Paddle Token | Future | Future | TruffleHog supports |
-| FastSpring Token | Future | Future | TruffleHog supports |
-| Sellfy Token | Future | Future | TruffleHog supports |
-| Duffel API Token | Future | Future | Gitleaks detects |
-| EasyPost API Token | Future | Future | Gitleaks detects |
-| EasyPost Test API Token | Future | Future | Gitleaks detects |
-| Finicity API Token | Future | Future | Gitleaks detects |
-| Finicity Client Secret | Future | Future | Gitleaks detects |
-| Freshbooks Access Token | Future | Future | Gitleaks detects |
-| GoCardless API Token | Future | Future | Gitleaks detects |
-| Taxjar API Key | Future | Future | TruffleHog supports |
-| Etsy API Key | Future | Future | TruffleHog supports (deprecated) |
-| Amazon MWS Token | Future | Future | TruffleHog + Gitleaks |
+| Shopify Shared Secret (shpss_) | **Supported** | Future | |
+| Shopify Custom App Token (shpca_) | **Supported** | Future | |
+| Shopify Private App Token (shppa_) | **Supported** | Future | |
+| PayPal OAuth Token | **Supported** | Future | |
+| PayPal Client Secret | **Supported** | Future | 80-char assignment |
+| Square Token | **Supported** | Future | sq0atp- prefix |
+| Square App Token | **Supported** | Future | sq0csp- prefix |
+| Coinbase Access Token | **Supported** | Future | |
+| RazorPay Key | **Supported** | Future | rzp_ prefix |
+| Paystack Token | **Supported** | Future | sk_live_/sk_test_ prefix |
+| Plaid Token | **Supported** | Future | access-sandbox/production/development- prefix |
+| Plaid Key | **Supported** | Future | Client ID assignment |
+| Flutterwave Secret Key | **Supported** | Future | FLWSECK- prefix |
+| Flutterwave Encryption Key | **Supported** | Future | FLWSECK_TEST- prefix |
+| Paddle Token | **Supported** | Future | |
+| FastSpring Token | **Supported** | Future | |
+| Sellfy Token | **Supported** | Future | |
+| Duffel API Token | **Supported** | Future | duffel_ prefix |
+| EasyPost API Token | **Supported** | Future | EZ prefix |
+| EasyPost Test API Token | **Supported** | Future | EZTK prefix |
+| Finicity API Token | **Supported** | Future | |
+| Finicity Client Secret | **Supported** | Future | |
+| Freshbooks Access Token | **Supported** | Future | |
+| GoCardless API Token | **Supported** | Future | |
+| Taxjar API Key | **Supported** | Future | |
+| Etsy API Key | **Supported** | Future | Deprecated |
+| Amazon MWS Token | **Supported** | Future | Already covered by aws-mws-auth-token |
 
 ---
 
@@ -181,21 +181,21 @@ This document lists all secret providers that PledgeGuard **could** support in t
 |---|---|---|---|
 | OpenAI API Key (sk-) | **Supported** | **Supported** | |
 | Anthropic API Key (sk-ant-) | **Supported** | **Supported** | |
-| Anthropic Admin API Key | Future | Future | Gitleaks detects admin variant |
+| Anthropic Admin API Key | **Supported** | Future | sk-ant-admin prefix |
 | HuggingFace Token (hf_) | **Supported** | **Supported** | |
-| Google Gemini / PaLM Key | Future | Future | |
-| Cohere API Key | Future | Future | |
-| Replicate API Token | Future | Future | |
-| Stability AI Key | Future | Future | |
-| AssemblyAI Key | Future | Future | TruffleHog supports |
-| Clarifai Key | Future | Future | TruffleHog supports |
-| OpenRouter Key | Future | Future | |
-| Together AI Key | Future | Future | |
-| Perplexity API Key | Future | Future | |
-| Mistral API Key | Future | Future | |
-| Groq API Key | Future | Future | |
-| DeepSeek API Key | Future | Future | |
-| ElevenLabs API Key | Future | Future | |
+| Google Gemini / PaLM Key | **Supported** | Future | AIza prefix |
+| Cohere API Key | **Supported** | Future | |
+| Replicate API Token | **Supported** | Future | r8_ prefix |
+| Stability AI Key | **Supported** | Future | |
+| AssemblyAI Key | **Supported** | Future | |
+| Clarifai Key | **Supported** | Future | |
+| OpenRouter Key | **Supported** | Future | sk-or- prefix |
+| Together AI Key | **Supported** | Future | |
+| Perplexity API Key | **Supported** | Future | pplx- prefix |
+| Mistral API Key | **Supported** | Future | |
+| Groq API Key | **Supported** | Future | gsk_ prefix |
+| DeepSeek API Key | **Supported** | Future | |
+| ElevenLabs API Key | **Supported** | Future | |
 
 ---
 
@@ -206,26 +206,26 @@ This document lists all secret providers that PledgeGuard **could** support in t
 | SendGrid API Key (SG.) | **Supported** | **Supported** | |
 | Mailgun API Key (key-) | **Supported** | **Supported** | |
 | Mailchimp API Key | **Supported** | **Supported** | |
-| Postmark Token | Future | Future | TruffleHog supports |
-| MailJet Basic Auth | Future | Future | TruffleHog supports |
-| MailJet SMS | Future | Future | TruffleHog supports |
-| SendinBlue / Brevo Token | Future | Future | TruffleHog supports |
-| Elastic Email Key | Future | Future | TruffleHog supports |
-| Pepipost Token | Future | Future | TruffleHog supports |
-| Mailmodo Token | Future | Future | TruffleHog supports |
-| Verimail Token | Future | Future | TruffleHog supports |
-| ZeroBounce Token | Future | Future | TruffleHog supports |
-| Mailboxlayer Token | Future | Future | TruffleHog supports |
-| D7Network Token | Future | Future | TruffleHog supports |
-| Sinch Message Token | Future | Future | TruffleHog supports |
-| MessageBird Token | Future | Future | TruffleHog supports |
-| Vonage/Nexmo API Key | Future | Future | TruffleHog supports |
-| Plivo Token | Future | Future | TruffleHog supports |
-| Postman API Key | Future | Future | TruffleHog supports |
-| PubNub Publish/Subscription Key | Future | Future | TruffleHog supports |
-| Pusher Channel Key | Future | Future | TruffleHog supports |
-| PushBullet API Key | Future | Future | TruffleHog supports |
-| Doppler API Token | Future | Future | Gitleaks detects |
+| Postmark Token | **Supported** | Future | po_ prefix |
+| MailJet Basic Auth | **Supported** | Future | MJ prefix |
+| MailJet SMS | **Supported** | Future | |
+| SendinBlue / Brevo Token | **Supported** | Future | xkeysib- prefix |
+| Elastic Email Key | **Supported** | Future | |
+| Pepipost Token | **Supported** | Future | |
+| Mailmodo Token | **Supported** | Future | |
+| Verimail Token | **Supported** | Future | |
+| ZeroBounce Token | **Supported** | Future | |
+| Mailboxlayer Token | **Supported** | Future | |
+| D7Network Token | **Supported** | Future | |
+| Sinch Message Token | **Supported** | Future | |
+| MessageBird Token | **Supported** | Future | |
+| Vonage/Nexmo API Key | **Supported** | Future | |
+| Plivo Token | **Supported** | Future | |
+| Postman API Key | **Supported** | Future | PMAK- prefix |
+| PubNub Publish/Subscription Key | **Supported** | Future | sub-c- prefix |
+| Pusher Channel Key | **Supported** | Future | |
+| PushBullet API Key | **Supported** | Future | |
+| Doppler API Token | **Supported** | Future | dp.pt. prefix |
 
 ---
 
@@ -234,22 +234,22 @@ This document lists all secret providers that PledgeGuard **could** support in t
 | Provider / Token Type | Detector | Verifier | Notes |
 |---|---|---|---|
 | Datadog API Key | **Supported** | **Supported** | |
-| Datadog Access Token (dt0) | Future | Future | Gitleaks detects different format |
+| Datadog Access Token (dt0) | **Supported** | Future | dt0 format |
 | New Relic License Key | **Supported** | **Supported** | |
-| New Relic Personal API Key | Future | Future | TruffleHog supports |
+| New Relic Personal API Key | **Supported** | Future | NRAK prefix |
 | PagerDuty API Key | **Supported** | **Supported** | |
 | Opsgenie API Key | **Supported** | **Supported** | |
-| Sentry Token | Future | Future | TruffleHog supports |
-| SumoLogic Key | Future | Future | TruffleHog supports |
-| Splunk Observability Token | Future | Future | TruffleHog supports |
-| AppOptics Token | Future | Future | TruffleHog supports |
-| Airbrake Project/User Key | Future | Future | TruffleHog supports |
-| LogDNA Key | Future | Future | |
-| Loggly Token | Future | Future | |
-| Better Stack / Better Uptime Key | Future | Future | |
-| Statuspage API Key | Future | Future | |
-| UptimeRobot API Key | Future | Future | |
-| Pingdom Token | Future | Future | |
+| Sentry Token | **Supported** | Future | sntrys_ prefix |
+| SumoLogic Key | **Supported** | Future | |
+| Splunk Observability Token | **Supported** | Future | SPL prefix |
+| AppOptics Token | **Supported** | Future | |
+| Airbrake Project/User Key | **Supported** | Future | |
+| LogDNA Key | **Supported** | Future | |
+| Loggly Token | **Supported** | Future | |
+| Better Stack / Better Uptime Key | **Supported** | Future | |
+| Statuspage API Key | **Supported** | Future | |
+| UptimeRobot API Key | **Supported** | Future | |
+| Pingdom Token | **Supported** | Future | |
 
 ---
 
@@ -257,23 +257,23 @@ This document lists all secret providers that PledgeGuard **could** support in t
 
 | Provider / Token Type | Detector | Verifier | Notes |
 |---|---|---|---|
-| PostHog API Key | Future | Future | TruffleHog supports (PosthogApp) |
-| Amplitude API Key | Future | Future | TruffleHog supports |
-| Segment API Key | Future | Future | TruffleHog supports |
-| Mixpanel Token | Future | Future | |
-| Heap API Key | Future | Future | |
-| Pendo Integration Key | Future | Future | TruffleHog supports |
-| Keen.io Key | Future | Future | TruffleHog supports |
-| Fathom Analytics Key | Future | Future | |
-| Plausible Analytics Key | Future | Future | |
-| Hotjar Token | Future | Future | |
-| FullStory Token | Future | Future | |
-| Amplitude Key | Future | Future | TruffleHog supports |
-| Bitly Access Token | Future | Future | TruffleHog supports |
-| Calendly API Key | Future | Future | TruffleHog supports |
-| Calendarific Token | Future | Future | TruffleHog supports |
-| AppFollow Token | Future | Future | TruffleHog supports |
-| Appcues Token | Future | Future | TruffleHog supports |
+| PostHog API Key | **Supported** | Future | phc_ prefix |
+| Amplitude API Key | **Supported** | Future | |
+| Segment API Key | **Supported** | Future | |
+| Mixpanel Token | **Supported** | Future | |
+| Heap API Key | **Supported** | Future | |
+| Pendo Integration Key | **Supported** | Future | |
+| Keen.io Key | **Supported** | Future | |
+| Fathom Analytics Key | **Supported** | Future | |
+| Plausible Analytics Key | **Supported** | Future | |
+| Hotjar Token | **Supported** | Future | |
+| FullStory Token | **Supported** | Future | |
+| Amplitude Key | **Supported** | Future | Duplicate of Amplitude API Key |
+| Bitly Access Token | **Supported** | Future | |
+| Calendly API Key | **Supported** | Future | |
+| Calendarific Token | **Supported** | Future | |
+| AppFollow Token | **Supported** | Future | |
+| Appcues Token | **Supported** | Future | |
 
 ---
 
@@ -282,26 +282,26 @@ This document lists all secret providers that PledgeGuard **could** support in t
 | Provider / Token Type | Detector | Verifier | Notes |
 |---|---|---|---|
 | Auth0 API Token | **Supported** | **Supported** | |
-| Auth0 Management API Token | Future | Future | TruffleHog has separate detector |
-| Auth0 OAuth Token | Future | Future | TruffleHog supports |
+| Auth0 Management API Token | **Supported** | Future | |
+| Auth0 OAuth Token | **Supported** | Future | |
 | Okta API Token | **Supported** | **Supported** | |
-| OneLogin Token | Future | Future | TruffleHog supports |
-| JumpCloud Token | Future | Future | TruffleHog supports |
-| Authress Service Client Key | Future | Future | Gitleaks detects |
-| Keycloak Token | Future | Future | |
-| FusionAuth Token | Future | Future | |
-| Stytch Token | Future | Future | |
-| Clerk Token | Future | Future | |
-| WorkOS Token | Future | Future | |
+| OneLogin Token | **Supported** | Future | |
+| JumpCloud Token | **Supported** | Future | |
+| Authress Service Client Key | **Supported** | Future | sc_ prefix |
+| Keycloak Token | **Supported** | Future | |
+| FusionAuth Token | **Supported** | Future | |
+| Stytch Token | **Supported** | Future | |
+| Clerk Token | **Supported** | Future | sk_ prefix |
+| WorkOS Token | **Supported** | Future | |
 | Supabase Service Key | **Supported** | **Supported** | |
-| Supabase Anon Key | Future | Future | Not truly secret but worth detecting |
-| Firebase Token | Future | Future | TruffleHog supports |
-| Firebase Cloud Messaging Key | Future | Future | TruffleHog supports |
-| KubeConfig | Future | Future | TruffleHog supports |
-| HashiCorp Vault Token | Future | Future | Gitleaks detects (hvs./hvb./s. prefixes) |
-| 1Password Secret Key | Future | Future | Gitleaks detects |
-| 1Password Service Account Token | Future | Future | Gitleaks detects |
-| Doppler Token | Future | Future | Gitleaks detects |
+| Supabase Anon Key | **Supported** | Future | eyJ JWT format |
+| Firebase Token | **Supported** | Future | |
+| Firebase Cloud Messaging Key | **Supported** | Future | AAAA prefix |
+| KubeConfig | **Supported** | Future | client_key_data |
+| HashiCorp Vault Token | **Supported** | Future | hvs./hvb./s. prefixes |
+| 1Password Secret Key | **Supported** | Future | a3- format |
+| 1Password Service Account Token | **Supported** | Future | ops_ prefix |
+| Doppler Token | **Supported** | Future | dp.pt. prefix |
 
 ---
 
@@ -313,14 +313,14 @@ This document lists all secret providers that PledgeGuard **could** support in t
 | Netlify Token | **Supported** | Future | |
 | Heroku API Key | **Supported** | **Supported** | |
 | Supabase Service Key | **Supported** | **Supported** | |
-| WP Engine Token | Future | Future | TruffleHog supports |
-| Fastly API Key | Future | Future | Gitleaks + TruffleHog |
-| Akamai Token | Future | Future | TruffleHog supports |
-| Equinix OAuth Token | Future | Future | TruffleHog supports |
-| Fly.io Token | Future | Future | |
-| Railway Token | Future | Future | |
-| Render Token | Future | Future | |
-| Koyeb Token | Future | Future | |
+| WP Engine Token | **Supported** | Future | |
+| Fastly API Key | **Supported** | Future | |
+| Akamai Token | **Supported** | Future | |
+| Equinix OAuth Token | **Supported** | Future | |
+| Fly.io Token | **Supported** | Future | |
+| Railway Token | **Supported** | Future | |
+| Render Token | **Supported** | Future | rnd_ prefix |
+| Koyeb Token | **Supported** | Future | |
 | Edge Token | Future | Future | |
 
 ---
@@ -332,30 +332,30 @@ This document lists all secret providers that PledgeGuard **could** support in t
 | Twitch Client Secret | **Supported** | Future | |
 | Twitter/X Bearer Token | **Supported** | Future | |
 | Facebook App Secret | **Supported** | Future | |
-| Facebook Access Token | Future | Future | TruffleHog supports (FacebookOAuth) |
-| Facebook OAuth Token | Future | Future | |
+| Facebook Access Token | **Supported** | Future | EAAD prefix |
+| Facebook OAuth Token | **Supported** | Future | |
 | LinkedIn Client Secret | **Supported** | Future | |
 | Linear API Key | **Supported** | **Supported** | |
 | Figma Token | **Supported** | Future | |
-| Figma Personal Access Token | Future | Future | TruffleHog has specific detector |
+| Figma Personal Access Token | **Supported** | Future | figd_ prefix |
 | npm Token (npm_) | **Supported** | **Supported** | |
-| PyPI Token (pypi-AgEI...) | Future | Future | Gitleaks detects newer format |
+| PyPI Token (pypi-AgEI...) | **Supported** | Future | |
 | Docker Hub Token | **Supported** | **Supported** | |
-| Spotify Key | Future | Future | TruffleHog supports |
-| YouTube API Key | Future | Future | TruffleHog supports |
-| Twitch Access Token | Future | Future | |
-| Flickr Access Token | Future | Future | Gitleaks detects |
-| Dropbox API Secret | Future | Future | Gitleaks detects |
-| Dropbox Long-Lived Token | Future | Future | Gitleaks detects |
-| Dropbox Short-Lived Token | Future | Future | Gitleaks detects |
-| Reddit Client Secret | Future | Future | |
-| Reddit Access Token | Future | Future | |
-| Instagram Access Token | Future | Future | |
-| Pinterest Token | Future | Future | |
-| TikTok Access Token | Future | Future | |
-| Zoom API Key/Secret | Future | Future | |
+| Spotify Key | **Supported** | Future | |
+| YouTube API Key | **Supported** | Future | AIza prefix |
+| Twitch Access Token | **Supported** | Future | |
+| Flickr Access Token | **Supported** | Future | |
+| Dropbox API Secret | **Supported** | Future | |
+| Dropbox Long-Lived Token | **Supported** | Future | sl. prefix |
+| Dropbox Short-Lived Token | **Supported** | Future | sl. prefix |
+| Reddit Client Secret | **Supported** | Future | |
+| Reddit Access Token | **Supported** | Future | |
+| Instagram Access Token | **Supported** | Future | IG prefix |
+| Pinterest Token | **Supported** | Future | |
+| TikTok Access Token | **Supported** | Future | |
+| Zoom API Key/Secret | **Supported** | Future | |
 | Calendly Webhook | Future | Future | |
-| Zapier Webhook URL | Future | Future | TruffleHog supports |
+| Zapier Webhook URL | **Supported** | Future | |
 
 ---
 
@@ -367,18 +367,18 @@ This document lists all secret providers that PledgeGuard **could** support in t
 | MySQL Connection String | **Supported** | Future | TruffleHog verifies by connecting |
 | MongoDB Connection String | **Supported** | Future | TruffleHog verifies by connecting |
 | Redis Connection String | **Supported** | Future | TruffleHog verifies by connecting |
-| JDBC Connection String | Future | Future | TruffleHog supports (MySQL/PostgreSQL/SQL Server) |
-| SQL Server Connection String | Future | Future | |
-| Elasticsearch Connection | Future | Future | |
-| InfluxDB Token | Future | Future | |
-| Couchbase Connection String | Future | Future | |
-| Cassandra Connection | Future | Future | |
-| Neo4j Connection String | Future | Future | |
-| Supabase DB Connection | Future | Future | |
-| PlanetScale Token | Future | Future | |
-| Neon Database Token | Future | Future | |
-| Turso Token | Future | Future | |
-| Convex Token | Future | Future | |
+| JDBC Connection String | **Supported** | Future | MySQL/PostgreSQL/SQL Server |
+| SQL Server Connection String | **Supported** | Future | |
+| Elasticsearch Connection | **Supported** | Future | |
+| InfluxDB Token | **Supported** | Future | |
+| Couchbase Connection String | **Supported** | Future | |
+| Cassandra Connection | **Supported** | Future | |
+| Neo4j Connection String | **Supported** | Future | |
+| Supabase DB Connection | **Supported** | Future | |
+| PlanetScale Token | **Supported** | Future | pscale_ prefix |
+| Neon Database Token | **Supported** | Future | |
+| Turso Token | **Supported** | Future | |
+| Convex Token | **Supported** | Future | |
 
 ---
 
@@ -387,22 +387,22 @@ This document lists all secret providers that PledgeGuard **could** support in t
 | Provider / Token Type | Detector | Verifier | Notes |
 |---|---|---|---|
 | PEM Private Key | **Supported** | Future | TruffleHog verifies by testing against GitHub/GitLab/Driftwood |
-| Age Secret Key | Future | Future | Gitleaks detects (age encryption tool) |
-| Kubernetes Secret Manifest | Future | Future | Gitleaks detects YAML with base64 data |
-| HashiCorp Vault Token | Future | Future | Gitleaks detects (hvs./hvb./s. prefixes) |
-| HashiCorp Terraform Token | Future | Future | Gitleaks + TruffleHog |
-| Ansible Vault Password | Future | Future | |
-| Docker Registry Token | Future | Future | |
-| Harbor Token | Future | Future | |
-| Nexus Token | Future | Future | |
-| Confluent Access Token | Future | Future | Gitleaks detects |
-| Confluent Secret Key | Future | Future | Gitleaks detects |
-| Databricks Token | Future | Future | Gitleaks + TruffleHog |
-| Snowflake Token | Future | Future | TruffleHog supports |
-| Dynatrace API Token | Future | Future | Gitleaks detects |
-| LaunchDarkly Key | Future | Future | |
-| ConfigCat Key | Future | Future | |
-| Flagsmith Key | Future | Future | |
+| Age Secret Key | **Supported** | Future | AGE-SECRET-KEY-1 prefix |
+| Kubernetes Secret Manifest | **Supported** | Future | YAML with base64 data |
+| HashiCorp Vault Token | **Supported** | Future | hvs./hvb./s. prefixes |
+| HashiCorp Terraform Token | **Supported** | Future | |
+| Ansible Vault Password | **Supported** | Future | |
+| Docker Registry Token | **Supported** | Future | |
+| Harbor Token | **Supported** | Future | |
+| Nexus Token | **Supported** | Future | |
+| Confluent Access Token | **Supported** | Future | |
+| Confluent Secret Key | **Supported** | Future | |
+| Databricks Token | **Supported** | Future | dapi prefix |
+| Snowflake Token | **Supported** | Future | |
+| Dynatrace API Token | **Supported** | Future | dt0c01 prefix |
+| LaunchDarkly Key | **Supported** | Future | |
+| ConfigCat Key | **Supported** | Future | |
+| Flagsmith Key | **Supported** | Future | |
 
 ---
 
@@ -410,18 +410,18 @@ This document lists all secret providers that PledgeGuard **could** support in t
 
 | Provider / Token Type | Detector | Verifier | Notes |
 |---|---|---|---|
-| Shodan API Key | Future | Future | TruffleHog supports |
-| AbuseIPDB Key | Future | Future | TruffleHog supports |
-| AlienVault OTX Key | Future | Future | TruffleHog supports |
-| VirusTotal API Key | Future | Future | |
-| Hunter.io API Key | Future | Future | TruffleHog supports |
-| IPStack Key | Future | Future | TruffleHog supports |
-| MaxMind License Key | Future | Future | TruffleHog supports |
-| CloudSight Key | Future | Future | TruffleHog supports |
-| Snyk API Key | Future | Future | TruffleHog supports |
-| RapidAPI Key | Future | Future | TruffleHog supports |
-| ScrapingBee Key | Future | Future | TruffleHog supports |
-| ipinfo.io Token | Future | Future | |
+| Shodan API Key | **Supported** | Future | |
+| AbuseIPDB Key | **Supported** | Future | |
+| AlienVault OTX Key | **Supported** | Future | |
+| VirusTotal API Key | **Supported** | Future | |
+| Hunter.io API Key | **Supported** | Future | |
+| IPStack Key | **Supported** | Future | |
+| MaxMind License Key | **Supported** | Future | |
+| CloudSight Key | **Supported** | Future | |
+| Snyk API Key | **Supported** | Future | Already supported in CI/CD section |
+| RapidAPI Key | **Supported** | Future | |
+| ScrapingBee Key | **Supported** | Future | |
+| ipinfo.io Token | **Supported** | Future | |
 
 ---
 
@@ -429,11 +429,11 @@ This document lists all secret providers that PledgeGuard **could** support in t
 
 | Provider / Token Type | Detector | Verifier | Notes |
 |---|---|---|---|
-| Google Maps API Key | Future | Future | Subset of Google API Key |
-| MapBox Token | Future | Future | TruffleHog supports |
-| MapQuest Key | Future | Future | |
-| Here Maps Key | Future | Future | |
-| OpenCage Key | Future | Future | |
+| Google Maps API Key | **Supported** | Future | AIza prefix (subset of Google API Key) |
+| MapBox Token | **Supported** | Future | pk. prefix |
+| MapQuest Key | **Supported** | Future | |
+| Here Maps Key | **Supported** | Future | |
+| OpenCage Key | **Supported** | Future | |
 
 ---
 
@@ -441,25 +441,25 @@ This document lists all secret providers that PledgeGuard **could** support in t
 
 | Provider / Token Type | Detector | Verifier | Notes |
 |---|---|---|---|
-| HubSpot API Key | Future | Future | TruffleHog supports |
-| HubSpot OAuth Token | Future | Future | TruffleHog supports |
-| Salesforce OAuth2 Token | Future | Future | TruffleHog supports |
-| Zendesk API Token | Future | Future | TruffleHog supports |
-| Intercom Token | Future | Future | TruffleHog supports |
-| HelpScout Token | Future | Future | TruffleHog supports |
-| Pipedrive Token | Future | Future | TruffleHog supports |
-| Elastic Path Token | Future | Future | TruffleHog supports |
-| ButterCMS Token | Future | Future | TruffleHog supports |
-| Contentful Delivery Token | Future | Future | Gitleaks + TruffleHog |
-| Contentful Personal Access Token | Future | Future | TruffleHog supports |
-| Sanity API Token | Future | Future | |
-| Storyblok Token | Future | Future | |
-| Strapi API Token | Future | Future | |
-| Airtable API Key | Future | Future | Gitleaks detects (deprecated) |
-| Airtable Personal Access Token | Future | Future | TruffleHog supports |
-| Airtable OAuth Token | Future | Future | TruffleHog supports |
-| Algolia Admin Key | Future | Future | Gitleaks detects |
-| Lokalise Token | Future | Future | TruffleHog supports |
+| HubSpot API Key | **Supported** | Future | |
+| HubSpot OAuth Token | **Supported** | Future | |
+| Salesforce OAuth2 Token | **Supported** | Future | |
+| Zendesk API Token | **Supported** | Future | |
+| Intercom Token | **Supported** | Future | Already supported in Communication section |
+| HelpScout Token | **Supported** | Future | Already supported in Communication section |
+| Pipedrive Token | **Supported** | Future | Already supported in Communication section |
+| Elastic Path Token | **Supported** | Future | |
+| ButterCMS Token | **Supported** | Future | |
+| Contentful Delivery Token | **Supported** | Future | |
+| Contentful Personal Access Token | **Supported** | Future | CFPAT- prefix |
+| Sanity API Token | **Supported** | Future | |
+| Storyblok Token | **Supported** | Future | |
+| Strapi API Token | **Supported** | Future | |
+| Airtable API Key | **Supported** | Future | Deprecated, key prefix |
+| Airtable Personal Access Token | **Supported** | Future | pat prefix |
+| Airtable OAuth Token | **Supported** | Future | |
+| Algolia Admin Key | **Supported** | Future | |
+| Lokalise Token | **Supported** | Future | |
 
 ---
 
@@ -467,17 +467,17 @@ This document lists all secret providers that PledgeGuard **could** support in t
 
 | Provider / Token Type | Detector | Verifier | Notes |
 |---|---|---|---|
-| Bitcoin Private Key (WIF) | Future | Future | |
-| Ethereum Private Key | Future | Future | |
-| Solana Private Key | Future | Future | |
-| Infura API Key | Future | Future | |
-| Alchemy API Key | Future | Future | TruffleHog supports |
-| Moralis API Key | Future | Future | |
-| QuickNode Token | Future | Future | |
-| Bitfinex API Key | Future | Future | TruffleHog supports |
-| Bittrex Access Key | Future | Future | Gitleaks detects |
-| Bittrex Secret Key | Future | Future | Gitleaks detects |
-| Coinbase Access Token | Future | Future | TruffleHog + Gitleaks |
+| Bitcoin Private Key (WIF) | **Supported** | Future | 5K/L prefix |
+| Ethereum Private Key | **Supported** | Future | 0x + 64 hex |
+| Solana Private Key | **Supported** | Future | base58 88-char |
+| Infura API Key | **Supported** | Future | |
+| Alchemy API Key | **Supported** | Future | |
+| Moralis API Key | **Supported** | Future | |
+| QuickNode Token | **Supported** | Future | |
+| Bitfinex API Key | **Supported** | Future | |
+| Bittrex Access Key | **Supported** | Future | |
+| Bittrex Secret Key | **Supported** | Future | |
+| Coinbase Access Token | **Supported** | Future | Already supported in Payments section |
 
 ---
 
@@ -542,7 +542,7 @@ Beyond the current scanning sources (working tree, stdin, git history, Docker, G
 
 | Metric | Current | Future (Total Potential) |
 |---|---|---|
-| **Detectors** | 106 | 300+ |
+| **Detectors** | 325 | 350+ |
 | **Verification providers** | 34 | 150+ |
 | **Scanning sources** | 10 | 25+ |
 | **Output formats** | 6 | 6 (competitive) |
