@@ -17,8 +17,10 @@ This document lists all secret providers that PledgeGuard **could** support in t
 | AWS Access Key ID (AKIA/ASIA/...) | **Supported** | Future | Verification requires STS GetCallerIdentity with signed requests |
 | AWS Secret Access Key | **Supported** | Future | Paired with Access Key ID; needs AWS SigV4 signing |
 | AWS Session Token | **Supported** | Future | Needs STS API with temporary credentials |
-| AWS MWS Auth Token | Future | Future | Amazon Marketplace Web Service |
-| AWS Amazon Bedrock API Key | Future | Future | Long-lived Bedrock API keys |
+| AWS MWS Auth Token | **Supported** | Future | Amazon Marketplace Web Service |
+| AWS Amazon Bedrock API Key (long-lived) | **Supported** | Future | ABSK prefix, 109+ chars |
+| AWS Amazon Bedrock API Key (short-lived) | **Supported** | Future | bedrock-api-key- prefix |
+| AWS Account ID | **Supported** | N/A | 12-digit numeric, Low severity |
 
 ### Azure
 
@@ -27,9 +29,11 @@ This document lists all secret providers that PledgeGuard **could** support in t
 | Azure Storage Connection String | **Supported** | Future | Could verify by listing blobs |
 | Azure SAS Token | **Supported** | Future | |
 | Azure Client Secret | **Supported** | Future | Needs Azure AD OAuth2 token endpoint |
-| Azure AD Client Secret | Future | Future | Gitleaks detects this pattern |
-| Azure Batch Key | Future | Future | |
-| Azure Function Key | Future | Future | |
+| Azure AD Client Secret | **Supported** | Future | Entra ID, Q~ marker pattern |
+| Azure Batch Key | **Supported** | Future | BatchAccountKey= assignment |
+| Azure Function Key | **Supported** | Future | FUNCTIONS_KEY/function_key/code= assignment |
+| Azure DevOps PAT | **Supported** | Future | 52-char alphanumeric near devops/vsts context |
+| Azure Cosmos DB Key | **Supported** | Future | AccountKey= with 88-char base64 |
 
 ### Google Cloud
 
@@ -38,7 +42,8 @@ This document lists all secret providers that PledgeGuard **could** support in t
 | Google API Key (AIza) | **Supported** | **Supported** | |
 | Google OAuth Access Token (ya29) | **Supported** | **Supported** | |
 | Google Service Account JSON | **Supported** | Future | Verification: exchange key for OAuth2 token |
-| GCP Service Account Key | Future | Future | TruffleHog verifies by exchanging for OAuth2 token |
+| GCP Service Account Key | **Supported** | Future | private_key field with PEM block |
+| GCP OAuth Client ID | **Supported** | N/A | xxx-32chars.apps.googleusercontent.com, Medium severity |
 
 ### Other Cloud Providers
 

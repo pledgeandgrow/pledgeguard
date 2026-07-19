@@ -6,7 +6,7 @@ This document lists all detectors, verification providers, output formats, scann
 
 ## Built-in Detectors
 
-PledgeGuard ships with **50+ regex-based detectors** covering major cloud providers, SaaS platforms, CI/CD systems, and generic secret patterns. Each detector has a prefilter (Aho-Corasick) for fast scanning and a regex for precise matching.
+PledgeGuard ships with **60+ regex-based detectors** covering major cloud providers, SaaS platforms, CI/CD systems, and generic secret patterns. Each detector has a prefilter (Aho-Corasick) for fast scanning and a regex for precise matching.
 
 ### Cloud Providers
 
@@ -15,12 +15,23 @@ PledgeGuard ships with **50+ regex-based detectors** covering major cloud provid
 | `aws-access-key-id` | AWS Access Key ID (AKIA/ASIA/AGPA/AIDA/AROA/AIPA/ANPA/ANVA/ASCA prefixes) | Critical |
 | `aws-secret-access-key` | AWS Secret Access Key (40-char base64 assigned to `aws_secret_access_key`) | Critical |
 | `aws-session-token` | AWS Session Token | Critical |
+| `aws-mws-auth-token` | Amazon MWS Auth Token (amzn.mws. UUID format) | High |
+| `aws-bedrock-api-key-long-lived` | Amazon Bedrock API Key — long-lived (ABSK prefix, 109+ chars) | Critical |
+| `aws-bedrock-api-key-short-lived` | Amazon Bedrock API Key — short-lived (bedrock-api-key- prefix) | High |
+| `aws-account-id` | AWS Account ID (12-digit numeric assignment) | Low |
 | `azure-connection-string` | Azure Storage Connection String | Critical |
 | `azure-sas-token` | Azure Shared Access Signature Token | High |
 | `azure-client-secret` | Azure Client Secret | High |
+| `azure-ad-client-secret` | Azure AD (Entra ID) Client Secret (Q~ marker pattern) | High |
+| `azure-batch-key` | Azure Batch Account Key | High |
+| `azure-function-key` | Azure Function Key (FUNCTIONS_KEY/code= assignment) | High |
+| `azure-devops-pat` | Azure DevOps Personal Access Token (52-char alphanumeric) | High |
+| `azure-cosmos-key` | Azure Cosmos DB Key (AccountKey= 88-char base64) | Critical |
 | `google-api-key` | Google API Key (AIza prefix) | High |
 | `google-oauth-access-token` | Google OAuth Access Token (ya29 prefix) | High |
 | `google-service-account-json` | Google Service Account Private Key JSON | Critical |
+| `gcp-service-account-private-key` | GCP Service Account Private Key (private_key field with PEM block) | Critical |
+| `gcp-oauth-client-id` | GCP OAuth Client ID (xxx.apps.googleusercontent.com) | Medium |
 | `alibaba-access-key-id` | Alibaba Cloud Access Key ID (LTAI prefix) | Critical |
 | `tencent-secret-id` | Tencent Cloud Secret ID (AKID prefix) | Critical |
 | `digitalocean-pat` | DigitalOcean Personal Access Token (dop_v1_ prefix) | High |

@@ -29,6 +29,34 @@ pub fn builtin_detectors() -> Vec<Box<dyn Detector>> {
             r#"(?i)aws_session_token\s*[:=]\s*['"]?([A-Za-z0-9/+=]{16,})['"]?"#,
             &["aws_session_token", "AWS_SESSION_TOKEN"],
         )),
+        Box::new(RegexDetector::with_prefilter(
+            "aws-mws-auth-token",
+            "Amazon MWS Auth Token",
+            Severity::High,
+            r"\bamzn\.mws\.[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}\b",
+            &["amzn.mws."],
+        )),
+        Box::new(RegexDetector::with_prefilter(
+            "aws-bedrock-api-key-long-lived",
+            "Amazon Bedrock API Key (long-lived)",
+            Severity::Critical,
+            r"\bABSK[A-Za-z0-9+/]{109,269}={0,2}\b",
+            &["ABSK"],
+        )),
+        Box::new(RegexDetector::with_prefilter(
+            "aws-bedrock-api-key-short-lived",
+            "Amazon Bedrock API Key (short-lived)",
+            Severity::High,
+            r"bedrock-api-key-YmVkcm9jay5hbWF6b25hd3MuY29t",
+            &["bedrock-api-key-"],
+        )),
+        Box::new(RegexDetector::with_prefilter(
+            "aws-account-id",
+            "AWS Account ID",
+            Severity::Low,
+            r#"(?i)aws_account_id\s*[:=]\s*['"]?(\d{12})['"]?"#,
+            &["aws_account_id", "AWS_ACCOUNT_ID"],
+        )),
         // ── GitHub ───────────────────────────────────────────────────────
         Box::new(RegexDetector::with_prefilter(
             "github-pat",
@@ -96,6 +124,20 @@ pub fn builtin_detectors() -> Vec<Box<dyn Detector>> {
             r#"(?i)"type"\s*:\s*"service_account""#,
             &["\"type\"", "service_account"],
         )),
+        Box::new(RegexDetector::with_prefilter(
+            "gcp-service-account-private-key",
+            "GCP Service Account Private Key",
+            Severity::Critical,
+            r#"(?i)"private_key"\s*:\s*"-----BEGIN (RSA |EC )?PRIVATE KEY-----"#,
+            &["private_key", "BEGIN PRIVATE KEY", "BEGIN RSA PRIVATE KEY", "BEGIN EC PRIVATE KEY"],
+        )),
+        Box::new(RegexDetector::with_prefilter(
+            "gcp-oauth-client-id",
+            "GCP OAuth Client ID",
+            Severity::Medium,
+            r#"[0-9]+-[A-Za-z0-9_]{32}\.apps\.googleusercontent\.com"#,
+            &["googleusercontent.com"],
+        )),
         // ── Azure ────────────────────────────────────────────────────────
         Box::new(RegexDetector::with_prefilter(
             "azure-connection-string",
@@ -117,6 +159,41 @@ pub fn builtin_detectors() -> Vec<Box<dyn Detector>> {
             Severity::High,
             r#"(?i)(azure|client)_secret\s*[:=]\s*['"]?([A-Za-z0-9\-_.~]{20,})['"]?"#,
             &["azure_secret", "client_secret", "AZURE_CLIENT_SECRET"],
+        )),
+        Box::new(RegexDetector::with_prefilter(
+            "azure-ad-client-secret",
+            "Azure AD (Entra ID) Client Secret",
+            Severity::High,
+            r"[a-zA-Z0-9_~.]{3}\dQ~[a-zA-Z0-9_~.-]{31,34}",
+            &["Q~"],
+        )),
+        Box::new(RegexDetector::with_prefilter(
+            "azure-batch-key",
+            "Azure Batch Account Key",
+            Severity::High,
+            r#"(?i)batchaccountkey\s*[:=]\s*['"]?([A-Za-z0-9+/=]{50,})['"]?"#,
+            &["BatchAccountKey", "batchaccountkey", "BATCHACCOUNTKEY"],
+        )),
+        Box::new(RegexDetector::with_prefilter(
+            "azure-function-key",
+            "Azure Function Key",
+            Severity::High,
+            r#"(?i)(functions_key|function_key|code)\s*[:=]\s*['"]?([A-Za-z0-9_\-=/+]{20,})['"]?"#,
+            &["FUNCTIONS_KEY", "functions_key", "function_key", "code="],
+        )),
+        Box::new(RegexDetector::with_prefilter(
+            "azure-devops-pat",
+            "Azure DevOps Personal Access Token",
+            Severity::High,
+            r"\b[A-Za-z0-9]{52}\b",
+            &["devops", "azure-devops", "vsts"],
+        )),
+        Box::new(RegexDetector::with_prefilter(
+            "azure-cosmos-key",
+            "Azure Cosmos DB Key",
+            Severity::Critical,
+            r#"(?i)accountkey\s*[:=]\s*['"]?([A-Za-z0-9+/=]{88})['"]?"#,
+            &["AccountKey", "accountkey", "ACCOUNTKEY"],
         )),
         // ── GitLab ───────────────────────────────────────────────────────
         Box::new(RegexDetector::with_prefilter(
@@ -533,5 +610,83 @@ mod tests {
                 d.id()
             );
         }
+    }
+
+    #[test]
+    fn test_aws_mws_token_detected() {
+        let detectors = builtin_detectors();
+        let mws = detectors
+            .iter()
+            .find(|d| d.id() == "aws-mws-auth-token")
+            .unwrap();
+        let matches = mws.scan_line("amzn.mws.12345678-1234-1234-1234-123456789012");
+        assert_eq!(matches.len(), 1);
+    }
+
+    #[test]
+    fn test_aws_bedrock_key_detected() {
+        let detectors = builtin_detectors();
+        let bedrock = detectors
+            .iter()
+            .find(|d| d.id() == "aws-bedrock-api-key-long-lived")
+            .unwrap();
+        let key = format!("ABSK{}", "A".repeat(110));
+        let matches = bedrock.scan_line(&key);
+        assert_eq!(matches.len(), 1);
+    }
+
+    #[test]
+    fn test_azure_ad_client_secret_detected() {
+        let detectors = builtin_detectors();
+        let azure = detectors
+            .iter()
+            .find(|d| d.id() == "azure-ad-client-secret")
+            .unwrap();
+        let matches = azure.scan_line("abc1Q~abcdefghijklmnopqrstuvwxyz0123456789");
+        assert_eq!(matches.len(), 1);
+    }
+
+    #[test]
+    fn test_azure_batch_key_detected() {
+        let detectors = builtin_detectors();
+        let batch = detectors
+            .iter()
+            .find(|d| d.id() == "azure-batch-key")
+            .unwrap();
+        let matches = batch.scan_line("BatchAccountKey=ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=");
+        assert_eq!(matches.len(), 1);
+    }
+
+    #[test]
+    fn test_azure_function_key_detected() {
+        let detectors = builtin_detectors();
+        let func = detectors
+            .iter()
+            .find(|d| d.id() == "azure-function-key")
+            .unwrap();
+        let matches = func.scan_line("FUNCTIONS_KEY=abc123def456ghi789jkl012mno345pqr678");
+        assert_eq!(matches.len(), 1);
+    }
+
+    #[test]
+    fn test_gcp_service_account_private_key_detected() {
+        let detectors = builtin_detectors();
+        let gcp = detectors
+            .iter()
+            .find(|d| d.id() == "gcp-service-account-private-key")
+            .unwrap();
+        let matches = gcp.scan_line(r#""private_key": "-----BEGIN PRIVATE KEY-----""#);
+        assert_eq!(matches.len(), 1);
+    }
+
+    #[test]
+    fn test_gcp_oauth_client_id_detected() {
+        let detectors = builtin_detectors();
+        let gcp = detectors
+            .iter()
+            .find(|d| d.id() == "gcp-oauth-client-id")
+            .unwrap();
+        let matches = gcp.scan_line("123456789-abcdefghijklmnopqrstuvwxyz012345.apps.googleusercontent.com");
+        assert_eq!(matches.len(), 1);
     }
 }
