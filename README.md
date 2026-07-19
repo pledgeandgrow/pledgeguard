@@ -9,7 +9,7 @@ Rust-native secret scanner — a TruffleHog/Gitleaks alternative.
 ## Status
 
 **v0.2.0 — comprehensive feature set.** PledgeGuard is a working secret
-scanner with 512 built-in detectors, 34 live verification providers, git history
+scanner with 708 built-in detectors, 34 live verification providers, git history
 scanning, WASM plugins, MCP server, 6 output formats (Table/JSON/SARIF/CSV/JUnit/Template),
 baseline/allowlist mode, pre-commit hook installer, AST-based false-positive
 refinement for JS/TS, custom TOML rules with entropy/allowlists/path filters,
@@ -88,7 +88,7 @@ to be inside a git working tree.
 
 ## Built-in detectors
 
-512 detectors covering AWS (Access Key, Secret, Session Token, MWS, Bedrock,
+708 detectors covering AWS (Access Key, Secret, Session Token, MWS, Bedrock,
 Account ID), Azure (Storage, SAS, Client Secret, AD/Entra ID, Batch, Function,
 DevOps PAT, Cosmos DB), Google Cloud (API Key, OAuth, Service Account, Client ID,
 Gemini/PaLM), Alibaba, Tencent, DigitalOcean, IBM Cloud, Oracle Cloud, Scaleway,
@@ -164,6 +164,33 @@ Bitcoin Average, World Coin Index, Glassnode, Tatum.io, Ethplorer, NFTPort,
 Messari, CoinGecko,
 OpenWeather, WeatherStack, AccuWeather, World Weather, Tomorrow.io,
 AirVisual, Visual Crossing, Stormglass, Aeris Weather, Ambee, OpenUV,
+Edge Token, Calendly Webhook,
+TomTom, Geoapify, Geocodify, Geocode, Geocodio, PositionStack, LocationIQ,
+Graphhopper, SmartyStreets, Route4me, ZipCode, OnWater, GeoIPify, IPGeolocation,
+IPinfoDB, ipify, ipapi, VPN, DNS Check, Walk Score, Besttime, Hypertrack, Fulcrum, Samsara,
+Unsplash, Pixabay, Gyazo, Imgur, Shutterstock, IconFinder, ImageKit, Bannerbear,
+Imagga, Face++, SkyBiometry, Cloudmersive, ScreenshotAPI, ScreenshotLayer, Browshot,
+LinkPreview, Mixcloud, RAWG, Strava, FourSquare, TicketMaster, Riot Games, Cricket,
+All Sports, SportsMonk, Edamam, Nutritionix, Spoonacular, Calorie Ninja, Protocols.io,
+HypeAuditor, NewsAPI, Newscatcher, Currents, Guardian, Aylien, Cicero, Lexigram,
+Blogger, MediaStack, ClickHelp, Storychief, Noticeable, ReadMe, Pastebin, Crowdin,
+Alconost, Gengo, HappyScribe, RiteKit, RubyGems, Codacy, Coveralls, SauceLabs, Bitbar,
+Bugsnag, Adafruit IO, Apify, Keygen, Aiven, File.io, Flat.io, Dynalist, Sheety, Swell,
+M3o, JSONbin, UserStack, PureStake, Host, BaseAPI, SslMate, Adobe IO, EdenAI, Deepgram,
+Voicegain, Audd.io, OwlBot, DetectLanguage, LanguageLayer, ParallelDots, Veriphone,
+Verifier, API2Cart, APIDeck, APIFlash, Fleetbase, Agora, Yandex, Artsy, Blit.app,
+Censys, SecurityTrails, URLScan, Aletheia, Whoxy, Mailsac, LoginRadius, Rev,
+YouNeedABudget, Filestack, Bubble, Shopee, Kite Connect, Veeva Vault, Cloudways,
+Duda, Yext, ContentStack, Surge, Kairos, FullContact, Eversign, NetCore, Bored,
+HTML2PDF, PDF Layer, PDF Shift, Restpack (HTML-to-PDF, Screenshot), Documo, ClustDoc,
+PandaDoc, HelloSign, Juro, YouSign, VatLayer, UPC Database,
+ScraperAPI, ScrapingDog, ScrapeOwl, WebScraping, ZenScrape, ZenSerp, SerpStack,
+ScraperBox, ScrapingAnt, ScrapeStack, ProxyCrawl,
+Debounce, Kickbox, IPQuality, Roaring, OOPSpam, Numverify,
+Webflow, Squarespace, Siteleaf, GraphCMS, Kontent,
+Wakatime, Ubidots, Raven, Guru, Hive, Technical Analysis, Impala, Unplugg,
+Cloverly, Flight, AviationStack, Distribusion, Words, Holiday, Amadeus,
+Exchange Rate, Abstract,
 Auth0, Okta, Vercel, Netlify, Supabase, CircleCI, Heroku, Travis CI, DroneCI,
 Buildkite, TeamCity, Jenkins, GoCD, ArgoCD, Spinnaker, Harness, Codecov,
 SonarQube, Snyk, Artifactory, Terraform Cloud, Pivotal Tracker, Clojars, Linear,

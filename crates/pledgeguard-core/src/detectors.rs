@@ -3640,6 +3640,1385 @@ pub fn builtin_detectors() -> Vec<Box<dyn Detector>> {
             &["openuv_api", "OPENUV_API", "openuvApi"],
         )),
 
+        // ── Edge Token (TruffleHog) ───────────────────────────────────────
+        Box::new(RegexDetector::with_prefilter(
+            "edge-token",
+            "Edge Token",
+            Severity::Medium,
+            r#"(?i)edge[_\-]?(?:api[_\-]?)?token\s*[:=]\s*['"]?([A-Za-z0-9_\-]{20,})['"]?"#,
+            &["edge_token", "EDGE_TOKEN", "edgeToken"],
+        )),
+        // ── Calendly Webhook (TruffleHog) ────────────────────────────────
+        Box::new(RegexDetector::with_prefilter(
+            "calendly-webhook",
+            "Calendly Webhook",
+            Severity::Medium,
+            r#"(?i)calendly[_\-]?webhook[_\-]?(?:url|secret)\s*[:=]\s*['"]?([A-Za-z0-9_\-]{20,})['"]?"#,
+            &["calendly_webhook", "CALENDLY_WEBHOOK", "calendlyWebhook"],
+        )),
+
+        // ── Geocoding & Location (TruffleHog) ────────────────────────────
+        Box::new(RegexDetector::with_prefilter(
+            "tomtom-api-key",
+            "TomTom API Key",
+            Severity::Medium,
+            r#"(?i)tomtom[_\-]?(?:api[_\-]?)?key\s*[:=]\s*['"]?([A-Za-z0-9_\-]{20,})['"]?"#,
+            &["tomtom_api", "TOMTOM_API", "tomtomApi"],
+        )),
+        Box::new(RegexDetector::with_prefilter(
+            "geoapify-api-key",
+            "Geoapify API Key",
+            Severity::Medium,
+            r#"(?i)geoapify[_\-]?(?:api[_\-]?)?key\s*[:=]\s*['"]?([A-Za-z0-9_\-]{20,})['"]?"#,
+            &["geoapify_api", "GEOAPIFY_API", "geoapifyApi"],
+        )),
+        Box::new(RegexDetector::with_prefilter(
+            "geocodify-api-key",
+            "Geocodify API Key",
+            Severity::Medium,
+            r#"(?i)geocodify[_\-]?(?:api[_\-]?)?key\s*[:=]\s*['"]?([A-Za-z0-9_\-]{20,})['"]?"#,
+            &["geocodify_api", "GEOCODIFY_API", "geocodifyApi"],
+        )),
+        Box::new(RegexDetector::with_prefilter(
+            "geocode-api-key",
+            "Geocode API Key",
+            Severity::Medium,
+            r#"(?i)geocode[_\-]?(?:api[_\-]?)?key\s*[:=]\s*['"]?([A-Za-z0-9_\-]{20,})['"]?"#,
+            &["geocode_api", "GEOCODE_API", "geocodeApi"],
+        )),
+        Box::new(RegexDetector::with_prefilter(
+            "geocodio-api-key",
+            "Geocodio API Key",
+            Severity::Medium,
+            r#"(?i)geocodio[_\-]?(?:api[_\-]?)?key\s*[:=]\s*['"]?([A-Za-z0-9_\-]{20,})['"]?"#,
+            &["geocodio_api", "GEOCODIO_API", "geocodioApi"],
+        )),
+        Box::new(RegexDetector::with_prefilter(
+            "positionstack-api-key",
+            "PositionStack API Key",
+            Severity::Medium,
+            r#"(?i)position[_\-]?stack[_\-]?(?:api[_\-]?)?key\s*[:=]\s*['"]?([A-Za-z0-9_\-]{20,})['"]?"#,
+            &["positionstack_api", "POSITIONSTACK_API", "positionstackApi"],
+        )),
+        Box::new(RegexDetector::with_prefilter(
+            "locationiq-api-key",
+            "LocationIQ API Key",
+            Severity::Medium,
+            r#"(?i)locationiq[_\-]?(?:api[_\-]?)?key\s*[:=]\s*['"]?([A-Za-z0-9_\-]{20,})['"]?"#,
+            &["locationiq_api", "LOCATIONIQ_API", "locationiqApi"],
+        )),
+        Box::new(RegexDetector::with_prefilter(
+            "graphhopper-api-key",
+            "Graphhopper API Key",
+            Severity::Medium,
+            r#"(?i)graphhopper[_\-]?(?:api[_\-]?)?key\s*[:=]\s*['"]?([A-Za-z0-9_\-]{20,})['"]?"#,
+            &["graphhopper_api", "GRAPHHOPPER_API", "graphhopperApi"],
+        )),
+        Box::new(RegexDetector::with_prefilter(
+            "smartystreets-api-key",
+            "SmartyStreets API Key",
+            Severity::Medium,
+            r#"(?i)smartystreets[_\-]?(?:api[_\-]?)?key\s*[:=]\s*['"]?([A-Za-z0-9_\-]{20,})['"]?"#,
+            &["smartystreets_api", "SMARTYSTREETS_API", "smartystreetsApi"],
+        )),
+        Box::new(RegexDetector::with_prefilter(
+            "route4me-api-key",
+            "Route4me API Key",
+            Severity::Medium,
+            r#"(?i)route4me[_\-]?(?:api[_\-]?)?key\s*[:=]\s*['"]?([A-Za-z0-9_\-]{20,})['"]?"#,
+            &["route4me_api", "ROUTE4ME_API", "route4meApi"],
+        )),
+        Box::new(RegexDetector::with_prefilter(
+            "zipcode-api-key",
+            "ZipCode API Key",
+            Severity::Medium,
+            r#"(?i)zipcode[_\-]?(?:api[_\-]?)?key\s*[:=]\s*['"]?([A-Za-z0-9_\-]{20,})['"]?"#,
+            &["zipcode_api", "ZIPCODE_API", "zipcodeApi"],
+        )),
+        Box::new(RegexDetector::with_prefilter(
+            "onwater-api-key",
+            "OnWater.io API Key",
+            Severity::Low,
+            r#"(?i)onwater[_\-]?(?:api[_\-]?)?key\s*[:=]\s*['"]?([A-Za-z0-9_\-]{20,})['"]?"#,
+            &["onwater_api", "ONWATER_API", "onwaterApi"],
+        )),
+        Box::new(RegexDetector::with_prefilter(
+            "geoipify-api-key",
+            "GeoIPify API Key",
+            Severity::Medium,
+            r#"(?i)geoipify[_\-]?(?:api[_\-]?)?key\s*[:=]\s*['"]?([A-Za-z0-9_\-]{20,})['"]?"#,
+            &["geoipify_api", "GEOIPIFY_API", "geoipifyApi"],
+        )),
+        Box::new(RegexDetector::with_prefilter(
+            "ipgeolocation-api-key",
+            "IPGeolocation API Key",
+            Severity::Medium,
+            r#"(?i)ipgeolocation[_\-]?(?:api[_\-]?)?key\s*[:=]\s*['"]?([A-Za-z0-9_\-]{20,})['"]?"#,
+            &["ipgeolocation_api", "IPGEOLOCATION_API", "ipgeolocationApi"],
+        )),
+        Box::new(RegexDetector::with_prefilter(
+            "ipinfodb-api-key",
+            "IPinfoDB API Key",
+            Severity::Medium,
+            r#"(?i)ipinfodb[_\-]?(?:api[_\-]?)?key\s*[:=]\s*['"]?([A-Za-z0-9_\-]{20,})['"]?"#,
+            &["ipinfodb_api", "IPINFODB_API", "ipinfodbApi"],
+        )),
+        Box::new(RegexDetector::with_prefilter(
+            "ipify-api-key",
+            "ipify API Key",
+            Severity::Medium,
+            r#"(?i)ipify[_\-]?(?:api[_\-]?)?key\s*[:=]\s*['"]?([A-Za-z0-9_\-]{20,})['"]?"#,
+            &["ipify_api", "IPIFY_API", "ipifyApi"],
+        )),
+        Box::new(RegexDetector::with_prefilter(
+            "ipapi-api-key",
+            "ipapi API Key",
+            Severity::Medium,
+            r#"(?i)ipapi[_\-]?(?:api[_\-]?)?key\s*[:=]\s*['"]?([A-Za-z0-9_\-]{20,})['"]?"#,
+            &["ipapi_api", "IPAPI_API", "ipapiApi"],
+        )),
+        Box::new(RegexDetector::with_prefilter(
+            "vpn-api-key",
+            "VPN API Key",
+            Severity::Medium,
+            r#"(?i)vpn[_\-]?(?:api[_\-]?)?key\s*[:=]\s*['"]?([A-Za-z0-9_\-]{20,})['"]?"#,
+            &["vpn_api", "VPN_API", "vpnApi"],
+        )),
+        Box::new(RegexDetector::with_prefilter(
+            "dnscheck-api-key",
+            "DNS Check API Key",
+            Severity::Medium,
+            r#"(?i)dns[_\-]?check[_\-]?(?:api[_\-]?)?key\s*[:=]\s*['"]?([A-Za-z0-9_\-]{20,})['"]?"#,
+            &["dnscheck_api", "DNSCHECK_API", "dnscheckApi"],
+        )),
+        Box::new(RegexDetector::with_prefilter(
+            "walkscore-api-key",
+            "Walk Score API Key",
+            Severity::Low,
+            r#"(?i)walk[_\-]?score[_\-]?(?:api[_\-]?)?key\s*[:=]\s*['"]?([A-Za-z0-9_\-]{20,})['"]?"#,
+            &["walkscore_api", "WALKSCORE_API", "walkscoreApi"],
+        )),
+        Box::new(RegexDetector::with_prefilter(
+            "besttime-api-key",
+            "Besttime API Key",
+            Severity::Medium,
+            r#"(?i)besttime[_\-]?(?:api[_\-]?)?key\s*[:=]\s*['"]?([A-Za-z0-9_\-]{20,})['"]?"#,
+            &["besttime_api", "BESTTIME_API", "besttimeApi"],
+        )),
+        Box::new(RegexDetector::with_prefilter(
+            "hypertrack-api-key",
+            "Hypertrack API Key",
+            Severity::Medium,
+            r#"(?i)hypertrack[_\-]?(?:api[_\-]?)?key\s*[:=]\s*['"]?([A-Za-z0-9_\-]{20,})['"]?"#,
+            &["hypertrack_api", "HYPERTRACK_API", "hypertrackApi"],
+        )),
+        Box::new(RegexDetector::with_prefilter(
+            "fulcrum-api-key",
+            "Fulcrum API Key",
+            Severity::Medium,
+            r#"(?i)fulcrum[_\-]?(?:api[_\-]?)?key\s*[:=]\s*['"]?([A-Za-z0-9_\-]{20,})['"]?"#,
+            &["fulcrum_api", "FULCRUM_API", "fulcrumApi"],
+        )),
+        Box::new(RegexDetector::with_prefilter(
+            "samsara-api-key",
+            "Samsara API Key",
+            Severity::High,
+            r#"(?i)samsara[_\-]?(?:api[_\-]?)?key\s*[:=]\s*['"]?([A-Za-z0-9_\-]{20,})['"]?"#,
+            &["samsara_api", "SAMSARA_API", "samsaraApi"],
+        )),
+
+        // ── Media & Image APIs (TruffleHog) ──────────────────────────────
+        Box::new(RegexDetector::with_prefilter(
+            "unsplash-api-key",
+            "Unsplash API Key",
+            Severity::Medium,
+            r#"(?i)unsplash[_\-]?(?:api[_\-]?)?key\s*[:=]\s*['"]?([A-Za-z0-9_\-]{20,})['"]?"#,
+            &["unsplash_api", "UNSPLASH_API", "unsplashApi"],
+        )),
+        Box::new(RegexDetector::with_prefilter(
+            "pixabay-api-key",
+            "Pixabay API Key",
+            Severity::Medium,
+            r#"(?i)pixabay[_\-]?(?:api[_\-]?)?key\s*[:=]\s*['"]?([A-Za-z0-9_\-]{20,})['"]?"#,
+            &["pixabay_api", "PIXABAY_API", "pixabayApi"],
+        )),
+        Box::new(RegexDetector::with_prefilter(
+            "gyazo-api-key",
+            "Gyazo API Key",
+            Severity::Medium,
+            r#"(?i)gyazo[_\-]?(?:api[_\-]?)?key\s*[:=]\s*['"]?([A-Za-z0-9_\-]{20,})['"]?"#,
+            &["gyazo_api", "GYAZO_API", "gyazoApi"],
+        )),
+        Box::new(RegexDetector::with_prefilter(
+            "imgur-api-key",
+            "Imgur API Key",
+            Severity::Medium,
+            r#"(?i)imgur[_\-]?(?:api[_\-]?)?key\s*[:=]\s*['"]?([A-Za-z0-9_\-]{20,})['"]?"#,
+            &["imgur_api", "IMGUR_API", "imgurApi"],
+        )),
+        Box::new(RegexDetector::with_prefilter(
+            "shutterstock-api-key",
+            "Shutterstock API Key",
+            Severity::High,
+            r#"(?i)shutterstock[_\-]?(?:api[_\-]?)?key\s*[:=]\s*['"]?([A-Za-z0-9_\-]{20,})['"]?"#,
+            &["shutterstock_api", "SHUTTERSTOCK_API", "shutterstockApi"],
+        )),
+        Box::new(RegexDetector::with_prefilter(
+            "shutterstock-oauth-token",
+            "Shutterstock OAuth Token",
+            Severity::High,
+            r#"(?i)shutterstock[_\-]?oauth[_\-]?token\s*[:=]\s*['"]?([A-Za-z0-9_\-]{20,})['"]?"#,
+            &["shutterstock_oauth", "SHUTTERSTOCK_OAUTH", "shutterstockOauth"],
+        )),
+        Box::new(RegexDetector::with_prefilter(
+            "iconfinder-api-key",
+            "IconFinder API Key",
+            Severity::Medium,
+            r#"(?i)iconfinder[_\-]?(?:api[_\-]?)?key\s*[:=]\s*['"]?([A-Za-z0-9_\-]{20,})['"]?"#,
+            &["iconfinder_api", "ICONFINDER_API", "iconfinderApi"],
+        )),
+        Box::new(RegexDetector::with_prefilter(
+            "imagekit-api-key",
+            "ImageKit API Key",
+            Severity::Medium,
+            r#"(?i)imagekit[_\-]?(?:api[_\-]?)?key\s*[:=]\s*['"]?([A-Za-z0-9_\-]{20,})['"]?"#,
+            &["imagekit_api", "IMAGEKIT_API", "imagekitApi"],
+        )),
+        Box::new(RegexDetector::with_prefilter(
+            "bannerbear-api-key",
+            "Bannerbear API Key",
+            Severity::Medium,
+            r#"(?i)bannerbear[_\-]?(?:api[_\-]?)?key\s*[:=]\s*['"]?([A-Za-z0-9_\-]{20,})['"]?"#,
+            &["bannerbear_api", "BANNERBEAR_API", "bannerbearApi"],
+        )),
+        Box::new(RegexDetector::with_prefilter(
+            "imagga-api-key",
+            "Imagga API Key",
+            Severity::Medium,
+            r#"(?i)imagga[_\-]?(?:api[_\-]?)?key\s*[:=]\s*['"]?([A-Za-z0-9_\-]{20,})['"]?"#,
+            &["imagga_api", "IMAGGA_API", "imaggaApi"],
+        )),
+        Box::new(RegexDetector::with_prefilter(
+            "faceplusplus-api-key",
+            "Face++ API Key",
+            Severity::Medium,
+            r#"(?i)face[_\-]?plusplus[_\-]?(?:api[_\-]?)?key\s*[:=]\s*['"]?([A-Za-z0-9_\-]{20,})['"]?"#,
+            &["faceplusplus_api", "FACEPLUSPLUS_API", "faceplusplusApi"],
+        )),
+        Box::new(RegexDetector::with_prefilter(
+            "skybiometry-api-key",
+            "SkyBiometry API Key",
+            Severity::Medium,
+            r#"(?i)skybiometry[_\-]?(?:api[_\-]?)?key\s*[:=]\s*['"]?([A-Za-z0-9_\-]{20,})['"]?"#,
+            &["skybiometry_api", "SKYBIOMETRY_API", "skybiometryApi"],
+        )),
+        Box::new(RegexDetector::with_prefilter(
+            "cloudmersive-api-key",
+            "Cloudmersive API Key",
+            Severity::Medium,
+            r#"(?i)cloudmersive[_\-]?(?:api[_\-]?)?key\s*[:=]\s*['"]?([A-Za-z0-9_\-]{20,})['"]?"#,
+            &["cloudmersive_api", "CLOUDMERSIVE_API", "cloudmersiveApi"],
+        )),
+        Box::new(RegexDetector::with_prefilter(
+            "screenshotapi-api-key",
+            "ScreenshotAPI API Key",
+            Severity::Medium,
+            r#"(?i)screenshotapi[_\-]?(?:api[_\-]?)?key\s*[:=]\s*['"]?([A-Za-z0-9_\-]{20,})['"]?"#,
+            &["screenshotapi_api", "SCREENSHOTAPI_API", "screenshotapiApi"],
+        )),
+        Box::new(RegexDetector::with_prefilter(
+            "screenshotlayer-api-key",
+            "ScreenshotLayer API Key",
+            Severity::Medium,
+            r#"(?i)screenshotlayer[_\-]?(?:api[_\-]?)?key\s*[:=]\s*['"]?([A-Za-z0-9_\-]{20,})['"]?"#,
+            &["screenshotlayer_api", "SCREENSHOTLAYER_API", "screenshotlayerApi"],
+        )),
+        Box::new(RegexDetector::with_prefilter(
+            "browshot-api-key",
+            "Browshot API Key",
+            Severity::Medium,
+            r#"(?i)browshot[_\-]?(?:api[_\-]?)?key\s*[:=]\s*['"]?([A-Za-z0-9_\-]{20,})['"]?"#,
+            &["browshot_api", "BROWSHOT_API", "browshotApi"],
+        )),
+        Box::new(RegexDetector::with_prefilter(
+            "linkpreview-api-key",
+            "LinkPreview API Key",
+            Severity::Medium,
+            r#"(?i)linkpreview[_\-]?(?:api[_\-]?)?key\s*[:=]\s*['"]?([A-Za-z0-9_\-]{20,})['"]?"#,
+            &["linkpreview_api", "LINKPREVIEW_API", "linkpreviewApi"],
+        )),
+        Box::new(RegexDetector::with_prefilter(
+            "mixcloud-api-key",
+            "Mixcloud API Key",
+            Severity::Low,
+            r#"(?i)mixcloud[_\-]?(?:api[_\-]?)?key\s*[:=]\s*['"]?([A-Za-z0-9_\-]{20,})['"]?"#,
+            &["mixcloud_api", "MIXCLOUD_API", "mixcloudApi"],
+        )),
+        Box::new(RegexDetector::with_prefilter(
+            "rawg-api-key",
+            "Rawg API Key",
+            Severity::Medium,
+            r#"(?i)rawg[_\-]?(?:api[_\-]?)?key\s*[:=]\s*['"]?([A-Za-z0-9_\-]{20,})['"]?"#,
+            &["rawg_api", "RAWG_API", "rawgApi"],
+        )),
+        Box::new(RegexDetector::with_prefilter(
+            "strava-api-key",
+            "Strava API Key",
+            Severity::Medium,
+            r#"(?i)strava[_\-]?(?:api[_\-]?)?key\s*[:=]\s*['"]?([A-Za-z0-9_\-]{20,})['"]?"#,
+            &["strava_api", "STRAVA_API", "stravaApi"],
+        )),
+        Box::new(RegexDetector::with_prefilter(
+            "foursquare-api-key",
+            "FourSquare API Key",
+            Severity::Medium,
+            r#"(?i)foursquare[_\-]?(?:api[_\-]?)?key\s*[:=]\s*['"]?([A-Za-z0-9_\-]{20,})['"]?"#,
+            &["foursquare_api", "FOURSQUARE_API", "foursquareApi"],
+        )),
+        Box::new(RegexDetector::with_prefilter(
+            "ticketmaster-api-key",
+            "TicketMaster API Key",
+            Severity::Medium,
+            r#"(?i)ticketmaster[_\-]?(?:api[_\-]?)?key\s*[:=]\s*['"]?([A-Za-z0-9_\-]{20,})['"]?"#,
+            &["ticketmaster_api", "TICKETMASTER_API", "ticketmasterApi"],
+        )),
+        Box::new(RegexDetector::with_prefilter(
+            "riotgames-api-key",
+            "Riot Games API Key",
+            Severity::Medium,
+            r#"(?i)riot[_\-]?games[_\-]?(?:api[_\-]?)?key\s*[:=]\s*['"]?([A-Za-z0-9_\-]{20,})['"]?"#,
+            &["riotgames_api", "RIOTGAMES_API", "riotgamesApi"],
+        )),
+        Box::new(RegexDetector::with_prefilter(
+            "cricket-api-key",
+            "Cricket API Key",
+            Severity::Low,
+            r#"(?i)cricket[_\-]?(?:api[_\-]?)?key\s*[:=]\s*['"]?([A-Za-z0-9_\-]{20,})['"]?"#,
+            &["cricket_api", "CRICKET_API", "cricketApi"],
+        )),
+        Box::new(RegexDetector::with_prefilter(
+            "allsports-api-key",
+            "All Sports API Key",
+            Severity::Medium,
+            r#"(?i)all[_\-]?sports[_\-]?(?:api[_\-]?)?key\s*[:=]\s*['"]?([A-Za-z0-9_\-]{20,})['"]?"#,
+            &["allsports_api", "ALLSPORTS_API", "allsportsApi"],
+        )),
+        Box::new(RegexDetector::with_prefilter(
+            "sportsmonk-api-key",
+            "SportsMonk API Key",
+            Severity::Medium,
+            r#"(?i)sportsmonk[_\-]?(?:api[_\-]?)?key\s*[:=]\s*['"]?([A-Za-z0-9_\-]{20,})['"]?"#,
+            &["sportsmonk_api", "SPORTSMONK_API", "sportsmonkApi"],
+        )),
+        Box::new(RegexDetector::with_prefilter(
+            "edamam-api-key",
+            "Edamam API Key",
+            Severity::Medium,
+            r#"(?i)edamam[_\-]?(?:api[_\-]?)?key\s*[:=]\s*['"]?([A-Za-z0-9_\-]{20,})['"]?"#,
+            &["edamam_api", "EDAMAM_API", "edamamApi"],
+        )),
+        Box::new(RegexDetector::with_prefilter(
+            "nutritionix-api-key",
+            "Nutritionix API Key",
+            Severity::Medium,
+            r#"(?i)nutritionix[_\-]?(?:api[_\-]?)?key\s*[:=]\s*['"]?([A-Za-z0-9_\-]{20,})['"]?"#,
+            &["nutritionix_api", "NUTRITIONIX_API", "nutritionixApi"],
+        )),
+        Box::new(RegexDetector::with_prefilter(
+            "spoonacular-api-key",
+            "Spoonacular API Key",
+            Severity::Medium,
+            r#"(?i)spoonacular[_\-]?(?:api[_\-]?)?key\s*[:=]\s*['"]?([A-Za-z0-9_\-]{20,})['"]?"#,
+            &["spoonacular_api", "SPOONACULAR_API", "spoonacularApi"],
+        )),
+        Box::new(RegexDetector::with_prefilter(
+            "calorieninja-api-key",
+            "Calorie Ninja API Key",
+            Severity::Low,
+            r#"(?i)calorie[_\-]?ninja[_\-]?(?:api[_\-]?)?key\s*[:=]\s*['"]?([A-Za-z0-9_\-]{20,})['"]?"#,
+            &["calorieninja_api", "CALORIENINJA_API", "calorieninjaApi"],
+        )),
+        Box::new(RegexDetector::with_prefilter(
+            "protocolsio-api-key",
+            "Protocols.io API Key",
+            Severity::Medium,
+            r#"(?i)protocols[_\-]?io[_\-]?(?:api[_\-]?)?key\s*[:=]\s*['"]?([A-Za-z0-9_\-]{20,})['"]?"#,
+            &["protocolsio_api", "PROTOCOLSIO_API", "protocolsioApi"],
+        )),
+        Box::new(RegexDetector::with_prefilter(
+            "hypeauditor-api-key",
+            "HypeAuditor API Key",
+            Severity::Medium,
+            r#"(?i)hypeauditor[_\-]?(?:api[_\-]?)?key\s*[:=]\s*['"]?([A-Za-z0-9_\-]{20,})['"]?"#,
+            &["hypeauditor_api", "HYPEAUDITOR_API", "hypeauditorApi"],
+        )),
+
+        // ── News & Content APIs (TruffleHog) ─────────────────────────────
+        Box::new(RegexDetector::with_prefilter(
+            "newsapi-key",
+            "NewsAPI Key",
+            Severity::Medium,
+            r#"(?i)news[_\-]?api[_\-]?key\s*[:=]\s*['"]?([A-Za-z0-9_\-]{20,})['"]?"#,
+            &["newsapi_key", "NEWSAPI_KEY", "newsapiKey"],
+        )),
+        Box::new(RegexDetector::with_prefilter(
+            "newscatcher-api-key",
+            "Newscatcher API Key",
+            Severity::Medium,
+            r#"(?i)newscatcher[_\-]?(?:api[_\-]?)?key\s*[:=]\s*['"]?([A-Za-z0-9_\-]{20,})['"]?"#,
+            &["newscatcher_api", "NEWSCATCHER_API", "newscatcherApi"],
+        )),
+        Box::new(RegexDetector::with_prefilter(
+            "currents-api-key",
+            "Currents API Key",
+            Severity::Medium,
+            r#"(?i)currents[_\-]?(?:api[_\-]?)?key\s*[:=]\s*['"]?([A-Za-z0-9_\-]{20,})['"]?"#,
+            &["currents_api", "CURRENTS_API", "currentsApi"],
+        )),
+        Box::new(RegexDetector::with_prefilter(
+            "guardian-api-key",
+            "Guardian API Key",
+            Severity::Medium,
+            r#"(?i)guardian[_\-]?(?:api[_\-]?)?key\s*[:=]\s*['"]?([A-Za-z0-9_\-]{20,})['"]?"#,
+            &["guardian_api", "GUARDIAN_API", "guardianApi"],
+        )),
+        Box::new(RegexDetector::with_prefilter(
+            "aylien-api-key",
+            "Aylien API Key",
+            Severity::Medium,
+            r#"(?i)aylien[_\-]?(?:api[_\-]?)?key\s*[:=]\s*['"]?([A-Za-z0-9_\-]{20,})['"]?"#,
+            &["aylien_api", "AYLIEN_API", "aylienApi"],
+        )),
+        Box::new(RegexDetector::with_prefilter(
+            "cicero-api-key",
+            "Cicero API Key",
+            Severity::Medium,
+            r#"(?i)cicero[_\-]?(?:api[_\-]?)?key\s*[:=]\s*['"]?([A-Za-z0-9_\-]{20,})['"]?"#,
+            &["cicero_api", "CICERO_API", "ciceroApi"],
+        )),
+        Box::new(RegexDetector::with_prefilter(
+            "lexigram-api-key",
+            "Lexigram API Key",
+            Severity::Medium,
+            r#"(?i)lexigram[_\-]?(?:api[_\-]?)?key\s*[:=]\s*['"]?([A-Za-z0-9_\-]{20,})['"]?"#,
+            &["lexigram_api", "LEXIGRAM_API", "lexigramApi"],
+        )),
+        Box::new(RegexDetector::with_prefilter(
+            "blogger-api-key",
+            "Blogger API Key",
+            Severity::Low,
+            r#"(?i)blogger[_\-]?(?:api[_\-]?)?key\s*[:=]\s*['"]?([A-Za-z0-9_\-]{20,})['"]?"#,
+            &["blogger_api", "BLOGGER_API", "bloggerApi"],
+        )),
+        Box::new(RegexDetector::with_prefilter(
+            "mediastack-api-key",
+            "MediaStack API Key",
+            Severity::Medium,
+            r#"(?i)mediastack[_\-]?(?:api[_\-]?)?key\s*[:=]\s*['"]?([A-Za-z0-9_\-]{20,})['"]?"#,
+            &["mediastack_api", "MEDIASTACK_API", "mediastackApi"],
+        )),
+        Box::new(RegexDetector::with_prefilter(
+            "clickhelp-api-key",
+            "ClickHelp API Key",
+            Severity::Medium,
+            r#"(?i)clickhelp[_\-]?(?:api[_\-]?)?key\s*[:=]\s*['"]?([A-Za-z0-9_\-]{20,})['"]?"#,
+            &["clickhelp_api", "CLICKHELP_API", "clickhelpApi"],
+        )),
+        Box::new(RegexDetector::with_prefilter(
+            "storychief-api-key",
+            "Storychief API Key",
+            Severity::Medium,
+            r#"(?i)storychief[_\-]?(?:api[_\-]?)?key\s*[:=]\s*['"]?([A-Za-z0-9_\-]{20,})['"]?"#,
+            &["storychief_api", "STORYCHIEF_API", "storychiefApi"],
+        )),
+        Box::new(RegexDetector::with_prefilter(
+            "noticeable-api-key",
+            "Noticeable API Key",
+            Severity::Medium,
+            r#"(?i)noticeable[_\-]?(?:api[_\-]?)?key\s*[:=]\s*['"]?([A-Za-z0-9_\-]{20,})['"]?"#,
+            &["noticeable_api", "NOTICEABLE_API", "noticeableApi"],
+        )),
+        Box::new(RegexDetector::with_prefilter(
+            "readme-api-key",
+            "ReadMe API Key",
+            Severity::Medium,
+            r#"(?i)readme[_\-]?(?:api[_\-]?)?key\s*[:=]\s*['"]?([A-Za-z0-9_\-]{20,})['"]?"#,
+            &["readme_api", "README_API", "readmeApi"],
+        )),
+        Box::new(RegexDetector::with_prefilter(
+            "pastebin-api-key",
+            "Pastebin API Key",
+            Severity::Medium,
+            r#"(?i)pastebin[_\-]?(?:api[_\-]?)?key\s*[:=]\s*['"]?([A-Za-z0-9_\-]{20,})['"]?"#,
+            &["pastebin_api", "PASTEBIN_API", "pastebinApi"],
+        )),
+        Box::new(RegexDetector::with_prefilter(
+            "crowdin-api-key",
+            "Crowdin API Key",
+            Severity::Medium,
+            r#"(?i)crowdin[_\-]?(?:api[_\-]?)?key\s*[:=]\s*['"]?([A-Za-z0-9_\-]{20,})['"]?"#,
+            &["crowdin_api", "CROWDIN_API", "crowdinApi"],
+        )),
+        Box::new(RegexDetector::with_prefilter(
+            "alconost-api-key",
+            "Alconost API Key",
+            Severity::Medium,
+            r#"(?i)alconost[_\-]?(?:api[_\-]?)?key\s*[:=]\s*['"]?([A-Za-z0-9_\-]{20,})['"]?"#,
+            &["alconost_api", "ALCONOST_API", "alconostApi"],
+        )),
+        Box::new(RegexDetector::with_prefilter(
+            "gengo-api-key",
+            "Gengo API Key",
+            Severity::Medium,
+            r#"(?i)gengo[_\-]?(?:api[_\-]?)?key\s*[:=]\s*['"]?([A-Za-z0-9_\-]{20,})['"]?"#,
+            &["gengo_api", "GENGO_API", "gengoApi"],
+        )),
+        Box::new(RegexDetector::with_prefilter(
+            "happyscribe-api-key",
+            "HappyScribe API Key",
+            Severity::Medium,
+            r#"(?i)happyscribe[_\-]?(?:api[_\-]?)?key\s*[:=]\s*['"]?([A-Za-z0-9_\-]{20,})['"]?"#,
+            &["happyscribe_api", "HAPPYSCRIBE_API", "happyscribeApi"],
+        )),
+        Box::new(RegexDetector::with_prefilter(
+            "ritekit-api-key",
+            "RiteKit API Key",
+            Severity::Medium,
+            r#"(?i)ritekit[_\-]?(?:api[_\-]?)?key\s*[:=]\s*['"]?([A-Za-z0-9_\-]{20,})['"]?"#,
+            &["ritekit_api", "RITEKIT_API", "ritekitApi"],
+        )),
+
+        // ── Developer & Code Tools (TruffleHog) ──────────────────────────
+        Box::new(RegexDetector::with_prefilter(
+            "rubygems-api-token",
+            "RubyGems API Token",
+            Severity::High,
+            r#"(?i)rubygems[_\-]?(?:api[_\-]?)?token\s*[:=]\s*['"]?([A-Za-z0-9_\-]{20,})['"]?"#,
+            &["rubygems_api", "RUBYGEMS_API", "rubygemsApi"],
+        )),
+        Box::new(RegexDetector::with_prefilter(
+            "codacy-api-token",
+            "Codacy API Token",
+            Severity::High,
+            r#"(?i)codacy[_\-]?(?:api[_\-]?)?token\s*[:=]\s*['"]?([A-Za-z0-9_\-]{20,})['"]?"#,
+            &["codacy_api", "CODACY_API", "codacyApi"],
+        )),
+        Box::new(RegexDetector::with_prefilter(
+            "coveralls-api-token",
+            "Coveralls API Token",
+            Severity::Medium,
+            r#"(?i)coveralls[_\-]?(?:api[_\-]?)?token\s*[:=]\s*['"]?([A-Za-z0-9_\-]{20,})['"]?"#,
+            &["coveralls_api", "COVERALLS_API", "coverallsApi"],
+        )),
+        Box::new(RegexDetector::with_prefilter(
+            "saucelabs-api-key",
+            "SauceLabs API Key",
+            Severity::High,
+            r#"(?i)saucelabs[_\-]?(?:api[_\-]?)?key\s*[:=]\s*['"]?([A-Za-z0-9_\-]{20,})['"]?"#,
+            &["saucelabs_api", "SAUCELABS_API", "saucelabsApi"],
+        )),
+        Box::new(RegexDetector::with_prefilter(
+            "bitbar-api-key",
+            "Bitbar API Key",
+            Severity::Medium,
+            r#"(?i)bitbar[_\-]?(?:api[_\-]?)?key\s*[:=]\s*['"]?([A-Za-z0-9_\-]{20,})['"]?"#,
+            &["bitbar_api", "BITBAR_API", "bitbarApi"],
+        )),
+        Box::new(RegexDetector::with_prefilter(
+            "bugsnag-api-key",
+            "Bugsnag API Key",
+            Severity::High,
+            r#"(?i)bugsnag[_\-]?(?:api[_\-]?)?key\s*[:=]\s*['"]?([A-Za-z0-9_\-]{20,})['"]?"#,
+            &["bugsnag_api", "BUGSNAG_API", "bugsnagApi"],
+        )),
+        Box::new(RegexDetector::with_prefilter(
+            "adafruit-io-key",
+            "Adafruit IO Key",
+            Severity::Medium,
+            r#"(?i)adafruit[_\-]?io[_\-]?(?:api[_\-]?)?key\s*[:=]\s*['"]?([A-Za-z0-9_\-]{20,})['"]?"#,
+            &["adafruit_io", "ADAFRUIT_IO", "adafruitIo"],
+        )),
+        Box::new(RegexDetector::with_prefilter(
+            "apify-api-key",
+            "Apify API Key",
+            Severity::Medium,
+            r#"(?i)apify[_\-]?(?:api[_\-]?)?key\s*[:=]\s*['"]?([A-Za-z0-9_\-]{20,})['"]?"#,
+            &["apify_api", "APIFY_API", "apifyApi"],
+        )),
+        Box::new(RegexDetector::with_prefilter(
+            "keygen-api-key",
+            "Keygen API Key",
+            Severity::High,
+            r#"(?i)keygen[_\-]?(?:api[_\-]?)?key\s*[:=]\s*['"]?([A-Za-z0-9_\-]{20,})['"]?"#,
+            &["keygen_api", "KEYGEN_API", "keygenApi"],
+        )),
+        Box::new(RegexDetector::with_prefilter(
+            "aiven-api-key",
+            "Aiven API Key",
+            Severity::Medium,
+            r#"(?i)aiven[_\-]?(?:api[_\-]?)?key\s*[:=]\s*['"]?([A-Za-z0-9_\-]{20,})['"]?"#,
+            &["aiven_api", "AIVEN_API", "aivenApi"],
+        )),
+        Box::new(RegexDetector::with_prefilter(
+            "fileio-api-key",
+            "File.io API Key",
+            Severity::Medium,
+            r#"(?i)file[_\-]?io[_\-]?(?:api[_\-]?)?key\s*[:=]\s*['"]?([A-Za-z0-9_\-]{20,})['"]?"#,
+            &["fileio_api", "FILEIO_API", "fileioApi"],
+        )),
+        Box::new(RegexDetector::with_prefilter(
+            "flatio-api-key",
+            "Flat.io API Key",
+            Severity::Medium,
+            r#"(?i)flat[_\-]?io[_\-]?(?:api[_\-]?)?key\s*[:=]\s*['"]?([A-Za-z0-9_\-]{20,})['"]?"#,
+            &["flatio_api", "FLATIO_API", "flatioApi"],
+        )),
+        Box::new(RegexDetector::with_prefilter(
+            "dynalist-api-key",
+            "Dynalist API Key",
+            Severity::Medium,
+            r#"(?i)dynalist[_\-]?(?:api[_\-]?)?key\s*[:=]\s*['"]?([A-Za-z0-9_\-]{20,})['"]?"#,
+            &["dynalist_api", "DYNALIST_API", "dynalistApi"],
+        )),
+        Box::new(RegexDetector::with_prefilter(
+            "sheety-api-key",
+            "Sheety API Key",
+            Severity::Medium,
+            r#"(?i)sheety[_\-]?(?:api[_\-]?)?key\s*[:=]\s*['"]?([A-Za-z0-9_\-]{20,})['"]?"#,
+            &["sheety_api", "SHEETY_API", "sheetyApi"],
+        )),
+        Box::new(RegexDetector::with_prefilter(
+            "swell-api-key",
+            "Swell API Key",
+            Severity::Medium,
+            r#"(?i)swell[_\-]?(?:api[_\-]?)?key\s*[:=]\s*['"]?([A-Za-z0-9_\-]{20,})['"]?"#,
+            &["swell_api", "SWELL_API", "swellApi"],
+        )),
+        Box::new(RegexDetector::with_prefilter(
+            "m3o-api-key",
+            "M3o API Key",
+            Severity::Medium,
+            r#"(?i)m3o[_\-]?(?:api[_\-]?)?key\s*[:=]\s*['"]?([A-Za-z0-9_\-]{20,})['"]?"#,
+            &["m3o_api", "M3O_API", "m3oApi"],
+        )),
+        Box::new(RegexDetector::with_prefilter(
+            "jsonbin-api-key",
+            "JSONbin API Key",
+            Severity::Medium,
+            r#"(?i)jsonbin[_\-]?(?:api[_\-]?)?key\s*[:=]\s*['"]?([A-Za-z0-9_\-]{20,})['"]?"#,
+            &["jsonbin_api", "JSONBIN_API", "jsonbinApi"],
+        )),
+        Box::new(RegexDetector::with_prefilter(
+            "userstack-api-key",
+            "UserStack API Key",
+            Severity::Medium,
+            r#"(?i)userstack[_\-]?(?:api[_\-]?)?key\s*[:=]\s*['"]?([A-Za-z0-9_\-]{20,})['"]?"#,
+            &["userstack_api", "USERSTACK_API", "userstackApi"],
+        )),
+        Box::new(RegexDetector::with_prefilter(
+            "purestake-api-key",
+            "PureStake API Key",
+            Severity::Medium,
+            r#"(?i)purestake[_\-]?(?:api[_\-]?)?key\s*[:=]\s*['"]?([A-Za-z0-9_\-]{20,})['"]?"#,
+            &["purestake_api", "PURESTAKE_API", "purestakeApi"],
+        )),
+        Box::new(RegexDetector::with_prefilter(
+            "host-api-key",
+            "Host API Key",
+            Severity::Medium,
+            r#"(?i)host[_\-]?(?:api[_\-]?)?key\s*[:=]\s*['"]?([A-Za-z0-9_\-]{20,})['"]?"#,
+            &["host_api", "HOST_API", "hostApi"],
+        )),
+        Box::new(RegexDetector::with_prefilter(
+            "baseapi-api-key",
+            "BaseAPI.io API Key",
+            Severity::Medium,
+            r#"(?i)baseapi[_\-]?io[_\-]?(?:api[_\-]?)?key\s*[:=]\s*['"]?([A-Za-z0-9_\-]{20,})['"]?"#,
+            &["baseapi_api", "BASEAPI_API", "baseapiApi"],
+        )),
+        Box::new(RegexDetector::with_prefilter(
+            "sslmate-api-key",
+            "SslMate API Key",
+            Severity::Medium,
+            r#"(?i)sslmate[_\-]?(?:api[_\-]?)?key\s*[:=]\s*['"]?([A-Za-z0-9_\-]{20,})['"]?"#,
+            &["sslmate_api", "SSLMATE_API", "sslmateApi"],
+        )),
+        Box::new(RegexDetector::with_prefilter(
+            "adobeio-api-key",
+            "Adobe IO API Key",
+            Severity::High,
+            r#"(?i)adobe[_\-]?io[_\-]?(?:api[_\-]?)?key\s*[:=]\s*['"]?([A-Za-z0-9_\-]{20,})['"]?"#,
+            &["adobeio_api", "ADOBEIO_API", "adobeioApi"],
+        )),
+        Box::new(RegexDetector::with_prefilter(
+            "edenai-api-key",
+            "EdenAI API Key",
+            Severity::Medium,
+            r#"(?i)edenai[_\-]?(?:api[_\-]?)?key\s*[:=]\s*['"]?([A-Za-z0-9_\-]{20,})['"]?"#,
+            &["edenai_api", "EDENAI_API", "edenaiApi"],
+        )),
+        Box::new(RegexDetector::with_prefilter(
+            "deepgram-api-key",
+            "Deepgram API Key",
+            Severity::High,
+            r#"(?i)deepgram[_\-]?(?:api[_\-]?)?key\s*[:=]\s*['"]?([A-Za-z0-9_\-]{20,})['"]?"#,
+            &["deepgram_api", "DEEPGRAM_API", "deepgramApi"],
+        )),
+        Box::new(RegexDetector::with_prefilter(
+            "voicegain-api-key",
+            "Voicegain API Key",
+            Severity::Medium,
+            r#"(?i)voicegain[_\-]?(?:api[_\-]?)?key\s*[:=]\s*['"]?([A-Za-z0-9_\-]{20,})['"]?"#,
+            &["voicegain_api", "VOICEGAIN_API", "voicegainApi"],
+        )),
+        Box::new(RegexDetector::with_prefilter(
+            "auddio-api-key",
+            "Audd.io API Key",
+            Severity::Medium,
+            r#"(?i)audd[_\-]?io[_\-]?(?:api[_\-]?)?key\s*[:=]\s*['"]?([A-Za-z0-9_\-]{20,})['"]?"#,
+            &["auddio_api", "AUDDIO_API", "auddioApi"],
+        )),
+        Box::new(RegexDetector::with_prefilter(
+            "owlbot-api-key",
+            "OwlBot API Key",
+            Severity::Low,
+            r#"(?i)owlbot[_\-]?(?:api[_\-]?)?key\s*[:=]\s*['"]?([A-Za-z0-9_\-]{20,})['"]?"#,
+            &["owlbot_api", "OWLBOT_API", "owlbotApi"],
+        )),
+        Box::new(RegexDetector::with_prefilter(
+            "detectlanguage-api-key",
+            "DetectLanguage API Key",
+            Severity::Medium,
+            r#"(?i)detectlanguage[_\-]?(?:api[_\-]?)?key\s*[:=]\s*['"]?([A-Za-z0-9_\-]{20,})['"]?"#,
+            &["detectlanguage_api", "DETECTLANGUAGE_API", "detectlanguageApi"],
+        )),
+        Box::new(RegexDetector::with_prefilter(
+            "languagelayer-api-key",
+            "LanguageLayer API Key",
+            Severity::Medium,
+            r#"(?i)languagelayer[_\-]?(?:api[_\-]?)?key\s*[:=]\s*['"]?([A-Za-z0-9_\-]{20,})['"]?"#,
+            &["languagelayer_api", "LANGUAGELAYER_API", "languagelayerApi"],
+        )),
+        Box::new(RegexDetector::with_prefilter(
+            "paralleldots-api-key",
+            "ParallelDots API Key",
+            Severity::Medium,
+            r#"(?i)paralleldots[_\-]?(?:api[_\-]?)?key\s*[:=]\s*['"]?([A-Za-z0-9_\-]{20,})['"]?"#,
+            &["paralleldots_api", "PARALLELDOTS_API", "paralleldotsApi"],
+        )),
+        Box::new(RegexDetector::with_prefilter(
+            "veriphone-api-key",
+            "Veriphone API Key",
+            Severity::Medium,
+            r#"(?i)veriphone[_\-]?(?:api[_\-]?)?key\s*[:=]\s*['"]?([A-Za-z0-9_\-]{20,})['"]?"#,
+            &["veriphone_api", "VERIPHONE_API", "veriphoneApi"],
+        )),
+        Box::new(RegexDetector::with_prefilter(
+            "verifier-api-key",
+            "Verifier API Key",
+            Severity::Medium,
+            r#"(?i)verifier[_\-]?(?:api[_\-]?)?key\s*[:=]\s*['"]?([A-Za-z0-9_\-]{20,})['"]?"#,
+            &["verifier_api", "VERIFIER_API", "verifierApi"],
+        )),
+        Box::new(RegexDetector::with_prefilter(
+            "api2cart-api-key",
+            "API2Cart API Key",
+            Severity::Medium,
+            r#"(?i)api2cart[_\-]?(?:api[_\-]?)?key\s*[:=]\s*['"]?([A-Za-z0-9_\-]{20,})['"]?"#,
+            &["api2cart_api", "API2CART_API", "api2cartApi"],
+        )),
+        Box::new(RegexDetector::with_prefilter(
+            "apideck-api-key",
+            "APIDeck API Key",
+            Severity::Medium,
+            r#"(?i)apideck[_\-]?(?:api[_\-]?)?key\s*[:=]\s*['"]?([A-Za-z0-9_\-]{20,})['"]?"#,
+            &["apideck_api", "APIDECK_API", "apideckApi"],
+        )),
+        Box::new(RegexDetector::with_prefilter(
+            "apiflash-api-key",
+            "APIFlash API Key",
+            Severity::Medium,
+            r#"(?i)apiflash[_\-]?(?:api[_\-]?)?key\s*[:=]\s*['"]?([A-Za-z0-9_\-]{20,})['"]?"#,
+            &["apiflash_api", "APIFLASH_API", "apiflashApi"],
+        )),
+        Box::new(RegexDetector::with_prefilter(
+            "fleetbase-api-key",
+            "Fleetbase API Key",
+            Severity::Medium,
+            r#"(?i)fleetbase[_\-]?(?:api[_\-]?)?key\s*[:=]\s*['"]?([A-Za-z0-9_\-]{20,})['"]?"#,
+            &["fleetbase_api", "FLEETBASE_API", "fleetbaseApi"],
+        )),
+        Box::new(RegexDetector::with_prefilter(
+            "agora-api-key",
+            "Agora API Key",
+            Severity::High,
+            r#"(?i)agora[_\-]?(?:api[_\-]?)?key\s*[:=]\s*['"]?([A-Za-z0-9_\-]{20,})['"]?"#,
+            &["agora_api", "AGORA_API", "agoraApi"],
+        )),
+        Box::new(RegexDetector::with_prefilter(
+            "yandex-api-key",
+            "Yandex API Key",
+            Severity::Medium,
+            r#"(?i)yandex[_\-]?(?:api[_\-]?)?key\s*[:=]\s*['"]?([A-Za-z0-9_\-]{20,})['"]?"#,
+            &["yandex_api", "YANDEX_API", "yandexApi"],
+        )),
+        Box::new(RegexDetector::with_prefilter(
+            "artsy-api-key",
+            "Artsy API Key",
+            Severity::Low,
+            r#"(?i)artsy[_\-]?(?:api[_\-]?)?key\s*[:=]\s*['"]?([A-Za-z0-9_\-]{20,})['"]?"#,
+            &["artsy_api", "ARTSY_API", "artsyApi"],
+        )),
+        Box::new(RegexDetector::with_prefilter(
+            "blitapp-api-key",
+            "Blit.app API Key",
+            Severity::Medium,
+            r#"(?i)blit[_\-]?app[_\-]?(?:api[_\-]?)?key\s*[:=]\s*['"]?([A-Za-z0-9_\-]{20,})['"]?"#,
+            &["blitapp_api", "BLITAPP_API", "blitappApi"],
+        )),
+        Box::new(RegexDetector::with_prefilter(
+            "censys-api-key",
+            "Censys API Key",
+            Severity::High,
+            r#"(?i)censys[_\-]?(?:api[_\-]?)?key\s*[:=]\s*['"]?([A-Za-z0-9_\-]{20,})['"]?"#,
+            &["censys_api", "CENSYS_API", "censysApi"],
+        )),
+        Box::new(RegexDetector::with_prefilter(
+            "securitytrails-api-key",
+            "SecurityTrails API Key",
+            Severity::High,
+            r#"(?i)securitytrails[_\-]?(?:api[_\-]?)?key\s*[:=]\s*['"]?([A-Za-z0-9_\-]{20,})['"]?"#,
+            &["securitytrails_api", "SECURITYTRAILS_API", "securitytrailsApi"],
+        )),
+        Box::new(RegexDetector::with_prefilter(
+            "urlscan-api-key",
+            "URLScan API Key",
+            Severity::Medium,
+            r#"(?i)urlscan[_\-]?(?:api[_\-]?)?key\s*[:=]\s*['"]?([A-Za-z0-9_\-]{20,})['"]?"#,
+            &["urlscan_api", "URLSCAN_API", "urlscanApi"],
+        )),
+        Box::new(RegexDetector::with_prefilter(
+            "aletheia-api-key",
+            "Aletheia API Key",
+            Severity::Medium,
+            r#"(?i)aletheia[_\-]?(?:api[_\-]?)?key\s*[:=]\s*['"]?([A-Za-z0-9_\-]{20,})['"]?"#,
+            &["aletheia_api", "ALETHEIA_API", "aletheiaApi"],
+        )),
+        Box::new(RegexDetector::with_prefilter(
+            "whoxy-api-key",
+            "Whoxy API Key",
+            Severity::Medium,
+            r#"(?i)whoxy[_\-]?(?:api[_\-]?)?key\s*[:=]\s*['"]?([A-Za-z0-9_\-]{20,})['"]?"#,
+            &["whoxy_api", "WHOXY_API", "whoxyApi"],
+        )),
+        Box::new(RegexDetector::with_prefilter(
+            "mailsac-api-key",
+            "Mailsac API Key",
+            Severity::Medium,
+            r#"(?i)mailsac[_\-]?(?:api[_\-]?)?key\s*[:=]\s*['"]?([A-Za-z0-9_\-]{20,})['"]?"#,
+            &["mailsac_api", "MAILSAC_API", "mailsacApi"],
+        )),
+        Box::new(RegexDetector::with_prefilter(
+            "loginradius-api-key",
+            "LoginRadius API Key",
+            Severity::High,
+            r#"(?i)loginradius[_\-]?(?:api[_\-]?)?key\s*[:=]\s*['"]?([A-Za-z0-9_\-]{20,})['"]?"#,
+            &["loginradius_api", "LOGINRADIUS_API", "loginradiusApi"],
+        )),
+        Box::new(RegexDetector::with_prefilter(
+            "rev-api-key",
+            "Rev API Key",
+            Severity::Medium,
+            r#"(?i)rev[_\-]?(?:api[_\-]?)?key\s*[:=]\s*['"]?([A-Za-z0-9_\-]{20,})['"]?"#,
+            &["rev_api", "REV_API", "revApi"],
+        )),
+        Box::new(RegexDetector::with_prefilter(
+            "youneedabudget-api-key",
+            "YouNeedABudget API Key",
+            Severity::Medium,
+            r#"(?i)youneedabudget[_\-]?(?:api[_\-]?)?key\s*[:=]\s*['"]?([A-Za-z0-9_\-]{20,})['"]?"#,
+            &["youneedabudget_api", "YOUNEEDABUDGET_API", "youneedabudgetApi"],
+        )),
+        Box::new(RegexDetector::with_prefilter(
+            "filestack-api-key",
+            "Filestack API Key",
+            Severity::Medium,
+            r#"(?i)filestack[_\-]?(?:api[_\-]?)?key\s*[:=]\s*['"]?([A-Za-z0-9_\-]{20,})['"]?"#,
+            &["filestack_api", "FILESTACK_API", "filestackApi"],
+        )),
+        Box::new(RegexDetector::with_prefilter(
+            "bubble-api-key",
+            "Bubble API Key",
+            Severity::Medium,
+            r#"(?i)bubble[_\-]?(?:api[_\-]?)?key\s*[:=]\s*['"]?([A-Za-z0-9_\-]{20,})['"]?"#,
+            &["bubble_api", "BUBBLE_API", "bubbleApi"],
+        )),
+        Box::new(RegexDetector::with_prefilter(
+            "shopee-api-key",
+            "Shopee Open Platform API Key",
+            Severity::Medium,
+            r#"(?i)shopee[_\-]?(?:api[_\-]?)?key\s*[:=]\s*['"]?([A-Za-z0-9_\-]{20,})['"]?"#,
+            &["shopee_api", "SHOPEE_API", "shopeeApi"],
+        )),
+        Box::new(RegexDetector::with_prefilter(
+            "kiteconnect-api-key",
+            "Kite Connect API Key",
+            Severity::High,
+            r#"(?i)kite[_\-]?connect[_\-]?(?:api[_\-]?)?key\s*[:=]\s*['"]?([A-Za-z0-9_\-]{20,})['"]?"#,
+            &["kiteconnect_api", "KITECONNECT_API", "kiteconnectApi"],
+        )),
+        Box::new(RegexDetector::with_prefilter(
+            "veevavault-api-key",
+            "Veeva Vault API Key",
+            Severity::High,
+            r#"(?i)veeva[_\-]?vault[_\-]?(?:api[_\-]?)?key\s*[:=]\s*['"]?([A-Za-z0-9_\-]{20,})['"]?"#,
+            &["veevavault_api", "VEEVAVAULT_API", "veevavaultApi"],
+        )),
+        Box::new(RegexDetector::with_prefilter(
+            "cloudways-api-key",
+            "Cloudways API Key",
+            Severity::High,
+            r#"(?i)cloudways[_\-]?(?:api[_\-]?)?key\s*[:=]\s*['"]?([A-Za-z0-9_\-]{20,})['"]?"#,
+            &["cloudways_api", "CLOUDWAYS_API", "cloudwaysApi"],
+        )),
+        Box::new(RegexDetector::with_prefilter(
+            "duda-api-key",
+            "Duda API Key",
+            Severity::Medium,
+            r#"(?i)duda[_\-]?(?:api[_\-]?)?key\s*[:=]\s*['"]?([A-Za-z0-9_\-]{20,})['"]?"#,
+            &["duda_api", "DUDA_API", "dudaApi"],
+        )),
+        Box::new(RegexDetector::with_prefilter(
+            "yext-api-key",
+            "Yext API Key",
+            Severity::Medium,
+            r#"(?i)yext[_\-]?(?:api[_\-]?)?key\s*[:=]\s*['"]?([A-Za-z0-9_\-]{20,})['"]?"#,
+            &["yext_api", "YEXT_API", "yextApi"],
+        )),
+        Box::new(RegexDetector::with_prefilter(
+            "contentstack-api-key",
+            "ContentStack API Key",
+            Severity::Medium,
+            r#"(?i)contentstack[_\-]?(?:api[_\-]?)?key\s*[:=]\s*['"]?([A-Za-z0-9_\-]{20,})['"]?"#,
+            &["contentstack_api", "CONTENTSTACK_API", "contentstackApi"],
+        )),
+        Box::new(RegexDetector::with_prefilter(
+            "surge-api-key",
+            "Surge API Key",
+            Severity::Medium,
+            r#"(?i)surge[_\-]?(?:api[_\-]?)?key\s*[:=]\s*['"]?([A-Za-z0-9_\-]{20,})['"]?"#,
+            &["surge_api", "SURGE_API", "surgeApi"],
+        )),
+        Box::new(RegexDetector::with_prefilter(
+            "kairos-api-key",
+            "Kairos API Key",
+            Severity::Medium,
+            r#"(?i)kairos[_\-]?(?:api[_\-]?)?key\s*[:=]\s*['"]?([A-Za-z0-9_\-]{20,})['"]?"#,
+            &["kairos_api", "KAIROS_API", "kairosApi"],
+        )),
+        Box::new(RegexDetector::with_prefilter(
+            "fullcontact-api-key",
+            "FullContact API Key",
+            Severity::Medium,
+            r#"(?i)fullcontact[_\-]?(?:api[_\-]?)?key\s*[:=]\s*['"]?([A-Za-z0-9_\-]{20,})['"]?"#,
+            &["fullcontact_api", "FULLCONTACT_API", "fullcontactApi"],
+        )),
+        Box::new(RegexDetector::with_prefilter(
+            "eversign-api-key",
+            "Eversign API Key",
+            Severity::Medium,
+            r#"(?i)eversign[_\-]?(?:api[_\-]?)?key\s*[:=]\s*['"]?([A-Za-z0-9_\-]{20,})['"]?"#,
+            &["eversign_api", "EVERSIGN_API", "eversignApi"],
+        )),
+        Box::new(RegexDetector::with_prefilter(
+            "netcore-api-key",
+            "NetCore API Key",
+            Severity::Medium,
+            r#"(?i)netcore[_\-]?(?:api[_\-]?)?key\s*[:=]\s*['"]?([A-Za-z0-9_\-]{20,})['"]?"#,
+            &["netcore_api", "NETCORE_API", "netcoreApi"],
+        )),
+        Box::new(RegexDetector::with_prefilter(
+            "bored-api-key",
+            "Bored API Key",
+            Severity::Low,
+            r#"(?i)bored[_\-]?(?:api[_\-]?)?key\s*[:=]\s*['"]?([A-Za-z0-9_\-]{20,})['"]?"#,
+            &["bored_api", "BORED_API", "boredApi"],
+        )),
+
+        // ── Document & PDF APIs (TruffleHog) ─────────────────────────────
+        Box::new(RegexDetector::with_prefilter(
+            "html2pdf-api-key",
+            "HTML2PDF API Key",
+            Severity::Medium,
+            r#"(?i)html2pdf[_\-]?(?:api[_\-]?)?key\s*[:=]\s*['"]?([A-Za-z0-9_\-]{20,})['"]?"#,
+            &["html2pdf_api", "HTML2PDF_API", "html2pdfApi"],
+        )),
+        Box::new(RegexDetector::with_prefilter(
+            "pdflayer-api-key",
+            "PDF Layer API Key",
+            Severity::Medium,
+            r#"(?i)pdf[_\-]?layer[_\-]?(?:api[_\-]?)?key\s*[:=]\s*['"]?([A-Za-z0-9_\-]{20,})['"]?"#,
+            &["pdflayer_api", "PDFLAYER_API", "pdflayerApi"],
+        )),
+        Box::new(RegexDetector::with_prefilter(
+            "pdfshift-api-key",
+            "PDF Shift API Key",
+            Severity::Medium,
+            r#"(?i)pdf[_\-]?shift[_\-]?(?:api[_\-]?)?key\s*[:=]\s*['"]?([A-Za-z0-9_\-]{20,})['"]?"#,
+            &["pdfshift_api", "PDFSHIFT_API", "pdfshiftApi"],
+        )),
+        Box::new(RegexDetector::with_prefilter(
+            "restpack-html-to-pdf-api-key",
+            "Restpack HTML-to-PDF API Key",
+            Severity::Medium,
+            r#"(?i)restpack[_\-]?html[_\-]?to[_\-]?pdf[_\-]?(?:api[_\-]?)?key\s*[:=]\s*['"]?([A-Za-z0-9_\-]{20,})['"]?"#,
+            &["restpack_html", "RESTPACK_HTML", "restpackHtml"],
+        )),
+        Box::new(RegexDetector::with_prefilter(
+            "restpack-screenshot-api-key",
+            "Restpack Screenshot API Key",
+            Severity::Medium,
+            r#"(?i)restpack[_\-]?screenshot[_\-]?(?:api[_\-]?)?key\s*[:=]\s*['"]?([A-Za-z0-9_\-]{20,})['"]?"#,
+            &["restpack_screenshot", "RESTPACK_SCREENSHOT", "restpackScreenshot"],
+        )),
+        Box::new(RegexDetector::with_prefilter(
+            "documo-api-key",
+            "Documo API Key",
+            Severity::Medium,
+            r#"(?i)documo[_\-]?(?:api[_\-]?)?key\s*[:=]\s*['"]?([A-Za-z0-9_\-]{20,})['"]?"#,
+            &["documo_api", "DOCUMO_API", "documoApi"],
+        )),
+        Box::new(RegexDetector::with_prefilter(
+            "clustdoc-api-key",
+            "ClustDoc API Key",
+            Severity::Medium,
+            r#"(?i)clustdoc[_\-]?(?:api[_\-]?)?key\s*[:=]\s*['"]?([A-Za-z0-9_\-]{20,})['"]?"#,
+            &["clustdoc_api", "CLUSTDOC_API", "clustdocApi"],
+        )),
+        Box::new(RegexDetector::with_prefilter(
+            "pandadoc-api-key",
+            "PandaDoc API Key",
+            Severity::High,
+            r#"(?i)pandadoc[_\-]?(?:api[_\-]?)?key\s*[:=]\s*['"]?([A-Za-z0-9_\-]{20,})['"]?"#,
+            &["pandadoc_api", "PANDADOC_API", "pandadocApi"],
+        )),
+        Box::new(RegexDetector::with_prefilter(
+            "hellosign-api-key",
+            "HelloSign API Key",
+            Severity::High,
+            r#"(?i)hellosign[_\-]?(?:api[_\-]?)?key\s*[:=]\s*['"]?([A-Za-z0-9_\-]{20,})['"]?"#,
+            &["hellosign_api", "HELLOSIGN_API", "hellosignApi"],
+        )),
+        Box::new(RegexDetector::with_prefilter(
+            "juro-api-key",
+            "Juro API Key",
+            Severity::Medium,
+            r#"(?i)juro[_\-]?(?:api[_\-]?)?key\s*[:=]\s*['"]?([A-Za-z0-9_\-]{20,})['"]?"#,
+            &["juro_api", "JURO_API", "juroApi"],
+        )),
+        Box::new(RegexDetector::with_prefilter(
+            "yousign-api-key",
+            "YouSign API Key",
+            Severity::Medium,
+            r#"(?i)yousign[_\-]?(?:api[_\-]?)?key\s*[:=]\s*['"]?([A-Za-z0-9_\-]{20,})['"]?"#,
+            &["yousign_api", "YOUSIGN_API", "yousignApi"],
+        )),
+        Box::new(RegexDetector::with_prefilter(
+            "vatlayer-api-key",
+            "VatLayer API Key",
+            Severity::Medium,
+            r#"(?i)vatlayer[_\-]?(?:api[_\-]?)?key\s*[:=]\s*['"]?([A-Za-z0-9_\-]{20,})['"]?"#,
+            &["vatlayer_api", "VATLAYER_API", "vatlayerApi"],
+        )),
+        Box::new(RegexDetector::with_prefilter(
+            "upcdatabase-api-key",
+            "UPC Database API Key",
+            Severity::Low,
+            r#"(?i)upc[_\-]?database[_\-]?(?:api[_\-]?)?key\s*[:=]\s*['"]?([A-Za-z0-9_\-]{20,})['"]?"#,
+            &["upcdatabase_api", "UPCDATABASE_API", "upcdatabaseApi"],
+        )),
+
+        // ── Scraping & Web Automation (TruffleHog) ───────────────────────
+        Box::new(RegexDetector::with_prefilter(
+            "scraperapi-key",
+            "ScraperAPI Key",
+            Severity::Medium,
+            r#"(?i)scraperapi[_\-]?key\s*[:=]\s*['"]?([A-Za-z0-9_\-]{20,})['"]?"#,
+            &["scraperapi_key", "SCRAPERAPI_KEY", "scraperapiKey"],
+        )),
+        Box::new(RegexDetector::with_prefilter(
+            "scrapingdog-api-key",
+            "ScrapingDog API Key",
+            Severity::Medium,
+            r#"(?i)scrapingdog[_\-]?(?:api[_\-]?)?key\s*[:=]\s*['"]?([A-Za-z0-9_\-]{20,})['"]?"#,
+            &["scrapingdog_api", "SCRAPINGDOG_API", "scrapingdogApi"],
+        )),
+        Box::new(RegexDetector::with_prefilter(
+            "scrapeowl-api-key",
+            "ScrapeOwl API Key",
+            Severity::Medium,
+            r#"(?i)scrapeowl[_\-]?(?:api[_\-]?)?key\s*[:=]\s*['"]?([A-Za-z0-9_\-]{20,})['"]?"#,
+            &["scrapeowl_api", "SCRAPEOWL_API", "scrapeowlApi"],
+        )),
+        Box::new(RegexDetector::with_prefilter(
+            "webscraping-api-key",
+            "WebScraping API Key",
+            Severity::Medium,
+            r#"(?i)webscraping[_\-]?(?:api[_\-]?)?key\s*[:=]\s*['"]?([A-Za-z0-9_\-]{20,})['"]?"#,
+            &["webscraping_api", "WEBSCRAPING_API", "webscrapingApi"],
+        )),
+        Box::new(RegexDetector::with_prefilter(
+            "zenscrape-api-key",
+            "ZenScrape API Key",
+            Severity::Medium,
+            r#"(?i)zenscrape[_\-]?(?:api[_\-]?)?key\s*[:=]\s*['"]?([A-Za-z0-9_\-]{20,})['"]?"#,
+            &["zenscrape_api", "ZENSCRAPE_API", "zenscrapeApi"],
+        )),
+        Box::new(RegexDetector::with_prefilter(
+            "zenserp-api-key",
+            "ZenSerp API Key",
+            Severity::Medium,
+            r#"(?i)zenserp[_\-]?(?:api[_\-]?)?key\s*[:=]\s*['"]?([A-Za-z0-9_\-]{20,})['"]?"#,
+            &["zenserp_api", "ZENSERP_API", "zenserpApi"],
+        )),
+        Box::new(RegexDetector::with_prefilter(
+            "serpstack-api-key",
+            "SerpStack API Key",
+            Severity::Medium,
+            r#"(?i)serpstack[_\-]?(?:api[_\-]?)?key\s*[:=]\s*['"]?([A-Za-z0-9_\-]{20,})['"]?"#,
+            &["serpstack_api", "SERPSTACK_API", "serpstackApi"],
+        )),
+        Box::new(RegexDetector::with_prefilter(
+            "scraperbox-api-key",
+            "ScraperBox API Key",
+            Severity::Medium,
+            r#"(?i)scraperbox[_\-]?(?:api[_\-]?)?key\s*[:=]\s*['"]?([A-Za-z0-9_\-]{20,})['"]?"#,
+            &["scraperbox_api", "SCRAPERBOX_API", "scraperboxApi"],
+        )),
+        Box::new(RegexDetector::with_prefilter(
+            "scrapingant-api-key",
+            "ScrapingAnt API Key",
+            Severity::Medium,
+            r#"(?i)scrapingant[_\-]?(?:api[_\-]?)?key\s*[:=]\s*['"]?([A-Za-z0-9_\-]{20,})['"]?"#,
+            &["scrapingant_api", "SCRAPINGANT_API", "scrapingantApi"],
+        )),
+        Box::new(RegexDetector::with_prefilter(
+            "scrapestack-api-key",
+            "ScrapeStack API Key",
+            Severity::Medium,
+            r#"(?i)scrapestack[_\-]?(?:api[_\-]?)?key\s*[:=]\s*['"]?([A-Za-z0-9_\-]{20,})['"]?"#,
+            &["scrapestack_api", "SCRAPESTACK_API", "scrapestackApi"],
+        )),
+        Box::new(RegexDetector::with_prefilter(
+            "proxycrawl-api-key",
+            "ProxyCrawl API Key",
+            Severity::Medium,
+            r#"(?i)proxycrawl[_\-]?(?:api[_\-]?)?key\s*[:=]\s*['"]?([A-Za-z0-9_\-]{20,})['"]?"#,
+            &["proxycrawl_api", "PROXYCRAWL_API", "proxycrawlApi"],
+        )),
+
+        // ── Email Verification (TruffleHog) ──────────────────────────────
+        Box::new(RegexDetector::with_prefilter(
+            "debounce-api-key",
+            "Debounce API Key",
+            Severity::Medium,
+            r#"(?i)debounce[_\-]?(?:api[_\-]?)?key\s*[:=]\s*['"]?([A-Za-z0-9_\-]{20,})['"]?"#,
+            &["debounce_api", "DEBOUNCE_API", "debounceApi"],
+        )),
+        Box::new(RegexDetector::with_prefilter(
+            "kickbox-api-key",
+            "Kickbox API Key",
+            Severity::Medium,
+            r#"(?i)kickbox[_\-]?(?:api[_\-]?)?key\s*[:=]\s*['"]?([A-Za-z0-9_\-]{20,})['"]?"#,
+            &["kickbox_api", "KICKBOX_API", "kickboxApi"],
+        )),
+        Box::new(RegexDetector::with_prefilter(
+            "ipquality-api-key",
+            "IPQuality API Key",
+            Severity::Medium,
+            r#"(?i)ipquality[_\-]?(?:api[_\-]?)?key\s*[:=]\s*['"]?([A-Za-z0-9_\-]{20,})['"]?"#,
+            &["ipquality_api", "IPQUALITY_API", "ipqualityApi"],
+        )),
+        Box::new(RegexDetector::with_prefilter(
+            "roaring-api-key",
+            "Roaring API Key",
+            Severity::Medium,
+            r#"(?i)roaring[_\-]?(?:api[_\-]?)?key\s*[:=]\s*['"]?([A-Za-z0-9_\-]{20,})['"]?"#,
+            &["roaring_api", "ROARING_API", "roaringApi"],
+        )),
+        Box::new(RegexDetector::with_prefilter(
+            "oopspam-api-key",
+            "OOPSpam API Key",
+            Severity::Medium,
+            r#"(?i)oopspam[_\-]?(?:api[_\-]?)?key\s*[:=]\s*['"]?([A-Za-z0-9_\-]{20,})['"]?"#,
+            &["oopspam_api", "OOPSPAM_API", "oopspamApi"],
+        )),
+        Box::new(RegexDetector::with_prefilter(
+            "numverify-api-key",
+            "Numverify API Key",
+            Severity::Medium,
+            r#"(?i)numverify[_\-]?(?:api[_\-]?)?key\s*[:=]\s*['"]?([A-Za-z0-9_\-]{20,})['"]?"#,
+            &["numverify_api", "NUMVERIFY_API", "numverifyApi"],
+        )),
+
+        // ── CMS & Web Builders (TruffleHog) ──────────────────────────────
+        Box::new(RegexDetector::with_prefilter(
+            "webflow-api-key",
+            "Webflow API Key",
+            Severity::High,
+            r#"(?i)webflow[_\-]?(?:api[_\-]?)?key\s*[:=]\s*['"]?([A-Za-z0-9_\-]{20,})['"]?"#,
+            &["webflow_api", "WEBFLOW_API", "webflowApi"],
+        )),
+        Box::new(RegexDetector::with_prefilter(
+            "squarespace-api-key",
+            "Squarespace API Key",
+            Severity::Medium,
+            r#"(?i)squarespace[_\-]?(?:api[_\-]?)?key\s*[:=]\s*['"]?([A-Za-z0-9_\-]{20,})['"]?"#,
+            &["squarespace_api", "SQUARESPACE_API", "squarespaceApi"],
+        )),
+        Box::new(RegexDetector::with_prefilter(
+            "siteleaf-api-key",
+            "Siteleaf API Key",
+            Severity::Medium,
+            r#"(?i)siteleaf[_\-]?(?:api[_\-]?)?key\s*[:=]\s*['"]?([A-Za-z0-9_\-]{20,})['"]?"#,
+            &["siteleaf_api", "SITELEAF_API", "siteleafApi"],
+        )),
+        Box::new(RegexDetector::with_prefilter(
+            "graphcms-api-key",
+            "GraphCMS API Key",
+            Severity::Medium,
+            r#"(?i)graphcms[_\-]?(?:api[_\-]?)?key\s*[:=]\s*['"]?([A-Za-z0-9_\-]{20,})['"]?"#,
+            &["graphcms_api", "GRAPHCMS_API", "graphcmsApi"],
+        )),
+        Box::new(RegexDetector::with_prefilter(
+            "kontent-api-key",
+            "Kontent API Key",
+            Severity::Medium,
+            r#"(?i)kontent[_\-]?(?:api[_\-]?)?key\s*[:=]\s*['"]?([A-Za-z0-9_\-]{20,})['"]?"#,
+            &["kontent_api", "KONTENT_API", "kontentApi"],
+        )),
+
+        // ── Miscellaneous APIs (TruffleHog) ──────────────────────────────
+        Box::new(RegexDetector::with_prefilter(
+            "wakatime-api-key",
+            "Wakatime API Key",
+            Severity::Medium,
+            r#"(?i)wakatime[_\-]?(?:api[_\-]?)?key\s*[:=]\s*['"]?([A-Za-z0-9_\-]{20,})['"]?"#,
+            &["wakatime_api", "WAKATIME_API", "wakatimeApi"],
+        )),
+        Box::new(RegexDetector::with_prefilter(
+            "ubidots-api-key",
+            "Ubidots API Key",
+            Severity::Medium,
+            r#"(?i)ubidots[_\-]?(?:api[_\-]?)?key\s*[:=]\s*['"]?([A-Za-z0-9_\-]{20,})['"]?"#,
+            &["ubidots_api", "UBIDOTS_API", "ubidotsApi"],
+        )),
+        Box::new(RegexDetector::with_prefilter(
+            "raven-api-key",
+            "Raven API Key",
+            Severity::Medium,
+            r#"(?i)raven[_\-]?(?:api[_\-]?)?key\s*[:=]\s*['"]?([A-Za-z0-9_\-]{20,})['"]?"#,
+            &["raven_api", "RAVEN_API", "ravenApi"],
+        )),
+        Box::new(RegexDetector::with_prefilter(
+            "guru-api-key",
+            "Guru API Key",
+            Severity::Medium,
+            r#"(?i)guru[_\-]?(?:api[_\-]?)?key\s*[:=]\s*['"]?([A-Za-z0-9_\-]{20,})['"]?"#,
+            &["guru_api", "GURU_API", "guruApi"],
+        )),
+        Box::new(RegexDetector::with_prefilter(
+            "hive-api-key",
+            "Hive API Key",
+            Severity::Medium,
+            r#"(?i)hive[_\-]?(?:api[_\-]?)?key\s*[:=]\s*['"]?([A-Za-z0-9_\-]{20,})['"]?"#,
+            &["hive_api", "HIVE_API", "hiveApi"],
+        )),
+        Box::new(RegexDetector::with_prefilter(
+            "technicalanalysis-api-key",
+            "Technical Analysis API Key",
+            Severity::Medium,
+            r#"(?i)technical[_\-]?analysis[_\-]?(?:api[_\-]?)?key\s*[:=]\s*['"]?([A-Za-z0-9_\-]{20,})['"]?"#,
+            &["technicalanalysis_api", "TECHNICALANALYSIS_API", "technicalanalysisApi"],
+        )),
+        Box::new(RegexDetector::with_prefilter(
+            "impala-api-key",
+            "Impala API Key",
+            Severity::Medium,
+            r#"(?i)impala[_\-]?(?:api[_\-]?)?key\s*[:=]\s*['"]?([A-Za-z0-9_\-]{20,})['"]?"#,
+            &["impala_api", "IMPALA_API", "impalaApi"],
+        )),
+        Box::new(RegexDetector::with_prefilter(
+            "unplugg-api-key",
+            "Unplugg API Key",
+            Severity::Medium,
+            r#"(?i)unplugg[_\-]?(?:api[_\-]?)?key\s*[:=]\s*['"]?([A-Za-z0-9_\-]{20,})['"]?"#,
+            &["unplugg_api", "UNPLUGG_API", "unpluggApi"],
+        )),
+        Box::new(RegexDetector::with_prefilter(
+            "cloverly-api-key",
+            "Cloverly API Key",
+            Severity::Medium,
+            r#"(?i)cloverly[_\-]?(?:api[_\-]?)?key\s*[:=]\s*['"]?([A-Za-z0-9_\-]{20,})['"]?"#,
+            &["cloverly_api", "CLOVERLY_API", "cloverlyApi"],
+        )),
+        Box::new(RegexDetector::with_prefilter(
+            "flight-api-key",
+            "Flight API Key",
+            Severity::Medium,
+            r#"(?i)flight[_\-]?(?:api[_\-]?)?key\s*[:=]\s*['"]?([A-Za-z0-9_\-]{20,})['"]?"#,
+            &["flight_api", "FLIGHT_API", "flightApi"],
+        )),
+        Box::new(RegexDetector::with_prefilter(
+            "aviationstack-api-key",
+            "AviationStack API Key",
+            Severity::Medium,
+            r#"(?i)aviationstack[_\-]?(?:api[_\-]?)?key\s*[:=]\s*['"]?([A-Za-z0-9_\-]{20,})['"]?"#,
+            &["aviationstack_api", "AVIATIONSTACK_API", "aviationstackApi"],
+        )),
+        Box::new(RegexDetector::with_prefilter(
+            "distribusion-api-key",
+            "Distribusion API Key",
+            Severity::Medium,
+            r#"(?i)distribusion[_\-]?(?:api[_\-]?)?key\s*[:=]\s*['"]?([A-Za-z0-9_\-]{20,})['"]?"#,
+            &["distribusion_api", "DISTRIBUSION_API", "distribusionApi"],
+        )),
+        Box::new(RegexDetector::with_prefilter(
+            "words-api-key",
+            "Words API Key",
+            Severity::Low,
+            r#"(?i)words[_\-]?(?:api[_\-]?)?key\s*[:=]\s*['"]?([A-Za-z0-9_\-]{20,})['"]?"#,
+            &["words_api", "WORDS_API", "wordsApi"],
+        )),
+        Box::new(RegexDetector::with_prefilter(
+            "holiday-api-key",
+            "Holiday API Key",
+            Severity::Low,
+            r#"(?i)holiday[_\-]?(?:api[_\-]?)?key\s*[:=]\s*['"]?([A-Za-z0-9_\-]{20,})['"]?"#,
+            &["holiday_api", "HOLIDAY_API", "holidayApi"],
+        )),
+        Box::new(RegexDetector::with_prefilter(
+            "amadeus-api-key",
+            "Amadeus API Key",
+            Severity::High,
+            r#"(?i)amadeus[_\-]?(?:api[_\-]?)?key\s*[:=]\s*['"]?([A-Za-z0-9_\-]{20,})['"]?"#,
+            &["amadeus_api", "AMADEUS_API", "amadeusApi"],
+        )),
+        Box::new(RegexDetector::with_prefilter(
+            "exchangerate-api-key",
+            "Exchange Rate API Key",
+            Severity::Low,
+            r#"(?i)exchange[_\-]?rate[_\-]?(?:api[_\-]?)?key\s*[:=]\s*['"]?([A-Za-z0-9_\-]{20,})['"]?"#,
+            &["exchangerate_api", "EXCHANGERATE_API", "exchangerateApi"],
+        )),
+        Box::new(RegexDetector::with_prefilter(
+            "abstract-api-key",
+            "Abstract API Key",
+            Severity::Medium,
+            r#"(?i)abstract[_\-]?(?:api[_\-]?)?key\s*[:=]\s*['"]?([A-Za-z0-9_\-]{20,})['"]?"#,
+            &["abstract_api", "ABSTRACT_API", "abstractApi"],
+        )),
+
         Box::new(EntropyDetector::default()),
     ]
 }
@@ -7774,6 +9153,1964 @@ mod tests {
         let d = detectors.iter().find(|d| d.id() == "openuv-api-key").unwrap();
         let key = "a".repeat(25);
         let line = format!("openuv_api_key = {}", key);
+        let matches = d.scan_line(&line);
+        assert_eq!(matches.len(), 1);
+    }
+
+    // ── Tests: Edge Token, Calendly Webhook, Geocoding & Location ────────
+
+    #[test]
+    fn test_edge_token_detected() {
+        let detectors = builtin_detectors();
+        let d = detectors.iter().find(|d| d.id() == "edge-token").unwrap();
+        let key = "a".repeat(25);
+        let line = format!("edge_token = {}", key);
+        let matches = d.scan_line(&line);
+        assert_eq!(matches.len(), 1);
+    }
+
+    #[test]
+    fn test_calendly_webhook_detected() {
+        let detectors = builtin_detectors();
+        let d = detectors.iter().find(|d| d.id() == "calendly-webhook").unwrap();
+        let key = "a".repeat(25);
+        let line = format!("calendly_webhook_secret = {}", key);
+        let matches = d.scan_line(&line);
+        assert_eq!(matches.len(), 1);
+    }
+
+    #[test]
+    fn test_tomtom_api_key_detected() {
+        let detectors = builtin_detectors();
+        let d = detectors.iter().find(|d| d.id() == "tomtom-api-key").unwrap();
+        let key = "a".repeat(25);
+        let line = format!("tomtom_api_key = {}", key);
+        let matches = d.scan_line(&line);
+        assert_eq!(matches.len(), 1);
+    }
+
+    #[test]
+    fn test_geoapify_api_key_detected() {
+        let detectors = builtin_detectors();
+        let d = detectors.iter().find(|d| d.id() == "geoapify-api-key").unwrap();
+        let key = "a".repeat(25);
+        let line = format!("geoapify_api_key = {}", key);
+        let matches = d.scan_line(&line);
+        assert_eq!(matches.len(), 1);
+    }
+
+    #[test]
+    fn test_geocodify_api_key_detected() {
+        let detectors = builtin_detectors();
+        let d = detectors.iter().find(|d| d.id() == "geocodify-api-key").unwrap();
+        let key = "a".repeat(25);
+        let line = format!("geocodify_api_key = {}", key);
+        let matches = d.scan_line(&line);
+        assert_eq!(matches.len(), 1);
+    }
+
+    #[test]
+    fn test_geocode_api_key_detected() {
+        let detectors = builtin_detectors();
+        let d = detectors.iter().find(|d| d.id() == "geocode-api-key").unwrap();
+        let key = "a".repeat(25);
+        let line = format!("geocode_api_key = {}", key);
+        let matches = d.scan_line(&line);
+        assert_eq!(matches.len(), 1);
+    }
+
+    #[test]
+    fn test_geocodio_api_key_detected() {
+        let detectors = builtin_detectors();
+        let d = detectors.iter().find(|d| d.id() == "geocodio-api-key").unwrap();
+        let key = "a".repeat(25);
+        let line = format!("geocodio_api_key = {}", key);
+        let matches = d.scan_line(&line);
+        assert_eq!(matches.len(), 1);
+    }
+
+    #[test]
+    fn test_positionstack_api_key_detected() {
+        let detectors = builtin_detectors();
+        let d = detectors.iter().find(|d| d.id() == "positionstack-api-key").unwrap();
+        let key = "a".repeat(25);
+        let line = format!("positionstack_api_key = {}", key);
+        let matches = d.scan_line(&line);
+        assert_eq!(matches.len(), 1);
+    }
+
+    #[test]
+    fn test_locationiq_api_key_detected() {
+        let detectors = builtin_detectors();
+        let d = detectors.iter().find(|d| d.id() == "locationiq-api-key").unwrap();
+        let key = "a".repeat(25);
+        let line = format!("locationiq_api_key = {}", key);
+        let matches = d.scan_line(&line);
+        assert_eq!(matches.len(), 1);
+    }
+
+    #[test]
+    fn test_graphhopper_api_key_detected() {
+        let detectors = builtin_detectors();
+        let d = detectors.iter().find(|d| d.id() == "graphhopper-api-key").unwrap();
+        let key = "a".repeat(25);
+        let line = format!("graphhopper_api_key = {}", key);
+        let matches = d.scan_line(&line);
+        assert_eq!(matches.len(), 1);
+    }
+
+    #[test]
+    fn test_smartystreets_api_key_detected() {
+        let detectors = builtin_detectors();
+        let d = detectors.iter().find(|d| d.id() == "smartystreets-api-key").unwrap();
+        let key = "a".repeat(25);
+        let line = format!("smartystreets_api_key = {}", key);
+        let matches = d.scan_line(&line);
+        assert_eq!(matches.len(), 1);
+    }
+
+    #[test]
+    fn test_route4me_api_key_detected() {
+        let detectors = builtin_detectors();
+        let d = detectors.iter().find(|d| d.id() == "route4me-api-key").unwrap();
+        let key = "a".repeat(25);
+        let line = format!("route4me_api_key = {}", key);
+        let matches = d.scan_line(&line);
+        assert_eq!(matches.len(), 1);
+    }
+
+    #[test]
+    fn test_zipcode_api_key_detected() {
+        let detectors = builtin_detectors();
+        let d = detectors.iter().find(|d| d.id() == "zipcode-api-key").unwrap();
+        let key = "a".repeat(25);
+        let line = format!("zipcode_api_key = {}", key);
+        let matches = d.scan_line(&line);
+        assert_eq!(matches.len(), 1);
+    }
+
+    #[test]
+    fn test_onwater_api_key_detected() {
+        let detectors = builtin_detectors();
+        let d = detectors.iter().find(|d| d.id() == "onwater-api-key").unwrap();
+        let key = "a".repeat(25);
+        let line = format!("onwater_api_key = {}", key);
+        let matches = d.scan_line(&line);
+        assert_eq!(matches.len(), 1);
+    }
+
+    #[test]
+    fn test_geoipify_api_key_detected() {
+        let detectors = builtin_detectors();
+        let d = detectors.iter().find(|d| d.id() == "geoipify-api-key").unwrap();
+        let key = "a".repeat(25);
+        let line = format!("geoipify_api_key = {}", key);
+        let matches = d.scan_line(&line);
+        assert_eq!(matches.len(), 1);
+    }
+
+    #[test]
+    fn test_ipgeolocation_api_key_detected() {
+        let detectors = builtin_detectors();
+        let d = detectors.iter().find(|d| d.id() == "ipgeolocation-api-key").unwrap();
+        let key = "a".repeat(25);
+        let line = format!("ipgeolocation_api_key = {}", key);
+        let matches = d.scan_line(&line);
+        assert_eq!(matches.len(), 1);
+    }
+
+    #[test]
+    fn test_ipinfodb_api_key_detected() {
+        let detectors = builtin_detectors();
+        let d = detectors.iter().find(|d| d.id() == "ipinfodb-api-key").unwrap();
+        let key = "a".repeat(25);
+        let line = format!("ipinfodb_api_key = {}", key);
+        let matches = d.scan_line(&line);
+        assert_eq!(matches.len(), 1);
+    }
+
+    #[test]
+    fn test_ipify_api_key_detected() {
+        let detectors = builtin_detectors();
+        let d = detectors.iter().find(|d| d.id() == "ipify-api-key").unwrap();
+        let key = "a".repeat(25);
+        let line = format!("ipify_api_key = {}", key);
+        let matches = d.scan_line(&line);
+        assert_eq!(matches.len(), 1);
+    }
+
+    #[test]
+    fn test_ipapi_api_key_detected() {
+        let detectors = builtin_detectors();
+        let d = detectors.iter().find(|d| d.id() == "ipapi-api-key").unwrap();
+        let key = "a".repeat(25);
+        let line = format!("ipapi_api_key = {}", key);
+        let matches = d.scan_line(&line);
+        assert_eq!(matches.len(), 1);
+    }
+
+    #[test]
+    fn test_vpn_api_key_detected() {
+        let detectors = builtin_detectors();
+        let d = detectors.iter().find(|d| d.id() == "vpn-api-key").unwrap();
+        let key = "a".repeat(25);
+        let line = format!("vpn_api_key = {}", key);
+        let matches = d.scan_line(&line);
+        assert_eq!(matches.len(), 1);
+    }
+
+    #[test]
+    fn test_dnscheck_api_key_detected() {
+        let detectors = builtin_detectors();
+        let d = detectors.iter().find(|d| d.id() == "dnscheck-api-key").unwrap();
+        let key = "a".repeat(25);
+        let line = format!("dnscheck_api_key = {}", key);
+        let matches = d.scan_line(&line);
+        assert_eq!(matches.len(), 1);
+    }
+
+    #[test]
+    fn test_walkscore_api_key_detected() {
+        let detectors = builtin_detectors();
+        let d = detectors.iter().find(|d| d.id() == "walkscore-api-key").unwrap();
+        let key = "a".repeat(25);
+        let line = format!("walkscore_api_key = {}", key);
+        let matches = d.scan_line(&line);
+        assert_eq!(matches.len(), 1);
+    }
+
+    #[test]
+    fn test_besttime_api_key_detected() {
+        let detectors = builtin_detectors();
+        let d = detectors.iter().find(|d| d.id() == "besttime-api-key").unwrap();
+        let key = "a".repeat(25);
+        let line = format!("besttime_api_key = {}", key);
+        let matches = d.scan_line(&line);
+        assert_eq!(matches.len(), 1);
+    }
+
+    #[test]
+    fn test_hypertrack_api_key_detected() {
+        let detectors = builtin_detectors();
+        let d = detectors.iter().find(|d| d.id() == "hypertrack-api-key").unwrap();
+        let key = "a".repeat(25);
+        let line = format!("hypertrack_api_key = {}", key);
+        let matches = d.scan_line(&line);
+        assert_eq!(matches.len(), 1);
+    }
+
+    #[test]
+    fn test_fulcrum_api_key_detected() {
+        let detectors = builtin_detectors();
+        let d = detectors.iter().find(|d| d.id() == "fulcrum-api-key").unwrap();
+        let key = "a".repeat(25);
+        let line = format!("fulcrum_api_key = {}", key);
+        let matches = d.scan_line(&line);
+        assert_eq!(matches.len(), 1);
+    }
+
+    #[test]
+    fn test_samsara_api_key_detected() {
+        let detectors = builtin_detectors();
+        let d = detectors.iter().find(|d| d.id() == "samsara-api-key").unwrap();
+        let key = "a".repeat(25);
+        let line = format!("samsara_api_key = {}", key);
+        let matches = d.scan_line(&line);
+        assert_eq!(matches.len(), 1);
+    }
+
+    // ── Tests: Media & Image APIs ────────────────────────────────────────
+
+    #[test]
+    fn test_unsplash_api_key_detected() {
+        let detectors = builtin_detectors();
+        let d = detectors.iter().find(|d| d.id() == "unsplash-api-key").unwrap();
+        let key = "a".repeat(25);
+        let line = format!("unsplash_api_key = {}", key);
+        let matches = d.scan_line(&line);
+        assert_eq!(matches.len(), 1);
+    }
+
+    #[test]
+    fn test_pixabay_api_key_detected() {
+        let detectors = builtin_detectors();
+        let d = detectors.iter().find(|d| d.id() == "pixabay-api-key").unwrap();
+        let key = "a".repeat(25);
+        let line = format!("pixabay_api_key = {}", key);
+        let matches = d.scan_line(&line);
+        assert_eq!(matches.len(), 1);
+    }
+
+    #[test]
+    fn test_gyazo_api_key_detected() {
+        let detectors = builtin_detectors();
+        let d = detectors.iter().find(|d| d.id() == "gyazo-api-key").unwrap();
+        let key = "a".repeat(25);
+        let line = format!("gyazo_api_key = {}", key);
+        let matches = d.scan_line(&line);
+        assert_eq!(matches.len(), 1);
+    }
+
+    #[test]
+    fn test_imgur_api_key_detected() {
+        let detectors = builtin_detectors();
+        let d = detectors.iter().find(|d| d.id() == "imgur-api-key").unwrap();
+        let key = "a".repeat(25);
+        let line = format!("imgur_api_key = {}", key);
+        let matches = d.scan_line(&line);
+        assert_eq!(matches.len(), 1);
+    }
+
+    #[test]
+    fn test_shutterstock_api_key_detected() {
+        let detectors = builtin_detectors();
+        let d = detectors.iter().find(|d| d.id() == "shutterstock-api-key").unwrap();
+        let key = "a".repeat(25);
+        let line = format!("shutterstock_api_key = {}", key);
+        let matches = d.scan_line(&line);
+        assert_eq!(matches.len(), 1);
+    }
+
+    #[test]
+    fn test_shutterstock_oauth_token_detected() {
+        let detectors = builtin_detectors();
+        let d = detectors.iter().find(|d| d.id() == "shutterstock-oauth-token").unwrap();
+        let key = "a".repeat(25);
+        let line = format!("shutterstock_oauth_token = {}", key);
+        let matches = d.scan_line(&line);
+        assert_eq!(matches.len(), 1);
+    }
+
+    #[test]
+    fn test_iconfinder_api_key_detected() {
+        let detectors = builtin_detectors();
+        let d = detectors.iter().find(|d| d.id() == "iconfinder-api-key").unwrap();
+        let key = "a".repeat(25);
+        let line = format!("iconfinder_api_key = {}", key);
+        let matches = d.scan_line(&line);
+        assert_eq!(matches.len(), 1);
+    }
+
+    #[test]
+    fn test_imagekit_api_key_detected() {
+        let detectors = builtin_detectors();
+        let d = detectors.iter().find(|d| d.id() == "imagekit-api-key").unwrap();
+        let key = "a".repeat(25);
+        let line = format!("imagekit_api_key = {}", key);
+        let matches = d.scan_line(&line);
+        assert_eq!(matches.len(), 1);
+    }
+
+    #[test]
+    fn test_bannerbear_api_key_detected() {
+        let detectors = builtin_detectors();
+        let d = detectors.iter().find(|d| d.id() == "bannerbear-api-key").unwrap();
+        let key = "a".repeat(25);
+        let line = format!("bannerbear_api_key = {}", key);
+        let matches = d.scan_line(&line);
+        assert_eq!(matches.len(), 1);
+    }
+
+    #[test]
+    fn test_imagga_api_key_detected() {
+        let detectors = builtin_detectors();
+        let d = detectors.iter().find(|d| d.id() == "imagga-api-key").unwrap();
+        let key = "a".repeat(25);
+        let line = format!("imagga_api_key = {}", key);
+        let matches = d.scan_line(&line);
+        assert_eq!(matches.len(), 1);
+    }
+
+    #[test]
+    fn test_faceplusplus_api_key_detected() {
+        let detectors = builtin_detectors();
+        let d = detectors.iter().find(|d| d.id() == "faceplusplus-api-key").unwrap();
+        let key = "a".repeat(25);
+        let line = format!("faceplusplus_api_key = {}", key);
+        let matches = d.scan_line(&line);
+        assert_eq!(matches.len(), 1);
+    }
+
+    #[test]
+    fn test_skybiometry_api_key_detected() {
+        let detectors = builtin_detectors();
+        let d = detectors.iter().find(|d| d.id() == "skybiometry-api-key").unwrap();
+        let key = "a".repeat(25);
+        let line = format!("skybiometry_api_key = {}", key);
+        let matches = d.scan_line(&line);
+        assert_eq!(matches.len(), 1);
+    }
+
+    #[test]
+    fn test_cloudmersive_api_key_detected() {
+        let detectors = builtin_detectors();
+        let d = detectors.iter().find(|d| d.id() == "cloudmersive-api-key").unwrap();
+        let key = "a".repeat(25);
+        let line = format!("cloudmersive_api_key = {}", key);
+        let matches = d.scan_line(&line);
+        assert_eq!(matches.len(), 1);
+    }
+
+    #[test]
+    fn test_screenshotapi_api_key_detected() {
+        let detectors = builtin_detectors();
+        let d = detectors.iter().find(|d| d.id() == "screenshotapi-api-key").unwrap();
+        let key = "a".repeat(25);
+        let line = format!("screenshotapi_api_key = {}", key);
+        let matches = d.scan_line(&line);
+        assert_eq!(matches.len(), 1);
+    }
+
+    #[test]
+    fn test_screenshotlayer_api_key_detected() {
+        let detectors = builtin_detectors();
+        let d = detectors.iter().find(|d| d.id() == "screenshotlayer-api-key").unwrap();
+        let key = "a".repeat(25);
+        let line = format!("screenshotlayer_api_key = {}", key);
+        let matches = d.scan_line(&line);
+        assert_eq!(matches.len(), 1);
+    }
+
+    #[test]
+    fn test_browshot_api_key_detected() {
+        let detectors = builtin_detectors();
+        let d = detectors.iter().find(|d| d.id() == "browshot-api-key").unwrap();
+        let key = "a".repeat(25);
+        let line = format!("browshot_api_key = {}", key);
+        let matches = d.scan_line(&line);
+        assert_eq!(matches.len(), 1);
+    }
+
+    #[test]
+    fn test_linkpreview_api_key_detected() {
+        let detectors = builtin_detectors();
+        let d = detectors.iter().find(|d| d.id() == "linkpreview-api-key").unwrap();
+        let key = "a".repeat(25);
+        let line = format!("linkpreview_api_key = {}", key);
+        let matches = d.scan_line(&line);
+        assert_eq!(matches.len(), 1);
+    }
+
+    #[test]
+    fn test_mixcloud_api_key_detected() {
+        let detectors = builtin_detectors();
+        let d = detectors.iter().find(|d| d.id() == "mixcloud-api-key").unwrap();
+        let key = "a".repeat(25);
+        let line = format!("mixcloud_api_key = {}", key);
+        let matches = d.scan_line(&line);
+        assert_eq!(matches.len(), 1);
+    }
+
+    #[test]
+    fn test_rawg_api_key_detected() {
+        let detectors = builtin_detectors();
+        let d = detectors.iter().find(|d| d.id() == "rawg-api-key").unwrap();
+        let key = "a".repeat(25);
+        let line = format!("rawg_api_key = {}", key);
+        let matches = d.scan_line(&line);
+        assert_eq!(matches.len(), 1);
+    }
+
+    #[test]
+    fn test_strava_api_key_detected() {
+        let detectors = builtin_detectors();
+        let d = detectors.iter().find(|d| d.id() == "strava-api-key").unwrap();
+        let key = "a".repeat(25);
+        let line = format!("strava_api_key = {}", key);
+        let matches = d.scan_line(&line);
+        assert_eq!(matches.len(), 1);
+    }
+
+    #[test]
+    fn test_foursquare_api_key_detected() {
+        let detectors = builtin_detectors();
+        let d = detectors.iter().find(|d| d.id() == "foursquare-api-key").unwrap();
+        let key = "a".repeat(25);
+        let line = format!("foursquare_api_key = {}", key);
+        let matches = d.scan_line(&line);
+        assert_eq!(matches.len(), 1);
+    }
+
+    #[test]
+    fn test_ticketmaster_api_key_detected() {
+        let detectors = builtin_detectors();
+        let d = detectors.iter().find(|d| d.id() == "ticketmaster-api-key").unwrap();
+        let key = "a".repeat(25);
+        let line = format!("ticketmaster_api_key = {}", key);
+        let matches = d.scan_line(&line);
+        assert_eq!(matches.len(), 1);
+    }
+
+    #[test]
+    fn test_riotgames_api_key_detected() {
+        let detectors = builtin_detectors();
+        let d = detectors.iter().find(|d| d.id() == "riotgames-api-key").unwrap();
+        let key = "a".repeat(25);
+        let line = format!("riotgames_api_key = {}", key);
+        let matches = d.scan_line(&line);
+        assert_eq!(matches.len(), 1);
+    }
+
+    #[test]
+    fn test_cricket_api_key_detected() {
+        let detectors = builtin_detectors();
+        let d = detectors.iter().find(|d| d.id() == "cricket-api-key").unwrap();
+        let key = "a".repeat(25);
+        let line = format!("cricket_api_key = {}", key);
+        let matches = d.scan_line(&line);
+        assert_eq!(matches.len(), 1);
+    }
+
+    #[test]
+    fn test_allsports_api_key_detected() {
+        let detectors = builtin_detectors();
+        let d = detectors.iter().find(|d| d.id() == "allsports-api-key").unwrap();
+        let key = "a".repeat(25);
+        let line = format!("allsports_api_key = {}", key);
+        let matches = d.scan_line(&line);
+        assert_eq!(matches.len(), 1);
+    }
+
+    #[test]
+    fn test_sportsmonk_api_key_detected() {
+        let detectors = builtin_detectors();
+        let d = detectors.iter().find(|d| d.id() == "sportsmonk-api-key").unwrap();
+        let key = "a".repeat(25);
+        let line = format!("sportsmonk_api_key = {}", key);
+        let matches = d.scan_line(&line);
+        assert_eq!(matches.len(), 1);
+    }
+
+    #[test]
+    fn test_edamam_api_key_detected() {
+        let detectors = builtin_detectors();
+        let d = detectors.iter().find(|d| d.id() == "edamam-api-key").unwrap();
+        let key = "a".repeat(25);
+        let line = format!("edamam_api_key = {}", key);
+        let matches = d.scan_line(&line);
+        assert_eq!(matches.len(), 1);
+    }
+
+    #[test]
+    fn test_nutritionix_api_key_detected() {
+        let detectors = builtin_detectors();
+        let d = detectors.iter().find(|d| d.id() == "nutritionix-api-key").unwrap();
+        let key = "a".repeat(25);
+        let line = format!("nutritionix_api_key = {}", key);
+        let matches = d.scan_line(&line);
+        assert_eq!(matches.len(), 1);
+    }
+
+    #[test]
+    fn test_spoonacular_api_key_detected() {
+        let detectors = builtin_detectors();
+        let d = detectors.iter().find(|d| d.id() == "spoonacular-api-key").unwrap();
+        let key = "a".repeat(25);
+        let line = format!("spoonacular_api_key = {}", key);
+        let matches = d.scan_line(&line);
+        assert_eq!(matches.len(), 1);
+    }
+
+    #[test]
+    fn test_calorieninja_api_key_detected() {
+        let detectors = builtin_detectors();
+        let d = detectors.iter().find(|d| d.id() == "calorieninja-api-key").unwrap();
+        let key = "a".repeat(25);
+        let line = format!("calorieninja_api_key = {}", key);
+        let matches = d.scan_line(&line);
+        assert_eq!(matches.len(), 1);
+    }
+
+    #[test]
+    fn test_protocolsio_api_key_detected() {
+        let detectors = builtin_detectors();
+        let d = detectors.iter().find(|d| d.id() == "protocolsio-api-key").unwrap();
+        let key = "a".repeat(25);
+        let line = format!("protocolsio_api_key = {}", key);
+        let matches = d.scan_line(&line);
+        assert_eq!(matches.len(), 1);
+    }
+
+    #[test]
+    fn test_hypeauditor_api_key_detected() {
+        let detectors = builtin_detectors();
+        let d = detectors.iter().find(|d| d.id() == "hypeauditor-api-key").unwrap();
+        let key = "a".repeat(25);
+        let line = format!("hypeauditor_api_key = {}", key);
+        let matches = d.scan_line(&line);
+        assert_eq!(matches.len(), 1);
+    }
+
+    // ── Tests: News & Content APIs ───────────────────────────────────────
+
+    #[test]
+    fn test_newsapi_key_detected() {
+        let detectors = builtin_detectors();
+        let d = detectors.iter().find(|d| d.id() == "newsapi-key").unwrap();
+        let key = "a".repeat(25);
+        let line = format!("newsapi_key = {}", key);
+        let matches = d.scan_line(&line);
+        assert_eq!(matches.len(), 1);
+    }
+
+    #[test]
+    fn test_newscatcher_api_key_detected() {
+        let detectors = builtin_detectors();
+        let d = detectors.iter().find(|d| d.id() == "newscatcher-api-key").unwrap();
+        let key = "a".repeat(25);
+        let line = format!("newscatcher_api_key = {}", key);
+        let matches = d.scan_line(&line);
+        assert_eq!(matches.len(), 1);
+    }
+
+    #[test]
+    fn test_currents_api_key_detected() {
+        let detectors = builtin_detectors();
+        let d = detectors.iter().find(|d| d.id() == "currents-api-key").unwrap();
+        let key = "a".repeat(25);
+        let line = format!("currents_api_key = {}", key);
+        let matches = d.scan_line(&line);
+        assert_eq!(matches.len(), 1);
+    }
+
+    #[test]
+    fn test_guardian_api_key_detected() {
+        let detectors = builtin_detectors();
+        let d = detectors.iter().find(|d| d.id() == "guardian-api-key").unwrap();
+        let key = "a".repeat(25);
+        let line = format!("guardian_api_key = {}", key);
+        let matches = d.scan_line(&line);
+        assert_eq!(matches.len(), 1);
+    }
+
+    #[test]
+    fn test_aylien_api_key_detected() {
+        let detectors = builtin_detectors();
+        let d = detectors.iter().find(|d| d.id() == "aylien-api-key").unwrap();
+        let key = "a".repeat(25);
+        let line = format!("aylien_api_key = {}", key);
+        let matches = d.scan_line(&line);
+        assert_eq!(matches.len(), 1);
+    }
+
+    #[test]
+    fn test_cicero_api_key_detected() {
+        let detectors = builtin_detectors();
+        let d = detectors.iter().find(|d| d.id() == "cicero-api-key").unwrap();
+        let key = "a".repeat(25);
+        let line = format!("cicero_api_key = {}", key);
+        let matches = d.scan_line(&line);
+        assert_eq!(matches.len(), 1);
+    }
+
+    #[test]
+    fn test_lexigram_api_key_detected() {
+        let detectors = builtin_detectors();
+        let d = detectors.iter().find(|d| d.id() == "lexigram-api-key").unwrap();
+        let key = "a".repeat(25);
+        let line = format!("lexigram_api_key = {}", key);
+        let matches = d.scan_line(&line);
+        assert_eq!(matches.len(), 1);
+    }
+
+    #[test]
+    fn test_blogger_api_key_detected() {
+        let detectors = builtin_detectors();
+        let d = detectors.iter().find(|d| d.id() == "blogger-api-key").unwrap();
+        let key = "a".repeat(25);
+        let line = format!("blogger_api_key = {}", key);
+        let matches = d.scan_line(&line);
+        assert_eq!(matches.len(), 1);
+    }
+
+    #[test]
+    fn test_mediastack_api_key_detected() {
+        let detectors = builtin_detectors();
+        let d = detectors.iter().find(|d| d.id() == "mediastack-api-key").unwrap();
+        let key = "a".repeat(25);
+        let line = format!("mediastack_api_key = {}", key);
+        let matches = d.scan_line(&line);
+        assert_eq!(matches.len(), 1);
+    }
+
+    #[test]
+    fn test_clickhelp_api_key_detected() {
+        let detectors = builtin_detectors();
+        let d = detectors.iter().find(|d| d.id() == "clickhelp-api-key").unwrap();
+        let key = "a".repeat(25);
+        let line = format!("clickhelp_api_key = {}", key);
+        let matches = d.scan_line(&line);
+        assert_eq!(matches.len(), 1);
+    }
+
+    #[test]
+    fn test_storychief_api_key_detected() {
+        let detectors = builtin_detectors();
+        let d = detectors.iter().find(|d| d.id() == "storychief-api-key").unwrap();
+        let key = "a".repeat(25);
+        let line = format!("storychief_api_key = {}", key);
+        let matches = d.scan_line(&line);
+        assert_eq!(matches.len(), 1);
+    }
+
+    #[test]
+    fn test_noticeable_api_key_detected() {
+        let detectors = builtin_detectors();
+        let d = detectors.iter().find(|d| d.id() == "noticeable-api-key").unwrap();
+        let key = "a".repeat(25);
+        let line = format!("noticeable_api_key = {}", key);
+        let matches = d.scan_line(&line);
+        assert_eq!(matches.len(), 1);
+    }
+
+    #[test]
+    fn test_readme_api_key_detected() {
+        let detectors = builtin_detectors();
+        let d = detectors.iter().find(|d| d.id() == "readme-api-key").unwrap();
+        let key = "a".repeat(25);
+        let line = format!("readme_api_key = {}", key);
+        let matches = d.scan_line(&line);
+        assert_eq!(matches.len(), 1);
+    }
+
+    #[test]
+    fn test_pastebin_api_key_detected() {
+        let detectors = builtin_detectors();
+        let d = detectors.iter().find(|d| d.id() == "pastebin-api-key").unwrap();
+        let key = "a".repeat(25);
+        let line = format!("pastebin_api_key = {}", key);
+        let matches = d.scan_line(&line);
+        assert_eq!(matches.len(), 1);
+    }
+
+    #[test]
+    fn test_crowdin_api_key_detected() {
+        let detectors = builtin_detectors();
+        let d = detectors.iter().find(|d| d.id() == "crowdin-api-key").unwrap();
+        let key = "a".repeat(25);
+        let line = format!("crowdin_api_key = {}", key);
+        let matches = d.scan_line(&line);
+        assert_eq!(matches.len(), 1);
+    }
+
+    #[test]
+    fn test_alconost_api_key_detected() {
+        let detectors = builtin_detectors();
+        let d = detectors.iter().find(|d| d.id() == "alconost-api-key").unwrap();
+        let key = "a".repeat(25);
+        let line = format!("alconost_api_key = {}", key);
+        let matches = d.scan_line(&line);
+        assert_eq!(matches.len(), 1);
+    }
+
+    #[test]
+    fn test_gengo_api_key_detected() {
+        let detectors = builtin_detectors();
+        let d = detectors.iter().find(|d| d.id() == "gengo-api-key").unwrap();
+        let key = "a".repeat(25);
+        let line = format!("gengo_api_key = {}", key);
+        let matches = d.scan_line(&line);
+        assert_eq!(matches.len(), 1);
+    }
+
+    #[test]
+    fn test_happyscribe_api_key_detected() {
+        let detectors = builtin_detectors();
+        let d = detectors.iter().find(|d| d.id() == "happyscribe-api-key").unwrap();
+        let key = "a".repeat(25);
+        let line = format!("happyscribe_api_key = {}", key);
+        let matches = d.scan_line(&line);
+        assert_eq!(matches.len(), 1);
+    }
+
+    #[test]
+    fn test_ritekit_api_key_detected() {
+        let detectors = builtin_detectors();
+        let d = detectors.iter().find(|d| d.id() == "ritekit-api-key").unwrap();
+        let key = "a".repeat(25);
+        let line = format!("ritekit_api_key = {}", key);
+        let matches = d.scan_line(&line);
+        assert_eq!(matches.len(), 1);
+    }
+
+    // ── Tests: Developer & Code Tools ────────────────────────────────────
+
+    #[test]
+    fn test_rubygems_api_token_detected() {
+        let detectors = builtin_detectors();
+        let d = detectors.iter().find(|d| d.id() == "rubygems-api-token").unwrap();
+        let key = "a".repeat(25);
+        let line = format!("rubygems_api_token = {}", key);
+        let matches = d.scan_line(&line);
+        assert_eq!(matches.len(), 1);
+    }
+
+    #[test]
+    fn test_codacy_api_token_detected() {
+        let detectors = builtin_detectors();
+        let d = detectors.iter().find(|d| d.id() == "codacy-api-token").unwrap();
+        let key = "a".repeat(25);
+        let line = format!("codacy_api_token = {}", key);
+        let matches = d.scan_line(&line);
+        assert_eq!(matches.len(), 1);
+    }
+
+    #[test]
+    fn test_coveralls_api_token_detected() {
+        let detectors = builtin_detectors();
+        let d = detectors.iter().find(|d| d.id() == "coveralls-api-token").unwrap();
+        let key = "a".repeat(25);
+        let line = format!("coveralls_api_token = {}", key);
+        let matches = d.scan_line(&line);
+        assert_eq!(matches.len(), 1);
+    }
+
+    #[test]
+    fn test_saucelabs_api_key_detected() {
+        let detectors = builtin_detectors();
+        let d = detectors.iter().find(|d| d.id() == "saucelabs-api-key").unwrap();
+        let key = "a".repeat(25);
+        let line = format!("saucelabs_api_key = {}", key);
+        let matches = d.scan_line(&line);
+        assert_eq!(matches.len(), 1);
+    }
+
+    #[test]
+    fn test_bitbar_api_key_detected() {
+        let detectors = builtin_detectors();
+        let d = detectors.iter().find(|d| d.id() == "bitbar-api-key").unwrap();
+        let key = "a".repeat(25);
+        let line = format!("bitbar_api_key = {}", key);
+        let matches = d.scan_line(&line);
+        assert_eq!(matches.len(), 1);
+    }
+
+    #[test]
+    fn test_bugsnag_api_key_detected() {
+        let detectors = builtin_detectors();
+        let d = detectors.iter().find(|d| d.id() == "bugsnag-api-key").unwrap();
+        let key = "a".repeat(25);
+        let line = format!("bugsnag_api_key = {}", key);
+        let matches = d.scan_line(&line);
+        assert_eq!(matches.len(), 1);
+    }
+
+    #[test]
+    fn test_adafruit_io_key_detected() {
+        let detectors = builtin_detectors();
+        let d = detectors.iter().find(|d| d.id() == "adafruit-io-key").unwrap();
+        let key = "a".repeat(25);
+        let line = format!("adafruit_io_key = {}", key);
+        let matches = d.scan_line(&line);
+        assert_eq!(matches.len(), 1);
+    }
+
+    #[test]
+    fn test_apify_api_key_detected() {
+        let detectors = builtin_detectors();
+        let d = detectors.iter().find(|d| d.id() == "apify-api-key").unwrap();
+        let key = "a".repeat(25);
+        let line = format!("apify_api_key = {}", key);
+        let matches = d.scan_line(&line);
+        assert_eq!(matches.len(), 1);
+    }
+
+    #[test]
+    fn test_keygen_api_key_detected() {
+        let detectors = builtin_detectors();
+        let d = detectors.iter().find(|d| d.id() == "keygen-api-key").unwrap();
+        let key = "a".repeat(25);
+        let line = format!("keygen_api_key = {}", key);
+        let matches = d.scan_line(&line);
+        assert_eq!(matches.len(), 1);
+    }
+
+    #[test]
+    fn test_aiven_api_key_detected() {
+        let detectors = builtin_detectors();
+        let d = detectors.iter().find(|d| d.id() == "aiven-api-key").unwrap();
+        let key = "a".repeat(25);
+        let line = format!("aiven_api_key = {}", key);
+        let matches = d.scan_line(&line);
+        assert_eq!(matches.len(), 1);
+    }
+
+    #[test]
+    fn test_fileio_api_key_detected() {
+        let detectors = builtin_detectors();
+        let d = detectors.iter().find(|d| d.id() == "fileio-api-key").unwrap();
+        let key = "a".repeat(25);
+        let line = format!("file_io_api_key = {}", key);
+        let matches = d.scan_line(&line);
+        assert_eq!(matches.len(), 1);
+    }
+
+    #[test]
+    fn test_flatio_api_key_detected() {
+        let detectors = builtin_detectors();
+        let d = detectors.iter().find(|d| d.id() == "flatio-api-key").unwrap();
+        let key = "a".repeat(25);
+        let line = format!("flat_io_api_key = {}", key);
+        let matches = d.scan_line(&line);
+        assert_eq!(matches.len(), 1);
+    }
+
+    #[test]
+    fn test_dynalist_api_key_detected() {
+        let detectors = builtin_detectors();
+        let d = detectors.iter().find(|d| d.id() == "dynalist-api-key").unwrap();
+        let key = "a".repeat(25);
+        let line = format!("dynalist_api_key = {}", key);
+        let matches = d.scan_line(&line);
+        assert_eq!(matches.len(), 1);
+    }
+
+    #[test]
+    fn test_sheety_api_key_detected() {
+        let detectors = builtin_detectors();
+        let d = detectors.iter().find(|d| d.id() == "sheety-api-key").unwrap();
+        let key = "a".repeat(25);
+        let line = format!("sheety_api_key = {}", key);
+        let matches = d.scan_line(&line);
+        assert_eq!(matches.len(), 1);
+    }
+
+    #[test]
+    fn test_swell_api_key_detected() {
+        let detectors = builtin_detectors();
+        let d = detectors.iter().find(|d| d.id() == "swell-api-key").unwrap();
+        let key = "a".repeat(25);
+        let line = format!("swell_api_key = {}", key);
+        let matches = d.scan_line(&line);
+        assert_eq!(matches.len(), 1);
+    }
+
+    #[test]
+    fn test_m3o_api_key_detected() {
+        let detectors = builtin_detectors();
+        let d = detectors.iter().find(|d| d.id() == "m3o-api-key").unwrap();
+        let key = "a".repeat(25);
+        let line = format!("m3o_api_key = {}", key);
+        let matches = d.scan_line(&line);
+        assert_eq!(matches.len(), 1);
+    }
+
+    #[test]
+    fn test_jsonbin_api_key_detected() {
+        let detectors = builtin_detectors();
+        let d = detectors.iter().find(|d| d.id() == "jsonbin-api-key").unwrap();
+        let key = "a".repeat(25);
+        let line = format!("jsonbin_api_key = {}", key);
+        let matches = d.scan_line(&line);
+        assert_eq!(matches.len(), 1);
+    }
+
+    #[test]
+    fn test_userstack_api_key_detected() {
+        let detectors = builtin_detectors();
+        let d = detectors.iter().find(|d| d.id() == "userstack-api-key").unwrap();
+        let key = "a".repeat(25);
+        let line = format!("userstack_api_key = {}", key);
+        let matches = d.scan_line(&line);
+        assert_eq!(matches.len(), 1);
+    }
+
+    #[test]
+    fn test_purestake_api_key_detected() {
+        let detectors = builtin_detectors();
+        let d = detectors.iter().find(|d| d.id() == "purestake-api-key").unwrap();
+        let key = "a".repeat(25);
+        let line = format!("purestake_api_key = {}", key);
+        let matches = d.scan_line(&line);
+        assert_eq!(matches.len(), 1);
+    }
+
+    #[test]
+    fn test_host_api_key_detected() {
+        let detectors = builtin_detectors();
+        let d = detectors.iter().find(|d| d.id() == "host-api-key").unwrap();
+        let key = "a".repeat(25);
+        let line = format!("host_api_key = {}", key);
+        let matches = d.scan_line(&line);
+        assert_eq!(matches.len(), 1);
+    }
+
+    #[test]
+    fn test_baseapi_api_key_detected() {
+        let detectors = builtin_detectors();
+        let d = detectors.iter().find(|d| d.id() == "baseapi-api-key").unwrap();
+        let key = "a".repeat(25);
+        let line = format!("baseapi_io_api_key = {}", key);
+        let matches = d.scan_line(&line);
+        assert_eq!(matches.len(), 1);
+    }
+
+    #[test]
+    fn test_sslmate_api_key_detected() {
+        let detectors = builtin_detectors();
+        let d = detectors.iter().find(|d| d.id() == "sslmate-api-key").unwrap();
+        let key = "a".repeat(25);
+        let line = format!("sslmate_api_key = {}", key);
+        let matches = d.scan_line(&line);
+        assert_eq!(matches.len(), 1);
+    }
+
+    #[test]
+    fn test_adobeio_api_key_detected() {
+        let detectors = builtin_detectors();
+        let d = detectors.iter().find(|d| d.id() == "adobeio-api-key").unwrap();
+        let key = "a".repeat(25);
+        let line = format!("adobe_io_api_key = {}", key);
+        let matches = d.scan_line(&line);
+        assert_eq!(matches.len(), 1);
+    }
+
+    #[test]
+    fn test_edenai_api_key_detected() {
+        let detectors = builtin_detectors();
+        let d = detectors.iter().find(|d| d.id() == "edenai-api-key").unwrap();
+        let key = "a".repeat(25);
+        let line = format!("edenai_api_key = {}", key);
+        let matches = d.scan_line(&line);
+        assert_eq!(matches.len(), 1);
+    }
+
+    #[test]
+    fn test_deepgram_api_key_detected() {
+        let detectors = builtin_detectors();
+        let d = detectors.iter().find(|d| d.id() == "deepgram-api-key").unwrap();
+        let key = "a".repeat(25);
+        let line = format!("deepgram_api_key = {}", key);
+        let matches = d.scan_line(&line);
+        assert_eq!(matches.len(), 1);
+    }
+
+    #[test]
+    fn test_voicegain_api_key_detected() {
+        let detectors = builtin_detectors();
+        let d = detectors.iter().find(|d| d.id() == "voicegain-api-key").unwrap();
+        let key = "a".repeat(25);
+        let line = format!("voicegain_api_key = {}", key);
+        let matches = d.scan_line(&line);
+        assert_eq!(matches.len(), 1);
+    }
+
+    #[test]
+    fn test_auddio_api_key_detected() {
+        let detectors = builtin_detectors();
+        let d = detectors.iter().find(|d| d.id() == "auddio-api-key").unwrap();
+        let key = "a".repeat(25);
+        let line = format!("audd_io_api_key = {}", key);
+        let matches = d.scan_line(&line);
+        assert_eq!(matches.len(), 1);
+    }
+
+    #[test]
+    fn test_owlbot_api_key_detected() {
+        let detectors = builtin_detectors();
+        let d = detectors.iter().find(|d| d.id() == "owlbot-api-key").unwrap();
+        let key = "a".repeat(25);
+        let line = format!("owlbot_api_key = {}", key);
+        let matches = d.scan_line(&line);
+        assert_eq!(matches.len(), 1);
+    }
+
+    #[test]
+    fn test_detectlanguage_api_key_detected() {
+        let detectors = builtin_detectors();
+        let d = detectors.iter().find(|d| d.id() == "detectlanguage-api-key").unwrap();
+        let key = "a".repeat(25);
+        let line = format!("detectlanguage_api_key = {}", key);
+        let matches = d.scan_line(&line);
+        assert_eq!(matches.len(), 1);
+    }
+
+    #[test]
+    fn test_languagelayer_api_key_detected() {
+        let detectors = builtin_detectors();
+        let d = detectors.iter().find(|d| d.id() == "languagelayer-api-key").unwrap();
+        let key = "a".repeat(25);
+        let line = format!("languagelayer_api_key = {}", key);
+        let matches = d.scan_line(&line);
+        assert_eq!(matches.len(), 1);
+    }
+
+    #[test]
+    fn test_paralleldots_api_key_detected() {
+        let detectors = builtin_detectors();
+        let d = detectors.iter().find(|d| d.id() == "paralleldots-api-key").unwrap();
+        let key = "a".repeat(25);
+        let line = format!("paralleldots_api_key = {}", key);
+        let matches = d.scan_line(&line);
+        assert_eq!(matches.len(), 1);
+    }
+
+    #[test]
+    fn test_veriphone_api_key_detected() {
+        let detectors = builtin_detectors();
+        let d = detectors.iter().find(|d| d.id() == "veriphone-api-key").unwrap();
+        let key = "a".repeat(25);
+        let line = format!("veriphone_api_key = {}", key);
+        let matches = d.scan_line(&line);
+        assert_eq!(matches.len(), 1);
+    }
+
+    #[test]
+    fn test_verifier_api_key_detected() {
+        let detectors = builtin_detectors();
+        let d = detectors.iter().find(|d| d.id() == "verifier-api-key").unwrap();
+        let key = "a".repeat(25);
+        let line = format!("verifier_api_key = {}", key);
+        let matches = d.scan_line(&line);
+        assert_eq!(matches.len(), 1);
+    }
+
+    #[test]
+    fn test_api2cart_api_key_detected() {
+        let detectors = builtin_detectors();
+        let d = detectors.iter().find(|d| d.id() == "api2cart-api-key").unwrap();
+        let key = "a".repeat(25);
+        let line = format!("api2cart_api_key = {}", key);
+        let matches = d.scan_line(&line);
+        assert_eq!(matches.len(), 1);
+    }
+
+    #[test]
+    fn test_apideck_api_key_detected() {
+        let detectors = builtin_detectors();
+        let d = detectors.iter().find(|d| d.id() == "apideck-api-key").unwrap();
+        let key = "a".repeat(25);
+        let line = format!("apideck_api_key = {}", key);
+        let matches = d.scan_line(&line);
+        assert_eq!(matches.len(), 1);
+    }
+
+    #[test]
+    fn test_apiflash_api_key_detected() {
+        let detectors = builtin_detectors();
+        let d = detectors.iter().find(|d| d.id() == "apiflash-api-key").unwrap();
+        let key = "a".repeat(25);
+        let line = format!("apiflash_api_key = {}", key);
+        let matches = d.scan_line(&line);
+        assert_eq!(matches.len(), 1);
+    }
+
+    #[test]
+    fn test_fleetbase_api_key_detected() {
+        let detectors = builtin_detectors();
+        let d = detectors.iter().find(|d| d.id() == "fleetbase-api-key").unwrap();
+        let key = "a".repeat(25);
+        let line = format!("fleetbase_api_key = {}", key);
+        let matches = d.scan_line(&line);
+        assert_eq!(matches.len(), 1);
+    }
+
+    #[test]
+    fn test_agora_api_key_detected() {
+        let detectors = builtin_detectors();
+        let d = detectors.iter().find(|d| d.id() == "agora-api-key").unwrap();
+        let key = "a".repeat(25);
+        let line = format!("agora_api_key = {}", key);
+        let matches = d.scan_line(&line);
+        assert_eq!(matches.len(), 1);
+    }
+
+    #[test]
+    fn test_yandex_api_key_detected() {
+        let detectors = builtin_detectors();
+        let d = detectors.iter().find(|d| d.id() == "yandex-api-key").unwrap();
+        let key = "a".repeat(25);
+        let line = format!("yandex_api_key = {}", key);
+        let matches = d.scan_line(&line);
+        assert_eq!(matches.len(), 1);
+    }
+
+    #[test]
+    fn test_artsy_api_key_detected() {
+        let detectors = builtin_detectors();
+        let d = detectors.iter().find(|d| d.id() == "artsy-api-key").unwrap();
+        let key = "a".repeat(25);
+        let line = format!("artsy_api_key = {}", key);
+        let matches = d.scan_line(&line);
+        assert_eq!(matches.len(), 1);
+    }
+
+    #[test]
+    fn test_blitapp_api_key_detected() {
+        let detectors = builtin_detectors();
+        let d = detectors.iter().find(|d| d.id() == "blitapp-api-key").unwrap();
+        let key = "a".repeat(25);
+        let line = format!("blit_app_api_key = {}", key);
+        let matches = d.scan_line(&line);
+        assert_eq!(matches.len(), 1);
+    }
+
+    #[test]
+    fn test_censys_api_key_detected() {
+        let detectors = builtin_detectors();
+        let d = detectors.iter().find(|d| d.id() == "censys-api-key").unwrap();
+        let key = "a".repeat(25);
+        let line = format!("censys_api_key = {}", key);
+        let matches = d.scan_line(&line);
+        assert_eq!(matches.len(), 1);
+    }
+
+    #[test]
+    fn test_securitytrails_api_key_detected() {
+        let detectors = builtin_detectors();
+        let d = detectors.iter().find(|d| d.id() == "securitytrails-api-key").unwrap();
+        let key = "a".repeat(25);
+        let line = format!("securitytrails_api_key = {}", key);
+        let matches = d.scan_line(&line);
+        assert_eq!(matches.len(), 1);
+    }
+
+    #[test]
+    fn test_urlscan_api_key_detected() {
+        let detectors = builtin_detectors();
+        let d = detectors.iter().find(|d| d.id() == "urlscan-api-key").unwrap();
+        let key = "a".repeat(25);
+        let line = format!("urlscan_api_key = {}", key);
+        let matches = d.scan_line(&line);
+        assert_eq!(matches.len(), 1);
+    }
+
+    #[test]
+    fn test_aletheia_api_key_detected() {
+        let detectors = builtin_detectors();
+        let d = detectors.iter().find(|d| d.id() == "aletheia-api-key").unwrap();
+        let key = "a".repeat(25);
+        let line = format!("aletheia_api_key = {}", key);
+        let matches = d.scan_line(&line);
+        assert_eq!(matches.len(), 1);
+    }
+
+    #[test]
+    fn test_whoxy_api_key_detected() {
+        let detectors = builtin_detectors();
+        let d = detectors.iter().find(|d| d.id() == "whoxy-api-key").unwrap();
+        let key = "a".repeat(25);
+        let line = format!("whoxy_api_key = {}", key);
+        let matches = d.scan_line(&line);
+        assert_eq!(matches.len(), 1);
+    }
+
+    #[test]
+    fn test_mailsac_api_key_detected() {
+        let detectors = builtin_detectors();
+        let d = detectors.iter().find(|d| d.id() == "mailsac-api-key").unwrap();
+        let key = "a".repeat(25);
+        let line = format!("mailsac_api_key = {}", key);
+        let matches = d.scan_line(&line);
+        assert_eq!(matches.len(), 1);
+    }
+
+    #[test]
+    fn test_loginradius_api_key_detected() {
+        let detectors = builtin_detectors();
+        let d = detectors.iter().find(|d| d.id() == "loginradius-api-key").unwrap();
+        let key = "a".repeat(25);
+        let line = format!("loginradius_api_key = {}", key);
+        let matches = d.scan_line(&line);
+        assert_eq!(matches.len(), 1);
+    }
+
+    #[test]
+    fn test_rev_api_key_detected() {
+        let detectors = builtin_detectors();
+        let d = detectors.iter().find(|d| d.id() == "rev-api-key").unwrap();
+        let key = "a".repeat(25);
+        let line = format!("rev_api_key = {}", key);
+        let matches = d.scan_line(&line);
+        assert_eq!(matches.len(), 1);
+    }
+
+    #[test]
+    fn test_youneedabudget_api_key_detected() {
+        let detectors = builtin_detectors();
+        let d = detectors.iter().find(|d| d.id() == "youneedabudget-api-key").unwrap();
+        let key = "a".repeat(25);
+        let line = format!("youneedabudget_api_key = {}", key);
+        let matches = d.scan_line(&line);
+        assert_eq!(matches.len(), 1);
+    }
+
+    #[test]
+    fn test_filestack_api_key_detected() {
+        let detectors = builtin_detectors();
+        let d = detectors.iter().find(|d| d.id() == "filestack-api-key").unwrap();
+        let key = "a".repeat(25);
+        let line = format!("filestack_api_key = {}", key);
+        let matches = d.scan_line(&line);
+        assert_eq!(matches.len(), 1);
+    }
+
+    #[test]
+    fn test_bubble_api_key_detected() {
+        let detectors = builtin_detectors();
+        let d = detectors.iter().find(|d| d.id() == "bubble-api-key").unwrap();
+        let key = "a".repeat(25);
+        let line = format!("bubble_api_key = {}", key);
+        let matches = d.scan_line(&line);
+        assert_eq!(matches.len(), 1);
+    }
+
+    #[test]
+    fn test_shopee_api_key_detected() {
+        let detectors = builtin_detectors();
+        let d = detectors.iter().find(|d| d.id() == "shopee-api-key").unwrap();
+        let key = "a".repeat(25);
+        let line = format!("shopee_api_key = {}", key);
+        let matches = d.scan_line(&line);
+        assert_eq!(matches.len(), 1);
+    }
+
+    #[test]
+    fn test_kiteconnect_api_key_detected() {
+        let detectors = builtin_detectors();
+        let d = detectors.iter().find(|d| d.id() == "kiteconnect-api-key").unwrap();
+        let key = "a".repeat(25);
+        let line = format!("kiteconnect_api_key = {}", key);
+        let matches = d.scan_line(&line);
+        assert_eq!(matches.len(), 1);
+    }
+
+    #[test]
+    fn test_veevavault_api_key_detected() {
+        let detectors = builtin_detectors();
+        let d = detectors.iter().find(|d| d.id() == "veevavault-api-key").unwrap();
+        let key = "a".repeat(25);
+        let line = format!("veevavault_api_key = {}", key);
+        let matches = d.scan_line(&line);
+        assert_eq!(matches.len(), 1);
+    }
+
+    #[test]
+    fn test_cloudways_api_key_detected() {
+        let detectors = builtin_detectors();
+        let d = detectors.iter().find(|d| d.id() == "cloudways-api-key").unwrap();
+        let key = "a".repeat(25);
+        let line = format!("cloudways_api_key = {}", key);
+        let matches = d.scan_line(&line);
+        assert_eq!(matches.len(), 1);
+    }
+
+    #[test]
+    fn test_duda_api_key_detected() {
+        let detectors = builtin_detectors();
+        let d = detectors.iter().find(|d| d.id() == "duda-api-key").unwrap();
+        let key = "a".repeat(25);
+        let line = format!("duda_api_key = {}", key);
+        let matches = d.scan_line(&line);
+        assert_eq!(matches.len(), 1);
+    }
+
+    #[test]
+    fn test_yext_api_key_detected() {
+        let detectors = builtin_detectors();
+        let d = detectors.iter().find(|d| d.id() == "yext-api-key").unwrap();
+        let key = "a".repeat(25);
+        let line = format!("yext_api_key = {}", key);
+        let matches = d.scan_line(&line);
+        assert_eq!(matches.len(), 1);
+    }
+
+    #[test]
+    fn test_contentstack_api_key_detected() {
+        let detectors = builtin_detectors();
+        let d = detectors.iter().find(|d| d.id() == "contentstack-api-key").unwrap();
+        let key = "a".repeat(25);
+        let line = format!("contentstack_api_key = {}", key);
+        let matches = d.scan_line(&line);
+        assert_eq!(matches.len(), 1);
+    }
+
+    #[test]
+    fn test_surge_api_key_detected() {
+        let detectors = builtin_detectors();
+        let d = detectors.iter().find(|d| d.id() == "surge-api-key").unwrap();
+        let key = "a".repeat(25);
+        let line = format!("surge_api_key = {}", key);
+        let matches = d.scan_line(&line);
+        assert_eq!(matches.len(), 1);
+    }
+
+    #[test]
+    fn test_kairos_api_key_detected() {
+        let detectors = builtin_detectors();
+        let d = detectors.iter().find(|d| d.id() == "kairos-api-key").unwrap();
+        let key = "a".repeat(25);
+        let line = format!("kairos_api_key = {}", key);
+        let matches = d.scan_line(&line);
+        assert_eq!(matches.len(), 1);
+    }
+
+    #[test]
+    fn test_fullcontact_api_key_detected() {
+        let detectors = builtin_detectors();
+        let d = detectors.iter().find(|d| d.id() == "fullcontact-api-key").unwrap();
+        let key = "a".repeat(25);
+        let line = format!("fullcontact_api_key = {}", key);
+        let matches = d.scan_line(&line);
+        assert_eq!(matches.len(), 1);
+    }
+
+    #[test]
+    fn test_eversign_api_key_detected() {
+        let detectors = builtin_detectors();
+        let d = detectors.iter().find(|d| d.id() == "eversign-api-key").unwrap();
+        let key = "a".repeat(25);
+        let line = format!("eversign_api_key = {}", key);
+        let matches = d.scan_line(&line);
+        assert_eq!(matches.len(), 1);
+    }
+
+    #[test]
+    fn test_netcore_api_key_detected() {
+        let detectors = builtin_detectors();
+        let d = detectors.iter().find(|d| d.id() == "netcore-api-key").unwrap();
+        let key = "a".repeat(25);
+        let line = format!("netcore_api_key = {}", key);
+        let matches = d.scan_line(&line);
+        assert_eq!(matches.len(), 1);
+    }
+
+    #[test]
+    fn test_bored_api_key_detected() {
+        let detectors = builtin_detectors();
+        let d = detectors.iter().find(|d| d.id() == "bored-api-key").unwrap();
+        let key = "a".repeat(25);
+        let line = format!("bored_api_key = {}", key);
+        let matches = d.scan_line(&line);
+        assert_eq!(matches.len(), 1);
+    }
+
+    // ── Tests: Document & PDF APIs ───────────────────────────────────────
+
+    #[test]
+    fn test_html2pdf_api_key_detected() {
+        let detectors = builtin_detectors();
+        let d = detectors.iter().find(|d| d.id() == "html2pdf-api-key").unwrap();
+        let key = "a".repeat(25);
+        let line = format!("html2pdf_api_key = {}", key);
+        let matches = d.scan_line(&line);
+        assert_eq!(matches.len(), 1);
+    }
+
+    #[test]
+    fn test_pdflayer_api_key_detected() {
+        let detectors = builtin_detectors();
+        let d = detectors.iter().find(|d| d.id() == "pdflayer-api-key").unwrap();
+        let key = "a".repeat(25);
+        let line = format!("pdf_layer_api_key = {}", key);
+        let matches = d.scan_line(&line);
+        assert_eq!(matches.len(), 1);
+    }
+
+    #[test]
+    fn test_pdfshift_api_key_detected() {
+        let detectors = builtin_detectors();
+        let d = detectors.iter().find(|d| d.id() == "pdfshift-api-key").unwrap();
+        let key = "a".repeat(25);
+        let line = format!("pdf_shift_api_key = {}", key);
+        let matches = d.scan_line(&line);
+        assert_eq!(matches.len(), 1);
+    }
+
+    #[test]
+    fn test_restpack_html_to_pdf_api_key_detected() {
+        let detectors = builtin_detectors();
+        let d = detectors.iter().find(|d| d.id() == "restpack-html-to-pdf-api-key").unwrap();
+        let key = "a".repeat(25);
+        let line = format!("restpack_html_to_pdf_api_key = {}", key);
+        let matches = d.scan_line(&line);
+        assert_eq!(matches.len(), 1);
+    }
+
+    #[test]
+    fn test_restpack_screenshot_api_key_detected() {
+        let detectors = builtin_detectors();
+        let d = detectors.iter().find(|d| d.id() == "restpack-screenshot-api-key").unwrap();
+        let key = "a".repeat(25);
+        let line = format!("restpack_screenshot_api_key = {}", key);
+        let matches = d.scan_line(&line);
+        assert_eq!(matches.len(), 1);
+    }
+
+    #[test]
+    fn test_documo_api_key_detected() {
+        let detectors = builtin_detectors();
+        let d = detectors.iter().find(|d| d.id() == "documo-api-key").unwrap();
+        let key = "a".repeat(25);
+        let line = format!("documo_api_key = {}", key);
+        let matches = d.scan_line(&line);
+        assert_eq!(matches.len(), 1);
+    }
+
+    #[test]
+    fn test_clustdoc_api_key_detected() {
+        let detectors = builtin_detectors();
+        let d = detectors.iter().find(|d| d.id() == "clustdoc-api-key").unwrap();
+        let key = "a".repeat(25);
+        let line = format!("clustdoc_api_key = {}", key);
+        let matches = d.scan_line(&line);
+        assert_eq!(matches.len(), 1);
+    }
+
+    #[test]
+    fn test_pandadoc_api_key_detected() {
+        let detectors = builtin_detectors();
+        let d = detectors.iter().find(|d| d.id() == "pandadoc-api-key").unwrap();
+        let key = "a".repeat(25);
+        let line = format!("pandadoc_api_key = {}", key);
+        let matches = d.scan_line(&line);
+        assert_eq!(matches.len(), 1);
+    }
+
+    #[test]
+    fn test_hellosign_api_key_detected() {
+        let detectors = builtin_detectors();
+        let d = detectors.iter().find(|d| d.id() == "hellosign-api-key").unwrap();
+        let key = "a".repeat(25);
+        let line = format!("hellosign_api_key = {}", key);
+        let matches = d.scan_line(&line);
+        assert_eq!(matches.len(), 1);
+    }
+
+    #[test]
+    fn test_juro_api_key_detected() {
+        let detectors = builtin_detectors();
+        let d = detectors.iter().find(|d| d.id() == "juro-api-key").unwrap();
+        let key = "a".repeat(25);
+        let line = format!("juro_api_key = {}", key);
+        let matches = d.scan_line(&line);
+        assert_eq!(matches.len(), 1);
+    }
+
+    #[test]
+    fn test_yousign_api_key_detected() {
+        let detectors = builtin_detectors();
+        let d = detectors.iter().find(|d| d.id() == "yousign-api-key").unwrap();
+        let key = "a".repeat(25);
+        let line = format!("yousign_api_key = {}", key);
+        let matches = d.scan_line(&line);
+        assert_eq!(matches.len(), 1);
+    }
+
+    #[test]
+    fn test_vatlayer_api_key_detected() {
+        let detectors = builtin_detectors();
+        let d = detectors.iter().find(|d| d.id() == "vatlayer-api-key").unwrap();
+        let key = "a".repeat(25);
+        let line = format!("vatlayer_api_key = {}", key);
+        let matches = d.scan_line(&line);
+        assert_eq!(matches.len(), 1);
+    }
+
+    #[test]
+    fn test_upcdatabase_api_key_detected() {
+        let detectors = builtin_detectors();
+        let d = detectors.iter().find(|d| d.id() == "upcdatabase-api-key").unwrap();
+        let key = "a".repeat(25);
+        let line = format!("upc_database_api_key = {}", key);
+        let matches = d.scan_line(&line);
+        assert_eq!(matches.len(), 1);
+    }
+
+    // ── Tests: Scraping & Web Automation ─────────────────────────────────
+
+    #[test]
+    fn test_scraperapi_key_detected() {
+        let detectors = builtin_detectors();
+        let d = detectors.iter().find(|d| d.id() == "scraperapi-key").unwrap();
+        let key = "a".repeat(25);
+        let line = format!("scraperapi_key = {}", key);
+        let matches = d.scan_line(&line);
+        assert_eq!(matches.len(), 1);
+    }
+
+    #[test]
+    fn test_scrapingdog_api_key_detected() {
+        let detectors = builtin_detectors();
+        let d = detectors.iter().find(|d| d.id() == "scrapingdog-api-key").unwrap();
+        let key = "a".repeat(25);
+        let line = format!("scrapingdog_api_key = {}", key);
+        let matches = d.scan_line(&line);
+        assert_eq!(matches.len(), 1);
+    }
+
+    #[test]
+    fn test_scrapeowl_api_key_detected() {
+        let detectors = builtin_detectors();
+        let d = detectors.iter().find(|d| d.id() == "scrapeowl-api-key").unwrap();
+        let key = "a".repeat(25);
+        let line = format!("scrapeowl_api_key = {}", key);
+        let matches = d.scan_line(&line);
+        assert_eq!(matches.len(), 1);
+    }
+
+    #[test]
+    fn test_webscraping_api_key_detected() {
+        let detectors = builtin_detectors();
+        let d = detectors.iter().find(|d| d.id() == "webscraping-api-key").unwrap();
+        let key = "a".repeat(25);
+        let line = format!("webscraping_api_key = {}", key);
+        let matches = d.scan_line(&line);
+        assert_eq!(matches.len(), 1);
+    }
+
+    #[test]
+    fn test_zenscrape_api_key_detected() {
+        let detectors = builtin_detectors();
+        let d = detectors.iter().find(|d| d.id() == "zenscrape-api-key").unwrap();
+        let key = "a".repeat(25);
+        let line = format!("zenscrape_api_key = {}", key);
+        let matches = d.scan_line(&line);
+        assert_eq!(matches.len(), 1);
+    }
+
+    #[test]
+    fn test_zenserp_api_key_detected() {
+        let detectors = builtin_detectors();
+        let d = detectors.iter().find(|d| d.id() == "zenserp-api-key").unwrap();
+        let key = "a".repeat(25);
+        let line = format!("zenserp_api_key = {}", key);
+        let matches = d.scan_line(&line);
+        assert_eq!(matches.len(), 1);
+    }
+
+    #[test]
+    fn test_serpstack_api_key_detected() {
+        let detectors = builtin_detectors();
+        let d = detectors.iter().find(|d| d.id() == "serpstack-api-key").unwrap();
+        let key = "a".repeat(25);
+        let line = format!("serpstack_api_key = {}", key);
+        let matches = d.scan_line(&line);
+        assert_eq!(matches.len(), 1);
+    }
+
+    #[test]
+    fn test_scraperbox_api_key_detected() {
+        let detectors = builtin_detectors();
+        let d = detectors.iter().find(|d| d.id() == "scraperbox-api-key").unwrap();
+        let key = "a".repeat(25);
+        let line = format!("scraperbox_api_key = {}", key);
+        let matches = d.scan_line(&line);
+        assert_eq!(matches.len(), 1);
+    }
+
+    #[test]
+    fn test_scrapingant_api_key_detected() {
+        let detectors = builtin_detectors();
+        let d = detectors.iter().find(|d| d.id() == "scrapingant-api-key").unwrap();
+        let key = "a".repeat(25);
+        let line = format!("scrapingant_api_key = {}", key);
+        let matches = d.scan_line(&line);
+        assert_eq!(matches.len(), 1);
+    }
+
+    #[test]
+    fn test_scrapestack_api_key_detected() {
+        let detectors = builtin_detectors();
+        let d = detectors.iter().find(|d| d.id() == "scrapestack-api-key").unwrap();
+        let key = "a".repeat(25);
+        let line = format!("scrapestack_api_key = {}", key);
+        let matches = d.scan_line(&line);
+        assert_eq!(matches.len(), 1);
+    }
+
+    #[test]
+    fn test_proxycrawl_api_key_detected() {
+        let detectors = builtin_detectors();
+        let d = detectors.iter().find(|d| d.id() == "proxycrawl-api-key").unwrap();
+        let key = "a".repeat(25);
+        let line = format!("proxycrawl_api_key = {}", key);
+        let matches = d.scan_line(&line);
+        assert_eq!(matches.len(), 1);
+    }
+
+    // ── Tests: Email Verification ────────────────────────────────────────
+
+    #[test]
+    fn test_debounce_api_key_detected() {
+        let detectors = builtin_detectors();
+        let d = detectors.iter().find(|d| d.id() == "debounce-api-key").unwrap();
+        let key = "a".repeat(25);
+        let line = format!("debounce_api_key = {}", key);
+        let matches = d.scan_line(&line);
+        assert_eq!(matches.len(), 1);
+    }
+
+    #[test]
+    fn test_kickbox_api_key_detected() {
+        let detectors = builtin_detectors();
+        let d = detectors.iter().find(|d| d.id() == "kickbox-api-key").unwrap();
+        let key = "a".repeat(25);
+        let line = format!("kickbox_api_key = {}", key);
+        let matches = d.scan_line(&line);
+        assert_eq!(matches.len(), 1);
+    }
+
+    #[test]
+    fn test_ipquality_api_key_detected() {
+        let detectors = builtin_detectors();
+        let d = detectors.iter().find(|d| d.id() == "ipquality-api-key").unwrap();
+        let key = "a".repeat(25);
+        let line = format!("ipquality_api_key = {}", key);
+        let matches = d.scan_line(&line);
+        assert_eq!(matches.len(), 1);
+    }
+
+    #[test]
+    fn test_roaring_api_key_detected() {
+        let detectors = builtin_detectors();
+        let d = detectors.iter().find(|d| d.id() == "roaring-api-key").unwrap();
+        let key = "a".repeat(25);
+        let line = format!("roaring_api_key = {}", key);
+        let matches = d.scan_line(&line);
+        assert_eq!(matches.len(), 1);
+    }
+
+    #[test]
+    fn test_oopspam_api_key_detected() {
+        let detectors = builtin_detectors();
+        let d = detectors.iter().find(|d| d.id() == "oopspam-api-key").unwrap();
+        let key = "a".repeat(25);
+        let line = format!("oopspam_api_key = {}", key);
+        let matches = d.scan_line(&line);
+        assert_eq!(matches.len(), 1);
+    }
+
+    #[test]
+    fn test_numverify_api_key_detected() {
+        let detectors = builtin_detectors();
+        let d = detectors.iter().find(|d| d.id() == "numverify-api-key").unwrap();
+        let key = "a".repeat(25);
+        let line = format!("numverify_api_key = {}", key);
+        let matches = d.scan_line(&line);
+        assert_eq!(matches.len(), 1);
+    }
+
+    // ── Tests: CMS & Web Builders ────────────────────────────────────────
+
+    #[test]
+    fn test_webflow_api_key_detected() {
+        let detectors = builtin_detectors();
+        let d = detectors.iter().find(|d| d.id() == "webflow-api-key").unwrap();
+        let key = "a".repeat(25);
+        let line = format!("webflow_api_key = {}", key);
+        let matches = d.scan_line(&line);
+        assert_eq!(matches.len(), 1);
+    }
+
+    #[test]
+    fn test_squarespace_api_key_detected() {
+        let detectors = builtin_detectors();
+        let d = detectors.iter().find(|d| d.id() == "squarespace-api-key").unwrap();
+        let key = "a".repeat(25);
+        let line = format!("squarespace_api_key = {}", key);
+        let matches = d.scan_line(&line);
+        assert_eq!(matches.len(), 1);
+    }
+
+    #[test]
+    fn test_siteleaf_api_key_detected() {
+        let detectors = builtin_detectors();
+        let d = detectors.iter().find(|d| d.id() == "siteleaf-api-key").unwrap();
+        let key = "a".repeat(25);
+        let line = format!("siteleaf_api_key = {}", key);
+        let matches = d.scan_line(&line);
+        assert_eq!(matches.len(), 1);
+    }
+
+    #[test]
+    fn test_graphcms_api_key_detected() {
+        let detectors = builtin_detectors();
+        let d = detectors.iter().find(|d| d.id() == "graphcms-api-key").unwrap();
+        let key = "a".repeat(25);
+        let line = format!("graphcms_api_key = {}", key);
+        let matches = d.scan_line(&line);
+        assert_eq!(matches.len(), 1);
+    }
+
+    #[test]
+    fn test_kontent_api_key_detected() {
+        let detectors = builtin_detectors();
+        let d = detectors.iter().find(|d| d.id() == "kontent-api-key").unwrap();
+        let key = "a".repeat(25);
+        let line = format!("kontent_api_key = {}", key);
+        let matches = d.scan_line(&line);
+        assert_eq!(matches.len(), 1);
+    }
+
+    // ── Tests: Miscellaneous APIs ────────────────────────────────────────
+
+    #[test]
+    fn test_wakatime_api_key_detected() {
+        let detectors = builtin_detectors();
+        let d = detectors.iter().find(|d| d.id() == "wakatime-api-key").unwrap();
+        let key = "a".repeat(25);
+        let line = format!("wakatime_api_key = {}", key);
+        let matches = d.scan_line(&line);
+        assert_eq!(matches.len(), 1);
+    }
+
+    #[test]
+    fn test_ubidots_api_key_detected() {
+        let detectors = builtin_detectors();
+        let d = detectors.iter().find(|d| d.id() == "ubidots-api-key").unwrap();
+        let key = "a".repeat(25);
+        let line = format!("ubidots_api_key = {}", key);
+        let matches = d.scan_line(&line);
+        assert_eq!(matches.len(), 1);
+    }
+
+    #[test]
+    fn test_raven_api_key_detected() {
+        let detectors = builtin_detectors();
+        let d = detectors.iter().find(|d| d.id() == "raven-api-key").unwrap();
+        let key = "a".repeat(25);
+        let line = format!("raven_api_key = {}", key);
+        let matches = d.scan_line(&line);
+        assert_eq!(matches.len(), 1);
+    }
+
+    #[test]
+    fn test_guru_api_key_detected() {
+        let detectors = builtin_detectors();
+        let d = detectors.iter().find(|d| d.id() == "guru-api-key").unwrap();
+        let key = "a".repeat(25);
+        let line = format!("guru_api_key = {}", key);
+        let matches = d.scan_line(&line);
+        assert_eq!(matches.len(), 1);
+    }
+
+    #[test]
+    fn test_hive_api_key_detected() {
+        let detectors = builtin_detectors();
+        let d = detectors.iter().find(|d| d.id() == "hive-api-key").unwrap();
+        let key = "a".repeat(25);
+        let line = format!("hive_api_key = {}", key);
+        let matches = d.scan_line(&line);
+        assert_eq!(matches.len(), 1);
+    }
+
+    #[test]
+    fn test_technicalanalysis_api_key_detected() {
+        let detectors = builtin_detectors();
+        let d = detectors.iter().find(|d| d.id() == "technicalanalysis-api-key").unwrap();
+        let key = "a".repeat(25);
+        let line = format!("technicalanalysis_api_key = {}", key);
+        let matches = d.scan_line(&line);
+        assert_eq!(matches.len(), 1);
+    }
+
+    #[test]
+    fn test_impala_api_key_detected() {
+        let detectors = builtin_detectors();
+        let d = detectors.iter().find(|d| d.id() == "impala-api-key").unwrap();
+        let key = "a".repeat(25);
+        let line = format!("impala_api_key = {}", key);
+        let matches = d.scan_line(&line);
+        assert_eq!(matches.len(), 1);
+    }
+
+    #[test]
+    fn test_unplugg_api_key_detected() {
+        let detectors = builtin_detectors();
+        let d = detectors.iter().find(|d| d.id() == "unplugg-api-key").unwrap();
+        let key = "a".repeat(25);
+        let line = format!("unplugg_api_key = {}", key);
+        let matches = d.scan_line(&line);
+        assert_eq!(matches.len(), 1);
+    }
+
+    #[test]
+    fn test_cloverly_api_key_detected() {
+        let detectors = builtin_detectors();
+        let d = detectors.iter().find(|d| d.id() == "cloverly-api-key").unwrap();
+        let key = "a".repeat(25);
+        let line = format!("cloverly_api_key = {}", key);
+        let matches = d.scan_line(&line);
+        assert_eq!(matches.len(), 1);
+    }
+
+    #[test]
+    fn test_flight_api_key_detected() {
+        let detectors = builtin_detectors();
+        let d = detectors.iter().find(|d| d.id() == "flight-api-key").unwrap();
+        let key = "a".repeat(25);
+        let line = format!("flight_api_key = {}", key);
+        let matches = d.scan_line(&line);
+        assert_eq!(matches.len(), 1);
+    }
+
+    #[test]
+    fn test_aviationstack_api_key_detected() {
+        let detectors = builtin_detectors();
+        let d = detectors.iter().find(|d| d.id() == "aviationstack-api-key").unwrap();
+        let key = "a".repeat(25);
+        let line = format!("aviationstack_api_key = {}", key);
+        let matches = d.scan_line(&line);
+        assert_eq!(matches.len(), 1);
+    }
+
+    #[test]
+    fn test_distribusion_api_key_detected() {
+        let detectors = builtin_detectors();
+        let d = detectors.iter().find(|d| d.id() == "distribusion-api-key").unwrap();
+        let key = "a".repeat(25);
+        let line = format!("distribusion_api_key = {}", key);
+        let matches = d.scan_line(&line);
+        assert_eq!(matches.len(), 1);
+    }
+
+    #[test]
+    fn test_words_api_key_detected() {
+        let detectors = builtin_detectors();
+        let d = detectors.iter().find(|d| d.id() == "words-api-key").unwrap();
+        let key = "a".repeat(25);
+        let line = format!("words_api_key = {}", key);
+        let matches = d.scan_line(&line);
+        assert_eq!(matches.len(), 1);
+    }
+
+    #[test]
+    fn test_holiday_api_key_detected() {
+        let detectors = builtin_detectors();
+        let d = detectors.iter().find(|d| d.id() == "holiday-api-key").unwrap();
+        let key = "a".repeat(25);
+        let line = format!("holiday_api_key = {}", key);
+        let matches = d.scan_line(&line);
+        assert_eq!(matches.len(), 1);
+    }
+
+    #[test]
+    fn test_amadeus_api_key_detected() {
+        let detectors = builtin_detectors();
+        let d = detectors.iter().find(|d| d.id() == "amadeus-api-key").unwrap();
+        let key = "a".repeat(25);
+        let line = format!("amadeus_api_key = {}", key);
+        let matches = d.scan_line(&line);
+        assert_eq!(matches.len(), 1);
+    }
+
+    #[test]
+    fn test_exchangerate_api_key_detected() {
+        let detectors = builtin_detectors();
+        let d = detectors.iter().find(|d| d.id() == "exchangerate-api-key").unwrap();
+        let key = "a".repeat(25);
+        let line = format!("exchange_rate_api_key = {}", key);
+        let matches = d.scan_line(&line);
+        assert_eq!(matches.len(), 1);
+    }
+
+    #[test]
+    fn test_abstract_api_key_detected() {
+        let detectors = builtin_detectors();
+        let d = detectors.iter().find(|d| d.id() == "abstract-api-key").unwrap();
+        let key = "a".repeat(25);
+        let line = format!("abstract_api_key = {}", key);
         let matches = d.scan_line(&line);
         assert_eq!(matches.len(), 1);
     }

@@ -6,7 +6,7 @@ This document lists all detectors, verification providers, output formats, scann
 
 ## Built-in Detectors
 
-PledgeGuard ships with **512 regex-based detectors** covering major cloud providers, SaaS platforms, CI/CD systems, and generic secret patterns. Each detector has a prefilter (Aho-Corasick) for fast scanning and a regex for precise matching.
+PledgeGuard ships with **708 built-in detectors** (707 regex-based + 1 entropy) covering major cloud providers, SaaS platforms, CI/CD systems, and generic secret patterns. Each regex detector has a prefilter (Aho-Corasick) for fast scanning and a regex for precise matching.
 
 ### Cloud Providers
 
@@ -631,6 +631,250 @@ PledgeGuard ships with **512 regex-based detectors** covering major cloud provid
 | `aeris-weather-api-key` | Aeris Weather API Key | Medium |
 | `ambee-api-key` | Ambee API Key | Medium |
 | `openuv-api-key` | OpenUV API Key | Medium |
+
+### Edge & Calendar
+
+| Rule ID | Description | Severity |
+|---|---|---|
+| `edge-token` | Edge API Token | Medium |
+| `calendly-webhook` | Calendly Webhook Secret | Medium |
+
+### Geocoding & Location (TruffleHog)
+
+| Rule ID | Description | Severity |
+|---|---|---|
+| `tomtom-api-key` | TomTom API Key | Medium |
+| `geoapify-api-key` | Geoapify API Key | Medium |
+| `geocodify-api-key` | Geocodify API Key | Medium |
+| `geocode-api-key` | Geocode API Key | Medium |
+| `geocodio-api-key` | Geocodio API Key | Medium |
+| `positionstack-api-key` | PositionStack API Key | Medium |
+| `locationiq-api-key` | LocationIQ API Key | Medium |
+| `graphhopper-api-key` | Graphhopper API Key | Medium |
+| `smartystreets-api-key` | SmartyStreets API Key | Medium |
+| `route4me-api-key` | Route4me API Key | Medium |
+| `zipcode-api-key` | ZipCode API Key | Low |
+| `onwater-api-key` | OnWater.io API Key | Low |
+| `geoipify-api-key` | GeoIPify API Key | Medium |
+| `ipgeolocation-api-key` | IPGeolocation API Key | Medium |
+| `ipinfodb-api-key` | IPinfoDB API Key | Medium |
+| `ipify-api-key` | ipify API Key | Medium |
+| `ipapi-api-key` | ipapi API Key | Medium |
+| `vpn-api-key` | VPN API Key | Medium |
+| `dnscheck-api-key` | DNS Check API Key | Low |
+| `walkscore-api-key` | Walk Score API Key | Low |
+| `besttime-api-key` | Besttime API Key | Medium |
+| `hypertrack-api-key` | Hypertrack API Key | High |
+| `fulcrum-api-key` | Fulcrum API Key | Medium |
+| `samsara-api-key` | Samsara API Key | High |
+
+### Media & Image APIs (TruffleHog)
+
+| Rule ID | Description | Severity |
+|---|---|---|
+| `unsplash-api-key` | Unsplash API Key | Medium |
+| `pixabay-api-key` | Pixabay API Key | Medium |
+| `gyazo-api-key` | Gyazo API Key | Medium |
+| `imgur-api-key` | Imgur API Key | Medium |
+| `shutterstock-api-key` | Shutterstock API Key | Medium |
+| `shutterstock-oauth-token` | Shutterstock OAuth Token | Medium |
+| `iconfinder-api-key` | IconFinder API Key | Medium |
+| `imagekit-api-key` | ImageKit API Key | Medium |
+| `bannerbear-api-key` | Bannerbear API Key | Medium |
+| `imagga-api-key` | Imagga API Key | Medium |
+| `faceplusplus-api-key` | Face++ API Key | Medium |
+| `skybiometry-api-key` | SkyBiometry API Key | Medium |
+| `cloudmersive-api-key` | Cloudmersive API Key | Medium |
+| `screenshotapi-api-key` | ScreenshotAPI API Key | Medium |
+| `screenshotlayer-api-key` | ScreenshotLayer API Key | Medium |
+| `browshot-api-key` | Browshot API Key | Medium |
+| `linkpreview-api-key` | LinkPreview API Key | Medium |
+| `mixcloud-api-key` | Mixcloud API Key | Medium |
+| `rawg-api-key` | RAWG API Key | Medium |
+| `strava-api-key` | Strava API Key | Medium |
+| `foursquare-api-key` | FourSquare API Key | Medium |
+| `ticketmaster-api-key` | TicketMaster API Key | Medium |
+| `riotgames-api-key` | Riot Games API Key | Medium |
+| `cricket-api-key` | Cricket API Key | Medium |
+| `allsports-api-key` | All Sports API Key | Medium |
+| `sportsmonk-api-key` | SportsMonk API Key | Medium |
+| `edamam-api-key` | Edamam API Key | Medium |
+| `nutritionix-api-key` | Nutritionix API Key | Medium |
+| `spoonacular-api-key` | Spoonacular API Key | Medium |
+| `calorieninja-api-key` | Calorie Ninja API Key | Medium |
+| `protocolsio-api-key` | Protocols.io API Key | Medium |
+| `hypeauditor-api-key` | HypeAuditor API Key | Medium |
+
+### News & Content APIs (TruffleHog)
+
+| Rule ID | Description | Severity |
+|---|---|---|
+| `newsapi-key` | NewsAPI Key | Medium |
+| `newscatcher-api-key` | Newscatcher API Key | Medium |
+| `currents-api-key` | Currents API Key | Medium |
+| `guardian-api-key` | Guardian API Key | Medium |
+| `aylien-api-key` | Aylien API Key | Medium |
+| `cicero-api-key` | Cicero API Key | Medium |
+| `lexigram-api-key` | Lexigram API Key | Medium |
+| `blogger-api-key` | Blogger API Key | Medium |
+| `mediastack-api-key` | MediaStack API Key | Medium |
+| `clickhelp-api-key` | ClickHelp API Key | Medium |
+| `storychief-api-key` | Storychief API Key | Medium |
+| `noticeable-api-key` | Noticeable API Key | Medium |
+| `readme-api-key` | ReadMe API Key | Medium |
+| `pastebin-api-key` | Pastebin API Key | Medium |
+| `crowdin-api-key` | Crowdin API Key | Medium |
+| `alconost-api-key` | Alconost API Key | Medium |
+| `gengo-api-key` | Gengo API Key | Medium |
+| `happyscribe-api-key` | HappyScribe API Key | Medium |
+| `ritekit-api-key` | RiteKit API Key | Medium |
+
+### Developer & Code Tools (TruffleHog)
+
+| Rule ID | Description | Severity |
+|---|---|---|
+| `rubygems-api-token` | RubyGems API Token | High |
+| `codacy-api-token` | Codacy API Token | Medium |
+| `coveralls-api-token` | Coveralls API Token | Medium |
+| `saucelabs-api-key` | SauceLabs API Key | Medium |
+| `bitbar-api-key` | Bitbar API Key | Medium |
+| `bugsnag-api-key` | Bugsnag API Key | Medium |
+| `adafruit-io-key` | Adafruit IO Key | Medium |
+| `apify-api-key` | Apify API Key | Medium |
+| `keygen-api-key` | Keygen API Key | Medium |
+| `aiven-api-key` | Aiven API Key | Medium |
+| `fileio-api-key` | File.io API Key | Medium |
+| `flatio-api-key` | Flat.io API Key | Medium |
+| `dynalist-api-key` | Dynalist API Key | Medium |
+| `sheety-api-key` | Sheety API Key | Medium |
+| `swell-api-key` | Swell API Key | Medium |
+| `m3o-api-key` | M3o API Key | Medium |
+| `jsonbin-api-key` | JSONbin API Key | Medium |
+| `userstack-api-key` | UserStack API Key | Medium |
+| `purestake-api-key` | PureStake API Key | Medium |
+| `host-api-key` | Host API Key | Medium |
+| `baseapi-api-key` | BaseAPI.io API Key | Medium |
+| `sslmate-api-key` | SslMate API Key | Medium |
+| `adobeio-api-key` | Adobe IO API Key | High |
+| `edenai-api-key` | EdenAI API Key | Medium |
+| `deepgram-api-key` | Deepgram API Key | Medium |
+| `voicegain-api-key` | Voicegain API Key | Medium |
+| `auddio-api-key` | Audd.io API Key | Medium |
+| `owlbot-api-key` | OwlBot API Key | Medium |
+| `detectlanguage-api-key` | DetectLanguage API Key | Medium |
+| `languagelayer-api-key` | LanguageLayer API Key | Medium |
+| `paralleldots-api-key` | ParallelDots API Key | Medium |
+| `veriphone-api-key` | Veriphone API Key | Medium |
+| `verifier-api-key` | Verifier API Key | Medium |
+| `api2cart-api-key` | API2Cart API Key | Medium |
+| `apideck-api-key` | APIDeck API Key | Medium |
+| `apiflash-api-key` | APIFlash API Key | Medium |
+| `fleetbase-api-key` | Fleetbase API Key | Medium |
+| `agora-api-key` | Agora API Key | Medium |
+| `yandex-api-key` | Yandex API Key | Medium |
+| `artsy-api-key` | Artsy API Key | Medium |
+| `blitapp-api-key` | Blit.app API Key | Medium |
+| `censys-api-key` | Censys API Key | Medium |
+| `securitytrails-api-key` | SecurityTrails API Key | Medium |
+| `urlscan-api-key` | URLScan API Key | Medium |
+| `aletheia-api-key` | Aletheia API Key | Medium |
+| `whoxy-api-key` | Whoxy API Key | Medium |
+| `mailsac-api-key` | Mailsac API Key | Medium |
+| `loginradius-api-key` | LoginRadius API Key | Medium |
+| `rev-api-key` | Rev API Key | Medium |
+| `youneedabudget-api-key` | YouNeedABudget API Key | Medium |
+| `filestack-api-key` | Filestack API Key | Medium |
+| `bubble-api-key` | Bubble API Key | Medium |
+| `shopee-api-key` | Shopee API Key | Medium |
+| `kiteconnect-api-key` | Kite Connect API Key | Medium |
+| `veevavault-api-key` | Veeva Vault API Key | Medium |
+| `cloudways-api-key` | Cloudways API Key | Medium |
+| `duda-api-key` | Duda API Key | Medium |
+| `yext-api-key` | Yext API Key | Medium |
+| `contentstack-api-key` | ContentStack API Key | Medium |
+| `surge-api-key` | Surge API Key | Medium |
+| `kairos-api-key` | Kairos API Key | Medium |
+| `fullcontact-api-key` | FullContact API Key | Medium |
+| `eversign-api-key` | Eversign API Key | Medium |
+| `netcore-api-key` | NetCore API Key | Medium |
+| `bored-api-key` | Bored API Key | Low |
+
+### Document & PDF APIs (TruffleHog)
+
+| Rule ID | Description | Severity |
+|---|---|---|
+| `html2pdf-api-key` | HTML2PDF API Key | Medium |
+| `pdflayer-api-key` | PDF Layer API Key | Medium |
+| `pdfshift-api-key` | PDF Shift API Key | Medium |
+| `restpack-html-to-pdf-api-key` | Restpack HTML-to-PDF API Key | Medium |
+| `restpack-screenshot-api-key` | Restpack Screenshot API Key | Medium |
+| `documo-api-key` | Documo API Key | Medium |
+| `clustdoc-api-key` | ClustDoc API Key | Medium |
+| `pandadoc-api-key` | PandaDoc API Key | Medium |
+| `hellosign-api-key` | HelloSign API Key | Medium |
+| `juro-api-key` | Juro API Key | Medium |
+| `yousign-api-key` | YouSign API Key | Medium |
+| `vatlayer-api-key` | VatLayer API Key | Medium |
+| `upcdatabase-api-key` | UPC Database API Key | Low |
+
+### Scraping & Web Automation (TruffleHog)
+
+| Rule ID | Description | Severity |
+|---|---|---|
+| `scraperapi-key` | ScraperAPI Key | Medium |
+| `scrapingdog-api-key` | ScrapingDog API Key | Medium |
+| `scrapeowl-api-key` | ScrapeOwl API Key | Medium |
+| `webscraping-api-key` | WebScraping API Key | Medium |
+| `zenscrape-api-key` | ZenScrape API Key | Medium |
+| `zenserp-api-key` | ZenSerp API Key | Medium |
+| `serpstack-api-key` | SerpStack API Key | Medium |
+| `scraperbox-api-key` | ScraperBox API Key | Medium |
+| `scrapingant-api-key` | ScrapingAnt API Key | Medium |
+| `scrapestack-api-key` | ScrapeStack API Key | Medium |
+| `proxycrawl-api-key` | ProxyCrawl API Key | Medium |
+
+### Email Verification (TruffleHog)
+
+| Rule ID | Description | Severity |
+|---|---|---|
+| `debounce-api-key` | Debounce API Key | Medium |
+| `kickbox-api-key` | Kickbox API Key | Medium |
+| `ipquality-api-key` | IPQuality API Key | Medium |
+| `roaring-api-key` | Roaring API Key | Medium |
+| `oopspam-api-key` | OOPSpam API Key | Medium |
+| `numverify-api-key` | Numverify API Key | Medium |
+
+### CMS & Web Builders (TruffleHog)
+
+| Rule ID | Description | Severity |
+|---|---|---|
+| `webflow-api-key` | Webflow API Key | Medium |
+| `squarespace-api-key` | Squarespace API Key | Medium |
+| `siteleaf-api-key` | Siteleaf API Key | Medium |
+| `graphcms-api-key` | GraphCMS API Key | Medium |
+| `kontent-api-key` | Kontent API Key | Medium |
+
+### Miscellaneous APIs (TruffleHog)
+
+| Rule ID | Description | Severity |
+|---|---|---|
+| `wakatime-api-key` | Wakatime API Key | Medium |
+| `ubidots-api-key` | Ubidots API Key | Medium |
+| `raven-api-key` | Raven API Key | Medium |
+| `guru-api-key` | Guru API Key | Medium |
+| `hive-api-key` | Hive API Key | Medium |
+| `technicalanalysis-api-key` | Technical Analysis API Key | Medium |
+| `impala-api-key` | Impala API Key | Medium |
+| `unplugg-api-key` | Unplugg API Key | Medium |
+| `cloverly-api-key` | Cloverly API Key | Medium |
+| `flight-api-key` | Flight API Key | Medium |
+| `aviationstack-api-key` | AviationStack API Key | Medium |
+| `distribusion-api-key` | Distribusion API Key | Medium |
+| `words-api-key` | Words API Key | Medium |
+| `holiday-api-key` | Holiday API Key | Low |
+| `amadeus-api-key` | Amadeus API Key | Medium |
+| `exchangerate-api-key` | Exchange Rate API Key | Low |
+| `abstract-api-key` | Abstract API Key | Medium |
 
 ### Cryptographic Keys & Tokens
 

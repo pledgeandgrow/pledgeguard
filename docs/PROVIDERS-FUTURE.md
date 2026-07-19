@@ -321,7 +321,7 @@ This document lists all secret providers that PledgeGuard **could** support in t
 | Railway Token | **Supported** | Future | |
 | Render Token | **Supported** | Future | rnd_ prefix |
 | Koyeb Token | **Supported** | Future | |
-| Edge Token | Future | Future | |
+| Edge Token | **Supported** | Future | |
 
 ---
 
@@ -354,7 +354,7 @@ This document lists all secret providers that PledgeGuard **could** support in t
 | Pinterest Token | **Supported** | Future | |
 | TikTok Access Token | **Supported** | Future | |
 | Zoom API Key/Secret | **Supported** | Future | |
-| Calendly Webhook | Future | Future | |
+| Calendly Webhook | **Supported** | Future | |
 | Zapier Webhook URL | **Supported** | Future | |
 
 ---
@@ -595,7 +595,7 @@ This document lists all secret providers that PledgeGuard **could** support in t
 | GetEmail API Key | **Supported** | Future | TruffleHog supports |
 | GetEmails API Key | **Supported** | Future | TruffleHog supports |
 | Skrappio API Key | **Supported** | Future | TruffleHog supports |
-| Prospect.io API Key | Future | Future | TruffleHog supports (deprecated) |
+| Prospect.io API Key | **Supported** | Future | TruffleHog supports (deprecated) |
 | Powrbot API Key | **Supported** | Future | TruffleHog supports |
 
 ---
@@ -735,30 +735,30 @@ This document lists all secret providers that PledgeGuard **could** support in t
 
 | Provider / Token Type | Detector | Verifier | Notes |
 |---|---|---|---|
-| TomTom API Key | Future | Future | TruffleHog supports |
-| Geoapify API Key | Future | Future | TruffleHog supports |
-| Geocodify API Key | Future | Future | TruffleHog supports |
-| Geocode API Key | Future | Future | TruffleHog supports |
-| Geocodio API Key | Future | Future | TruffleHog supports |
-| PositionStack API Key | Future | Future | TruffleHog supports |
-| LocationIQ API Key | Future | Future | TruffleHog supports |
-| Graphhopper API Key | Future | Future | TruffleHog supports |
-| SmartyStreets API Key | Future | Future | TruffleHog supports |
-| Route4me API Key | Future | Future | TruffleHog supports |
-| ZipCode API Key | Future | Future | TruffleHog supports |
-| OnWater.io API Key | Future | Future | TruffleHog supports |
-| GeoIPify API Key | Future | Future | TruffleHog supports |
-| IPGeolocation API Key | Future | Future | TruffleHog supports |
-| IPinfoDB API Key | Future | Future | TruffleHog supports |
-| ipify API Key | Future | Future | TruffleHog supports |
-| ipapi API Key | Future | Future | TruffleHog supports |
-| VPN API Key | Future | Future | TruffleHog supports |
-| DNS Check API Key | Future | Future | TruffleHog supports |
-| Walk Score API Key | Future | Future | TruffleHog supports |
-| Besttime API Key | Future | Future | TruffleHog supports |
-| Hypertrack API Key | Future | Future | TruffleHog supports |
-| Fulcrum API Key | Future | Future | TruffleHog supports |
-| Samsara API Key | Future | Future | TruffleHog (not yet implemented) |
+| TomTom API Key | **Supported** | Future | TruffleHog supports |
+| Geoapify API Key | **Supported** | Future | TruffleHog supports |
+| Geocodify API Key | **Supported** | Future | TruffleHog supports |
+| Geocode API Key | **Supported** | Future | TruffleHog supports |
+| Geocodio API Key | **Supported** | Future | TruffleHog supports |
+| PositionStack API Key | **Supported** | Future | TruffleHog supports |
+| LocationIQ API Key | **Supported** | Future | TruffleHog supports |
+| Graphhopper API Key | **Supported** | Future | TruffleHog supports |
+| SmartyStreets API Key | **Supported** | Future | TruffleHog supports |
+| Route4me API Key | **Supported** | Future | TruffleHog supports |
+| ZipCode API Key | **Supported** | Future | TruffleHog supports |
+| OnWater.io API Key | **Supported** | Future | TruffleHog supports |
+| GeoIPify API Key | **Supported** | Future | TruffleHog supports |
+| IPGeolocation API Key | **Supported** | Future | TruffleHog supports |
+| IPinfoDB API Key | **Supported** | Future | TruffleHog supports |
+| ipify API Key | **Supported** | Future | TruffleHog supports |
+| ipapi API Key | **Supported** | Future | TruffleHog supports |
+| VPN API Key | **Supported** | Future | TruffleHog supports |
+| DNS Check API Key | **Supported** | Future | TruffleHog supports |
+| Walk Score API Key | **Supported** | Future | TruffleHog supports |
+| Besttime API Key | **Supported** | Future | TruffleHog supports |
+| Hypertrack API Key | **Supported** | Future | TruffleHog supports |
+| Fulcrum API Key | **Supported** | Future | TruffleHog supports |
+| Samsara API Key | **Supported** | Future | TruffleHog (not yet implemented) |
 
 ---
 
@@ -766,39 +766,39 @@ This document lists all secret providers that PledgeGuard **could** support in t
 
 | Provider / Token Type | Detector | Verifier | Notes |
 |---|---|---|---|
-| Unsplash API Key | Future | Future | TruffleHog supports |
-| Pixabay API Key | Future | Future | TruffleHog supports |
-| Gyazo API Key | Future | Future | TruffleHog supports |
-| Imgur API Key | Future | Future | TruffleHog (not yet implemented) |
-| Shutterstock API Key | Future | Future | TruffleHog supports |
-| Shutterstock OAuth Token | Future | Future | TruffleHog supports |
-| IconFinder API Key | Future | Future | TruffleHog supports |
-| ImageKit API Key | Future | Future | TruffleHog supports |
-| Bannerbear API Key | Future | Future | TruffleHog supports |
-| Imagga API Key | Future | Future | TruffleHog supports |
-| Face++ API Key | Future | Future | TruffleHog supports |
-| SkyBiometry API Key | Future | Future | TruffleHog supports |
-| Cloudmersive API Key | Future | Future | TruffleHog supports |
-| ScreenshotAPI API Key | Future | Future | TruffleHog supports |
-| ScreenshotLayer API Key | Future | Future | TruffleHog supports |
-| Browshot API Key | Future | Future | TruffleHog supports |
-| LinkPreview API Key | Future | Future | TruffleHog supports |
-| Last.fm API Key | Future | Future | TruffleHog supports (deprecated) |
-| Mixcloud API Key | Future | Future | TruffleHog (not yet implemented) |
-| Rawg API Key | Future | Future | TruffleHog supports |
-| Strava API Key | Future | Future | TruffleHog supports |
-| FourSquare API Key | Future | Future | TruffleHog supports |
-| TicketMaster API Key | Future | Future | TruffleHog supports |
-| Riot Games API Key | Future | Future | TruffleHog (not yet implemented) |
-| Cricket API Key | Future | Future | TruffleHog (not yet implemented) |
-| All Sports API Key | Future | Future | TruffleHog supports |
-| SportsMonk API Key | Future | Future | TruffleHog supports |
-| Edamam API Key | Future | Future | TruffleHog supports |
-| Nutritionix API Key | Future | Future | TruffleHog supports |
-| Spoonacular API Key | Future | Future | TruffleHog supports |
-| Calorie Ninja API Key | Future | Future | TruffleHog supports |
-| Protocols.io API Key | Future | Future | TruffleHog supports |
-| HypeAuditor API Key | Future | Future | TruffleHog (not yet implemented) |
+| Unsplash API Key | **Supported** | Future | TruffleHog supports |
+| Pixabay API Key | **Supported** | Future | TruffleHog supports |
+| Gyazo API Key | **Supported** | Future | TruffleHog supports |
+| Imgur API Key | **Supported** | Future | TruffleHog (not yet implemented) |
+| Shutterstock API Key | **Supported** | Future | TruffleHog supports |
+| Shutterstock OAuth Token | **Supported** | Future | TruffleHog supports |
+| IconFinder API Key | **Supported** | Future | TruffleHog supports |
+| ImageKit API Key | **Supported** | Future | TruffleHog supports |
+| Bannerbear API Key | **Supported** | Future | TruffleHog supports |
+| Imagga API Key | **Supported** | Future | TruffleHog supports |
+| Face++ API Key | **Supported** | Future | TruffleHog supports |
+| SkyBiometry API Key | **Supported** | Future | TruffleHog supports |
+| Cloudmersive API Key | **Supported** | Future | TruffleHog supports |
+| ScreenshotAPI API Key | **Supported** | Future | TruffleHog supports |
+| ScreenshotLayer API Key | **Supported** | Future | TruffleHog supports |
+| Browshot API Key | **Supported** | Future | TruffleHog supports |
+| LinkPreview API Key | **Supported** | Future | TruffleHog supports |
+| Last.fm API Key | **Supported** | Future | TruffleHog supports (deprecated) |
+| Mixcloud API Key | **Supported** | Future | TruffleHog (not yet implemented) |
+| Rawg API Key | **Supported** | Future | TruffleHog supports |
+| Strava API Key | **Supported** | Future | TruffleHog supports |
+| FourSquare API Key | **Supported** | Future | TruffleHog supports |
+| TicketMaster API Key | **Supported** | Future | TruffleHog supports |
+| Riot Games API Key | **Supported** | Future | TruffleHog (not yet implemented) |
+| Cricket API Key | **Supported** | Future | TruffleHog (not yet implemented) |
+| All Sports API Key | **Supported** | Future | TruffleHog supports |
+| SportsMonk API Key | **Supported** | Future | TruffleHog supports |
+| Edamam API Key | **Supported** | Future | TruffleHog supports |
+| Nutritionix API Key | **Supported** | Future | TruffleHog supports |
+| Spoonacular API Key | **Supported** | Future | TruffleHog supports |
+| Calorie Ninja API Key | **Supported** | Future | TruffleHog supports |
+| Protocols.io API Key | **Supported** | Future | TruffleHog supports |
+| HypeAuditor API Key | **Supported** | Future | TruffleHog (not yet implemented) |
 
 ---
 
@@ -806,27 +806,27 @@ This document lists all secret providers that PledgeGuard **could** support in t
 
 | Provider / Token Type | Detector | Verifier | Notes |
 |---|---|---|---|
-| NewsAPI Key | Future | Future | TruffleHog supports |
-| Newscatcher API Key | Future | Future | TruffleHog supports |
-| Currents API Key | Future | Future | TruffleHog supports |
-| Guardian API Key | Future | Future | TruffleHog supports |
-| Aylien API Key | Future | Future | TruffleHog supports |
-| Cicero API Key | Future | Future | TruffleHog supports |
-| Lexigram API Key | Future | Future | TruffleHog supports |
-| Blogger API Key | Future | Future | TruffleHog supports |
-| NYT API Key | Future | Future | TruffleHog supports (deprecated) |
-| Open Graph API Key | Future | Future | TruffleHog supports (deprecated) |
-| MediaStack API Key | Future | Future | TruffleHog supports |
-| ClickHelp API Key | Future | Future | TruffleHog supports |
-| Storychief API Key | Future | Future | TruffleHog supports |
-| Noticeable API Key | Future | Future | TruffleHog supports |
-| ReadMe API Key | Future | Future | TruffleHog supports |
-| Pastebin API Key | Future | Future | TruffleHog supports |
-| Crowdin API Key | Future | Future | TruffleHog supports |
-| Alconost API Key | Future | Future | TruffleHog supports |
-| Gengo API Key | Future | Future | TruffleHog supports |
-| HappyScribe API Key | Future | Future | TruffleHog supports |
-| RiteKit API Key | Future | Future | TruffleHog supports |
+| NewsAPI Key | **Supported** | Future | TruffleHog supports |
+| Newscatcher API Key | **Supported** | Future | TruffleHog supports |
+| Currents API Key | **Supported** | Future | TruffleHog supports |
+| Guardian API Key | **Supported** | Future | TruffleHog supports |
+| Aylien API Key | **Supported** | Future | TruffleHog supports |
+| Cicero API Key | **Supported** | Future | TruffleHog supports |
+| Lexigram API Key | **Supported** | Future | TruffleHog supports |
+| Blogger API Key | **Supported** | Future | TruffleHog supports |
+| NYT API Key | **Supported** | Future | TruffleHog supports (deprecated) |
+| Open Graph API Key | **Supported** | Future | TruffleHog supports (deprecated) |
+| MediaStack API Key | **Supported** | Future | TruffleHog supports |
+| ClickHelp API Key | **Supported** | Future | TruffleHog supports |
+| Storychief API Key | **Supported** | Future | TruffleHog supports |
+| Noticeable API Key | **Supported** | Future | TruffleHog supports |
+| ReadMe API Key | **Supported** | Future | TruffleHog supports |
+| Pastebin API Key | **Supported** | Future | TruffleHog supports |
+| Crowdin API Key | **Supported** | Future | TruffleHog supports |
+| Alconost API Key | **Supported** | Future | TruffleHog supports |
+| Gengo API Key | **Supported** | Future | TruffleHog supports |
+| HappyScribe API Key | **Supported** | Future | TruffleHog supports |
+| RiteKit API Key | **Supported** | Future | TruffleHog supports |
 
 ---
 
@@ -834,74 +834,74 @@ This document lists all secret providers that PledgeGuard **could** support in t
 
 | Provider / Token Type | Detector | Verifier | Notes |
 |---|---|---|---|
-| RubyGems API Token | Future | Future | TruffleHog supports |
-| Codacy API Token | Future | Future | TruffleHog supports |
-| Coveralls API Token | Future | Future | TruffleHog supports |
-| SauceLabs API Key | Future | Future | TruffleHog supports |
-| Bitbar API Key | Future | Future | TruffleHog supports |
-| Bugsnag API Key | Future | Future | TruffleHog supports |
-| Adafruit IO Key | Future | Future | TruffleHog supports |
-| Apify API Key | Future | Future | TruffleHog supports |
-| Keygen API Key | Future | Future | TruffleHog (not yet implemented) |
-| Aiven API Key | Future | Future | TruffleHog supports |
-| File.io API Key | Future | Future | TruffleHog supports |
-| Flat.io API Key | Future | Future | TruffleHog supports |
-| Dynalist API Key | Future | Future | TruffleHog supports |
-| Sheety API Key | Future | Future | TruffleHog supports |
-| Swell API Key | Future | Future | TruffleHog supports |
-| M3o API Key | Future | Future | TruffleHog supports |
-| JSONbin API Key | Future | Future | TruffleHog (not yet implemented) |
-| UserStack API Key | Future | Future | TruffleHog supports |
-| PureStake API Key | Future | Future | TruffleHog supports |
-| Host API Key | Future | Future | TruffleHog supports |
-| BaseAPI.io API Key | Future | Future | TruffleHog (not yet implemented) |
-| SslMate API Key | Future | Future | TruffleHog supports |
-| Adobe IO API Key | Future | Future | TruffleHog supports |
-| EdenAI API Key | Future | Future | TruffleHog supports |
-| Deepgram API Key | Future | Future | TruffleHog supports |
-| Voicegain API Key | Future | Future | TruffleHog supports |
-| Audd.io API Key | Future | Future | TruffleHog supports |
-| OwlBot API Key | Future | Future | TruffleHog supports |
-| DetectLanguage API Key | Future | Future | TruffleHog supports |
-| LanguageLayer API Key | Future | Future | TruffleHog supports |
-| ParallelDots API Key | Future | Future | TruffleHog supports |
-| Text2Data API Key | Future | Future | TruffleHog supports (deprecated) |
-| Veriphone API Key | Future | Future | TruffleHog supports |
-| Verifier API Key | Future | Future | TruffleHog supports |
-| API2Cart API Key | Future | Future | TruffleHog supports |
-| APIDeck API Key | Future | Future | TruffleHog supports |
-| APIFlash API Key | Future | Future | TruffleHog supports |
-| Fleetbase API Key | Future | Future | TruffleHog supports |
-| Agora API Key | Future | Future | TruffleHog supports |
-| Yandex API Key | Future | Future | TruffleHog supports |
-| Artsy API Key | Future | Future | TruffleHog supports |
-| Blit.app API Key | Future | Future | TruffleHog supports |
-| Censys API Key | Future | Future | TruffleHog supports |
-| SecurityTrails API Key | Future | Future | TruffleHog supports |
-| URLScan API Key | Future | Future | TruffleHog supports |
-| Aletheia API Key | Future | Future | TruffleHog supports |
-| Whoxy API Key | Future | Future | TruffleHog supports |
-| Mailsac API Key | Future | Future | TruffleHog supports |
-| LoginRadius API Key | Future | Future | TruffleHog supports |
-| Passbase API Key | Future | Future | TruffleHog supports (deprecated) |
-| Nitro API Key | Future | Future | TruffleHog supports (deprecated) |
-| Rev API Key | Future | Future | TruffleHog supports |
-| YouNeedABudget API Key | Future | Future | TruffleHog supports |
-| Filestack API Key | Future | Future | TruffleHog (not yet implemented) |
-| Bubble API Key | Future | Future | TruffleHog (not yet implemented) |
-| Shopee Open Platform API Key | Future | Future | TruffleHog (not yet implemented) |
-| Kite Connect API Key | Future | Future | TruffleHog (not yet implemented) |
-| Veeva Vault API Key | Future | Future | TruffleHog (not yet implemented) |
-| Cloudways API Key | Future | Future | TruffleHog (not yet implemented) |
-| Duda API Key | Future | Future | TruffleHog (not yet implemented) |
-| Yext API Key | Future | Future | TruffleHog (not yet implemented) |
-| ContentStack API Key | Future | Future | TruffleHog (not yet implemented) |
-| Surge API Key | Future | Future | TruffleHog (not yet implemented) |
-| Kairos API Key | Future | Future | TruffleHog (not yet implemented) |
-| FullContact API Key | Future | Future | TruffleHog (not yet implemented) |
-| Eversign API Key | Future | Future | TruffleHog (not yet implemented) |
-| NetCore API Key | Future | Future | TruffleHog (not yet implemented) |
-| Bored API Key | Future | Future | TruffleHog (not yet implemented) |
+| RubyGems API Token | **Supported** | Future | TruffleHog supports |
+| Codacy API Token | **Supported** | Future | TruffleHog supports |
+| Coveralls API Token | **Supported** | Future | TruffleHog supports |
+| SauceLabs API Key | **Supported** | Future | TruffleHog supports |
+| Bitbar API Key | **Supported** | Future | TruffleHog supports |
+| Bugsnag API Key | **Supported** | Future | TruffleHog supports |
+| Adafruit IO Key | **Supported** | Future | TruffleHog supports |
+| Apify API Key | **Supported** | Future | TruffleHog supports |
+| Keygen API Key | **Supported** | Future | TruffleHog (not yet implemented) |
+| Aiven API Key | **Supported** | Future | TruffleHog supports |
+| File.io API Key | **Supported** | Future | TruffleHog supports |
+| Flat.io API Key | **Supported** | Future | TruffleHog supports |
+| Dynalist API Key | **Supported** | Future | TruffleHog supports |
+| Sheety API Key | **Supported** | Future | TruffleHog supports |
+| Swell API Key | **Supported** | Future | TruffleHog supports |
+| M3o API Key | **Supported** | Future | TruffleHog supports |
+| JSONbin API Key | **Supported** | Future | TruffleHog (not yet implemented) |
+| UserStack API Key | **Supported** | Future | TruffleHog supports |
+| PureStake API Key | **Supported** | Future | TruffleHog supports |
+| Host API Key | **Supported** | Future | TruffleHog supports |
+| BaseAPI.io API Key | **Supported** | Future | TruffleHog (not yet implemented) |
+| SslMate API Key | **Supported** | Future | TruffleHog supports |
+| Adobe IO API Key | **Supported** | Future | TruffleHog supports |
+| EdenAI API Key | **Supported** | Future | TruffleHog supports |
+| Deepgram API Key | **Supported** | Future | TruffleHog supports |
+| Voicegain API Key | **Supported** | Future | TruffleHog supports |
+| Audd.io API Key | **Supported** | Future | TruffleHog supports |
+| OwlBot API Key | **Supported** | Future | TruffleHog supports |
+| DetectLanguage API Key | **Supported** | Future | TruffleHog supports |
+| LanguageLayer API Key | **Supported** | Future | TruffleHog supports |
+| ParallelDots API Key | **Supported** | Future | TruffleHog supports |
+| Text2Data API Key | **Supported** | Future | TruffleHog supports (deprecated) |
+| Veriphone API Key | **Supported** | Future | TruffleHog supports |
+| Verifier API Key | **Supported** | Future | TruffleHog supports |
+| API2Cart API Key | **Supported** | Future | TruffleHog supports |
+| APIDeck API Key | **Supported** | Future | TruffleHog supports |
+| APIFlash API Key | **Supported** | Future | TruffleHog supports |
+| Fleetbase API Key | **Supported** | Future | TruffleHog supports |
+| Agora API Key | **Supported** | Future | TruffleHog supports |
+| Yandex API Key | **Supported** | Future | TruffleHog supports |
+| Artsy API Key | **Supported** | Future | TruffleHog supports |
+| Blit.app API Key | **Supported** | Future | TruffleHog supports |
+| Censys API Key | **Supported** | Future | TruffleHog supports |
+| SecurityTrails API Key | **Supported** | Future | TruffleHog supports |
+| URLScan API Key | **Supported** | Future | TruffleHog supports |
+| Aletheia API Key | **Supported** | Future | TruffleHog supports |
+| Whoxy API Key | **Supported** | Future | TruffleHog supports |
+| Mailsac API Key | **Supported** | Future | TruffleHog supports |
+| LoginRadius API Key | **Supported** | Future | TruffleHog supports |
+| Passbase API Key | **Supported** | Future | TruffleHog supports (deprecated) |
+| Nitro API Key | **Supported** | Future | TruffleHog supports (deprecated) |
+| Rev API Key | **Supported** | Future | TruffleHog supports |
+| YouNeedABudget API Key | **Supported** | Future | TruffleHog supports |
+| Filestack API Key | **Supported** | Future | TruffleHog (not yet implemented) |
+| Bubble API Key | **Supported** | Future | TruffleHog (not yet implemented) |
+| Shopee Open Platform API Key | **Supported** | Future | TruffleHog (not yet implemented) |
+| Kite Connect API Key | **Supported** | Future | TruffleHog (not yet implemented) |
+| Veeva Vault API Key | **Supported** | Future | TruffleHog (not yet implemented) |
+| Cloudways API Key | **Supported** | Future | TruffleHog (not yet implemented) |
+| Duda API Key | **Supported** | Future | TruffleHog (not yet implemented) |
+| Yext API Key | **Supported** | Future | TruffleHog (not yet implemented) |
+| ContentStack API Key | **Supported** | Future | TruffleHog (not yet implemented) |
+| Surge API Key | **Supported** | Future | TruffleHog (not yet implemented) |
+| Kairos API Key | **Supported** | Future | TruffleHog (not yet implemented) |
+| FullContact API Key | **Supported** | Future | TruffleHog (not yet implemented) |
+| Eversign API Key | **Supported** | Future | TruffleHog (not yet implemented) |
+| NetCore API Key | **Supported** | Future | TruffleHog (not yet implemented) |
+| Bored API Key | **Supported** | Future | TruffleHog (not yet implemented) |
 
 ---
 
@@ -909,22 +909,22 @@ This document lists all secret providers that PledgeGuard **could** support in t
 
 | Provider / Token Type | Detector | Verifier | Notes |
 |---|---|---|---|
-| HTML2PDF API Key | Future | Future | TruffleHog supports |
-| PDF Layer API Key | Future | Future | TruffleHog supports |
-| PDF Shift API Key | Future | Future | TruffleHog supports |
-| Restpack HTML-to-PDF API Key | Future | Future | TruffleHog supports |
-| Restpack Screenshot API Key | Future | Future | TruffleHog supports |
-| Restpack API Key | Future | Future | TruffleHog supports (deprecated) |
-| Documo API Key | Future | Future | TruffleHog supports |
-| ClustDoc API Key | Future | Future | TruffleHog supports |
-| PandaDoc API Key | Future | Future | TruffleHog supports |
-| HelloSign API Key | Future | Future | TruffleHog supports |
-| Juro API Key | Future | Future | TruffleHog supports |
-| Eversign API Key | Future | Future | TruffleHog (not yet implemented) |
-| YouSign API Key | Future | Future | TruffleHog supports |
-| PDFShift API Key | Future | Future | TruffleHog supports |
-| VatLayer API Key | Future | Future | TruffleHog supports |
-| UPC Database API Key | Future | Future | TruffleHog supports |
+| HTML2PDF API Key | **Supported** | Future | TruffleHog supports |
+| PDF Layer API Key | **Supported** | Future | TruffleHog supports |
+| PDF Shift API Key | **Supported** | Future | TruffleHog supports |
+| Restpack HTML-to-PDF API Key | **Supported** | Future | TruffleHog supports |
+| Restpack Screenshot API Key | **Supported** | Future | TruffleHog supports |
+| Restpack API Key | **Supported** | Future | TruffleHog supports (deprecated) |
+| Documo API Key | **Supported** | Future | TruffleHog supports |
+| ClustDoc API Key | **Supported** | Future | TruffleHog supports |
+| PandaDoc API Key | **Supported** | Future | TruffleHog supports |
+| HelloSign API Key | **Supported** | Future | TruffleHog supports |
+| Juro API Key | **Supported** | Future | TruffleHog supports |
+| Eversign API Key | **Supported** | Future | TruffleHog (not yet implemented) |
+| YouSign API Key | **Supported** | Future | TruffleHog supports |
+| PDFShift API Key | **Supported** | Future | TruffleHog supports |
+| VatLayer API Key | **Supported** | Future | TruffleHog supports |
+| UPC Database API Key | **Supported** | Future | TruffleHog supports |
 
 ---
 
@@ -932,18 +932,18 @@ This document lists all secret providers that PledgeGuard **could** support in t
 
 | Provider / Token Type | Detector | Verifier | Notes |
 |---|---|---|---|
-| ScraperAPI Key | Future | Future | TruffleHog supports |
-| ScrapingDog API Key | Future | Future | TruffleHog (not yet implemented) |
-| ScrapeOwl API Key | Future | Future | TruffleHog supports |
-| WebScraping API Key | Future | Future | TruffleHog supports |
-| ZenScrape API Key | Future | Future | TruffleHog supports |
-| ZenSerp API Key | Future | Future | TruffleHog supports |
-| SerpStack API Key | Future | Future | TruffleHog supports |
-| ScraperBox API Key | Future | Future | TruffleHog supports |
-| ScrapingAnt API Key | Future | Future | TruffleHog supports |
-| ScrapeStack API Key | Future | Future | TruffleHog supports |
-| ProxyCrawl API Key | Future | Future | TruffleHog supports |
-| ScrapingBee (additional) | Future | Future | Already supported in Security section |
+| ScraperAPI Key | **Supported** | Future | TruffleHog supports |
+| ScrapingDog API Key | **Supported** | Future | TruffleHog (not yet implemented) |
+| ScrapeOwl API Key | **Supported** | Future | TruffleHog supports |
+| WebScraping API Key | **Supported** | Future | TruffleHog supports |
+| ZenScrape API Key | **Supported** | Future | TruffleHog supports |
+| ZenSerp API Key | **Supported** | Future | TruffleHog supports |
+| SerpStack API Key | **Supported** | Future | TruffleHog supports |
+| ScraperBox API Key | **Supported** | Future | TruffleHog supports |
+| ScrapingAnt API Key | **Supported** | Future | TruffleHog supports |
+| ScrapeStack API Key | **Supported** | Future | TruffleHog supports |
+| ProxyCrawl API Key | **Supported** | Future | TruffleHog supports |
+| ScrapingBee (additional) | **Supported** | Future | Already supported in Security section |
 
 ---
 
@@ -951,12 +951,12 @@ This document lists all secret providers that PledgeGuard **could** support in t
 
 | Provider / Token Type | Detector | Verifier | Notes |
 |---|---|---|---|
-| Debounce API Key | Future | Future | TruffleHog supports |
-| Kickbox API Key | Future | Future | TruffleHog supports |
-| IPQuality API Key | Future | Future | TruffleHog supports |
-| Roaring API Key | Future | Future | TruffleHog supports |
-| OOPSpam API Key | Future | Future | TruffleHog supports |
-| Numverify API Key | Future | Future | TruffleHog supports |
+| Debounce API Key | **Supported** | Future | TruffleHog supports |
+| Kickbox API Key | **Supported** | Future | TruffleHog supports |
+| IPQuality API Key | **Supported** | Future | TruffleHog supports |
+| Roaring API Key | **Supported** | Future | TruffleHog supports |
+| OOPSpam API Key | **Supported** | Future | TruffleHog supports |
+| Numverify API Key | **Supported** | Future | TruffleHog supports |
 
 ---
 
@@ -964,18 +964,18 @@ This document lists all secret providers that PledgeGuard **could** support in t
 
 | Provider / Token Type | Detector | Verifier | Notes |
 |---|---|---|---|
-| Webflow API Key | Future | Future | TruffleHog supports |
-| Squarespace API Key | Future | Future | TruffleHog supports |
-| Siteleaf API Key | Future | Future | TruffleHog supports |
-| GraphCMS API Key | Future | Future | TruffleHog supports |
-| Kontent API Key | Future | Future | TruffleHog supports |
-| Swell API Key | Future | Future | TruffleHog supports |
-| Sheety API Key | Future | Future | TruffleHog supports |
+| Webflow API Key | **Supported** | Future | TruffleHog supports |
+| Squarespace API Key | **Supported** | Future | TruffleHog supports |
+| Siteleaf API Key | **Supported** | Future | TruffleHog supports |
+| GraphCMS API Key | **Supported** | Future | TruffleHog supports |
+| Kontent API Key | **Supported** | Future | TruffleHog supports |
+| Swell API Key | **Supported** | Future | TruffleHog supports |
+| Sheety API Key | **Supported** | Future | TruffleHog supports |
 | Daily.co API Key | **Supported** | Future | TruffleHog supports |
-| ClickHelp API Key | Future | Future | TruffleHog supports |
-| ReadMe API Key | Future | Future | TruffleHog supports |
-| Noticeable API Key | Future | Future | TruffleHog supports |
-| Storychief API Key | Future | Future | TruffleHog supports |
+| ClickHelp API Key | **Supported** | Future | TruffleHog supports |
+| ReadMe API Key | **Supported** | Future | TruffleHog supports |
+| Noticeable API Key | **Supported** | Future | TruffleHog supports |
+| Storychief API Key | **Supported** | Future | TruffleHog supports |
 
 ---
 
@@ -983,39 +983,39 @@ This document lists all secret providers that PledgeGuard **could** support in t
 
 | Provider / Token Type | Detector | Verifier | Notes |
 |---|---|---|---|
-| Wakatime API Key | Future | Future | TruffleHog (not yet implemented) |
-| Ubidots API Key | Future | Future | TruffleHog supports |
+| Wakatime API Key | **Supported** | Future | TruffleHog (not yet implemented) |
+| Ubidots API Key | **Supported** | Future | TruffleHog supports |
 | Tmetric API Key | **Supported** | Future | TruffleHog supports |
-| Raven API Key | Future | Future | TruffleHog supports |
-| Guru API Key | Future | Future | TruffleHog supports |
-| Hive API Key | Future | Future | TruffleHog supports |
-| QuickMetrics API Key | Future | Future | TruffleHog supports (deprecated) |
-| Technical Analysis API Key | Future | Future | TruffleHog supports |
-| Impala API Key | Future | Future | TruffleHog supports |
-| Unplugg API Key | Future | Future | TruffleHog supports |
-| M3o API Key | Future | Future | TruffleHog supports |
-| Cloverly API Key | Future | Future | TruffleHog supports |
-| Flight API Key | Future | Future | TruffleHog supports |
-| AviationStack API Key | Future | Future | TruffleHog supports |
-| Distribusion API Key | Future | Future | TruffleHog (not yet implemented) |
-| Blablabus API Key | Future | Future | TruffleHog supports (deprecated) |
-| Words API Key | Future | Future | TruffleHog (not yet implemented) |
-| FakeJSON API Key | Future | Future | TruffleHog supports (deprecated) |
-| OpenGraphr API Key | Future | Future | TruffleHog supports (deprecated) |
-| Holiday API Key | Future | Future | TruffleHog supports |
-| Calendarific (additional) | Future | Future | Already supported in Analytics section |
-| Spoonacular API Key | Future | Future | TruffleHog supports |
-| Nutritionix API Key | Future | Future | TruffleHog supports |
-| Edamam API Key | Future | Future | TruffleHog supports |
-| Calorie Ninja API Key | Future | Future | TruffleHog supports |
-| Protocols.io API Key | Future | Future | TruffleHog supports |
-| Amadeus API Key | Future | Future | TruffleHog supports |
+| Raven API Key | **Supported** | Future | TruffleHog supports |
+| Guru API Key | **Supported** | Future | TruffleHog supports |
+| Hive API Key | **Supported** | Future | TruffleHog supports |
+| QuickMetrics API Key | **Supported** | Future | TruffleHog supports (deprecated) |
+| Technical Analysis API Key | **Supported** | Future | TruffleHog supports |
+| Impala API Key | **Supported** | Future | TruffleHog supports |
+| Unplugg API Key | **Supported** | Future | TruffleHog supports |
+| M3o API Key | **Supported** | Future | TruffleHog supports |
+| Cloverly API Key | **Supported** | Future | TruffleHog supports |
+| Flight API Key | **Supported** | Future | TruffleHog supports |
+| AviationStack API Key | **Supported** | Future | TruffleHog supports |
+| Distribusion API Key | **Supported** | Future | TruffleHog (not yet implemented) |
+| Blablabus API Key | **Supported** | Future | TruffleHog supports (deprecated) |
+| Words API Key | **Supported** | Future | TruffleHog (not yet implemented) |
+| FakeJSON API Key | **Supported** | Future | TruffleHog supports (deprecated) |
+| OpenGraphr API Key | **Supported** | Future | TruffleHog supports (deprecated) |
+| Holiday API Key | **Supported** | Future | TruffleHog supports |
+| Calendarific (additional) | **Supported** | Future | Already supported in Analytics section |
+| Spoonacular API Key | **Supported** | Future | TruffleHog supports |
+| Nutritionix API Key | **Supported** | Future | TruffleHog supports |
+| Edamam API Key | **Supported** | Future | TruffleHog supports |
+| Calorie Ninja API Key | **Supported** | Future | TruffleHog supports |
+| Protocols.io API Key | **Supported** | Future | TruffleHog supports |
+| Amadeus API Key | **Supported** | Future | TruffleHog supports |
 | Twelve Data API Key | **Supported** | Future | TruffleHog supports |
-| Exchange Rate API Key | Future | Future | TruffleHog supports |
-| Holiday API Key | Future | Future | TruffleHog supports |
-| Abstract API Key | Future | Future | TruffleHog supports |
-| Integromat API Key | Future | Future | TruffleHog supports (deprecated, now Make) |
-| Unsplash API Key | Future | Future | TruffleHog supports |
+| Exchange Rate API Key | **Supported** | Future | TruffleHog supports |
+| Holiday API Key | **Supported** | Future | TruffleHog supports |
+| Abstract API Key | **Supported** | Future | TruffleHog supports |
+| Integromat API Key | **Supported** | Future | TruffleHog supports (deprecated, now Make) |
+| Unsplash API Key | **Supported** | Future | TruffleHog supports |
 
 ---
 
@@ -1064,7 +1064,7 @@ Beyond the current scanning sources (working tree, stdin, git history, Docker, G
 
 | Metric | Current | Future (Total Potential) |
 |---|---|---|
-| **Detectors** | 512 | 700+ |
+| **Detectors** | 708 | 700+ |
 | **Verification providers** | 34 | 150+ |
 | **Scanning sources** | 10 | 25+ |
 | **Output formats** | 6 | 6 (competitive) |
