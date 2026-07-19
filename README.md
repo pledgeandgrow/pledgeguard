@@ -8,10 +8,16 @@ Rust-native secret scanner — a TruffleHog/Gitleaks alternative.
 
 ## Status
 
-**v0.1.0 — all roadmap features implemented.** PledgeGuard is a working secret
-scanner with regex + entropy detection, git history scanning, WASM plugins,
-live provider verification, MCP server, SARIF output, baseline/allowlist mode,
-pre-commit hook installer, and AST-based false-positive refinement for JS/TS.
+**v0.2.0 — comprehensive feature set.** PledgeGuard is a working secret
+scanner with 50+ built-in detectors, 15 live verification providers, git history
+scanning, WASM plugins, MCP server, 6 output formats (Table/JSON/SARIF/CSV/JUnit/Template),
+baseline/allowlist mode, pre-commit hook installer, AST-based false-positive
+refinement for JS/TS, custom TOML rules with entropy/allowlists/path filters,
+inline comment suppression, recursive base64 decoding, composite/proximity rules,
+Docker image scanning, GitHub/GitLab API scanning, S3/GCS bucket scanning, and
+archive (zip/tar) scanning.
+
+> **Full list of supported detectors, verifiers, and platforms:** see **[SUPPORT.md](SUPPORT.md)**
 
 It is functional and tested but **not yet production-hardened** — detector
 regexes may need tuning for precision/recall on large codebases, and it has
@@ -80,17 +86,15 @@ to be inside a git working tree.
 
 ## Built-in detectors
 
-- AWS Access Key ID / Secret Access Key
-- GitHub Personal Access Token (classic + fine-grained)
-- Slack token / incoming webhook
-- Stripe secret key
-- Google API key
-- npm access token
-- PEM-encoded private keys (RSA/EC/DSA/OpenSSH/PGP)
-- JSON Web Tokens
-- PostgreSQL / MySQL connection strings with embedded credentials
-- Generic bearer tokens
-- Generic high-entropy strings assigned to key/token/secret-like variables (Shannon entropy)
+50+ detectors covering AWS, Azure, Google Cloud, Alibaba, Tencent, DigitalOcean,
+GitHub, GitLab, Bitbucket, Slack, Discord, Telegram, Stripe, Shopify, OpenAI,
+Anthropic, HuggingFace, SendGrid, Mailgun, Mailchimp, Datadog, New Relic,
+PagerDuty, Opsgenie, Auth0, Okta, Vercel, Netlify, Supabase, Cloudflare,
+CircleCI, Heroku, Atlassian, Notion, Linear, Figma, Twitch, Twitter/X,
+Facebook, LinkedIn, npm, PEM private keys, JWTs, PostgreSQL/MySQL/MongoDB/Redis
+connection strings, and generic entropy-based detection.
+
+See **[SUPPORT.md](SUPPORT.md)** for the complete list.
 
 All matched secrets are redacted by default in CLI output (`--no-redact` to disable).
 
@@ -120,12 +124,13 @@ Findings are never dropped, only flagged; the CLI hides them by default and
 
 ### Live provider verification
 
-`--verify` calls provider APIs (GitHub, Slack, Stripe, npm) to check whether
-a matched secret is still active. Results appear as `Active`, `Inactive`,
-`Unknown`, or `Error` in the `VERIFIED` column (table), `verification` JSON
-field, or SARIF result message. Off by default (makes outbound network
-requests). Only bearer-style tokens whose match text is a complete credential
-can be verified.
+`--verify` calls provider APIs to check whether a matched secret is still active.
+15 providers are supported: GitHub, GitLab, Slack, Stripe, npm, DigitalOcean,
+Telegram, Twilio, OpenAI, PyPI, Docker Hub, SendGrid, Mailgun, Opsgenie, and
+PagerDuty. Results appear as `Active`, `Inactive`, `Unknown`, or `Error` in the
+`VERIFIED` column (table), `verification` JSON field, or SARIF result message.
+Off by default (makes outbound network requests). See **[SUPPORT.md](SUPPORT.md)**
+for the full provider list.
 
 ### Baseline / allowlist mode
 
@@ -215,7 +220,8 @@ install-pre-commit options:
 
 - **AST refinement is JS/TS only** — Python, Go, Ruby, etc. use the lexical heuristic.
 - **Git history scans use lexical-only filtering** — only added-line text is available, not the full file.
-- **Live verification covers 4 providers** — GitHub, Slack, Stripe, npm. AWS keys, PEM keys, JWTs, and connection strings cannot be verified.
+- **Live verification covers 15 providers** — see [SUPPORT.md](SUPPORT.md) for the full list. AWS keys, PEM keys, JWTs, and connection strings cannot be verified.
+- **Docker/GitHub/GitLab/S3/GCS scanning via library API** — not yet wired to CLI subcommands.
 - **Baseline files contain raw secret values** — treat as sensitive.
 - **Early-stage / unaudited** — detector regexes may need tuning; limited real-world testing.
 
