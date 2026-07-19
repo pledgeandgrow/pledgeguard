@@ -25,6 +25,8 @@ archive (zip/tar) scanning.
 > **Future providers roadmap (competitor comparison):** see **[PROVIDERS-FUTURE.md](docs/PROVIDERS-FUTURE.md)**
 >
 > **Competitive benchmark vs TruffleHog/Gitleaks/Betterleaks/GitGuardian/Trivy:** see **[BENCHMARK.md](docs/BENCHMARK.md)**
+>
+> **Roadmap to #1 — 100 goals to lead in every category:** see **[ROADMAPLEAD.md](docs/ROADMAPLEAD.md)**
 
 It is functional and tested but **not yet production-hardened** — detector
 regexes may need tuning for precision/recall on large codebases, and it has
