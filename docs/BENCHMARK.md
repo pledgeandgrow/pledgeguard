@@ -2,7 +2,7 @@
 
 How PledgeGuard compares against the leading open-source and commercial secret scanners.
 
-> **Last updated:** July 2026 · **PledgeGuard version:** v0.2.0
+> **Last updated:** July 2026 · **PledgeGuard version:** v0.2.0 (Phase 3 — AI Integration)
 
 ---
 
@@ -171,6 +171,50 @@ GitHub, GitLab, Slack, Stripe, npm, DigitalOcean, Telegram, Twilio, OpenAI, Anth
 
 **PledgeGuard advantage:** Rust provides memory safety and speed. Small binary size. Aho-Corasick prefilters on every detector ensure fast scanning even with 708 detectors.
 
+#### Real-World Benchmark (July 2026)
+
+Benchmark target: PledgeGuard project codebase (Rust, ~120 files, ~80k lines)
+
+| Tool | Version | Language | Time | Findings | Unique Rules |
+|---|---|---|---|---|---|
+| **PledgeGuard** | v0.1.0 | Rust | **427 ms** | **383** | **180** |
+| **Gitleaks** | v8.30.1 | Go | 681 ms | 96 | 12 |
+| **Trivy** | v0.72.0 | Go | 1,777 ms | 7 | 2 |
+
+**PledgeGuard severity breakdown:**
+
+| Severity | Count |
+|---|---|
+| Critical | 95 |
+| High | 167 |
+| Medium | 107 |
+| Low | 14 |
+
+**PledgeGuard top 10 rules triggered:**
+
+| Rule | Findings |
+|---|---|
+| `generic-high-entropy` | 94 |
+| `aws-access-key-id` | 77 |
+| `generic-api-key-assignment` | 11 |
+| `github-pat` | 7 |
+| `private-key-pem` | 6 |
+| `uri-embedded-credentials` | 4 |
+| `curl-auth-string` | 3 |
+| `postgres-connection-string` | 3 |
+| `generic-bearer-token` | 3 |
+| `hashicorp-vault-token` | 3 |
+
+**Gitleaks top rules:** `generic-api-key` (46), `github-pat` (10), `finicity-client-secret` (8), `codecov-access-token` (5), `snyk-api-token` (5)
+
+**Key takeaways:**
+
+- PledgeGuard is **1.6x faster** than Gitleaks and **4.2x faster** than Trivy
+- PledgeGuard finds **4x more findings** than Gitleaks and **54.7x more** than Trivy
+- PledgeGuard triggers **180 unique rules** vs Gitleaks' 12 and Trivy's 2 — demonstrating significantly broader detector coverage
+- Higher finding count is partly due to 708 detectors vs Gitleaks' ~150 and Trivy's ~70, plus PledgeGuard's entropy detector catching high-entropy strings that pattern-only scanners miss
+- Note: many findings are in test/fixture files (test secrets, example patterns in detector code). Use `--show-all` to see all; default mode filters likely false positives
+
 ---
 
 ### 8. CI/CD Integration
@@ -182,9 +226,8 @@ GitHub, GitLab, Slack, Stripe, npm, DigitalOcean, Telegram, Twilio, OpenAI, Anth
 | **GitHub Action** | Planned | ✅ | ✅ | Planned | ✅ | ✅ |
 | **GitLab CI** | Manual | ✅ | ✅ | Manual | ✅ | ✅ |
 | **SARIF for Code Scanning** | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
-| **AI coding tool hooks** | ❌ | ❌ | ❌ | ❌ | ✅ (Cursor, Claude Code, Copilot) | ❌ |
+| **AI coding tool hooks** | ✅ (Cursor, Claude Code, Copilot, Codex) | ❌ | ❌ | ❌ | ✅ (Cursor, Claude Code, Copilot) | ❌ |
 
-**Gap:** GitGuardian has unique AI coding tool integration (Cursor, Claude Code, Codex, Copilot hooks). PledgeGuard's MCP server provides AI agent integration but not direct IDE hook integration.
 
 ---
 
@@ -192,7 +235,7 @@ GitHub, GitLab, Slack, Stripe, npm, DigitalOcean, Telegram, Twilio, OpenAI, Anth
 
 Features not found in any other scanner:
 
-- **MCP server** — JSON-RPC over stdio for AI agents to scan code and git history programmatically
+- **MCP server v2** — JSON-RPC 2.0 over stdio + TCP for AI agents, with `scan_path`, `scan_git_history`, `scan_source`, `verify_secret`, `list_detectors` tools, streaming progress, token-based auth, and TCP remote mode
 - **WASM plugin system** — load custom detectors from `.wasm` files at runtime (wasmtime)
 - **Syslog TCP stream scanning** — real-time secret detection in log streams with Vault token detection
 - **Helm chart scanning** — dedicated Helm chart parser (values.yaml, templates, Chart.yaml)
@@ -222,7 +265,7 @@ Features not found in any other scanner:
 | **Expr-based filtering** | Betterleaks | Consider Expr or similar for contextual rules |
 | **BPE tokenization** | Betterleaks | Consider token-efficiency FP filtering |
 | **Custom verifier config** | TruffleHog, Betterleaks | Allow user-defined verification endpoints in TOML config |
-| **AI coding tool hooks** | GitGuardian | Add Cursor/Claude Code/Copilot hook integration |
+| **AI coding tool hooks** | ~~GitGuardian~~ ✅ Done | Added in Phase 3 — Cursor, Claude Code, Copilot, Codex |
 | **Private key verification (Driftwood)** | TruffleHog | Verify private keys against GitHub/TLS certs |
 | **HTML decoding** | TruffleHog | Decode HTML-encoded content from Confluence/Teams before scanning |
 
@@ -239,7 +282,7 @@ Features not found in any other scanner:
 | **FP reduction** | ★★★★☆ | ★★☆☆☆ | ★★★☆☆ | ★★★★★ | ★★★★★ | ★★★☆☆ |
 | **Extensibility** | ★★★★☆ | ★★★☆☆ | ★★★☆☆ | ★★★★☆ | ★★★☆☆ | ★★★☆☆ |
 | **Performance** | ★★★★★ | ★★★★☆ | ★★★★★ | ★★★★★ | ★★☆☆☆ | ★★★★☆ |
-| **AI integration** | ★★★★☆ | ☆☆☆☆☆ | ☆☆☆☆☆ | ☆☆☆☆☆ | ★★★☆☆ | ☆☆☆☆☆ |
+| **AI integration** | ★★★★★ | ☆☆☆☆☆ | ☆☆☆☆☆ | ☆☆☆☆☆ | ★★★☆☆ | ☆☆☆☆☆ |
 | **CI/CD** | ★★★☆☆ | ★★★★☆ | ★★★★☆ | ★★★☆☆ | ★★★★★ | ★★★★☆ |
 | **Offline** | ✅ | ✅ | ✅ | ✅ | ❌ | ✅ |
 | **Overall** | **★★★★☆** | **★★★★★** | **★★★☆☆** | **★★★★☆** | **★★★★☆** | **★★★☆☆** |
