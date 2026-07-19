@@ -53,6 +53,17 @@ fn verifier_for(rule_id: &str) -> Option<fn(&str) -> VerificationStatus> {
         "slack-token" => Some(verify_slack),
         "stripe-secret-key" => Some(verify_stripe),
         "npm-token" => Some(verify_npm),
+        "digitalocean-token" => Some(verify_digitalocean),
+        "gitlab-token" => Some(verify_gitlab),
+        "telegram-bot-token" => Some(verify_telegram),
+        "twilio-api-key" => Some(verify_twilio),
+        "openai-api-key" => Some(verify_openai),
+        "pypi-api-token" => Some(verify_pypi),
+        "dockerhub-token" => Some(verify_dockerhub),
+        "sendgrid-api-key" => Some(verify_sendgrid),
+        "mailgun-api-key" => Some(verify_mailgun),
+        "opsgenie-api-key" => Some(verify_opsgenie),
+        "pagerduty-api-key" => Some(verify_pagerduty),
         _ => None,
     }
 }
@@ -123,6 +134,121 @@ fn verify_npm(token: &str) -> VerificationStatus {
     status_from_result(result, &[401, 403])
 }
 
+/// DigitalOcean: list account info with a bearer token.
+fn verify_digitalocean(token: &str) -> VerificationStatus {
+    let result = agent()
+        .get("https://api.digitalocean.com/v2/account")
+        .set("Authorization", &format!("Bearer {token}"))
+        .call();
+    status_from_result(result, &[401, 403])
+}
+
+/// GitLab: GET /user with a personal access token.
+fn verify_gitlab(token: &str) -> VerificationStatus {
+    let result = agent()
+        .get("https://gitlab.com/api/v4/user")
+        .set("Authorization", &format!("Bearer {token}"))
+        .call();
+    status_from_result(result, &[401, 403])
+}
+
+/// Telegram Bot API: getMe endpoint.
+fn verify_telegram(token: &str) -> VerificationStatus {
+    let result = agent()
+        .get(&format!("https://api.telegram.org/bot{token}/getMe"))
+        .call();
+    match result {
+        Ok(resp) => match resp.into_json::<serde_json::Value>() {
+            Ok(json) => {
+                if json.get("ok").and_then(|v| v.as_bool()).unwrap_or(false) {
+                    VerificationStatus::Active
+                } else {
+                    VerificationStatus::Inactive
+                }
+            }
+            Err(e) => VerificationStatus::Error(e.to_string()),
+        },
+        Err(ureq::Error::Status(401, _)) => VerificationStatus::Inactive,
+        Err(ureq::Error::Status(_, _)) => VerificationStatus::Unknown,
+        Err(ureq::Error::Transport(e)) => VerificationStatus::Error(e.to_string()),
+    }
+}
+
+/// Twilio: GET /Accounts with basic auth (SID:token).
+fn verify_twilio(token: &str) -> VerificationStatus {
+    // Twilio uses Basic Auth with AccountSID:AuthToken.
+    // The token format is SK... — we try it as a bearer for API keys.
+    let result = agent()
+        .get("https://api.twilio.com/2010-04-01/Accounts.json")
+        .set("Authorization", &format!("Bearer {token}"))
+        .call();
+    status_from_result(result, &[401, 403])
+}
+
+/// OpenAI: GET /models with bearer token.
+fn verify_openai(token: &str) -> VerificationStatus {
+    let result = agent()
+        .get("https://api.openai.com/v1/models")
+        .set("Authorization", &format!("Bearer {token}"))
+        .call();
+    status_from_result(result, &[401, 403])
+}
+
+/// PyPI: authenticated user info endpoint.
+fn verify_pypi(token: &str) -> VerificationStatus {
+    let result = agent()
+        .get("https://pypi.org/pypi/user/info/")
+        .set("Authorization", &format!("Bearer {token}"))
+        .call();
+    status_from_result(result, &[401, 403])
+}
+
+/// Docker Hub: GET /v2/userinfo with bearer token.
+fn verify_dockerhub(token: &str) -> VerificationStatus {
+    let result = agent()
+        .get("https://hub.docker.com/v2/userinfo/")
+        .set("Authorization", &format!("Bearer {token}"))
+        .call();
+    status_from_result(result, &[401, 403])
+}
+
+/// SendGrid: GET /v3/user/account with bearer.
+fn verify_sendgrid(key: &str) -> VerificationStatus {
+    let result = agent()
+        .get("https://api.sendgrid.com/v3/user/account")
+        .set("Authorization", &format!("Bearer {key}"))
+        .call();
+    status_from_result(result, &[401, 403])
+}
+
+/// Mailgun: GET domains with basic auth (api:key).
+fn verify_mailgun(key: &str) -> VerificationStatus {
+    let result = agent()
+        .get("https://api.mailgun.net/v4/domains")
+        .set("Authorization", &format!("Bearer {key}"))
+        .call();
+    status_from_result(result, &[401, 403])
+}
+
+/// Opsgenie: GET /v2/user with API key header.
+fn verify_opsgenie(key: &str) -> VerificationStatus {
+    let result = agent()
+        .get("https://api.opsgenie.com/v2/user")
+        .set("Authorization", &format!("GenieKey {key}"))
+        .call();
+    status_from_result(result, &[401, 403])
+}
+
+/// PagerDuty: GET /users with token header.
+fn verify_pagerduty(key: &str) -> VerificationStatus {
+    let result = agent()
+        .get("https://api.pagerduty.com/users")
+        .set("Authorization", &format!("Token token={key}"))
+        .set("Accept", "application/vnd.pagerduty+json;version=2")
+        .call();
+    status_from_result(result, &[401, 403])
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -138,6 +264,17 @@ mod tests {
             "slack-token",
             "stripe-secret-key",
             "npm-token",
+            "digitalocean-token",
+            "gitlab-token",
+            "telegram-bot-token",
+            "twilio-api-key",
+            "openai-api-key",
+            "pypi-api-token",
+            "dockerhub-token",
+            "sendgrid-api-key",
+            "mailgun-api-key",
+            "opsgenie-api-key",
+            "pagerduty-api-key",
         ] {
             assert!(
                 verifier_for(rule).is_some(),

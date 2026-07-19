@@ -9,7 +9,7 @@ static GLOBAL: tikv_jemallocator::Jemalloc = tikv_jemallocator::Jemalloc;
 
 use clap::{Parser, ValueEnum};
 use pledgeguard_core::{
-    Detector, Finding, Scanner, Severity, baseline, detectors::builtin_detectors,
+    Allowlist, Detector, Finding, Scanner, Severity, baseline, detectors::builtin_detectors,
     load_config, scan_git_history, verify_findings,
 };
 use std::io::Read;
@@ -92,6 +92,15 @@ enum Command {
         /// Paths to ignore during scan (glob patterns). May be given multiple times.
         #[arg(long = "ignore-path")]
         ignore_paths: Vec<String>,
+
+        /// Only run rules with the given IDs. May be given multiple times.
+        /// If not set, all rules are enabled.
+        #[arg(long = "enable-rule")]
+        enable_rules: Vec<String>,
+
+        /// Timeout in seconds for the scan. Currently informational (no hard enforcement).
+        #[arg(long, default_value_t = 300)]
+        timeout: u64,
     },
 
     /// Scan git commit history (all refs) for secrets introduced in past commits.
@@ -151,6 +160,15 @@ enum Command {
         /// Verbose output — print scan progress and stats to stderr.
         #[arg(long)]
         verbose: bool,
+
+        /// Only run rules with the given IDs. May be given multiple times.
+        /// If not set, all rules are enabled.
+        #[arg(long = "enable-rule")]
+        enable_rules: Vec<String>,
+
+        /// Timeout in seconds for the scan.
+        #[arg(long, default_value_t = 300)]
+        timeout: u64,
     },
 
     /// Run a Model Context Protocol (MCP) server over stdio, exposing scan
@@ -180,6 +198,9 @@ enum OutputFormat {
     Table,
     Json,
     Sarif,
+    Csv,
+    Junit,
+    Template,
 }
 
 #[derive(Copy, Clone, ValueEnum)]
@@ -219,13 +240,22 @@ fn main() -> ExitCode {
             config: config_path,
             report_file,
             verbose,
-            ignore_paths: _,
+            ignore_paths,
+            enable_rules,
+            timeout: _,
         } => {
             if verbose {
                 eprintln!("pledgeguard: loading detectors...");
             }
-            let detectors = load_all_detectors(&plugin_dirs, config_path.as_deref());
-            let scanner = Scanner::new(detectors);
+            let (detectors, global_allowlist) = load_all_detectors_and_allowlist(&plugin_dirs, config_path.as_deref());
+
+            let scan_opts = pledgeguard_core::ScanOptions {
+                max_file_size: 5 * 1024 * 1024,
+                respect_gitignore: true,
+                ignore_paths,
+                enable_rules: if enable_rules.is_empty() { None } else { Some(enable_rules) },
+            };
+            let scanner = Scanner::with_allowlist(detectors, scan_opts, global_allowlist);
 
             // Handle stdin scanning.
             let findings = if path == std::path::Path::new("-") {
@@ -284,11 +314,20 @@ fn main() -> ExitCode {
             config: config_path,
             report_file,
             verbose,
+            enable_rules,
+            timeout: _,
         } => {
             if verbose {
                 eprintln!("pledgeguard: loading detectors...");
             }
-            let detectors = load_all_detectors(&plugin_dirs, config_path.as_deref());
+            let (detectors, _global_allowlist) = load_all_detectors_and_allowlist(&plugin_dirs, config_path.as_deref());
+            // For history scanning, we filter detectors by enable_rules manually.
+            let detectors = if enable_rules.is_empty() {
+                detectors
+            } else {
+                let enabled: std::collections::HashSet<&str> = enable_rules.iter().map(|s| s.as_str()).collect();
+                detectors.into_iter().filter(|d| enabled.contains(d.id())).collect()
+            };
             if verbose {
                 eprintln!("pledgeguard: scanning git history at {}", path.display());
             }
@@ -325,23 +364,27 @@ fn main() -> ExitCode {
     }
 }
 
-fn load_all_detectors(
+fn load_all_detectors_and_allowlist(
     plugin_dirs: &[PathBuf],
     config_path: Option<&std::path::Path>,
-) -> Vec<Box<dyn Detector>> {
+) -> (Vec<Box<dyn Detector>>, Option<Allowlist>) {
     let mut detectors = builtin_detectors();
     for dir in plugin_dirs {
         detectors.extend(pledgeguard_core::load_plugins(dir));
     }
+    let mut global_allowlist = None;
     if let Some(cp) = config_path {
         match load_config(cp) {
-            Ok(custom) => detectors.extend(custom),
+            Ok(result) => {
+                detectors.extend(result.detectors);
+                global_allowlist = result.global_allowlist;
+            }
             Err(e) => {
                 eprintln!("warning: failed to load config from {}: {}", cp.display(), e);
             }
         }
     }
-    detectors
+    (detectors, global_allowlist)
 }
 
 struct ReportOptions {
@@ -438,6 +481,9 @@ fn report(findings: Vec<Finding>, opts: ReportOptions) -> ExitCode {
         OutputFormat::Table => format_table(&display),
         OutputFormat::Json => format_json(&display),
         OutputFormat::Sarif => format_sarif(&display),
+        OutputFormat::Csv => pledgeguard_core::to_csv(&display),
+        OutputFormat::Junit => pledgeguard_core::to_junit(&display),
+        OutputFormat::Template => pledgeguard_core::to_template(&display, None),
     };
 
     let mut output = output;

@@ -68,6 +68,17 @@ smallvec = { version = "1", features = ["write"] }
 # Custom config file parsing
 toml = "0.8"
 
+# Glob pattern matching for --ignore-path
+glob = "0.3"
+
+# Base64 decoding for recursive decode scanning
+base64 = "0.22"
+
+# Archive scanning
+zip = { version = "2", default-features = false, features = ["deflate"] }
+tar = "0.4"
+flate2 = "1"
+
 # Internal crates
 pledgeguard-core = { path = "crates/pledgeguard-core", version = "0.1.0" }
 
