@@ -66,11 +66,11 @@ jobs:
 
       - name: Package (Windows)
         if: matrix.archive == 'zip'
-        shell: bash
+        shell: pwsh
         run: |
-          mkdir -p dist
-          cp target/${{ matrix.target }}/release/pledgeguard.exe dist/
-          cd dist && zip ../pledgeguard-${{ matrix.target }}.zip pledgeguard.exe
+          New-Item -ItemType Directory -Force -Path dist
+          Copy-Item target/${{ matrix.target }}/release/pledgeguard.exe dist/
+          Compress-Archive -Path dist/pledgeguard.exe -DestinationPath pledgeguard-${{ matrix.target }}.zip
 
       - name: Upload artifact
         uses: actions/upload-artifact@v4

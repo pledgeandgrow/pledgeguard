@@ -22,6 +22,7 @@
 pub mod ai;
 pub mod ai_hooks;
 pub mod api_scan;
+pub mod enterprise;
 pub mod archive;
 pub mod ast;
 pub mod ast_comments;
@@ -108,4 +109,10 @@ pub use ai::{
 };
 pub use ai_hooks::{
     AiTool, HookInstallResult, install_hooks, format_install_summary,
+};
+pub use enterprise::{
+    AuditEntry, AuditLogger, ComplianceFramework, ComplianceReport, ComplianceStatus,
+    DiffFinding, DiffStatus, DiffSummary, FindingState, FindingTracker, Permission,
+    RbacConfig, Role, Suppression, TrackedFinding, WebhookConfig, WebhookType,
+    diff_scans, diff_summary, generate_compliance_report, send_webhook,
 };

@@ -1,0 +1,58 @@
+# Example GitHub Actions workflow for PledgeGuard secret scanning
+# Add this to .github/workflows/pledgeguard.yml in your repo
+
+name: PledgeGuard Secret Scan
+
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+    branches: [main, master]
+
+permissions:
+  contents: read
+
+jobs:
+  scan:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # Full history for git history scanning
+
+      - name: Scan for secrets
+        uses: pledgeandgrow/pledgeguard@v0.1.0
+        with:
+          path: .
+          format: github-actions
+          min-severity: high
+          fail-on-findings: true
+          # verify: false  # Set to true for live API verification
+          # scan-history: true  # Scan git history too
+          # show-all: false  # Include likely false positives
+
+  # Optional: SARIF upload for GitHub code scanning
+  scan-sarif:
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push'
+    permissions:
+      contents: read
+      security-events: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Scan for secrets (SARIF)
+        uses: pledgeandgrow/pledgeguard@v0.1.0
+        with:
+          path: .
+          format: sarif
+          min-severity: medium
+          fail-on-findings: false
+          report-file: pledgeguard-results.sarif
+
+      - name: Upload SARIF results
+        uses: github/codeql-action/upload-sarif@v3
+        with:
+          sarif_file: pledgeguard-results.sarif

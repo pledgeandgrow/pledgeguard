@@ -13,6 +13,7 @@ use pledgeguard_core::{
     detectors::builtin_detectors, load_config, scan_git_history,
     verify_findings, verify_findings_with_options, VerifyOptions,
     ai, ai_hooks,
+    enterprise,
 };
 use std::io::Read;
 use std::path::PathBuf;
@@ -336,6 +337,65 @@ enum Command {
         #[arg(default_value = ".")]
         path: PathBuf,
     },
+
+    /// Generate a compliance report from scan findings (SOC2, PCI-DSS, ISO27001, etc.).
+    Compliance {
+        /// Path to scan.
+        #[arg(default_value = ".")]
+        path: PathBuf,
+
+        /// Compliance framework: soc2, pci-dss, iso27001, hipaa, gdpr, nist-csf.
+        #[arg(long, default_value = "soc2")]
+        framework: ComplianceFrameworkArg,
+
+        /// Minimum severity to include.
+        #[arg(long, default_value = "low")]
+        min_severity: CliSeverity,
+
+        /// Include findings flagged as likely false positives.
+        #[arg(long)]
+        show_all: bool,
+
+        /// Verify findings before generating the report.
+        #[arg(long)]
+        verify: bool,
+    },
+
+    /// Diff two scan reports to show new, resolved, and unchanged findings.
+    Diff {
+        /// Previous scan report (JSON file).
+        previous: PathBuf,
+
+        /// Current scan report (JSON file).
+        current: PathBuf,
+
+        /// Output format: table or json.
+        #[arg(long, default_value = "table")]
+        format: DiffFormat,
+    },
+
+    /// Notify a webhook (Slack, Teams, Discord) with scan findings.
+    Notify {
+        /// Webhook URL.
+        #[arg(long)]
+        url: String,
+
+        /// Webhook type: slack, teams, discord, generic.
+        #[arg(long, default_value = "slack")]
+        webhook_type: WebhookTypeArg,
+
+        /// Path to scan.
+        #[arg(default_value = ".")]
+        path: PathBuf,
+
+        /// Minimum severity to trigger notification.
+        #[arg(long, default_value = "high")]
+        min_severity: CliSeverity,
+
+        /// Only notify on verified-active secrets.
+        #[arg(long)]
+        only_verified_active: bool,
+    },
 }
 
 #[derive(Copy, Clone, PartialEq, ValueEnum)]
@@ -386,6 +446,54 @@ enum AiAnalysisArg {
     Rotation,
     Impact,
     Prioritize,
+}
+
+#[derive(Copy, Clone, Debug, ValueEnum)]
+enum ComplianceFrameworkArg {
+    Soc2,
+    PciDss,
+    Iso27001,
+    Hipaa,
+    Gdpr,
+    NistCsf,
+}
+
+impl From<ComplianceFrameworkArg> for enterprise::ComplianceFramework {
+    fn from(arg: ComplianceFrameworkArg) -> Self {
+        match arg {
+            ComplianceFrameworkArg::Soc2 => enterprise::ComplianceFramework::Soc2,
+            ComplianceFrameworkArg::PciDss => enterprise::ComplianceFramework::PciDss,
+            ComplianceFrameworkArg::Iso27001 => enterprise::ComplianceFramework::Iso27001,
+            ComplianceFrameworkArg::Hipaa => enterprise::ComplianceFramework::Hipaa,
+            ComplianceFrameworkArg::Gdpr => enterprise::ComplianceFramework::Gdpr,
+            ComplianceFrameworkArg::NistCsf => enterprise::ComplianceFramework::NistCsf,
+        }
+    }
+}
+
+#[derive(Copy, Clone, Debug, ValueEnum)]
+enum DiffFormat {
+    Table,
+    Json,
+}
+
+#[derive(Copy, Clone, Debug, ValueEnum)]
+enum WebhookTypeArg {
+    Slack,
+    Teams,
+    Discord,
+    Generic,
+}
+
+impl From<WebhookTypeArg> for enterprise::WebhookType {
+    fn from(arg: WebhookTypeArg) -> Self {
+        match arg {
+            WebhookTypeArg::Slack => enterprise::WebhookType::Slack,
+            WebhookTypeArg::Teams => enterprise::WebhookType::Teams,
+            WebhookTypeArg::Discord => enterprise::WebhookType::Discord,
+            WebhookTypeArg::Generic => enterprise::WebhookType::Generic,
+        }
+    }
 }
 
 #[derive(Copy, Clone, Debug, ValueEnum)]
@@ -866,6 +974,135 @@ fn main() -> ExitCode {
             ExitCode::SUCCESS
         }
         Command::InstallPreCommit { force, path } => install_pre_commit(&path, force),
+        Command::Compliance { path, framework, min_severity, show_all, verify } => {
+            let detectors = builtin_detectors();
+            let scanner = Scanner::new(detectors);
+            let mut findings = match scanner.scan_path(&path) {
+                Ok(f) => f,
+                Err(e) => {
+                    eprintln!("error scanning {}: {}", path.display(), e);
+                    return ExitCode::FAILURE;
+                }
+            };
+
+            findings.retain(|f| f.severity >= min_severity.into());
+            if !show_all {
+                findings.retain(|f| !f.likely_false_positive);
+            }
+            if verify {
+                verify_findings(&mut findings);
+            }
+
+            let report = enterprise::generate_compliance_report(
+                &findings,
+                framework.into(),
+                &path.display().to_string(),
+            );
+
+            println!("{}", report.to_text());
+            if report.compliance_status == enterprise::ComplianceStatus::NonCompliant {
+                ExitCode::FAILURE
+            } else {
+                ExitCode::SUCCESS
+            }
+        }
+        Command::Diff { previous, current, format } => {
+            let prev_json = match std::fs::read_to_string(&previous) {
+                Ok(s) => s,
+                Err(e) => {
+                    eprintln!("error reading {}: {}", previous.display(), e);
+                    return ExitCode::FAILURE;
+                }
+            };
+            let curr_json = match std::fs::read_to_string(&current) {
+                Ok(s) => s,
+                Err(e) => {
+                    eprintln!("error reading {}: {}", current.display(), e);
+                    return ExitCode::FAILURE;
+                }
+            };
+
+            let prev: Vec<Finding> = serde_json::from_str(&prev_json).unwrap_or_default();
+            let curr: Vec<Finding> = serde_json::from_str(&curr_json).unwrap_or_default();
+
+            let diff = enterprise::diff_scans(&prev, &curr);
+            let summary = enterprise::diff_summary(&diff);
+
+            match format {
+                DiffFormat::Json => {
+                    let output = serde_json::json!({
+                        "summary": &summary,
+                        "findings": &diff,
+                    });
+                    println!("{}", serde_json::to_string_pretty(&output).unwrap_or_default());
+                }
+                DiffFormat::Table => {
+                    println!("═══════════════════════════════════════════════");
+                    println!("  Scan Diff Summary");
+                    println!("═══════════════════════════════════════════════");
+                    println!("  New:        {}", summary.new_count);
+                    println!("  Resolved:   {}", summary.resolved_count);
+                    println!("  Unchanged:  {}", summary.unchanged_count);
+                    println!("  Total:      {}", summary.total);
+                    println!();
+
+                    if summary.new_count > 0 {
+                        println!("── New Findings ──");
+                        for d in diff.iter().filter(|d| d.status == enterprise::DiffStatus::New) {
+                            let f = &d.finding;
+                            println!("  [{}] {}:{} — {}", f.severity, f.path.display(), f.line, f.rule_id);
+                        }
+                        println!();
+                    }
+                    if summary.resolved_count > 0 {
+                        println!("── Resolved Findings ──");
+                        for d in diff.iter().filter(|d| d.status == enterprise::DiffStatus::Resolved) {
+                            let f = &d.finding;
+                            println!("  {}:{} — {}", f.path.display(), f.line, f.rule_id);
+                        }
+                    }
+                }
+            }
+            ExitCode::SUCCESS
+        }
+        Command::Notify { url, webhook_type, path, min_severity, only_verified_active } => {
+            let detectors = builtin_detectors();
+            let scanner = Scanner::new(detectors);
+            let mut findings = match scanner.scan_path(&path) {
+                Ok(f) => f,
+                Err(e) => {
+                    eprintln!("error scanning {}: {}", path.display(), e);
+                    return ExitCode::FAILURE;
+                }
+            };
+
+            findings.retain(|f| f.severity >= min_severity.into());
+
+            if only_verified_active {
+                verify_findings(&mut findings);
+            }
+
+            let config = enterprise::WebhookConfig {
+                url: url.clone(),
+                webhook_type: webhook_type.into(),
+                min_severity: min_severity.into(),
+                only_verified_active,
+            };
+
+            match enterprise::send_webhook(&config, &findings, &path.display().to_string()) {
+                Ok(_) => {
+                    let count = findings.iter()
+                        .filter(|f| f.severity >= min_severity.into())
+                        .count();
+                    println!("Webhook notification sent ({count} findings).");
+                    ExitCode::SUCCESS
+                }
+                Err(e) => {
+                    eprintln!("webhook error: {e}");
+                    ExitCode::FAILURE
+                }
+            }
+        }
     }
 }
 

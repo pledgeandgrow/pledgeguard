@@ -1,5 +1,5 @@
 name: "PledgeGuard Secret Scan"
-description: "Scan your repository for secrets and leaked credentials with 850+ detectors and live verification."
+description: "Scan your repository for secrets and leaked credentials with 708+ detectors and live verification."
 branding:
   icon: "shield"
   color: "red"
@@ -12,7 +12,7 @@ inputs:
     description: "Output format: table, json, sarif, csv, junit, github-actions, template."
     required: false
     default: "github-actions"
-  severity:
+  min-severity:
     description: "Minimum severity to report: low, medium, high, critical."
     required: false
     default: "low"
@@ -32,14 +32,55 @@ inputs:
     description: "Write the report to this file (useful for SARIF upload)."
     required: false
     default: ""
+  show-all:
+    description: "Include findings flagged as likely false positives."
+    required: false
+    default: "false"
 runs:
-  using: "docker"
-  image: "docker://pledgeguard/pledgeguard:latest"
-  args:
-    - "scan"
-    - "${{ inputs.path }}"
-    - "--format"
-    - "${{ inputs.format }}"
-    - "--severity"
-    - "${{ inputs.severity }}"
-    - "--fail-on-findings=${{ inputs.fail-on-findings }}"
+  using: "composite"
+  steps:
+    - name: Install PledgeGuard
+      shell: bash
+      run: |
+        if ! command -v pledgeguard &>/dev/null; then
+          echo "Installing PledgeGuard..."
+          if command -v npx &>/dev/null; then
+            npm install -g pledgeguard
+          else
+            echo "::error::pledgeguard not found and npm not available. Install from https://github.com/pledgeandgrow/pledgeguard/releases"
+            exit 1
+          fi
+        fi
+
+    - name: Run PledgeGuard scan
+      shell: bash
+      run: |
+        set -euo pipefail
+
+        ARGS="scan '${{ inputs.path }}'"
+        ARGS="$ARGS --format '${{ inputs.format }}'"
+        ARGS="$ARGS --min-severity '${{ inputs.min-severity }}'"
+
+        if [ "${{ inputs.fail-on-findings }}" = "true" ]; then
+          ARGS="$ARGS --fail-on-findings"
+        fi
+        if [ "${{ inputs.verify }}" = "true" ]; then
+          ARGS="$ARGS --verify"
+        fi
+        if [ "${{ inputs.show-all }}" = "true" ]; then
+          ARGS="$ARGS --show-all"
+        fi
+
+        REPORT_FILE="${{ inputs.report-file }}"
+
+        if [ -n "$REPORT_FILE" ]; then
+          ARGS="$ARGS --report-file '$REPORT_FILE'"
+        fi
+
+        if [ "${{ inputs.scan-history }}" = "true" ]; then
+          echo "Running PledgeGuard git history scan..."
+          eval "pledgeguard scan-history ${ARGS}"
+        else
+          echo "Running PledgeGuard scan..."
+          eval "pledgeguard ${ARGS}"
+        fi
