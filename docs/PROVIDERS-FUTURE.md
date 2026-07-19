@@ -489,11 +489,11 @@ This document lists all secret providers that PledgeGuard **could** support in t
 | Generic API Key Assignment | **Supported** | Future | |
 | Generic High-Entropy String | **Supported** | N/A | Shannon entropy based |
 | JWT | **Supported** | Future | Could verify signature against JWKS |
-| Curl Authentication String | Future | Future | Gitleaks detects `curl -u` patterns |
-| URI with Embedded Credentials | Future | Future | TruffleHog supports |
-| Generic OAuth Client Secret | Future | Future | |
-| .env File Secrets | Future | Future | Pattern: KEY=VALUE in .env files |
-| Firebase Config (web) | Future | Future | Not secret but worth flagging |
+| Curl Authentication String | **Supported** | Future | curl -u user:pass |
+| URI with Embedded Credentials | **Supported** | Future | https://user:pass@host |
+| Generic OAuth Client Secret | **Supported** | Future | |
+| .env File Secrets | **Supported** | Future | KEY=VALUE pattern |
+| Firebase Config (web) | **Supported** | Future | apiKey in firebaseConfig |
 
 ---
 
@@ -542,7 +542,7 @@ Beyond the current scanning sources (working tree, stdin, git history, Docker, G
 
 | Metric | Current | Future (Total Potential) |
 |---|---|---|
-| **Detectors** | 325 | 350+ |
+| **Detectors** | 330 | 350+ |
 | **Verification providers** | 34 | 150+ |
 | **Scanning sources** | 10 | 25+ |
 | **Output formats** | 6 | 6 (competitive) |

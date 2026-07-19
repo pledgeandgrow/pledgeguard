@@ -6,7 +6,7 @@ This document lists all detectors, verification providers, output formats, scann
 
 ## Built-in Detectors
 
-PledgeGuard ships with **325 regex-based detectors** covering major cloud providers, SaaS platforms, CI/CD systems, and generic secret patterns. Each detector has a prefilter (Aho-Corasick) for fast scanning and a regex for precise matching.
+PledgeGuard ships with **330 regex-based detectors** covering major cloud providers, SaaS platforms, CI/CD systems, and generic secret patterns. Each detector has a prefilter (Aho-Corasick) for fast scanning and a regex for precise matching.
 
 ### Cloud Providers
 
@@ -427,6 +427,11 @@ PledgeGuard ships with **325 regex-based detectors** covering major cloud provid
 | `generic-bearer-token` | Generic Bearer Token assignment | Low |
 | `generic-api-key-assignment` | Generic API Key assignment (api_key/apikey = ...) | Low |
 | `generic-high-entropy` | High-entropy string assigned to key/token/secret-like variables (Shannon entropy) | Low |
+| `curl-auth-string` | Curl Authentication String (curl -u user:pass) | High |
+| `uri-embedded-credentials` | URI with Embedded Credentials (https://user:pass@host) | High |
+| `generic-oauth-client-secret` | Generic OAuth Client Secret assignment | High |
+| `env-file-secret` | .env File Secret (KEY=VALUE pattern) | Medium |
+| `firebase-config-web` | Firebase Web Config (apiKey in firebaseConfig) | Low |
 
 ---
 

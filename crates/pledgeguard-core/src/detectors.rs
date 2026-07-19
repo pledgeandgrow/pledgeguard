@@ -2301,6 +2301,41 @@ pub fn builtin_detectors() -> Vec<Box<dyn Detector>> {
             r#"(?i)(api[_-]?key|apikey)\s*[:=]\s*['"]?([A-Za-z0-9]{32,})['"]?"#,
             &["api_key", "apikey", "API_KEY"],
         )),
+        Box::new(RegexDetector::with_prefilter(
+            "curl-auth-string",
+            "Curl Authentication String",
+            Severity::High,
+            r#"(?i)curl\s+(?:[^ ]+\s+)*-u\s+([A-Za-z0-9_\-]+):([A-Za-z0-9_\-]+)"#,
+            &["curl ", "curl\t"],
+        )),
+        Box::new(RegexDetector::with_prefilter(
+            "uri-embedded-credentials",
+            "URI with Embedded Credentials",
+            Severity::High,
+            r#"(?i)\b(https?|ftp|wss?)://[^:\s]+:[^@\s]+@[^\s/]+"#,
+            &["http://", "https://", "ftp://", "wss://"],
+        )),
+        Box::new(RegexDetector::with_prefilter(
+            "generic-oauth-client-secret",
+            "Generic OAuth Client Secret",
+            Severity::High,
+            r#"(?i)oauth[_-]?client[_-]?secret\s*[:=]\s*['"]?([A-Za-z0-9_\-]{20,})['"]?"#,
+            &["oauth_client_secret", "OAUTH_CLIENT_SECRET"],
+        )),
+        Box::new(RegexDetector::with_prefilter(
+            "env-file-secret",
+            ".env File Secret (KEY=VALUE)",
+            Severity::Medium,
+            r#"(?i)^(?:export\s+)?([A-Z][A-Z0-9_]*)\s*=\s*['"]?([A-Za-z0-9_\-]{20,})['"]?$"#,
+            &["SECRET=", "PASSWORD=", "TOKEN=", "API_KEY=", "PRIVATE_KEY="],
+        )),
+        Box::new(RegexDetector::with_prefilter(
+            "firebase-config-web",
+            "Firebase Web Config",
+            Severity::Low,
+            r#"(?i)firebase[_-]?config\s*[:=]\s*\{[^}]*?apiKey\s*:\s*['"]?(AIza[A-Za-z0-9\-_]{35})['"]?"#,
+            &["firebaseConfig", "firebase_config", "FIREBASE_CONFIG"],
+        )),
         Box::new(EntropyDetector::default()),
     ]
 }
@@ -4536,6 +4571,52 @@ mod tests {
         let detectors = builtin_detectors();
         let d = detectors.iter().find(|d| d.id() == "bittrex-secret-key").unwrap();
         let matches = d.scan_line("bittrex_secret_key = abcdefghijklmnopqrst");
+        assert_eq!(matches.len(), 1);
+    }
+
+    // ── Generic & Framework-Specific ───────────────────────────────────
+
+    #[test]
+    fn test_curl_auth_string_detected() {
+        let detectors = builtin_detectors();
+        let d = detectors.iter().find(|d| d.id() == "curl-auth-string").unwrap();
+        let matches = d.scan_line("curl -u myuser:mypassword123 https://example.com");
+        assert_eq!(matches.len(), 1);
+    }
+
+    #[test]
+    fn test_uri_embedded_credentials_detected() {
+        let detectors = builtin_detectors();
+        let d = detectors.iter().find(|d| d.id() == "uri-embedded-credentials").unwrap();
+        let matches = d.scan_line("https://user:password123@internal.example.com");
+        assert_eq!(matches.len(), 1);
+    }
+
+    #[test]
+    fn test_generic_oauth_client_secret_detected() {
+        let detectors = builtin_detectors();
+        let d = detectors.iter().find(|d| d.id() == "generic-oauth-client-secret").unwrap();
+        let key = format!("oauth_client_secret = {}", "A".repeat(20));
+        let matches = d.scan_line(&key);
+        assert_eq!(matches.len(), 1);
+    }
+
+    #[test]
+    fn test_env_file_secret_detected() {
+        let detectors = builtin_detectors();
+        let d = detectors.iter().find(|d| d.id() == "env-file-secret").unwrap();
+        let key = format!("API_KEY = {}", "A".repeat(32));
+        let matches = d.scan_line(&key);
+        assert_eq!(matches.len(), 1);
+    }
+
+    #[test]
+    fn test_firebase_config_web_detected() {
+        let detectors = builtin_detectors();
+        let d = detectors.iter().find(|d| d.id() == "firebase-config-web").unwrap();
+        let api_key = format!("AIza{}", "A".repeat(35));
+        let line = format!("firebaseConfig = {{ apiKey: \"{}\" }}", api_key);
+        let matches = d.scan_line(&line);
         assert_eq!(matches.len(), 1);
     }
 }
