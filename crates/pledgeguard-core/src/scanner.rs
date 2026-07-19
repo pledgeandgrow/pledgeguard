@@ -293,6 +293,8 @@ impl Scanner {
         crate::context::annotate(&mut findings);
         if crate::ast::is_js_ts(path) {
             crate::ast::refine_annotation(&mut findings, contents);
+        } else if crate::ast_comments::is_supported(path) {
+            crate::ast_comments::refine_annotation(&mut findings, contents);
         }
         findings
     }
@@ -377,6 +379,10 @@ impl Scanner {
             let contents_str = std::str::from_utf8(contents).unwrap_or("");
             crate::context::annotate(&mut findings);
             crate::ast::refine_annotation(&mut findings, contents_str);
+        } else if crate::ast_comments::is_supported(path) {
+            let contents_str = std::str::from_utf8(contents).unwrap_or("");
+            crate::context::annotate(&mut findings);
+            crate::ast_comments::refine_annotation(&mut findings, contents_str);
         } else {
             crate::context::annotate(&mut findings);
         }
