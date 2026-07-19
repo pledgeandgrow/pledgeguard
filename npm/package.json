@@ -1,6 +1,6 @@
 {
   "name": "pledgeguard",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Rust-native secret scanner — a TruffleHog/Gitleaks alternative",
   "license": "MIT",
   "repository": {
@@ -18,11 +18,12 @@
     "trufflehog"
   ],
   "bin": {
-    "pledgeguard": "bin/pledgeguard"
+    "pledgeguard": "pledgeguard.js"
   },
   "files": [
     "bin/",
     "install.js",
+    "pledgeguard.js",
     "README.md"
   ],
   "scripts": {
