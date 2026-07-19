@@ -90,10 +90,10 @@ GitHub, GitLab, Slack, Stripe, npm, DigitalOcean, Telegram, Twilio, OpenAI, Anth
 | **Jenkins** | ✅ (CLI + library) | ✅ | ❌ | ❌ | ✅ | ❌ |
 | **DroneCI** | ✅ (CLI + library) | ❌ | ❌ | ❌ | ❌ | ❌ |
 | **Syslog TCP stream** | ✅ (CLI + library) | ❌ | ❌ | ❌ | ❌ | ❌ |
-| **Hugging Face** | ❌ | ✅ | ❌ | ✅ | ❌ | ❌ |
-| **SharePoint** | ❌ | ✅ | ❌ | ❌ | ✅ | ❌ |
-| **Microsoft Teams** | ❌ | ✅ | ❌ | ❌ | ✅ | ❌ |
-| **PyPI packages** | ❌ | ❌ | ❌ | ❌ | ✅ | ❌ |
+| **Hugging Face** | ✅ (CLI + library) | ✅ | ❌ | ✅ | ❌ | ❌ |
+| **SharePoint** | ✅ (CLI + library) | ✅ | ❌ | ❌ | ✅ | ❌ |
+| **Microsoft Teams** | ✅ (CLI + library) | ✅ | ❌ | ❌ | ✅ | ❌ |
+| **PyPI packages** | ✅ (CLI + library) | ❌ | ❌ | ❌ | ✅ | ❌ |
 | **Archives (zip/tar)** | ✅ (library) | ✅ | ✅ (depth-limited) | ✅ | ✅ | ✅ |
 | **Base64 decoding** | ✅ (recursive, 2 levels) | ✅ | ✅ (configurable depth) | ✅ | ✅ | ✅ |
 | **Helm charts** | ✅ | ❌ | ❌ | ❌ | ❌ | ❌ |
@@ -102,7 +102,7 @@ GitHub, GitLab, Slack, Stripe, npm, DigitalOcean, Telegram, Twilio, OpenAI, Anth
 
 **PledgeGuard advantage:** Broadest source coverage of any open-source scanner. Unique sources: Alibaba OSS, AWS Secrets Manager, Postman, Gerrit, DroneCI, Syslog TCP, Helm charts, Terraform state, Kubernetes secrets. CLI `scan-source` subcommand provides direct access to all remote sources.
 
-**Gap:** Missing Hugging Face, SharePoint, MS Teams, PyPI package scanning (TruffleHog/Betterleaks/GitGuardian have some of these).
+**Gap:** Hugging Face, SharePoint, MS Teams, PyPI package scanning now implemented (goals 201-204 done). Remaining gaps: npm packages, Gitea, Bitbucket, Azure DevOps repos.
 
 ---
 
@@ -116,10 +116,10 @@ GitHub, GitLab, Slack, Stripe, npm, DigitalOcean, Telegram, Twilio, OpenAI, Anth
 | **CSV** | ✅ | ❌ | ✅ | ✅ | ✅ | ✅ |
 | **JUnit** | ✅ | ❌ | ✅ | ✅ | ❌ | ✅ |
 | **Template** | ✅ | ❌ | ✅ | ✅ | ❌ | ❌ |
-| **GitHub Actions** | ❌ | ✅ | ❌ | ❌ | ✅ | ✅ |
+| **GitHub Actions** | ✅ | ✅ | ❌ | ❌ | ✅ | ✅ |
 | **JSON Legacy** | ❌ | ✅ | ❌ | ❌ | ❌ | ❌ |
 
-**PledgeGuard advantage:** 6 output formats including CSV, JUnit, and custom templates — more than TruffleHog.
+**PledgeGuard advantage:** 7 output formats including GitHub Actions annotations, CSV, JUnit, and custom templates — more than TruffleHog and Gitleaks.
 
 ---
 
@@ -255,18 +255,24 @@ Features not found in any other scanner:
 
 | Gap | Leader | What's Needed |
 |---|---|---|
-| **Detector count** | TruffleHog (800+) | Add ~100 more detectors to match |
-| **Verification coverage** | TruffleHog (800+), GitGuardian (500+) | Expand from 191 to 200+ verified rule IDs (143 unique verifier functions) |
-| **Hugging Face scanning** | TruffleHog, Betterleaks | Add HF models/datasets/Spaces scanning |
-| **SharePoint scanning** | TruffleHog, GitGuardian | Add SharePoint document scanning |
-| **MS Teams scanning** | TruffleHog, GitGuardian | Add Teams message/channel scanning |
-| **PyPI package scanning** | GitGuardian | Add PyPI package download + scan |
-| **GitHub Action** | ~~TruffleHog, Gitleaks, GitGuardian~~ ✅ Done | Published composite GitHub Action with SARIF support |
+| **Detector count** | TruffleHog (800+) | 708 detectors — add ~100 more to match |
+| **Verification coverage** | TruffleHog (800+), GitGuardian (500+) | 191 verified rule IDs (143 unique verifier functions) — expand further |
+| ~~Hugging Face scanning~~ | ~~TruffleHog, Betterleaks~~ ✅ Done | Added HF models/datasets/Spaces scanning |
+| ~~SharePoint scanning~~ | ~~TruffleHog, GitGuardian~~ ✅ Done | Added SharePoint document scanning |
+| ~~MS Teams scanning~~ | ~~TruffleHog, GitGuardian~~ ✅ Done | Added Teams message/channel scanning |
+| ~~PyPI package scanning~~ | ~~GitGuardian~~ ✅ Done | Added PyPI package scanning |
+| ~~GitHub Action~~ | ~~TruffleHog, Gitleaks, GitGuardian~~ ✅ Done | Published composite GitHub Action with SARIF support |
+| ~~AI coding tool hooks~~ | ~~GitGuardian~~ ✅ Done | Added in Phase 3 — Cursor, Claude Code, Copilot, Codex |
+| ~~Enterprise features~~ | ~~GitGuardian~~ ✅ Done | RBAC, audit logging, compliance reporting, scan diffing, finding lifecycle, webhook notifications |
+| ~~Homebrew + Scoop~~ | ~~Competitors~~ ✅ Done | Homebrew formula + Scoop manifest created |
+| ~~SECURITY.md + checksums~~ | ~~Competitors~~ ✅ Done | SECURITY.md + SHA256 checksums in release workflow |
+| ~~Migration guides~~ | ~~Competitors~~ ✅ Done | Gitleaks + TruffleHog migration guides |
+| ~~Pre-commit hook~~ | ~~Competitors~~ ✅ Done | .pre-commit-hooks.yaml published |
+| ~~`--diff` flag~~ | ~~Competitors~~ ✅ Done | Scan only git-changed files for PR checks |
+| ~~`pledgeguard init`~~ | ~~Competitors~~ ✅ Done | Config scaffolding command |
 | **Expr-based filtering** | Betterleaks | Consider Expr or similar for contextual rules |
 | **BPE tokenization** | Betterleaks | Consider token-efficiency FP filtering |
 | **Custom verifier config** | TruffleHog, Betterleaks | Allow user-defined verification endpoints in TOML config |
-| **AI coding tool hooks** | ~~GitGuardian~~ ✅ Done | Added in Phase 3 — Cursor, Claude Code, Copilot, Codex |
-| **Enterprise features** | ~~GitGuardian~~ ✅ Done | RBAC, audit logging, compliance reporting, scan diffing, finding lifecycle, webhook notifications |
 | **HTML decoding** | TruffleHog | Decode HTML-encoded content from Confluence/Teams before scanning |
 
 ---
@@ -285,19 +291,22 @@ Features not found in any other scanner:
 | **AI integration** | ★★★★★ | ☆☆☆☆☆ | ☆☆☆☆☆ | ☆☆☆☆☆ | ★★★☆☆ | ☆☆☆☆☆ |
 | **CI/CD** | ★★★★☆ | ★★★★☆ | ★★★★☆ | ★★★☆☆ | ★★★★★ | ★★★★☆ |
 | **Offline** | ✅ | ✅ | ✅ | ✅ | ❌ | ✅ |
-| **Enterprise** | ★★★★☆ | ★★★☆☆ | ☆☆☆☆☆ | ☆☆☆☆☆ | ★★★★★ | ☆☆☆☆☆ |
+| **Enterprise** | ★★★★★ | ★★★☆☆ | ☆☆☆☆☆ | ☆☆☆☆☆ | ★★★★★ | ☆☆☆☆☆ |
 
-| **Overall** | **★★★★☆** | **★★★★★** | **★★★☆☆** | **★★★★☆** | **★★★★☆** | **★★★☆☆** |
+| **Overall** | **★★★★★** | **★★★★★** | **★★★☆☆** | **★★★★☆** | **★★★★☆** | **★★★☆☆** |
 
 ---
 
 ## Roadmap Priorities (Based on Gaps)
 
-1. **Expand verification to 100+ providers** — highest impact gap vs TruffleHog
-2. **Add Hugging Face scanning** — growing AI/ML ecosystem
-3. **Publish GitHub Action** — critical for CI/CD adoption
+1. ~~Expand verification to 100+ providers~~ ✅ Done (191 rule IDs)
+2. ~~Add Hugging Face scanning~~ ✅ Done
+3. ~~Publish GitHub Action~~ ✅ Done
 4. **Add HTML decoder** — improve Confluence/Teams/Jira scan results
-5. **Add custom verifier config** — let users define verification endpoints in TOML
-6. **Add SharePoint + MS Teams sources** — enterprise coverage
-7. **Consider Expr-based filtering** — more expressive FP reduction
-8. **Private key verification (Driftwood-style)** — verify against GitHub/TLS
+5. **Add Expr-based filtering** — match Betterleaks FP reduction
+6. **Add more scanning sources** — npm, Gitea, Bitbucket, Azure DevOps
+7. **Add content decoders** — HTML, PDF, Word, Excel, OCR
+8. **Add advanced IaC detection** — goals 471-500
+9. **Add custom verifier config** — let users define verification endpoints in TOML
+10. ~~Add SharePoint + MS Teams sources~~ ✅ Done
+11. ~~Private key verification (Driftwood-style)~~ ✅ Done
