@@ -54,6 +54,8 @@ pub mod stream_scan;
 pub mod template;
 pub mod verify;
 pub mod output_formats;
+pub mod fp_filters;
+pub mod extensibility;
 
 pub use baseline::{
     Baseline, BaselineEntry, filter as baseline_filter, from_findings as baseline_from_findings,
@@ -144,4 +146,23 @@ pub use source_scan2::{
 pub use output_formats::{
     to_html, to_markdown, to_spdx, to_cyclonedx,
     to_prometheus, to_jsonl, to_xml,
+};
+pub use fp_filters::{
+    parse_env_active_lines, is_env_file, is_documentation_path,
+    is_generated_content, is_generated_path, is_vendored_path,
+    is_minified_path, is_lock_file, is_binary_content, is_ca_certificate_path,
+    is_example_value, is_canary_token, context_aware_entropy_threshold,
+    detect_rotation, join_multiline_secrets, is_hex_blob, is_uuid,
+    is_valid_jwt_structure, should_suppress_by_path, should_suppress_by_content,
+    apply_path_filters, apply_content_filters, apply_all_filters,
+};
+pub use extensibility::{
+    CustomVerifierConfig, ExprVerifierConfig, evaluate_expr_verifier,
+    DetectorVersion, WasmVerifierConfig, WasmVerifyResult,
+    PluginContext, PluginMarketplaceEntry, PluginType, PluginMarketplace,
+    RuleProfile, RuleConditions, SeverityOverride, apply_severity_overrides,
+    DetectorMetadata, CustomEntropyConfig, compute_custom_entropy,
+    MultiPatternRule, LookaheadRule, CaptureTransform, Transform,
+    RuleDeprecation, RuleTestCase, RuleTestResult, test_rule, run_rule_tests,
+    generate_rule_docs, DocRule, ConfigError as ExtensibilityConfigError,
 };

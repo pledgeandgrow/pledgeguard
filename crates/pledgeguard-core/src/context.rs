@@ -27,7 +27,7 @@ use std::path::Path;
 fn line_comment_marker(extension: &str) -> Option<&'static str> {
     match extension {
         "py" | "sh" | "bash" | "zsh" | "rb" | "yaml" | "yml" | "toml" | "pl" | "r"
-        | "dockerfile" | "makefile" | "ini" | "cfg" | "conf" | "env" => Some("#"),
+        | "dockerfile" | "makefile" | "ini" | "cfg" | "conf" | "env" | "hcl" | "tf" | "tfvars" => Some("#"),
         "rs" | "js" | "jsx" | "ts" | "tsx" | "go" | "java" | "c" | "h" | "cpp" | "hpp" | "cc"
         | "cs" | "swift" | "kt" | "kts" | "scala" | "php" | "dart" | "zig" => Some("//"),
         "sql" | "lua" | "hs" | "elm" | "ada" => Some("--"),

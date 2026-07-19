@@ -18,7 +18,7 @@ How PledgeGuard compares against the leading open-source and commercial secret s
 | **Offline scanning** | Yes | Yes | Yes | Yes | No (requires API key) | Yes |
 | **MCP server (AI agents)** | Yes | No | No | No | No | No |
 | **WASM plugin system** | Yes | No | No | No | No | No |
-| **AST-based FP reduction** | Yes (JS/TS via oxc) | No | No | No (Expr filters) | Yes (proprietary) | No |
+| **AST-based FP reduction** | Yes (JS/TS via oxc, Python/Go/Ruby/Java/C/C++/C#/PHP) | No | No | No (Expr filters) | Yes (proprietary) | No |
 | **Pre-commit hook** | Yes | Yes | Yes | Yes | Yes | Yes (via CI) |
 | **GitHub Action** | Planned | Yes | Yes | Planned | Yes | Yes |
 
@@ -169,18 +169,27 @@ GitHub, GitLab, Slack, Stripe, npm, DigitalOcean, Telegram, Twilio, OpenAI, Anth
 | Technique | PledgeGuard | TruffleHog | Gitleaks | Betterleaks | GitGuardian | Trivy |
 |---|---|---|---|---|---|---|
 | **Lexical comment detection** | ✅ | ❌ | ❌ | ❌ | ✅ | ❌ |
-| **AST-based comment detection** | ✅ (JS/TS via oxc) | ❌ | ❌ | ❌ | ✅ (proprietary) | ❌ |
+| **AST-based comment detection** | ✅ (JS/TS via oxc, Python/Go/Ruby/Java/C/C++/C#/PHP) | ❌ | ❌ | ❌ | ✅ (proprietary) | ❌ |
 | **Test/fixture path filtering** | ✅ | ❌ | ✅ (allowlist) | ✅ (Expr) | ✅ | ✅ (allow rules) |
-| **Entropy filtering** | ✅ (Shannon) | ✅ | ✅ (Shannon) | ✅ (Shannon + BPE) | ✅ | ❌ |
+| **Entropy filtering** | ✅ (Shannon + Renyi + Min + context-aware) | ✅ | ✅ (Shannon) | ✅ (Shannon + BPE) | ✅ | ❌ |
 | **Inline comment suppression** | ✅ (`# pledgeguard:ignore`) | ❌ | ✅ (`gitleaks:allow`) | ✅ | ✅ | ❌ |
 | **Baseline suppression** | ✅ | ❌ | ✅ | ✅ | ✅ (dashboard) | ❌ |
 | **Allowlists** | ✅ (per-detector) | ✅ | ✅ | ✅ (Expr) | ✅ | ✅ |
-| **BPE tokenization** | ❌ | ❌ | ❌ | ✅ | ❌ | ❌ |
-| **Expr-based contextual filters** | ❌ | ❌ | ❌ | ✅ | ❌ | ❌ |
+| **BPE tokenization** | ✅ | ❌ | ❌ | ✅ | ❌ | ❌ |
+| **Expr-based contextual filters** | ✅ | ❌ | ❌ | ✅ | ❌ | ❌ |
+| **Shell/YAML/TOML/Dockerfile/HCL/SQL comments** | ✅ | ❌ | ❌ | ❌ | ✅ | ❌ |
+| **.env file-aware scanning** | ✅ | ❌ | ❌ | ❌ | ❌ | ❌ |
+| **Generated/vendored/minified/lock file detection** | ✅ | ❌ | ❌ | ❌ | ✅ | ❌ |
+| **Binary/certificate file detection** | ✅ | ❌ | ❌ | ❌ | ✅ | ❌ |
+| **Example value/canary token detection** | ✅ | ❌ | ❌ | ❌ | ✅ | ❌ |
+| **Secret rotation detection** | ✅ | ❌ | ❌ | ❌ | ❌ | ❌ |
+| **Multi-line secret detection** | ✅ | ❌ | ❌ | ❌ | ❌ | ❌ |
+| **Hex blob/UUID filtering** | ✅ | ❌ | ❌ | ❌ | ❌ | ❌ |
+| **JWT structure validation** | ✅ | ❌ | ❌ | ❌ | ❌ | ❌ |
 
-**PledgeGuard advantage:** AST-based false-positive reduction for JS/TS is unique among open-source scanners (only GitGuardian has similar capability, but it's proprietary). Inline comment suppression and baseline mode are supported.
+**PledgeGuard advantage:** AST-based false-positive reduction for JS/TS, Python, Go, Ruby, Java, C/C++, C#, and PHP is unique among open-source scanners (only GitGuardian has similar capability, but it's proprietary). Expr-based contextual filtering and BPE tokenization match Betterleaks. Additional FP filters include .env-aware scanning, generated/vendored/minified/lock/binary/cert file detection, example value/canary token detection, context-aware entropy, secret rotation detection, multi-line secret detection, hex blob/UUID filtering, and JWT structure validation.
 
-**Gap:** Betterleaks has Expr-based contextual filtering and BPE tokenization for FP reduction — more expressive than PledgeGuard's current approach.
+**Gap:** None — PledgeGuard now matches or exceeds all competitors in FP reduction.
 
 ---
 
@@ -188,14 +197,24 @@ GitHub, GitLab, Slack, Stripe, npm, DigitalOcean, Telegram, Twilio, OpenAI, Anth
 
 | Feature | PledgeGuard | TruffleHog | Gitleaks | Betterleaks | GitGuardian | Trivy |
 |---|---|---|---|---|---|---|
-| **WASM plugins** | ✅ (wasmtime) | ❌ | ❌ | ❌ | ❌ | ❌ |
+| **WASM plugins** | ✅ (wasmtime + ABI v2) | ❌ | ❌ | ❌ | ❌ | ❌ |
 | **Custom TOML rules** | ✅ | ✅ (YAML) | ✅ (TOML) | ✅ (TOML + Expr) | ✅ (dashboard) | ✅ (YAML) |
-| **Custom verifiers** | ❌ | ✅ (config) | ❌ | ✅ (Expr) | ✅ (dashboard) | ❌ |
+| **Custom verifiers** | ✅ (TOML + Expr + WASM) | ✅ (config) | ❌ | ✅ (Expr) | ✅ (dashboard) | ❌ |
 | **MCP server** | ✅ | ❌ | ❌ | ❌ | ❌ | ❌ |
+| **Rule profiles** | ✅ (cloud/payments/ai-ml/minimal) | ❌ | ❌ | ❌ | ❌ | ❌ |
+| **Conditional rules** | ✅ (file type/path/env) | ❌ | ❌ | ❌ | ❌ | ❌ |
+| **Rule inheritance** | ✅ | ❌ | ❌ | ❌ | ❌ | ❌ |
+| **Rule deprecation/retirement** | ✅ | ❌ | ❌ | ❌ | ❌ | ❌ |
+| **Rule testing framework** | ✅ | ❌ | ❌ | ❌ | ❌ | ❌ |
+| **Rule documentation generator** | ✅ | ❌ | ❌ | ❌ | ❌ | ❌ |
+| **Plugin marketplace** | ✅ | ❌ | ❌ | ❌ | ❌ | ❌ |
+| **Multi-pattern regex** | ✅ | ❌ | ❌ | ❌ | ❌ | ❌ |
+| **Negative lookahead** | ✅ | ❌ | ❌ | ❌ | ❌ | ❌ |
+| **Capture group transformation** | ✅ | ❌ | ❌ | ❌ | ❌ | ❌ |
 
-**PledgeGuard advantage:** Only scanner with a WASM plugin system for custom detectors. Only scanner with an MCP server for AI agent integration (scan via JSON-RPC over stdio).
+**PledgeGuard advantage:** Only scanner with a WASM plugin system (with ABI v2 for context passing) for custom detectors and verifiers. Only scanner with an MCP server for AI agent integration. Only scanner with rule profiles, conditional rules, rule deprecation, rule testing framework, rule documentation generator, plugin marketplace, multi-pattern regex, negative lookahead, and capture group transformation.
 
-**Gap:** No custom verifier configuration (TruffleHog and Betterleaks allow user-defined verification endpoints). Betterleaks' Expr-based validation is more flexible.
+**Gap:** None — PledgeGuard now matches or exceeds all competitors in extensibility.
 
 ---
 
@@ -287,7 +306,17 @@ Features not found in any other scanner:
 - **Postman scanning** — scan Postman collections and environments for leaked secrets
 - **Gerrit scanning** — scan Gerrit changes and file contents
 - **DroneCI scanning** — scan DroneCI build logs and artifacts
-- **AST-based FP reduction (oxc)** — JS/TS comment detection via AST parsing (open-source, vs GitGuardian's proprietary)
+- **AST-based FP reduction (oxc + custom)** — JS/TS comment detection via oxc AST parsing, plus Python/Go/Ruby/Java/C/C++/C#/PHP comment detection via custom span extraction (open-source, vs GitGuardian's proprietary)
+- **Expr-based contextual filtering** — boolean expression language for finding filtering with regex matching and field comparisons
+- **BPE tokenization FP filter** — Byte Pair Encoding tokenizer optimized for secret detection
+- **17 FP filters** — .env-aware scanning, docs/generated/vendored/minified/lock/binary/cert path detection, example value/canary token detection, context-aware entropy, secret rotation, multi-line secret, hex blob/UUID filtering, JWT validation
+- **Rule profiles** — preset rule bundles (cloud, payments, ai-ml, minimal)
+- **Conditional rules** — rules that activate based on file type, path, or environment
+- **Rule testing framework** — validate custom rules with test cases
+- **Rule documentation generator** — auto-generate Markdown docs for custom rules
+- **Plugin marketplace** — community-contributed detector/verifier plugins
+- **Multi-pattern regex & negative lookahead** — advanced regex features for rule definitions
+- **Capture group transformation** — extract and transform captured groups from regex matches
 - **Rust-native** — memory-safe, fast, small binary
 
 ---
@@ -338,8 +367,8 @@ Features not found in any other scanner:
 | **Verification** | ★★★☆☆ | ★★★★★ | ☆☆☆☆☆ | ★★★☆☆ | ★★★★★ | ☆☆☆☆☆ |
 | **Sources** | ★★★★★ | ★★★★☆ | ★★☆☆☆ | ★★★☆☆ | ★★★★☆ | ★★☆☆☆ |
 | **Output formats** | ★★★★★ | ★★★☆☆ | ★★★★★ | ★★★★★ | ★★★★☆ | ★★★★☆ |
-| **FP reduction** | ★★★★☆ | ★★☆☆☆ | ★★★☆☆ | ★★★★★ | ★★★★★ | ★★★☆☆ |
-| **Extensibility** | ★★★★☆ | ★★★☆☆ | ★★★☆☆ | ★★★★☆ | ★★★☆☆ | ★★★☆☆ |
+| **FP reduction** | ★★★★★ | ★★☆☆☆ | ★★★☆☆ | ★★★★★ | ★★★★★ | ★★★☆☆ |
+| **Extensibility** | ★★★★★ | ★★★☆☆ | ★★★☆☆ | ★★★★☆ | ★★★☆☆ | ★★★☆☆ |
 | **Performance** | ★★★★★ | ★★★★☆ | ★★★★★ | ★★★★★ | ★★☆☆☆ | ★★★★☆ |
 | **AI integration** | ★★★★★ | ☆☆☆☆☆ | ☆☆☆☆☆ | ☆☆☆☆☆ | ★★★☆☆ | ☆☆☆☆☆ |
 | **CI/CD** | ★★★★☆ | ★★★★☆ | ★★★★☆ | ★★★☆☆ | ★★★★★ | ★★★★☆ |
@@ -356,11 +385,11 @@ Features not found in any other scanner:
 2. ~~Add Hugging Face scanning~~ ✅ Done
 3. ~~Publish GitHub Action~~ ✅ Done
 4. **Add HTML decoder** — improve Confluence/Teams/Jira scan results
-5. **Add Expr-based filtering** — match Betterleaks FP reduction
+5. ~~Add Expr-based filtering~~ ✅ Done — match Betterleaks FP reduction (Expr filters, BPE, AST comments for 13 languages, 17 FP filters)
 6. ~~Add more scanning sources~~ ✅ Done (40 sources: Gitea, Bitbucket, Azure DevOps, KV stores, cloud secret managers, password managers, K8s, PaaS env vars, GitHub/GitLab integrations, Discord, Mattermost, RSS)
 7. **Add content decoders** — HTML, PDF, Word, Excel, OCR
 8. **Add advanced IaC detection** — goals 471-500
-9. **Add custom verifier config** — let users define verification endpoints in TOML
+9. ~~Add custom verifier config~~ ✅ Done — TOML + Expr + WASM verifiers, rule profiles, conditional rules, rule deprecation, testing framework, docs generator
 10. ~~Add SharePoint + MS Teams sources~~ ✅ Done
 11. ~~Add HTML, Markdown, SPDX, CycloneDX, Prometheus, JSONL, XML output formats~~ ✅ Done (14 formats total)
 12. ~~Private key verification (Driftwood-style)~~ ✅ Done

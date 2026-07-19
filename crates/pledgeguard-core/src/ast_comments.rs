@@ -26,7 +26,10 @@ pub fn is_supported(path: &Path) -> bool {
         .map(|s| s.to_lowercase());
     matches!(
         ext.as_deref(),
-        Some("py" | "go" | "rb" | "java" | "kt" | "kts" | "scala" | "groovy")
+        Some("py" | "go" | "rb" | "java" | "kt" | "kts" | "scala" | "groovy"
+          | "c" | "h" | "cpp" | "hpp" | "cc" | "cxx"
+          | "cs"
+          | "php" | "phtml")
     )
 }
 
@@ -50,6 +53,9 @@ pub fn refine_annotation(findings: &mut [Finding], source: &str) {
         Some("go") => Lang::Go,
         Some("rb") => Lang::Ruby,
         Some("java" | "kt" | "kts" | "scala" | "groovy") => Lang::Java,
+        Some("c" | "h" | "cpp" | "hpp" | "cc" | "cxx") => Lang::C,
+        Some("cs") => Lang::CSharp,
+        Some("php" | "phtml") => Lang::Php,
         _ => return,
     };
 
@@ -71,6 +77,9 @@ enum Lang {
     Go,
     Ruby,
     Java,
+    C,
+    CSharp,
+    Php,
 }
 
 /// Extract all comment spans (byte offsets) from source code.
@@ -80,6 +89,9 @@ fn extract_comment_spans(source: &str, lang: Lang) -> Vec<(usize, usize)> {
         Lang::Go => extract_c_style_comments(source, "//", "/*", "*/"),
         Lang::Ruby => extract_ruby_comments(source),
         Lang::Java => extract_c_style_comments(source, "//", "/*", "*/"),
+        Lang::C => extract_c_style_comments(source, "//", "/*", "*/"),
+        Lang::CSharp => extract_c_style_comments(source, "//", "/*", "*/"),
+        Lang::Php => extract_php_comments(source),
     }
 }
 
@@ -289,6 +301,64 @@ fn extract_ruby_comments(source: &str) -> Vec<(usize, usize)> {
     // If still in_block at EOF, close it.
     if in_block {
         spans.push((block_start, source.len()));
+    }
+
+    spans
+}
+
+/// Extract comment spans from PHP source.
+/// Handles `#`, `//` line comments and `/* */` block comments.
+fn extract_php_comments(source: &str) -> Vec<(usize, usize)> {
+    let mut spans = Vec::new();
+    let bytes = source.as_bytes();
+    let mut i = 0;
+
+    while i < bytes.len() {
+        // Block comment /* */
+        if i + 1 < bytes.len() && bytes[i] == b'/' && bytes[i + 1] == b'*' {
+            let start = i;
+            i += 2;
+            while i + 1 < bytes.len() {
+                if bytes[i] == b'*' && bytes[i + 1] == b'/' {
+                    i += 2;
+                    break;
+                }
+                i += 1;
+            }
+            spans.push((start, i.min(bytes.len())));
+            continue;
+        }
+
+        // Line comment // or #
+        if (i + 1 < bytes.len() && bytes[i] == b'/' && bytes[i + 1] == b'/')
+            || bytes[i] == b'#'
+        {
+            let start = i;
+            while i < bytes.len() && bytes[i] != b'\n' {
+                i += 1;
+            }
+            spans.push((start, i));
+            continue;
+        }
+
+        // Skip string literals
+        if bytes[i] == b'"' || bytes[i] == b'\'' {
+            let quote = bytes[i];
+            i += 1;
+            while i < bytes.len() && bytes[i] != quote {
+                if bytes[i] == b'\\' {
+                    i += 2;
+                } else {
+                    i += 1;
+                }
+            }
+            if i < bytes.len() {
+                i += 1;
+            }
+            continue;
+        }
+
+        i += 1;
     }
 
     spans

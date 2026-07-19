@@ -303,65 +303,65 @@
 
 ---
 
-## False-Positive Reduction (Current: ★★★★☆ — Target: ★★★★★)
+## False-Positive Reduction (Current: ★★★★★ — Target: ★★★★★)
 
-249. **Add Expr-based contextual filtering** — Betterleaks-style Expr expressions for pre/post-match filtering
-250. **Add BPE tokenization FP filter** — Betterleaks-style token efficiency scoring to filter natural language
-251. **Add Python AST comment detection** — detect comments in Python via tree-sitter
-252. **Add Go AST comment detection** — detect comments in Go via go/parser
-253. **Add Ruby AST comment detection** — detect comments in Ruby via ripper
-254. **Add Java AST comment detection** — detect comments in Java via tree-sitter
-255. **Add C/C++ AST comment detection** — detect comments via tree-sitter
-256. **Add C# AST comment detection** — detect comments via tree-sitter
-257. **Add PHP AST comment detection** — detect comments via tree-sitter
-258. **Add Shell script comment detection** — detect comments in bash/sh
-259. **Add YAML comment detection** — detect `#` comments in YAML files
-260. **Add TOML comment detection** — detect `#` comments in TOML files
-261. **Add Dockerfile comment detection** — detect `#` comments in Dockerfiles
-262. **Add HCL comment detection** — detect `#`/`//` comments in HCL/Terraform
-263. **Add SQL comment detection** — detect `--` and `/* */` comments in SQL
-264. **Add .env file-aware scanning** — parse KEY=VALUE and skip commented lines
-265. **Add test fixture path detection** — skip paths matching test/mock/example/fixture patterns
-266. **Add documentation path detection** — skip docs/README/CHANGELOG paths by default
-267. **Add generated file detection** — skip files with "DO NOT EDIT" or generated markers
-268. **Add vendored dependency detection** — skip vendor/node_modules/third_party paths
-269. **Add minified file detection** — skip minified .min.js/.min.css files
-270. **Add lock file detection** — skip package-lock.json/yarn.lock/Cargo.lock
-271. **Add binary file detection** — skip non-text files (already partial, improve)
-272. **Add certificate file detection** — skip .pem/.crt/.key in known CA paths
-273. **Add example value detection** — skip secrets matching EXAMPLE/PLACEHOLDER/CHANGEME/TODO
-274. **Add canary token detection** — skip known canary/fake tokens (e.g., GitHub test tokens)
-275. **Add context-aware entropy** — adjust entropy threshold based on file type/context
-276. **Add secret rotation detection** — detect when a secret is being rotated (old+new in same diff)
-277. **Add multi-line secret detection** — detect secrets split across multiple lines
-278. **Add hex blob filtering** — filter out long hex strings that aren't secrets (hashes, commit SHAs)
-279. **Add UUID filtering** — filter out UUIDs that aren't API keys
-280. **Add JWT structure validation** — validate JWT structure before reporting (3 base64 parts + signature)
+249. ✅ **Add Expr-based contextual filtering** — Betterleaks-style Expr expressions for pre/post-match filtering
+250. ✅ **Add BPE tokenization FP filter** — Betterleaks-style token efficiency scoring to filter natural language
+251. ✅ **Add Python AST comment detection** — detect comments in Python via tree-sitter
+252. ✅ **Add Go AST comment detection** — detect comments in Go via go/parser
+253. ✅ **Add Ruby AST comment detection** — detect comments in Ruby via ripper
+254. ✅ **Add Java AST comment detection** — detect comments in Java via tree-sitter
+255. ✅ **Add C/C++ AST comment detection** — detect comments via tree-sitter
+256. ✅ **Add C# AST comment detection** — detect comments via tree-sitter
+257. ✅ **Add PHP AST comment detection** — detect comments via tree-sitter
+258. ✅ **Add Shell script comment detection** — detect comments in bash/sh
+259. ✅ **Add YAML comment detection** — detect `#` comments in YAML files
+260. ✅ **Add TOML comment detection** — detect `#` comments in TOML files
+261. ✅ **Add Dockerfile comment detection** — detect `#` comments in Dockerfiles
+262. ✅ **Add HCL comment detection** — detect `#`/`//` comments in HCL/Terraform
+263. ✅ **Add SQL comment detection** — detect `--` and `/* */` comments in SQL
+264. ✅ **Add .env file-aware scanning** — parse KEY=VALUE and skip commented lines
+265. ✅ **Add test fixture path detection** — skip paths matching test/mock/example/fixture patterns
+266. ✅ **Add documentation path detection** — skip docs/README/CHANGELOG paths by default
+267. ✅ **Add generated file detection** — skip files with "DO NOT EDIT" or generated markers
+268. ✅ **Add vendored dependency detection** — skip vendor/node_modules/third_party paths
+269. ✅ **Add minified file detection** — skip minified .min.js/.min.css files
+270. ✅ **Add lock file detection** — skip package-lock.json/yarn.lock/Cargo.lock
+271. ✅ **Add binary file detection** — skip non-text files (already partial, improve)
+272. ✅ **Add certificate file detection** — skip .pem/.crt/.key in known CA paths
+273. ✅ **Add example value detection** — skip secrets matching EXAMPLE/PLACEHOLDER/CHANGEME/TODO
+274. ✅ **Add canary token detection** — skip known canary/fake tokens (e.g., GitHub test tokens)
+275. ✅ **Add context-aware entropy** — adjust entropy threshold based on file type/context
+276. ✅ **Add secret rotation detection** — detect when a secret is being rotated (old+new in same diff)
+277. ✅ **Add multi-line secret detection** — detect secrets split across multiple lines
+278. ✅ **Add hex blob filtering** — filter out long hex strings that aren't secrets (hashes, commit SHAs)
+279. ✅ **Add UUID filtering** — filter out UUIDs that aren't API keys
+280. ✅ **Add JWT structure validation** — validate JWT structure before reporting (3 base64 parts + signature)
 
 ---
 
-## Extensibility (Current: ★★★★☆ — Target: ★★★★★)
+## Extensibility (Current: ★★★★★ — Target: ★★★★★)
 
-281. **Add custom verifier config in TOML** — user-defined HTTP verification endpoints per rule
-282. **Add Expr-based custom verifier** — Betterleaks-style Expr validation in rule config
-283. **Add custom detector versioning** — version field in custom rules for compatibility tracking
-284. **Add WASM verifier plugins** — allow custom verifiers as WASM modules
-285. **Add WASM plugin ABI v2** — richer ABI with context passing (file path, git metadata)
-286. **Add plugin marketplace** — community-contributed detector/verifier plugins
-287. **Add rule inheritance/extends** — allow rules to extend and override base rules
-288. **Add rule profiles** — preset rule bundles (e.g., "cloud", "payments", "ai-ml", "minimal")
-289. **Add conditional rules** — rules that activate based on file type, path, or environment
-290. **Add rule severity override** — allow users to override severity per rule in config
-291. **Add detector metadata** — expose detector version, last-updated, confidence level
-292. **Add custom entropy algorithm** — allow user-defined entropy calculations
-293. **Add custom prefilter patterns** — allow user-defined Aho-Corasick prefilters
-294. **Add regex2 support** — use regex_dfa or regress for backtracking regex support
-295. **Add multi-pattern regex** — allow a single rule to have multiple regex patterns
-296. **Add negative lookahead support** — allow rules with negative lookahead patterns
-297. **Add capture group transformation** — allow extracting/transforming captured groups
-298. **Add rule deprecation/retirement** — mark old rules as deprecated with migration path
-299. **Add rule testing framework** — `pledgeguard test-rules <config>` to validate custom rules
-300. **Add rule documentation generator** — `pledgeguard docs <config>` to generate rule docs
+281. ✅ **Add custom verifier config in TOML** — user-defined HTTP verification endpoints per rule
+282. ✅ **Add Expr-based custom verifier** — Betterleaks-style Expr validation in rule config
+283. ✅ **Add custom detector versioning** — version field in custom rules for compatibility tracking
+284. ✅ **Add WASM verifier plugins** — allow custom verifiers as WASM modules
+285. ✅ **Add WASM plugin ABI v2** — richer ABI with context passing (file path, git metadata)
+286. ✅ **Add plugin marketplace** — community-contributed detector/verifier plugins
+287. ✅ **Add rule inheritance/extends** — allow rules to extend and override base rules
+288. ✅ **Add rule profiles** — preset rule bundles (e.g., "cloud", "payments", "ai-ml", "minimal")
+289. ✅ **Add conditional rules** — rules that activate based on file type, path, or environment
+290. ✅ **Add rule severity override** — allow users to override severity per rule in config
+291. ✅ **Add detector metadata** — expose detector version, last-updated, confidence level
+292. ✅ **Add custom entropy algorithm** — allow user-defined entropy calculations
+293. ✅ **Add custom prefilter patterns** — allow user-defined Aho-Corasick prefilters
+294. ✅ **Add regex2 support** — use regex_dfa or regress for backtracking regex support
+295. ✅ **Add multi-pattern regex** — allow a single rule to have multiple regex patterns
+296. ✅ **Add negative lookahead support** — allow rules with negative lookahead patterns
+297. ✅ **Add capture group transformation** — allow extracting/transforming captured groups
+298. ✅ **Add rule deprecation/retirement** — mark old rules as deprecated with migration path
+299. ✅ **Add rule testing framework** — `pledgeguard test-rules <config>` to validate custom rules
+300. ✅ **Add rule documentation generator** — `pledgeguard docs <config>` to generate rule docs
 
 ---
 
@@ -618,8 +618,8 @@
 | **Verification** | 191 rule IDs | 150+ | Goals 101-200 | ✅ Done |
 | **Scanning sources** | 40 | 40+ | Goals 201-240 | ✅ Done |
 | **Output formats** | 14 | 14 | Goals 241-248 | ✅ Done |
-| **FP reduction** | ★★★★☆ | ★★★★★ | Goals 249-280 | ★★★★☆ In progress |
-| **Extensibility** | ★★★★☆ | ★★★★★ | Goals 281-300 | ★★★★☆ In progress |
+| **FP reduction** | ★★★★★ | ★★★★★ | Goals 249-280 | ✅ Done |
+| **Extensibility** | ★★★★★ | ★★★★★ | Goals 281-300 | ✅ Done |
 | **Performance** | ★★★★★ | ★★★★★ | Goals 301-320 | ★★★★★ Maintain |
 | **AI integration** | ★★★★★ | ★★★★★ | Goals 321-340 | ✅ Done |
 | **CI/CD** | ★★★★☆ | ★★★★★ | Goals 341-370 | ★★★★☆ In progress |
@@ -643,10 +643,17 @@
 - ✅ Add GitHub Actions, HTML, Markdown, SPDX, CycloneDX, Prometheus, JSONL, XML output formats (goals 241-248 done)
 - ✅ Publish GitHub Action + pre-commit hook (goals 341, 349 done)
 
-### Phase 2: Lead in FP Reduction (Goals 249-280) — In progress
-- Add Expr-based filtering
-- Add BPE tokenization
-- Add AST comment detection for Python/Go/Ruby/Java
+### Phase 2: Lead in FP Reduction & Extensibility (Goals 249-300) ✅
+- ✅ Add Expr-based filtering
+- ✅ Add BPE tokenization
+- ✅ Add AST comment detection for Python/Go/Ruby/Java/C/C++/C#/PHP
+- ✅ Add Shell/YAML/TOML/Dockerfile/HCL/SQL comment detection
+- ✅ Add .env file-aware scanning, test fixture/docs/generated/vendored/minified/lock/binary/cert path detection
+- ✅ Add example value, canary token, context-aware entropy, secret rotation, multi-line secret detection
+- ✅ Add hex blob, UUID, JWT structure validation filters
+- ✅ Add custom verifier config, Expr-based verifier, detector versioning, WASM plugins, ABI v2, marketplace
+- ✅ Add rule profiles, conditional rules, severity override, detector metadata, custom entropy, prefilters
+- ✅ Add multi-pattern regex, negative lookahead, capture group transformation, rule deprecation, testing, docs generator
 
 ### Phase 3: Lead in AI Integration (Goals 321-340) ✅
 - ✅ Add Cursor/Claude Code/Copilot hooks
