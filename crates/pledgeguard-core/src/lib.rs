@@ -19,9 +19,11 @@
 //! assert!(!findings.is_empty());
 //! ```
 
+pub mod api_scan;
 pub mod archive;
 pub mod ast;
 pub mod baseline;
+pub mod cloud_scan;
 pub mod composite;
 pub mod config;
 pub mod context;
@@ -29,6 +31,7 @@ pub mod csv;
 pub mod decode;
 pub mod detector;
 pub mod detectors;
+pub mod docker;
 pub mod entropy;
 pub mod finding;
 pub mod git_history;
@@ -56,4 +59,7 @@ pub use junit::to_junit;
 pub use template::to_template;
 pub use composite::{scan_composite, CompositeRule};
 pub use archive::{is_archive, scan_archive};
+pub use docker::{scan_docker_image, is_docker_image, DockerScanError};
+pub use api_scan::{scan_github_repo, scan_gitlab_repo, GitHubScanConfig, GitLabScanConfig, ApiScanError};
+pub use cloud_scan::{scan_s3_bucket, scan_gcs_bucket, S3ScanConfig, GcsScanConfig, CloudScanError};
 pub use verify::verify_findings;
