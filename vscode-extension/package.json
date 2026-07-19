@@ -1,0 +1,74 @@
+{
+  "name": "pledgeguard",
+  "displayName": "PledgeGuard — Secret Scanner",
+  "description": "Scan for secrets in your code with PledgeGuard",
+  "version": "0.1.0",
+  "publisher": "pledgeandgrow",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/pledgeandgrow/pledgeguard"
+  },
+  "engines": {
+    "vscode": "^1.80.0"
+  },
+  "categories": [
+    "Linters",
+    "Other"
+  ],
+  "keywords": [
+    "secrets",
+    "security",
+    "scanner",
+    "gitleaks",
+    "trufflehog"
+  ],
+  "activationEvents": [
+    "onStartup"
+  ],
+  "main": "./extension.js",
+  "contributes": {
+    "commands": [
+      {
+        "command": "pledgeguard.scan",
+        "title": "PledgeGuard: Scan Workspace for Secrets"
+      },
+      {
+        "command": "pledgeguard.scanFile",
+        "title": "PledgeGuard: Scan Current File"
+      },
+      {
+        "command": "pledgeguard.init",
+        "title": "PledgeGuard: Initialize Config"
+      }
+    ],
+    "configuration": {
+      "title": "PledgeGuard",
+      "properties": {
+        "pledgeguard.minSeverity": {
+          "type": "string",
+          "default": "medium",
+          "enum": ["low", "medium", "high", "critical"],
+          "description": "Minimum severity to report"
+        },
+        "pledgeguard.enableOnSave": {
+          "type": "boolean",
+          "default": true,
+          "description": "Automatically scan files on save"
+        },
+        "pledgeguard.binaryPath": {
+          "type": "string",
+          "default": "",
+          "description": "Path to pledgeguard binary (empty = use npx)"
+        }
+      }
+    }
+  },
+  "scripts": {
+    "package": "vsce package"
+  },
+  "devDependencies": {
+    "@types/vscode": "^1.80.0",
+    "@types/node": "^20.0.0"
+  }
+}

@@ -1,92 +1,189 @@
 # PledgeGuard
 
-Rust-native secret scanner — a TruffleHog/Gitleaks alternative.
+**Rust-native secret scanner — a TruffleHog/Gitleaks alternative.**
 
+[![npm version](https://img.shields.io/npm/v/pledgeguard.svg)](https://www.npmjs.com/package/pledgeguard)
 [![CI](https://github.com/pledgeandgrow/pledgeguard/actions/workflows/ci.yml/badge.svg)](https://github.com/pledgeandgrow/pledgeguard/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Stars](https://img.shields.io/github/stars/pledgeandgrow/pledgeguard)](https://github.com/pledgeandgrow/pledgeguard)
+![secrets scanned](https://img.shields.io/badge/secrets%20scanned-pledgeguard-green)
 [![Sponsor](https://img.shields.io/badge/Sponsor-%E2%9D%A4-red)](https://github.com/sponsors/pledgeandgrow)
 
-## Status
+---
 
-**v0.2.0 — comprehensive feature set.** PledgeGuard is a working secret
-scanner with 708 built-in detectors, 48 live verification providers, git history
-scanning, WASM plugins, MCP server, 6 output formats (Table/JSON/SARIF/CSV/JUnit/Template),
-baseline/allowlist mode, pre-commit hook installer, AST-based false-positive
-refinement for JS/TS, custom TOML rules with entropy/allowlists/path filters,
-inline comment suppression, recursive base64 decoding, composite/proximity rules,
-Docker image scanning, GitHub/GitLab API scanning, S3/GCS/Azure Blob/Alibaba OSS
-bucket scanning, AWS Secrets Manager, Confluence/Slack/Jira/Postman/Gerrit/Buildkite/
-Artifactory/CircleCI/TravisCI/Jenkins/DroneCI source scanning, syslog TCP stream
-scanning, Helm chart/Terraform state/Kubernetes secret scanning, and
-archive (zip/tar) scanning.
+## Quick Start
 
-> **Full list of supported detectors, verifiers, and platforms:** see **[SUPPORT.md](docs/SUPPORT.md)**
+```bash
+# Install
+npm install -g pledgeguard
+# or: npx pledgeguard scan .   (no install needed)
+# or: brew install pledgeguard
+# or: scoop install pledgeguard
+
+# Scan your project
+pledgeguard scan .
+
+# Scan only changed files (great for PRs)
+pledgeguard scan . --diff --fail-on-findings
+
+# Generate a compliance report
+pledgeguard compliance . --framework pci-dss
+
+# Initialize config
+pledgeguard init
+```
+
+---
+
+## Why PledgeGuard?
+
+| Feature | PledgeGuard | TruffleHog | Gitleaks | GitGuardian |
+|---|:---:|:---:|:---:|:---:|
+| **Language** | Rust | Go | Go | SaaS |
+| **Detectors** | 708 | 800+ | ~100 | 500+ |
+| **Live verification** | 191 rule IDs | 800+ | ❌ | 500+ |
+| **AI integration** | ✅ | ❌ | ❌ | Partial |
+| **MCP server** | ✅ | ❌ | ❌ | ❌ |
+| **Enterprise (RBAC, audit)** | ✅ | Partial | ❌ | ✅ |
+| **Compliance reports** | ✅ | ❌ | ❌ | ✅ |
+| **Scan diffing** | ✅ | ❌ | ❌ | ✅ |
+| **Webhook notifications** | ✅ | ❌ | ❌ | ✅ |
+| **WASM plugins** | ✅ | ❌ | ❌ | ❌ |
+| **Offline** | ✅ | ✅ | ✅ | ❌ |
+| **npm/npx** | ✅ | ❌ | ❌ | ❌ |
+| **GitHub Action** | ✅ | ✅ | ✅ | ✅ |
+| **SARIF output** | ✅ | ✅ | ✅ | ✅ |
+| **Speed** | ★★★★★ | ★★★★☆ | ★★★★★ | ★★☆☆☆ |
+
+> **Full competitive benchmark:** see **[BENCHMARK.md](docs/BENCHMARK.md)**
 >
-> **Future providers roadmap (competitor comparison):** see **[PROVIDERS-FUTURE.md](docs/PROVIDERS-FUTURE.md)**
->
-> **Competitive benchmark vs TruffleHog/Gitleaks/Betterleaks/GitGuardian/Trivy:** see **[BENCHMARK.md](docs/BENCHMARK.md)**
->
-> **Roadmap to #1 — 100 goals to lead in every category:** see **[ROADMAPLEAD.md](docs/ROADMAPLEAD.md)**
+> **Roadmap to #1:** see **[ROADMAPLEAD.md](docs/ROADMAPLEAD.md)**
 
-It is functional and tested but **not yet production-hardened** — detector
-regexes may need tuning for precision/recall on large codebases, and it has
-not been audited against real-world repositories at scale.
-
-> **New here?** Read the **[Tutorial](docs/TUTORIAL.md)** for a hands-on walkthrough.
+---
 
 ## Installation
 
-### From source
+### npm (recommended)
+```bash
+npm install -g pledgeguard
+# or use without installing:
+npx pledgeguard scan .
+```
 
+### Homebrew (macOS/Linux)
+```bash
+brew install pledgeguard
+```
+
+### Scoop (Windows)
+```bash
+scoop install pledgeguard
+```
+
+### From source
 ```sh
 git clone https://github.com/pledgeandgrow/pledgeguard.git
 cd pledgeguard
 cargo install --path crates/pledgeguard-cli
 ```
 
-This installs the `pledgeguard` binary to `~/.cargo/bin`.
+### Binary download
+Download from [GitHub Releases](https://github.com/pledgeandgrow/pledgeguard/releases) for:
+- Linux x86_64 / ARM64
+- macOS x86_64 / ARM64 (Apple Silicon)
+- Windows x86_64
 
-### From crates.io (not yet published)
-
-```sh
-cargo install pledgeguard
+### Docker
+```bash
+docker run ghcr.io/pledgeandgrow/pledgeguard scan /repo
 ```
 
 ## Usage
 
-```sh
-# Scan the working tree
+### Basic scan
+```bash
 pledgeguard scan .
-pledgeguard scan ./src --format json
-pledgeguard scan . --min-severity high --fail-on-findings
+pledgeguard scan src/ --min-severity high
+pledgeguard scan . --format json --report-file results.json
+pledgeguard scan . --format sarif --report-file results.sarif
+pledgeguard scan . --format github-actions
+```
 
-# Scan git commit history (all refs, added lines only)
-pledgeguard history .
+### CI/CD gate
+```bash
+pledgeguard scan . --fail-on-findings --min-severity high
+# Exit code 1 if any findings at or above high severity
+```
 
-# Load custom WASM detectors
-pledgeguard scan . --plugin-dir ./plugins
+### PR diff scan (fast — only changed files)
+```bash
+pledgeguard scan . --diff --fail-on-findings
+# Only scans files changed since HEAD — perfect for pull requests
+```
 
-# Show findings flagged as likely false positives (hidden by default)
-pledgeguard scan . --show-all
-
-# Verify matched secrets against provider APIs (GitHub, Slack, Stripe, npm)
+### Verify secrets are active
+```bash
 pledgeguard scan . --verify
+# Calls provider APIs to check if secrets are still valid
+```
 
-# Output SARIF 2.1.0 for GitHub Code Scanning
-pledgeguard scan . --format sarif
+### Git history scan
+```bash
+pledgeguard history .
+# Scans all commits for secrets introduced in past commits
+```
 
-# Save a baseline of current findings for future suppression
-pledgeguard scan . --save-baseline .pledgeguard-baseline.json
+### Compliance report
+```bash
+pledgeguard compliance . --framework soc2
+pledgeguard compliance . --framework pci-dss --verify
+```
 
-# Suppress findings matching a previously saved baseline
-pledgeguard scan . --baseline .pledgeguard-baseline.json
+### Scan diff
+```bash
+pledgeguard scan . --format json --report-file current.json
+pledgeguard diff previous.json current.json
+# Shows new, resolved, and unchanged findings
+```
 
-# Install a git pre-commit hook
-pledgeguard install-pre-commit
-pledgeguard install-pre-commit --force  # overwrite existing hook
+### Webhook notification
+```bash
+pledgeguard notify --url https://hooks.slack.com/services/... --webhook-type slack .
+```
 
-# Run as an MCP server over stdio (for AI agents)
+### Initialize config
+```bash
+pledgeguard init
+# Creates .pledgeguard.toml with recommended defaults
+```
+
+### Install pre-commit hook
+```bash
+pledgeguard install-pre-commit .
+```
+
+### MCP server (for AI agents)
+```bash
 pledgeguard mcp
+pledgeguard mcp --tcp 127.0.0.1:9470 --auth-token secret
+```
+
+### AI hooks
+```bash
+pledgeguard install-ai-hooks --tool cursor
+pledgeguard install-ai-hooks --tool claude-code
+pledgeguard install-ai-hooks --tool copilot
+```
+
+### Load custom WASM detectors
+```bash
+pledgeguard scan . --plugin-dir ./plugins
+```
+
+### Baseline / allowlist
+```bash
+pledgeguard scan . --save-baseline .pledgeguard-baseline.json
+pledgeguard scan . --baseline .pledgeguard-baseline.json
 ```
 
 `--fail-on-findings` makes the CLI exit non-zero when findings are present,
@@ -307,39 +404,77 @@ pledgeguard/
         └── mcp.rs                 # MCP server over stdio (JSON-RPC 2.0)
 ```
 
+## GitHub Action
+
+Add `.github/workflows/pledgeguard.yml` to your repo:
+
+```yaml
+name: PledgeGuard Secret Scan
+on: [push, pull_request]
+jobs:
+  scan:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: pledgeandgrow/pledgeguard@v0.1.1
+        with:
+          path: .
+          format: github-actions
+          min-severity: high
+          fail-on-findings: true
+```
+
+See [`docs/github-action-example.yml`](docs/github-action-example.yml) for a full example with SARIF upload.
+
+## Migration
+
+Coming from another scanner? See our migration guides:
+- [Migrate from Gitleaks](docs/MIGRATION-GITLEAKS.md)
+- [Migrate from TruffleHog](docs/MIGRATION-TRUFFLEHOG.md)
+
 ## CLI reference
 
 ```
 pledgeguard scan <path> [OPTIONS]
 pledgeguard history <path> [OPTIONS]
+pledgeguard scan-source <source> [OPTIONS]
 pledgeguard mcp [OPTIONS]
 pledgeguard install-pre-commit [OPTIONS] [path]
+pledgeguard init [OPTIONS] [path]
+pledgeguard compliance <path> [OPTIONS]
+pledgeguard diff <previous.json> <current.json>
+pledgeguard notify [OPTIONS] <path>
+pledgeguard install-ai-hooks --tool <tool>
+pledgeguard ai-analyze --analysis <type> [OPTIONS] <path>
 
-Common options (scan & history):
-  --format <table|json|sarif>    Output format (default: table)
+Common scan options:
+  --format <table|json|sarif|csv|junit|github-actions>  Output format
   --min-severity <low|medium|high|critical>  Minimum severity to report
   --no-redact                    Show full secret values (default: redacted)
   --fail-on-findings             Exit non-zero if findings are present
-  --plugin-dir <dir>             Load .wasm detectors from directory (repeatable)
-  --show-all                     Include likely false positives (hidden by default)
+  --diff                         Only scan git-changed files (PR mode)
+  --plugin-dir <dir>             Load .wasm detectors (repeatable)
+  --show-all                     Include likely false positives
   --verify                       Call provider APIs to check if secrets are active
   --baseline <path>              Suppress findings matching a baseline file
   --save-baseline <path>         Save current findings as a baseline file
-
-install-pre-commit options:
-  --force                        Overwrite existing pre-commit hook
-  path                           Git repository path (default: .)
+  --config <path>                Load custom TOML rules
+  --report-file <path>           Write output to file instead of stdout
 ```
+
+## Security
+
+See [SECURITY.md](SECURITY.md) for responsible disclosure.
 
 ## Limitations
 
 - **AST refinement is JS/TS only** — Python, Go, Ruby, etc. use the lexical heuristic.
 - **Git history scans use lexical-only filtering** — only added-line text is available, not the full file.
-- **Live verification covers 48 providers** — see [SUPPORT.md](docs/SUPPORT.md) for the full list. JWTs and some connection strings cannot be verified.
-- **Docker/GitHub/GitLab scanning via library API** — not yet wired to CLI `scan-source` subcommand (S3, GCS, Azure Blob, Alibaba OSS, Confluence, Slack, Jira, Postman, Gerrit, Buildkite, Artifactory, AWS Secrets Manager, CircleCI, Travis CI, Jenkins, DroneCI are available via CLI).
+- **Live verification covers 48 providers** — see [SUPPORT.md](docs/SUPPORT.md) for the full list.
 - **Baseline files contain raw secret values** — treat as sensitive.
-- **Early-stage / unaudited** — detector regexes may need tuning; limited real-world testing.
-- **See [BENCHMARK.md](docs/BENCHMARK.md) for a detailed comparison against TruffleHog, Gitleaks, Betterleaks, GitGuardian, and Trivy.**
+- **See [BENCHMARK.md](docs/BENCHMARK.md) for a detailed comparison.**
 
 ## Sponsors
 

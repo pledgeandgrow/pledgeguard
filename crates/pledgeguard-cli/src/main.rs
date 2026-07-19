@@ -125,6 +125,11 @@ enum Command {
         /// Timeout in seconds for the scan. Currently informational (no hard enforcement).
         #[arg(long, default_value_t = 300)]
         timeout: u64,
+
+        /// Only scan files changed in git (staged + unstaged + untracked).
+        /// Uses `git diff` to determine changed files. Great for PR checks.
+        #[arg(long)]
+        diff: bool,
     },
 
     /// Scan git commit history (all refs) for secrets introduced in past commits.
@@ -338,6 +343,18 @@ enum Command {
         path: PathBuf,
     },
 
+    /// Initialize PledgeGuard configuration in the current project.
+    /// Creates a `.pledgeguard.toml` file with recommended defaults.
+    Init {
+        /// Path to initialize. Defaults to the current directory.
+        #[arg(default_value = ".")]
+        path: PathBuf,
+
+        /// Overwrite an existing config file.
+        #[arg(long)]
+        force: bool,
+    },
+
     /// Generate a compliance report from scan findings (SOC2, PCI-DSS, ISO27001, etc.).
     Compliance {
         /// Path to scan.
@@ -541,6 +558,7 @@ fn main() -> ExitCode {
             no_verify_detectors,
             verify_cache,
             timeout: _,
+            diff,
         } => {
             if verbose {
                 eprintln!("pledgeguard: loading detectors...");
@@ -555,8 +573,44 @@ fn main() -> ExitCode {
             };
             let scanner = Scanner::with_allowlist(detectors, scan_opts, global_allowlist);
 
-            // Handle stdin scanning.
-            let findings = if path == std::path::Path::new("-") {
+            // Handle --diff mode: only scan git-changed files.
+            let findings = if diff {
+                if verbose {
+                    eprintln!("pledgeguard: detecting changed files via git diff...");
+                }
+                let changed_files = get_git_changed_files(&path, verbose);
+                if changed_files.is_empty() {
+                    if verbose {
+                        eprintln!("pledgeguard: no changed files detected.");
+                    }
+                    Vec::new()
+                } else {
+                    if verbose {
+                        eprintln!("pledgeguard: scanning {} changed file(s).", changed_files.len());
+                    }
+                    let mut all_findings = Vec::new();
+                    for file in &changed_files {
+                        let full_path = path.join(file);
+                        if full_path.is_file() {
+                            match scanner.scan_path(&full_path) {
+                                Ok(f) => {
+                                    // Adjust path to be relative to the original root.
+                                    for mut finding in f {
+                                        finding.path = PathBuf::from(file);
+                                        all_findings.push(finding);
+                                    }
+                                }
+                                Err(e) => {
+                                    if verbose {
+                                        eprintln!("pledgeguard: skip {}: {e}", file);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    all_findings
+                }
+            } else if path == std::path::Path::new("-") {
                 if verbose {
                     eprintln!("pledgeguard: reading from stdin");
                 }
@@ -974,6 +1028,7 @@ fn main() -> ExitCode {
             ExitCode::SUCCESS
         }
         Command::InstallPreCommit { force, path } => install_pre_commit(&path, force),
+        Command::Init { path, force } => init_config(&path, force),
         Command::Compliance { path, framework, min_severity, show_all, verify } => {
             let detectors = builtin_detectors();
             let scanner = Scanner::new(detectors);
@@ -1402,5 +1457,104 @@ fn install_pre_commit(path: &std::path::Path, force: bool) -> ExitCode {
     println!("Pre-commit hook installed at {}.", hook_path.display());
     println!("The hook runs `pledgeguard scan --fail-on-findings` before each commit.");
     println!("To customize, edit the hook file or re-run with --force after editing.");
+    ExitCode::SUCCESS
+}
+
+/// Gets the list of files changed in git (staged, unstaged, and untracked).
+fn get_git_changed_files(repo_root: &std::path::Path, verbose: bool) -> Vec<String> {
+    let mut files = Vec::new();
+
+    // Get staged + unstaged changes (tracked files).
+    let output = std::process::Command::new("git")
+        .args(["diff", "--name-only", "HEAD"])
+        .current_dir(repo_root)
+        .output();
+
+    if let Ok(out) = output
+        && out.status.success()
+    {
+        let text = String::from_utf8_lossy(&out.stdout);
+        for line in text.lines() {
+            let line = line.trim();
+            if !line.is_empty() {
+                files.push(line.to_string());
+            }
+        }
+    }
+
+    // Get untracked files.
+    let output = std::process::Command::new("git")
+        .args(["ls-files", "--others", "--exclude-standard"])
+        .current_dir(repo_root)
+        .output();
+
+    if let Ok(out) = output
+        && out.status.success()
+    {
+        let text = String::from_utf8_lossy(&out.stdout);
+        for line in text.lines() {
+            let line = line.trim();
+            if !line.is_empty() {
+                files.push(line.to_string());
+            }
+        }
+    }
+
+    // Deduplicate.
+    files.sort();
+    files.dedup();
+
+    if verbose {
+        eprintln!("pledgeguard: {} unique changed file(s).", files.len());
+    }
+
+    files
+}
+
+/// Initializes a `.pledgeguard.toml` config file in the given path.
+fn init_config(path: &std::path::Path, force: bool) -> ExitCode {
+    let config_path = path.join(".pledgeguard.toml");
+
+    if config_path.exists() && !force {
+        eprintln!(
+            "Config file already exists at {}; use --force to overwrite.",
+            config_path.display()
+        );
+        return ExitCode::FAILURE;
+    }
+
+    let config_content = r#"# PledgeGuard configuration file
+# https://github.com/pledgeandgrow/pledgeguard
+
+# Custom detector rules (TOML format)
+# [[rules]]
+# id = "my-custom-token"
+# description = "My Custom API Token"
+# severity = "high"
+# regex = 'my_token_[a-zA-Z0-9]{32}'
+
+# Allowlist — suppress false positives
+# [allowlist]
+# paths = ["test/fixtures/*", "vendor/*"]
+# descriptions = ["Example.*", "Demo.*"]
+
+# Scan settings
+[scan]
+# max_file_size = 5242880  # 5 MB (default)
+# respect_gitignore = true
+# ignore_paths = ["node_modules/*", "*.min.js"]
+"#;
+
+    if let Err(e) = std::fs::write(&config_path, config_content) {
+        eprintln!("Failed to write config file {}: {e}", config_path.display());
+        return ExitCode::FAILURE;
+    }
+
+    println!("Created {}.", config_path.display());
+    println!();
+    println!("Next steps:");
+    println!("  1. Edit {} to add custom rules or allowlist entries.", config_path.display());
+    println!("  2. Run `pledgeguard scan . --config {}` to use it.", config_path.display());
+    println!("  3. Add `pledgeguard scan --diff --fail-on-findings` to your CI pipeline.");
     ExitCode::SUCCESS
 }

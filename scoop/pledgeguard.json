@@ -1,0 +1,23 @@
+{
+  "version": "0.1.1",
+  "description": "Rust-native secret scanner — a TruffleHog/Gitleaks alternative",
+  "homepage": "https://github.com/pledgeandgrow/pledgeguard",
+  "license": "MIT",
+  "architecture": {
+    "64bit": {
+      "url": "https://github.com/pledgeandgrow/pledgeguard/releases/download/v0.1.1/pledgeguard-x86_64-pc-windows-msvc.zip",
+      "hash": ""
+    }
+  },
+  "bin": "pledgeguard.exe",
+  "checkver": {
+    "github": "https://github.com/pledgeandgrow/pledgeguard"
+  },
+  "autoupdate": {
+    "architecture": {
+      "64bit": {
+        "url": "https://github.com/pledgeandgrow/pledgeguard/releases/download/v$version/pledgeguard-x86_64-pc-windows-msvc.zip"
+      }
+    }
+  }
+}

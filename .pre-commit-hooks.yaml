@@ -1,0 +1,11 @@
+repos:
+  - repo: https://github.com/pledgeandgrow/pledgeguard
+    rev: v0.1.1
+    hooks:
+      - id: pledgeguard
+        name: PledgeGuard Secret Scanner
+        description: Scan for secrets before commit
+        entry: pledgeguard scan --diff --fail-on-findings
+        language: system
+        pass_filenames: false
+        always_run: true
