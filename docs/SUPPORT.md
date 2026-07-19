@@ -6,7 +6,7 @@ This document lists all detectors, verification providers, output formats, scann
 
 ## Built-in Detectors
 
-PledgeGuard ships with **416 regex-based detectors** covering major cloud providers, SaaS platforms, CI/CD systems, and generic secret patterns. Each detector has a prefilter (Aho-Corasick) for fast scanning and a regex for precise matching.
+PledgeGuard ships with **512 regex-based detectors** covering major cloud providers, SaaS platforms, CI/CD systems, and generic secret patterns. Each detector has a prefilter (Aho-Corasick) for fast scanning and a regex for precise matching.
 
 ### Cloud Providers
 
@@ -510,6 +510,127 @@ PledgeGuard ships with **416 regex-based detectors** covering major cloud provid
 | `getemails-api-key` | GetEmails API Key | Medium |
 | `skrappio-api-key` | Skrappio API Key | Medium |
 | `powrbot-api-key` | Powrbot API Key | Medium |
+
+### Project Management & Productivity (TruffleHog)
+
+| Rule ID | Description | Severity |
+|---|---|---|
+| `clickup-personal-token` | ClickUp Personal Token | High |
+| `todoist-api-token` | Todoist API Token | High |
+| `shortcut-api-key` | Shortcut API Key | Medium |
+| `tmetric-api-key` | TMetric API Key | Medium |
+| `clockify-api-key` | Clockify API Key | High |
+| `everhour-api-key` | Everhour API Key | Medium |
+| `harvest-api-key` | Harvest API Key | High |
+| `humanity-api-key` | Humanity API Key | Medium |
+| `toggl-track-api-key` | Toggl Track API Key | Medium |
+| `runrunit-api-key` | RunRunIt API Key | Medium |
+| `workstack-api-key` | Workstack API Key | Medium |
+| `easyinsight-api-key` | EasyInsight API Key | Medium |
+| `dovico-api-key` | Dovico API Key | Medium |
+| `mavenlink-api-key` | Mavenlink API Key | Medium |
+| `float-api-key` | Float API Key | Medium |
+| `daily-co-api-key` | Daily.co API Key | High |
+| `tly-api-key` | T.ly API Key | Medium |
+| `rebrandly-api-key` | Rebrandly API Key | Medium |
+| `timezone-api-key` | Timezone API Key | Low |
+| `jotform-api-key` | Jotform API Key | High |
+
+### Forms & Survey Platforms (TruffleHog)
+
+| Rule ID | Description | Severity |
+|---|---|---|
+| `typeform-api-key` | Typeform API Key | High |
+| `surveysparrow-api-key` | SurveySparrow API Key | Medium |
+| `survicate-api-key` | Survicate API Key | Medium |
+| `delighted-api-key` | Delighted API Key | Medium |
+| `feedier-api-key` | Feedier API Key | Medium |
+| `zonka-feedback-api-key` | Zonka Feedback API Key | Medium |
+| `satismeter-project-key` | Satismeter Project Key | Medium |
+| `satismeter-write-key` | Satismeter Write Key | Medium |
+| `simplesat-api-key` | Simplesat API Key | Medium |
+| `surveyanyplace-api-key` | SurveyAnyplace API Key | Medium |
+| `surveybot-api-key` | SurveyBot API Key | Medium |
+| `qualaroo-api-key` | Qualaroo API Key | Medium |
+| `customerguru-api-key` | CustomerGuru API Key | Medium |
+| `abyssale-api-key` | Abyssale API Key | Medium |
+| `magnetic-api-key` | Magnetic API Key | Medium |
+| `refiner-api-key` | Refiner API Key | Medium |
+| `simvoly-api-key` | Simvoly API Key | Medium |
+| `checkmarket-api-key` | Checkmarket API Key | Medium |
+| `webengage-api-key` | Webengage API Key | Medium |
+
+### Financial & Trading APIs (TruffleHog)
+
+| Rule ID | Description | Severity |
+|---|---|---|
+| `twelve-data-api-key` | Twelve Data API Key | Medium |
+| `fixer-io-api-key` | Fixer.io API Key | Medium |
+| `alpha-vantage-api-key` | Alpha Vantage API Key | Medium |
+| `tradier-api-key` | Tradier API Key | High |
+| `finnhub-api-key` | Finnhub API Key | Medium |
+| `tiingo-api-key` | Tiingo API Key | Medium |
+| `finage-api-key` | Finage API Key | Medium |
+| `iex-cloud-api-key` | IEX Cloud API Key | Medium |
+| `intrinio-api-key` | Intrinio API Key | Medium |
+| `financial-modeling-prep-api-key` | Financial Modeling Prep API Key | Medium |
+| `nasdaq-data-link-api-key` | Nasdaq Data Link API Key | High |
+| `qubole-api-key` | Qubole API Key | Medium |
+| `enigma-api-key` | Enigma API Key | Medium |
+| `datagov-api-key` | Data.gov API Key | Low |
+| `stockdata-api-key` | Stockdata API Key | Medium |
+| `marketstack-api-key` | Marketstack API Key | Medium |
+| `commodities-api-key` | Commodities API Key | Medium |
+| `baremetrics-api-key` | Baremetrics API Key | Medium |
+| `dwolla-api-key` | Dwolla API Key | High |
+| `wepay-api-key` | WePay API Key | High |
+| `checkout-com-api-key` | Checkout.com API Key | High |
+| `paymongo-api-key` | Paymongo API Key | High |
+| `avalara-api-key` | Avalara API Key | High |
+| `carbon-interface-api-key` | Carbon Interface API Key | Medium |
+| `currency-layer-api-key` | Currency Layer API Key | Medium |
+| `exchange-rates-api-key` | Exchange Rates API Key | Low |
+| `currencyscoop-api-key` | CurrencyScoop API Key | Medium |
+| `currencyfreaks-api-key` | Currency Freaks API Key | Medium |
+| `country-layer-api-key` | Country Layer API Key | Low |
+| `fxmarket-api-key` | FX Market API Key | Medium |
+| `currencycloud-api-key` | Currency Cloud API Key | High |
+
+### Crypto & Blockchain Additional (TruffleHog)
+
+| Rule ID | Description | Severity |
+|---|---|---|
+| `kraken-api-key` | Kraken API Key | High |
+| `poloniex-api-key` | Poloniex API Key | High |
+| `bitmex-api-key` | BitMEX API Key | High |
+| `coinapi-key` | CoinAPI Key | Medium |
+| `coinlayer-api-key` | Coinlayer API Key | Medium |
+| `coinlib-api-key` | Coinlib API Key | Low |
+| `cryptocompare-api-key` | CryptoCompare API Key | Medium |
+| `bitcoinaverage-api-key` | Bitcoin Average API Key | Medium |
+| `worldcoinindex-api-key` | World Coin Index API Key | Medium |
+| `glassnode-api-key` | Glassnode API Key | High |
+| `tatum-api-key` | Tatum.io API Key | High |
+| `ethplorer-api-key` | Ethplorer API Key | Medium |
+| `nftport-api-key` | NFTPort API Key | High |
+| `messari-api-key` | Messari API Key | Medium |
+| `coingecko-api-key` | CoinGecko API Key | Medium |
+
+### Weather & Environment APIs (TruffleHog)
+
+| Rule ID | Description | Severity |
+|---|---|---|
+| `openweather-api-key` | OpenWeather API Key | Medium |
+| `weatherstack-api-key` | WeatherStack API Key | Medium |
+| `accuweather-api-key` | AccuWeather API Key | Medium |
+| `worldweather-api-key` | World Weather API Key | Medium |
+| `tomorrow-io-api-key` | Tomorrow.io API Key | Medium |
+| `airvisual-api-key` | AirVisual API Key | Medium |
+| `visualcrossing-api-key` | Visual Crossing API Key | Medium |
+| `stormglass-api-key` | Stormglass API Key | Medium |
+| `aeris-weather-api-key` | Aeris Weather API Key | Medium |
+| `ambee-api-key` | Ambee API Key | Medium |
+| `openuv-api-key` | OpenUV API Key | Medium |
 
 ### Cryptographic Keys & Tokens
 

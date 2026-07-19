@@ -2953,6 +2953,693 @@ pub fn builtin_detectors() -> Vec<Box<dyn Detector>> {
             r#"(?i)powrbot[_\-]?(?:api[_\-]?)?key\s*[:=]\s*['"]?([A-Za-z0-9_\-]{20,})['"]?"#,
             &["powrbot_api", "POWRBOT_API", "powrbotApi"],
         )),
+        // ── Project Management & Productivity (TruffleHog) ───────────────
+
+        Box::new(RegexDetector::with_prefilter(
+            "clickup-personal-token",
+            "ClickUp Personal Token",
+            Severity::High,
+            r#"(?i)clickup[_\-]?(?:personal[_\-]?)?token\s*[:=]\s*['"]?([A-Za-z0-9_\-]{20,})['"]?"#,
+            &["clickup_token", "CLICKUP_TOKEN", "clickupToken"],
+        )),
+        Box::new(RegexDetector::with_prefilter(
+            "todoist-api-token",
+            "Todoist API Token",
+            Severity::High,
+            r#"(?i)todoist[_\-]?(?:api[_\-]?)?token\s*[:=]\s*['"]?([A-Za-z0-9_\-]{20,})['"]?"#,
+            &["todoist_token", "TODOIST_TOKEN", "todoistToken"],
+        )),
+        Box::new(RegexDetector::with_prefilter(
+            "shortcut-api-key",
+            "Shortcut API Key",
+            Severity::Medium,
+            r#"(?i)shortcut[_\-]?(?:api[_\-]?)?key\s*[:=]\s*['"]?([A-Za-z0-9_\-]{20,})['"]?"#,
+            &["shortcut_api", "SHORTCUT_API", "shortcutApi"],
+        )),
+        Box::new(RegexDetector::with_prefilter(
+            "tmetric-api-key",
+            "TMetric API Key",
+            Severity::Medium,
+            r#"(?i)tmetric[_\-]?(?:api[_\-]?)?key\s*[:=]\s*['"]?([A-Za-z0-9_\-]{20,})['"]?"#,
+            &["tmetric_api", "TMETRIC_API", "tmetricApi"],
+        )),
+        Box::new(RegexDetector::with_prefilter(
+            "clockify-api-key",
+            "Clockify API Key",
+            Severity::High,
+            r#"(?i)clockify[_\-]?(?:api[_\-]?)?key\s*[:=]\s*['"]?([A-Za-z0-9_\-]{20,})['"]?"#,
+            &["clockify_api", "CLOCKIFY_API", "clockifyApi"],
+        )),
+        Box::new(RegexDetector::with_prefilter(
+            "everhour-api-key",
+            "Everhour API Key",
+            Severity::Medium,
+            r#"(?i)everhour[_\-]?(?:api[_\-]?)?key\s*[:=]\s*['"]?([A-Za-z0-9_\-]{20,})['"]?"#,
+            &["everhour_api", "EVERHOUR_API", "everhourApi"],
+        )),
+        Box::new(RegexDetector::with_prefilter(
+            "harvest-api-key",
+            "Harvest API Key",
+            Severity::High,
+            r#"(?i)harvest[_\-]?(?:api[_\-]?)?key\s*[:=]\s*['"]?([A-Za-z0-9_\-]{20,})['"]?"#,
+            &["harvest_api", "HARVEST_API", "harvestApi"],
+        )),
+        Box::new(RegexDetector::with_prefilter(
+            "humanity-api-key",
+            "Humanity API Key",
+            Severity::Medium,
+            r#"(?i)humanity[_\-]?(?:api[_\-]?)?key\s*[:=]\s*['"]?([A-Za-z0-9_\-]{20,})['"]?"#,
+            &["humanity_api", "HUMANITY_API", "humanityApi"],
+        )),
+        Box::new(RegexDetector::with_prefilter(
+            "toggl-track-api-key",
+            "Toggl Track API Key",
+            Severity::Medium,
+            r#"(?i)toggl[_\-]?track[_\-]?(?:api[_\-]?)?key\s*[:=]\s*['"]?([A-Za-z0-9_\-]{20,})['"]?"#,
+            &["toggl_track", "TOGGL_TRACK", "togglTrack"],
+        )),
+        Box::new(RegexDetector::with_prefilter(
+            "runrunit-api-key",
+            "RunRunIt API Key",
+            Severity::Medium,
+            r#"(?i)runrunit[_\-]?(?:api[_\-]?)?key\s*[:=]\s*['"]?([A-Za-z0-9_\-]{20,})['"]?"#,
+            &["runrunit_api", "RUNRUNIT_API", "runRunIt"],
+        )),
+        Box::new(RegexDetector::with_prefilter(
+            "workstack-api-key",
+            "Workstack API Key",
+            Severity::Medium,
+            r#"(?i)workstack[_\-]?(?:api[_\-]?)?key\s*[:=]\s*['"]?([A-Za-z0-9_\-]{20,})['"]?"#,
+            &["workstack_api", "WORKSTACK_API", "workstackApi"],
+        )),
+        Box::new(RegexDetector::with_prefilter(
+            "easyinsight-api-key",
+            "EasyInsight API Key",
+            Severity::Medium,
+            r#"(?i)easyinsight[_\-]?(?:api[_\-]?)?key\s*[:=]\s*['"]?([A-Za-z0-9_\-]{20,})['"]?"#,
+            &["easyinsight_api", "EASYINSIGHT_API", "easyInsight"],
+        )),
+        Box::new(RegexDetector::with_prefilter(
+            "dovico-api-key",
+            "Dovico API Key",
+            Severity::Medium,
+            r#"(?i)dovico[_\-]?(?:api[_\-]?)?key\s*[:=]\s*['"]?([A-Za-z0-9_\-]{20,})['"]?"#,
+            &["dovico_api", "DOVICO_API", "dovicoApi"],
+        )),
+        Box::new(RegexDetector::with_prefilter(
+            "mavenlink-api-key",
+            "Mavenlink API Key",
+            Severity::Medium,
+            r#"(?i)mavenlink[_\-]?(?:api[_\-]?)?key\s*[:=]\s*['"]?([A-Za-z0-9_\-]{20,})['"]?"#,
+            &["mavenlink_api", "MAVENLINK_API", "mavenlinkApi"],
+        )),
+        Box::new(RegexDetector::with_prefilter(
+            "float-api-key",
+            "Float API Key",
+            Severity::Medium,
+            r#"(?i)float[_\-]?(?:api[_\-]?)?key\s*[:=]\s*['"]?([A-Za-z0-9_\-]{20,})['"]?"#,
+            &["float_api", "FLOAT_API", "floatApi"],
+        )),
+        Box::new(RegexDetector::with_prefilter(
+            "daily-co-api-key",
+            "Daily.co API Key",
+            Severity::High,
+            r#"(?i)daily[_\-]?co[_\-]?(?:api[_\-]?)?key\s*[:=]\s*['"]?([A-Za-z0-9_\-]{20,})['"]?"#,
+            &["daily_co_api", "DAILY_CO_API", "dailyCoApi"],
+        )),
+        Box::new(RegexDetector::with_prefilter(
+            "tly-api-key",
+            "T.ly API Key",
+            Severity::Medium,
+            r#"(?i)t[_\-]?\.?ly[_\-]?(?:api[_\-]?)?key\s*[:=]\s*['"]?([A-Za-z0-9_\-]{20,})['"]?"#,
+            &["t.ly_api", "T.LY_API", "tlyApi"],
+        )),
+        Box::new(RegexDetector::with_prefilter(
+            "rebrandly-api-key",
+            "Rebrandly API Key",
+            Severity::Medium,
+            r#"(?i)rebrandly[_\-]?(?:api[_\-]?)?key\s*[:=]\s*['"]?([A-Za-z0-9_\-]{20,})['"]?"#,
+            &["rebrandly_api", "REBRANDLY_API", "rebrandlyApi"],
+        )),
+        Box::new(RegexDetector::with_prefilter(
+            "timezone-api-key",
+            "Timezone API Key",
+            Severity::Low,
+            r#"(?i)timezone[_\-]?(?:api[_\-]?)?key\s*[:=]\s*['"]?([A-Za-z0-9_\-]{20,})['"]?"#,
+            &["timezone_api", "TIMEZONE_API", "timezoneApi"],
+        )),
+        Box::new(RegexDetector::with_prefilter(
+            "jotform-api-key",
+            "Jotform API Key",
+            Severity::High,
+            r#"(?i)jotform[_\-]?(?:api[_\-]?)?key\s*[:=]\s*['"]?([A-Za-z0-9_\-]{20,})['"]?"#,
+            &["jotform_api", "JOTFORM_API", "jotformApi"],
+        )),
+
+        // ── Forms & Survey Platforms (TruffleHog) ────────────────────────
+
+        Box::new(RegexDetector::with_prefilter(
+            "typeform-api-key",
+            "Typeform API Key",
+            Severity::High,
+            r#"(?i)typeform[_\-]?(?:api[_\-]?)?key\s*[:=]\s*['"]?([A-Za-z0-9_\-]{20,})['"]?"#,
+            &["typeform_api", "TYPEFORM_API", "typeformApi"],
+        )),
+        Box::new(RegexDetector::with_prefilter(
+            "surveysparrow-api-key",
+            "SurveySparrow API Key",
+            Severity::Medium,
+            r#"(?i)surveysparrow[_\-]?(?:api[_\-]?)?key\s*[:=]\s*['"]?([A-Za-z0-9_\-]{20,})['"]?"#,
+            &["surveysparrow_api", "SURVEYSPARROW_API", "surveySparrow"],
+        )),
+        Box::new(RegexDetector::with_prefilter(
+            "survicate-api-key",
+            "Survicate API Key",
+            Severity::Medium,
+            r#"(?i)survicate[_\-]?(?:api[_\-]?)?key\s*[:=]\s*['"]?([A-Za-z0-9_\-]{20,})['"]?"#,
+            &["survicate_api", "SURVICATE_API", "survicateApi"],
+        )),
+        Box::new(RegexDetector::with_prefilter(
+            "delighted-api-key",
+            "Delighted API Key",
+            Severity::Medium,
+            r#"(?i)delighted[_\-]?(?:api[_\-]?)?key\s*[:=]\s*['"]?([A-Za-z0-9_\-]{20,})['"]?"#,
+            &["delighted_api", "DELIGHTED_API", "delightedApi"],
+        )),
+        Box::new(RegexDetector::with_prefilter(
+            "feedier-api-key",
+            "Feedier API Key",
+            Severity::Medium,
+            r#"(?i)feedier[_\-]?(?:api[_\-]?)?key\s*[:=]\s*['"]?([A-Za-z0-9_\-]{20,})['"]?"#,
+            &["feedier_api", "FEEDIER_API", "feedierApi"],
+        )),
+        Box::new(RegexDetector::with_prefilter(
+            "zonka-feedback-api-key",
+            "Zonka Feedback API Key",
+            Severity::Medium,
+            r#"(?i)zonka[_\-]?feedback[_\-]?(?:api[_\-]?)?key\s*[:=]\s*['"]?([A-Za-z0-9_\-]{20,})['"]?"#,
+            &["zonka_feedback", "ZONKA_FEEDBACK", "zonkaFeedback"],
+        )),
+        Box::new(RegexDetector::with_prefilter(
+            "satismeter-project-key",
+            "Satismeter Project Key",
+            Severity::Medium,
+            r#"(?i)satismeter[_\-]?project[_\-]?key\s*[:=]\s*['"]?([A-Za-z0-9_\-]{20,})['"]?"#,
+            &["satismeter_project", "SATISMETER_PROJECT", "satismeterProject"],
+        )),
+        Box::new(RegexDetector::with_prefilter(
+            "satismeter-write-key",
+            "Satismeter Write Key",
+            Severity::Medium,
+            r#"(?i)satismeter[_\-]?write[_\-]?key\s*[:=]\s*['"]?([A-Za-z0-9_\-]{20,})['"]?"#,
+            &["satismeter_write", "SATISMETER_WRITE", "satismeterWrite"],
+        )),
+        Box::new(RegexDetector::with_prefilter(
+            "simplesat-api-key",
+            "Simplesat API Key",
+            Severity::Medium,
+            r#"(?i)simplesat[_\-]?(?:api[_\-]?)?key\s*[:=]\s*['"]?([A-Za-z0-9_\-]{20,})['"]?"#,
+            &["simplesat_api", "SIMPLESAT_API", "simplesatApi"],
+        )),
+        Box::new(RegexDetector::with_prefilter(
+            "surveyanyplace-api-key",
+            "SurveyAnyplace API Key",
+            Severity::Medium,
+            r#"(?i)surveyanyplace[_\-]?(?:api[_\-]?)?key\s*[:=]\s*['"]?([A-Za-z0-9_\-]{20,})['"]?"#,
+            &["surveyanyplace_api", "SURVEYANYPLACE_API", "surveyAnyplace"],
+        )),
+        Box::new(RegexDetector::with_prefilter(
+            "surveybot-api-key",
+            "SurveyBot API Key",
+            Severity::Medium,
+            r#"(?i)surveybot[_\-]?(?:api[_\-]?)?key\s*[:=]\s*['"]?([A-Za-z0-9_\-]{20,})['"]?"#,
+            &["surveybot_api", "SURVEYBOT_API", "surveyBotApi"],
+        )),
+        Box::new(RegexDetector::with_prefilter(
+            "qualaroo-api-key",
+            "Qualaroo API Key",
+            Severity::Medium,
+            r#"(?i)qualaroo[_\-]?(?:api[_\-]?)?key\s*[:=]\s*['"]?([A-Za-z0-9_\-]{20,})['"]?"#,
+            &["qualaroo_api", "QUALAROO_API", "qualarooApi"],
+        )),
+        Box::new(RegexDetector::with_prefilter(
+            "customerguru-api-key",
+            "CustomerGuru API Key",
+            Severity::Medium,
+            r#"(?i)customerguru[_\-]?(?:api[_\-]?)?key\s*[:=]\s*['"]?([A-Za-z0-9_\-]{20,})['"]?"#,
+            &["customerguru_api", "CUSTOMERGURU_API", "customerGuru"],
+        )),
+        Box::new(RegexDetector::with_prefilter(
+            "abyssale-api-key",
+            "Abyssale API Key",
+            Severity::Medium,
+            r#"(?i)abyssale[_\-]?(?:api[_\-]?)?key\s*[:=]\s*['"]?([A-Za-z0-9_\-]{20,})['"]?"#,
+            &["abyssale_api", "ABYSSALE_API", "abyssaleApi"],
+        )),
+        Box::new(RegexDetector::with_prefilter(
+            "magnetic-api-key",
+            "Magnetic API Key",
+            Severity::Medium,
+            r#"(?i)magnetic[_\-]?(?:api[_\-]?)?key\s*[:=]\s*['"]?([A-Za-z0-9_\-]{20,})['"]?"#,
+            &["magnetic_api", "MAGNETIC_API", "magneticApi"],
+        )),
+        Box::new(RegexDetector::with_prefilter(
+            "refiner-api-key",
+            "Refiner API Key",
+            Severity::Medium,
+            r#"(?i)refiner[_\-]?(?:api[_\-]?)?key\s*[:=]\s*['"]?([A-Za-z0-9_\-]{20,})['"]?"#,
+            &["refiner_api", "REFINER_API", "refinerApi"],
+        )),
+        Box::new(RegexDetector::with_prefilter(
+            "simvoly-api-key",
+            "Simvoly API Key",
+            Severity::Medium,
+            r#"(?i)simvoly[_\-]?(?:api[_\-]?)?key\s*[:=]\s*['"]?([A-Za-z0-9_\-]{20,})['"]?"#,
+            &["simvoly_api", "SIMVOLY_API", "simvolyApi"],
+        )),
+        Box::new(RegexDetector::with_prefilter(
+            "checkmarket-api-key",
+            "Checkmarket API Key",
+            Severity::Medium,
+            r#"(?i)checkmarket[_\-]?(?:api[_\-]?)?key\s*[:=]\s*['"]?([A-Za-z0-9_\-]{20,})['"]?"#,
+            &["checkmarket_api", "CHECKMARKET_API", "checkmarketApi"],
+        )),
+        Box::new(RegexDetector::with_prefilter(
+            "webengage-api-key",
+            "Webengage API Key",
+            Severity::Medium,
+            r#"(?i)webengage[_\-]?(?:api[_\-]?)?key\s*[:=]\s*['"]?([A-Za-z0-9_\-]{20,})['"]?"#,
+            &["webengage_api", "WEBENGAGE_API", "webengageApi"],
+        )),
+
+        // ── Financial & Trading APIs (TruffleHog) ────────────────────────
+
+        Box::new(RegexDetector::with_prefilter(
+            "twelve-data-api-key",
+            "Twelve Data API Key",
+            Severity::Medium,
+            r#"(?i)twelve[_\-]?data[_\-]?(?:api[_\-]?)?key\s*[:=]\s*['"]?([A-Za-z0-9_\-]{20,})['"]?"#,
+            &["twelve_data_api", "TWELVE_DATA_API", "twelveDataApi"],
+        )),
+        Box::new(RegexDetector::with_prefilter(
+            "fixer-io-api-key",
+            "Fixer.io API Key",
+            Severity::Medium,
+            r#"(?i)fixer[_\-]?io[_\-]?(?:api[_\-]?)?key\s*[:=]\s*['"]?([A-Za-z0-9_\-]{20,})['"]?"#,
+            &["fixer_io_api", "FIXER_IO_API", "fixerIoApi"],
+        )),
+        Box::new(RegexDetector::with_prefilter(
+            "alpha-vantage-api-key",
+            "Alpha Vantage API Key",
+            Severity::Medium,
+            r#"(?i)alpha[_\-]?vantage[_\-]?(?:api[_\-]?)?key\s*[:=]\s*['"]?([A-Za-z0-9_\-]{20,})['"]?"#,
+            &["alpha_vantage_api", "ALPHA_VANTAGE_API", "alphaVantageApi"],
+        )),
+        Box::new(RegexDetector::with_prefilter(
+            "tradier-api-key",
+            "Tradier API Key",
+            Severity::High,
+            r#"(?i)tradier[_\-]?(?:api[_\-]?)?key\s*[:=]\s*['"]?([A-Za-z0-9_\-]{20,})['"]?"#,
+            &["tradier_api", "TRADIER_API", "tradierApi"],
+        )),
+        Box::new(RegexDetector::with_prefilter(
+            "finnhub-api-key",
+            "Finnhub API Key",
+            Severity::Medium,
+            r#"(?i)finnhub[_\-]?(?:api[_\-]?)?key\s*[:=]\s*['"]?([A-Za-z0-9_\-]{20,})['"]?"#,
+            &["finnhub_api", "FINNHUB_API", "finnhubApi"],
+        )),
+        Box::new(RegexDetector::with_prefilter(
+            "tiingo-api-key",
+            "Tiingo API Key",
+            Severity::Medium,
+            r#"(?i)tiingo[_\-]?(?:api[_\-]?)?key\s*[:=]\s*['"]?([A-Za-z0-9_\-]{20,})['"]?"#,
+            &["tiingo_api", "TIINGO_API", "tiingoApi"],
+        )),
+        Box::new(RegexDetector::with_prefilter(
+            "finage-api-key",
+            "Finage API Key",
+            Severity::Medium,
+            r#"(?i)finage[_\-]?(?:api[_\-]?)?key\s*[:=]\s*['"]?([A-Za-z0-9_\-]{20,})['"]?"#,
+            &["finage_api", "FINAGE_API", "finageApi"],
+        )),
+        Box::new(RegexDetector::with_prefilter(
+            "iex-cloud-api-key",
+            "IEX Cloud API Key",
+            Severity::Medium,
+            r#"(?i)iex[_\-]?cloud[_\-]?(?:api[_\-]?)?key\s*[:=]\s*['"]?([A-Za-z0-9_\-]{20,})['"]?"#,
+            &["iex_cloud_api", "IEX_CLOUD_API", "iexCloudApi"],
+        )),
+        Box::new(RegexDetector::with_prefilter(
+            "intrinio-api-key",
+            "Intrinio API Key",
+            Severity::Medium,
+            r#"(?i)intrinio[_\-]?(?:api[_\-]?)?key\s*[:=]\s*['"]?([A-Za-z0-9_\-]{20,})['"]?"#,
+            &["intrinio_api", "INTRINIO_API", "intrinioApi"],
+        )),
+        Box::new(RegexDetector::with_prefilter(
+            "financial-modeling-prep-api-key",
+            "Financial Modeling Prep API Key",
+            Severity::Medium,
+            r#"(?i)financial[_\-]?modeling[_\-]?prep[_\-]?(?:api[_\-]?)?key\s*[:=]\s*['"]?([A-Za-z0-9_\-]{20,})['"]?"#,
+            &["financial_modeling_prep", "FINANCIAL_MODELING_PREP", "financialModelingPrep"],
+        )),
+        Box::new(RegexDetector::with_prefilter(
+            "nasdaq-data-link-api-key",
+            "Nasdaq Data Link API Key",
+            Severity::High,
+            r#"(?i)nasdaq[_\-]?data[_\-]?link[_\-]?(?:api[_\-]?)?key\s*[:=]\s*['"]?([A-Za-z0-9_\-]{20,})['"]?"#,
+            &["nasdaq_data_link", "NASDAQ_DATA_LINK", "nasdaqDataLink"],
+        )),
+        Box::new(RegexDetector::with_prefilter(
+            "qubole-api-key",
+            "Qubole API Key",
+            Severity::Medium,
+            r#"(?i)qubole[_\-]?(?:api[_\-]?)?key\s*[:=]\s*['"]?([A-Za-z0-9_\-]{20,})['"]?"#,
+            &["qubole_api", "QUBOLE_API", "quboleApi"],
+        )),
+        Box::new(RegexDetector::with_prefilter(
+            "enigma-api-key",
+            "Enigma API Key",
+            Severity::Medium,
+            r#"(?i)enigma[_\-]?(?:api[_\-]?)?key\s*[:=]\s*['"]?([A-Za-z0-9_\-]{20,})['"]?"#,
+            &["enigma_api", "ENIGMA_API", "enigmaApi"],
+        )),
+        Box::new(RegexDetector::with_prefilter(
+            "datagov-api-key",
+            "Data.gov API Key",
+            Severity::Low,
+            r#"(?i)data[_\-]?gov[_\-]?(?:api[_\-]?)?key\s*[:=]\s*['"]?([A-Za-z0-9_\-]{20,})['"]?"#,
+            &["data_gov_api", "DATA_GOV_API", "dataGovApi"],
+        )),
+        Box::new(RegexDetector::with_prefilter(
+            "stockdata-api-key",
+            "Stockdata API Key",
+            Severity::Medium,
+            r#"(?i)stockdata[_\-]?(?:api[_\-]?)?key\s*[:=]\s*['"]?([A-Za-z0-9_\-]{20,})['"]?"#,
+            &["stockdata_api", "STOCKDATA_API", "stockdataApi"],
+        )),
+        Box::new(RegexDetector::with_prefilter(
+            "marketstack-api-key",
+            "Marketstack API Key",
+            Severity::Medium,
+            r#"(?i)marketstack[_\-]?(?:api[_\-]?)?key\s*[:=]\s*['"]?([A-Za-z0-9_\-]{20,})['"]?"#,
+            &["marketstack_api", "MARKETSTACK_API", "marketstackApi"],
+        )),
+        Box::new(RegexDetector::with_prefilter(
+            "commodities-api-key",
+            "Commodities API Key",
+            Severity::Medium,
+            r#"(?i)commodities[_\-]?(?:api[_\-]?)?key\s*[:=]\s*['"]?([A-Za-z0-9_\-]{20,})['"]?"#,
+            &["commodities_api", "COMMODITIES_API", "commoditiesApi"],
+        )),
+        Box::new(RegexDetector::with_prefilter(
+            "baremetrics-api-key",
+            "Baremetrics API Key",
+            Severity::Medium,
+            r#"(?i)baremetrics[_\-]?(?:api[_\-]?)?key\s*[:=]\s*['"]?([A-Za-z0-9_\-]{20,})['"]?"#,
+            &["baremetrics_api", "BAREMETRICS_API", "baremetricsApi"],
+        )),
+        Box::new(RegexDetector::with_prefilter(
+            "dwolla-api-key",
+            "Dwolla API Key",
+            Severity::High,
+            r#"(?i)dwolla[_\-]?(?:api[_\-]?)?key\s*[:=]\s*['"]?([A-Za-z0-9_\-]{20,})['"]?"#,
+            &["dwolla_api", "DWOLLA_API", "dwollaApi"],
+        )),
+        Box::new(RegexDetector::with_prefilter(
+            "wepay-api-key",
+            "WePay API Key",
+            Severity::High,
+            r#"(?i)wepay[_\-]?(?:api[_\-]?)?key\s*[:=]\s*['"]?([A-Za-z0-9_\-]{20,})['"]?"#,
+            &["wepay_api", "WEPAY_API", "wepayApi"],
+        )),
+        Box::new(RegexDetector::with_prefilter(
+            "checkout-com-api-key",
+            "Checkout.com API Key",
+            Severity::High,
+            r#"(?i)checkout[_\-]?com[_\-]?(?:api[_\-]?)?key\s*[:=]\s*['"]?([A-Za-z0-9_\-]{20,})['"]?"#,
+            &["checkout_com_api", "CHECKOUT_COM_API", "checkoutComApi"],
+        )),
+        Box::new(RegexDetector::with_prefilter(
+            "paymongo-api-key",
+            "Paymongo API Key",
+            Severity::High,
+            r#"(?i)paymongo[_\-]?(?:api[_\-]?)?key\s*[:=]\s*['"]?([A-Za-z0-9_\-]{20,})['"]?"#,
+            &["paymongo_api", "PAYMONGO_API", "paymongoApi"],
+        )),
+        Box::new(RegexDetector::with_prefilter(
+            "avalara-api-key",
+            "Avalara API Key",
+            Severity::High,
+            r#"(?i)avalara[_\-]?(?:api[_\-]?)?key\s*[:=]\s*['"]?([A-Za-z0-9_\-]{20,})['"]?"#,
+            &["avalara_api", "AVALARA_API", "avalaraApi"],
+        )),
+        Box::new(RegexDetector::with_prefilter(
+            "carbon-interface-api-key",
+            "Carbon Interface API Key",
+            Severity::Medium,
+            r#"(?i)carbon[_\-]?interface[_\-]?(?:api[_\-]?)?key\s*[:=]\s*['"]?([A-Za-z0-9_\-]{20,})['"]?"#,
+            &["carbon_interface_api", "CARBON_INTERFACE_API", "carbonInterfaceApi"],
+        )),
+        Box::new(RegexDetector::with_prefilter(
+            "currency-layer-api-key",
+            "Currency Layer API Key",
+            Severity::Medium,
+            r#"(?i)currency[_\-]?layer[_\-]?(?:api[_\-]?)?key\s*[:=]\s*['"]?([A-Za-z0-9_\-]{20,})['"]?"#,
+            &["currency_layer_api", "CURRENCY_LAYER_API", "currencyLayerApi"],
+        )),
+        Box::new(RegexDetector::with_prefilter(
+            "exchange-rates-api-key",
+            "Exchange Rates API Key",
+            Severity::Low,
+            r#"(?i)exchange[_\-]?rates[_\-]?(?:api[_\-]?)?key\s*[:=]\s*['"]?([A-Za-z0-9_\-]{20,})['"]?"#,
+            &["exchange_rates_api", "EXCHANGE_RATES_API", "exchangeRatesApi"],
+        )),
+        Box::new(RegexDetector::with_prefilter(
+            "currencyscoop-api-key",
+            "CurrencyScoop API Key",
+            Severity::Medium,
+            r#"(?i)currencyscoop[_\-]?(?:api[_\-]?)?key\s*[:=]\s*['"]?([A-Za-z0-9_\-]{20,})['"]?"#,
+            &["currencyscoop_api", "CURRENCYSCOOP_API", "currencyScoopApi"],
+        )),
+        Box::new(RegexDetector::with_prefilter(
+            "currencyfreaks-api-key",
+            "Currency Freaks API Key",
+            Severity::Medium,
+            r#"(?i)currencyfreaks[_\-]?(?:api[_\-]?)?key\s*[:=]\s*['"]?([A-Za-z0-9_\-]{20,})['"]?"#,
+            &["currencyfreaks_api", "CURRENCYFREAKS_API", "currencyFreaksApi"],
+        )),
+        Box::new(RegexDetector::with_prefilter(
+            "country-layer-api-key",
+            "Country Layer API Key",
+            Severity::Low,
+            r#"(?i)country[_\-]?layer[_\-]?(?:api[_\-]?)?key\s*[:=]\s*['"]?([A-Za-z0-9_\-]{20,})['"]?"#,
+            &["country_layer_api", "COUNTRY_LAYER_API", "countryLayerApi"],
+        )),
+        Box::new(RegexDetector::with_prefilter(
+            "fxmarket-api-key",
+            "FX Market API Key",
+            Severity::Medium,
+            r#"(?i)fx[_\-]?market[_\-]?(?:api[_\-]?)?key\s*[:=]\s*['"]?([A-Za-z0-9_\-]{20,})['"]?"#,
+            &["fx_market_api", "FX_MARKET_API", "fxMarketApi"],
+        )),
+        Box::new(RegexDetector::with_prefilter(
+            "currencycloud-api-key",
+            "Currency Cloud API Key",
+            Severity::High,
+            r#"(?i)currency[_\-]?cloud[_\-]?(?:api[_\-]?)?key\s*[:=]\s*['"]?([A-Za-z0-9_\-]{20,})['"]?"#,
+            &["currency_cloud_api", "CURRENCY_CLOUD_API", "currencyCloudApi"],
+        )),
+
+        // ── Crypto & Blockchain Additional (TruffleHog) ──────────────────
+
+        Box::new(RegexDetector::with_prefilter(
+            "kraken-api-key",
+            "Kraken API Key",
+            Severity::High,
+            r#"(?i)kraken[_\-]?(?:api[_\-]?)?key\s*[:=]\s*['"]?([A-Za-z0-9_\-/]{20,})['"]?"#,
+            &["kraken_api", "KRAKEN_API", "krakenApi"],
+        )),
+        Box::new(RegexDetector::with_prefilter(
+            "poloniex-api-key",
+            "Poloniex API Key",
+            Severity::High,
+            r#"(?i)poloniex[_\-]?(?:api[_\-]?)?key\s*[:=]\s*['"]?([A-Za-z0-9_\-]{20,})['"]?"#,
+            &["poloniex_api", "POLONIEX_API", "poloniexApi"],
+        )),
+        Box::new(RegexDetector::with_prefilter(
+            "bitmex-api-key",
+            "BitMEX API Key",
+            Severity::High,
+            r#"(?i)bitmex[_\-]?(?:api[_\-]?)?key\s*[:=]\s*['"]?([A-Za-z0-9_\-]{20,})['"]?"#,
+            &["bitmex_api", "BITMEX_API", "bitmexApi"],
+        )),
+        Box::new(RegexDetector::with_prefilter(
+            "coinapi-key",
+            "CoinAPI Key",
+            Severity::Medium,
+            r#"(?i)coinapi[_\-]?key\s*[:=]\s*['"]?([A-Za-z0-9_\-]{20,})['"]?"#,
+            &["coinapi_key", "COINAPI_KEY", "coinApiKey"],
+        )),
+        Box::new(RegexDetector::with_prefilter(
+            "coinlayer-api-key",
+            "Coinlayer API Key",
+            Severity::Medium,
+            r#"(?i)coinlayer[_\-]?(?:api[_\-]?)?key\s*[:=]\s*['"]?([A-Za-z0-9_\-]{20,})['"]?"#,
+            &["coinlayer_api", "COINLAYER_API", "coinlayerApi"],
+        )),
+        Box::new(RegexDetector::with_prefilter(
+            "coinlib-api-key",
+            "Coinlib API Key",
+            Severity::Low,
+            r#"(?i)coinlib[_\-]?(?:api[_\-]?)?key\s*[:=]\s*['"]?([A-Za-z0-9_\-]{20,})['"]?"#,
+            &["coinlib_api", "COINLIB_API", "coinlibApi"],
+        )),
+        Box::new(RegexDetector::with_prefilter(
+            "cryptocompare-api-key",
+            "CryptoCompare API Key",
+            Severity::Medium,
+            r#"(?i)cryptocompare[_\-]?(?:api[_\-]?)?key\s*[:=]\s*['"]?([A-Za-z0-9_\-]{20,})['"]?"#,
+            &["cryptocompare_api", "CRYPTOCOMPARE_API", "cryptoCompareApi"],
+        )),
+        Box::new(RegexDetector::with_prefilter(
+            "bitcoinaverage-api-key",
+            "Bitcoin Average API Key",
+            Severity::Medium,
+            r#"(?i)bitcoin[_\-]?average[_\-]?(?:api[_\-]?)?key\s*[:=]\s*['"]?([A-Za-z0-9_\-]{20,})['"]?"#,
+            &["bitcoin_average_api", "BITCOIN_AVERAGE_API", "bitcoinAverageApi"],
+        )),
+        Box::new(RegexDetector::with_prefilter(
+            "worldcoinindex-api-key",
+            "World Coin Index API Key",
+            Severity::Medium,
+            r#"(?i)world[_\-]?coin[_\-]?index[_\-]?(?:api[_\-]?)?key\s*[:=]\s*['"]?([A-Za-z0-9_\-]{20,})['"]?"#,
+            &["world_coin_index_api", "WORLD_COIN_INDEX_API", "worldCoinIndexApi"],
+        )),
+        Box::new(RegexDetector::with_prefilter(
+            "glassnode-api-key",
+            "Glassnode API Key",
+            Severity::High,
+            r#"(?i)glassnode[_\-]?(?:api[_\-]?)?key\s*[:=]\s*['"]?([A-Za-z0-9_\-]{20,})['"]?"#,
+            &["glassnode_api", "GLASSNODE_API", "glassnodeApi"],
+        )),
+        Box::new(RegexDetector::with_prefilter(
+            "tatum-api-key",
+            "Tatum.io API Key",
+            Severity::High,
+            r#"(?i)tatum[_\-]?(?:api[_\-]?)?key\s*[:=]\s*['"]?([A-Za-z0-9_\-]{20,})['"]?"#,
+            &["tatum_api", "TATUM_API", "tatumApi"],
+        )),
+        Box::new(RegexDetector::with_prefilter(
+            "ethplorer-api-key",
+            "Ethplorer API Key",
+            Severity::Medium,
+            r#"(?i)ethplorer[_\-]?(?:api[_\-]?)?key\s*[:=]\s*['"]?([A-Za-z0-9_\-]{20,})['"]?"#,
+            &["ethplorer_api", "ETHPLORER_API", "ethplorerApi"],
+        )),
+        Box::new(RegexDetector::with_prefilter(
+            "nftport-api-key",
+            "NFTPort API Key",
+            Severity::High,
+            r#"(?i)nftport[_\-]?(?:api[_\-]?)?key\s*[:=]\s*['"]?([A-Za-z0-9_\-]{20,})['"]?"#,
+            &["nftport_api", "NFTPORT_API", "nftportApi"],
+        )),
+        Box::new(RegexDetector::with_prefilter(
+            "messari-api-key",
+            "Messari API Key",
+            Severity::Medium,
+            r#"(?i)messari[_\-]?(?:api[_\-]?)?key\s*[:=]\s*['"]?([A-Za-z0-9_\-]{20,})['"]?"#,
+            &["messari_api", "MESSARI_API", "messariApi"],
+        )),
+        Box::new(RegexDetector::with_prefilter(
+            "coingecko-api-key",
+            "CoinGecko API Key",
+            Severity::Medium,
+            r#"(?i)coingecko[_\-]?(?:api[_\-]?)?key\s*[:=]\s*['"]?([A-Za-z0-9_\-]{20,})['"]?"#,
+            &["coingecko_api", "COINGECKO_API", "coingeckoApi"],
+        )),
+
+        // ── Weather & Environment APIs (TruffleHog) ──────────────────────
+
+        Box::new(RegexDetector::with_prefilter(
+            "openweather-api-key",
+            "OpenWeather API Key",
+            Severity::Medium,
+            r#"(?i)openweather[_\-]?(?:api[_\-]?)?key\s*[:=]\s*['"]?([A-Za-z0-9_\-]{20,})['"]?"#,
+            &["openweather_api", "OPENWEATHER_API", "openweatherApi"],
+        )),
+        Box::new(RegexDetector::with_prefilter(
+            "weatherstack-api-key",
+            "WeatherStack API Key",
+            Severity::Medium,
+            r#"(?i)weatherstack[_\-]?(?:api[_\-]?)?key\s*[:=]\s*['"]?([A-Za-z0-9_\-]{20,})['"]?"#,
+            &["weatherstack_api", "WEATHERSTACK_API", "weatherstackApi"],
+        )),
+        Box::new(RegexDetector::with_prefilter(
+            "accuweather-api-key",
+            "AccuWeather API Key",
+            Severity::Medium,
+            r#"(?i)accuweather[_\-]?(?:api[_\-]?)?key\s*[:=]\s*['"]?([A-Za-z0-9_\-]{20,})['"]?"#,
+            &["accuweather_api", "ACCUWEATHER_API", "accuweatherApi"],
+        )),
+        Box::new(RegexDetector::with_prefilter(
+            "worldweather-api-key",
+            "World Weather API Key",
+            Severity::Medium,
+            r#"(?i)world[_\-]?weather[_\-]?(?:api[_\-]?)?key\s*[:=]\s*['"]?([A-Za-z0-9_\-]{20,})['"]?"#,
+            &["world_weather_api", "WORLD_WEATHER_API", "worldWeatherApi"],
+        )),
+        Box::new(RegexDetector::with_prefilter(
+            "tomorrow-io-api-key",
+            "Tomorrow.io API Key",
+            Severity::Medium,
+            r#"(?i)tomorrow[_\-]?io[_\-]?(?:api[_\-]?)?key\s*[:=]\s*['"]?([A-Za-z0-9_\-]{20,})['"]?"#,
+            &["tomorrow_io_api", "TOMORROW_IO_API", "tomorrowIoApi"],
+        )),
+        Box::new(RegexDetector::with_prefilter(
+            "airvisual-api-key",
+            "AirVisual API Key",
+            Severity::Medium,
+            r#"(?i)airvisual[_\-]?(?:api[_\-]?)?key\s*[:=]\s*['"]?([A-Za-z0-9_\-]{20,})['"]?"#,
+            &["airvisual_api", "AIRVISUAL_API", "airvisualApi"],
+        )),
+        Box::new(RegexDetector::with_prefilter(
+            "visualcrossing-api-key",
+            "Visual Crossing API Key",
+            Severity::Medium,
+            r#"(?i)visual[_\-]?crossing[_\-]?(?:api[_\-]?)?key\s*[:=]\s*['"]?([A-Za-z0-9_\-]{20,})['"]?"#,
+            &["visual_crossing_api", "VISUAL_CROSSING_API", "visualCrossingApi"],
+        )),
+        Box::new(RegexDetector::with_prefilter(
+            "stormglass-api-key",
+            "Stormglass API Key",
+            Severity::Medium,
+            r#"(?i)stormglass[_\-]?(?:api[_\-]?)?key\s*[:=]\s*['"]?([A-Za-z0-9_\-]{20,})['"]?"#,
+            &["stormglass_api", "STORMGLASS_API", "stormglassApi"],
+        )),
+        Box::new(RegexDetector::with_prefilter(
+            "aeris-weather-api-key",
+            "Aeris Weather API Key",
+            Severity::Medium,
+            r#"(?i)aeris[_\-]?weather[_\-]?(?:api[_\-]?)?key\s*[:=]\s*['"]?([A-Za-z0-9_\-]{20,})['"]?"#,
+            &["aeris_weather_api", "AERIS_WEATHER_API", "aerisWeatherApi"],
+        )),
+        Box::new(RegexDetector::with_prefilter(
+            "ambee-api-key",
+            "Ambee API Key",
+            Severity::Medium,
+            r#"(?i)ambee[_\-]?(?:api[_\-]?)?key\s*[:=]\s*['"]?([A-Za-z0-9_\-]{20,})['"]?"#,
+            &["ambee_api", "AMBEE_API", "ambeeApi"],
+        )),
+        Box::new(RegexDetector::with_prefilter(
+            "openuv-api-key",
+            "OpenUV API Key",
+            Severity::Medium,
+            r#"(?i)openuv[_\-]?(?:api[_\-]?)?key\s*[:=]\s*['"]?([A-Za-z0-9_\-]{20,})['"]?"#,
+            &["openuv_api", "OPENUV_API", "openuvApi"],
+        )),
+
         Box::new(EntropyDetector::default()),
     ]
 }
@@ -6117,6 +6804,976 @@ mod tests {
         let d = detectors.iter().find(|d| d.id() == "powrbot-api-key").unwrap();
         let key = "a".repeat(25);
         let line = format!("powrbot_api_key = {}", key);
+        let matches = d.scan_line(&line);
+        assert_eq!(matches.len(), 1);
+    }
+
+    // ── Project Management & Productivity (TruffleHog) ─────────────────
+
+    #[test]
+    fn test_clickup_personal_token_detected() {
+        let detectors = builtin_detectors();
+        let d = detectors.iter().find(|d| d.id() == "clickup-personal-token").unwrap();
+        let token = "a".repeat(25);
+        let line = format!("clickup_token = {}", token);
+        let matches = d.scan_line(&line);
+        assert_eq!(matches.len(), 1);
+    }
+
+    #[test]
+    fn test_todoist_api_token_detected() {
+        let detectors = builtin_detectors();
+        let d = detectors.iter().find(|d| d.id() == "todoist-api-token").unwrap();
+        let token = "a".repeat(25);
+        let line = format!("todoist_token = {}", token);
+        let matches = d.scan_line(&line);
+        assert_eq!(matches.len(), 1);
+    }
+
+    #[test]
+    fn test_shortcut_api_key_detected() {
+        let detectors = builtin_detectors();
+        let d = detectors.iter().find(|d| d.id() == "shortcut-api-key").unwrap();
+        let key = "a".repeat(25);
+        let line = format!("shortcut_api_key = {}", key);
+        let matches = d.scan_line(&line);
+        assert_eq!(matches.len(), 1);
+    }
+
+    #[test]
+    fn test_tmetric_api_key_detected() {
+        let detectors = builtin_detectors();
+        let d = detectors.iter().find(|d| d.id() == "tmetric-api-key").unwrap();
+        let key = "a".repeat(25);
+        let line = format!("tmetric_api_key = {}", key);
+        let matches = d.scan_line(&line);
+        assert_eq!(matches.len(), 1);
+    }
+
+    #[test]
+    fn test_clockify_api_key_detected() {
+        let detectors = builtin_detectors();
+        let d = detectors.iter().find(|d| d.id() == "clockify-api-key").unwrap();
+        let key = "a".repeat(25);
+        let line = format!("clockify_api_key = {}", key);
+        let matches = d.scan_line(&line);
+        assert_eq!(matches.len(), 1);
+    }
+
+    #[test]
+    fn test_everhour_api_key_detected() {
+        let detectors = builtin_detectors();
+        let d = detectors.iter().find(|d| d.id() == "everhour-api-key").unwrap();
+        let key = "a".repeat(25);
+        let line = format!("everhour_api_key = {}", key);
+        let matches = d.scan_line(&line);
+        assert_eq!(matches.len(), 1);
+    }
+
+    #[test]
+    fn test_harvest_api_key_detected() {
+        let detectors = builtin_detectors();
+        let d = detectors.iter().find(|d| d.id() == "harvest-api-key").unwrap();
+        let key = "a".repeat(25);
+        let line = format!("harvest_api_key = {}", key);
+        let matches = d.scan_line(&line);
+        assert_eq!(matches.len(), 1);
+    }
+
+    #[test]
+    fn test_humanity_api_key_detected() {
+        let detectors = builtin_detectors();
+        let d = detectors.iter().find(|d| d.id() == "humanity-api-key").unwrap();
+        let key = "a".repeat(25);
+        let line = format!("humanity_api_key = {}", key);
+        let matches = d.scan_line(&line);
+        assert_eq!(matches.len(), 1);
+    }
+
+    #[test]
+    fn test_toggl_track_api_key_detected() {
+        let detectors = builtin_detectors();
+        let d = detectors.iter().find(|d| d.id() == "toggl-track-api-key").unwrap();
+        let key = "a".repeat(25);
+        let line = format!("toggl_track_api_key = {}", key);
+        let matches = d.scan_line(&line);
+        assert_eq!(matches.len(), 1);
+    }
+
+    #[test]
+    fn test_runrunit_api_key_detected() {
+        let detectors = builtin_detectors();
+        let d = detectors.iter().find(|d| d.id() == "runrunit-api-key").unwrap();
+        let key = "a".repeat(25);
+        let line = format!("runrunit_api_key = {}", key);
+        let matches = d.scan_line(&line);
+        assert_eq!(matches.len(), 1);
+    }
+
+    #[test]
+    fn test_workstack_api_key_detected() {
+        let detectors = builtin_detectors();
+        let d = detectors.iter().find(|d| d.id() == "workstack-api-key").unwrap();
+        let key = "a".repeat(25);
+        let line = format!("workstack_api_key = {}", key);
+        let matches = d.scan_line(&line);
+        assert_eq!(matches.len(), 1);
+    }
+
+    #[test]
+    fn test_easyinsight_api_key_detected() {
+        let detectors = builtin_detectors();
+        let d = detectors.iter().find(|d| d.id() == "easyinsight-api-key").unwrap();
+        let key = "a".repeat(25);
+        let line = format!("easyinsight_api_key = {}", key);
+        let matches = d.scan_line(&line);
+        assert_eq!(matches.len(), 1);
+    }
+
+    #[test]
+    fn test_dovico_api_key_detected() {
+        let detectors = builtin_detectors();
+        let d = detectors.iter().find(|d| d.id() == "dovico-api-key").unwrap();
+        let key = "a".repeat(25);
+        let line = format!("dovico_api_key = {}", key);
+        let matches = d.scan_line(&line);
+        assert_eq!(matches.len(), 1);
+    }
+
+    #[test]
+    fn test_mavenlink_api_key_detected() {
+        let detectors = builtin_detectors();
+        let d = detectors.iter().find(|d| d.id() == "mavenlink-api-key").unwrap();
+        let key = "a".repeat(25);
+        let line = format!("mavenlink_api_key = {}", key);
+        let matches = d.scan_line(&line);
+        assert_eq!(matches.len(), 1);
+    }
+
+    #[test]
+    fn test_float_api_key_detected() {
+        let detectors = builtin_detectors();
+        let d = detectors.iter().find(|d| d.id() == "float-api-key").unwrap();
+        let key = "a".repeat(25);
+        let line = format!("float_api_key = {}", key);
+        let matches = d.scan_line(&line);
+        assert_eq!(matches.len(), 1);
+    }
+
+    #[test]
+    fn test_daily_co_api_key_detected() {
+        let detectors = builtin_detectors();
+        let d = detectors.iter().find(|d| d.id() == "daily-co-api-key").unwrap();
+        let key = "a".repeat(25);
+        let line = format!("daily_co_api_key = {}", key);
+        let matches = d.scan_line(&line);
+        assert_eq!(matches.len(), 1);
+    }
+
+    #[test]
+    fn test_tly_api_key_detected() {
+        let detectors = builtin_detectors();
+        let d = detectors.iter().find(|d| d.id() == "tly-api-key").unwrap();
+        let key = "a".repeat(25);
+        let line = format!("t.ly_api_key = {}", key);
+        let matches = d.scan_line(&line);
+        assert_eq!(matches.len(), 1);
+    }
+
+    #[test]
+    fn test_rebrandly_api_key_detected() {
+        let detectors = builtin_detectors();
+        let d = detectors.iter().find(|d| d.id() == "rebrandly-api-key").unwrap();
+        let key = "a".repeat(25);
+        let line = format!("rebrandly_api_key = {}", key);
+        let matches = d.scan_line(&line);
+        assert_eq!(matches.len(), 1);
+    }
+
+    #[test]
+    fn test_timezone_api_key_detected() {
+        let detectors = builtin_detectors();
+        let d = detectors.iter().find(|d| d.id() == "timezone-api-key").unwrap();
+        let key = "a".repeat(25);
+        let line = format!("timezone_api_key = {}", key);
+        let matches = d.scan_line(&line);
+        assert_eq!(matches.len(), 1);
+    }
+
+    #[test]
+    fn test_jotform_api_key_detected() {
+        let detectors = builtin_detectors();
+        let d = detectors.iter().find(|d| d.id() == "jotform-api-key").unwrap();
+        let key = "a".repeat(25);
+        let line = format!("jotform_api_key = {}", key);
+        let matches = d.scan_line(&line);
+        assert_eq!(matches.len(), 1);
+    }
+
+    // ── Forms & Survey Platforms (TruffleHog) ──────────────────────────
+
+    #[test]
+    fn test_typeform_api_key_detected() {
+        let detectors = builtin_detectors();
+        let d = detectors.iter().find(|d| d.id() == "typeform-api-key").unwrap();
+        let key = "a".repeat(25);
+        let line = format!("typeform_api_key = {}", key);
+        let matches = d.scan_line(&line);
+        assert_eq!(matches.len(), 1);
+    }
+
+    #[test]
+    fn test_surveysparrow_api_key_detected() {
+        let detectors = builtin_detectors();
+        let d = detectors.iter().find(|d| d.id() == "surveysparrow-api-key").unwrap();
+        let key = "a".repeat(25);
+        let line = format!("surveysparrow_api_key = {}", key);
+        let matches = d.scan_line(&line);
+        assert_eq!(matches.len(), 1);
+    }
+
+    #[test]
+    fn test_survicate_api_key_detected() {
+        let detectors = builtin_detectors();
+        let d = detectors.iter().find(|d| d.id() == "survicate-api-key").unwrap();
+        let key = "a".repeat(25);
+        let line = format!("survicate_api_key = {}", key);
+        let matches = d.scan_line(&line);
+        assert_eq!(matches.len(), 1);
+    }
+
+    #[test]
+    fn test_delighted_api_key_detected() {
+        let detectors = builtin_detectors();
+        let d = detectors.iter().find(|d| d.id() == "delighted-api-key").unwrap();
+        let key = "a".repeat(25);
+        let line = format!("delighted_api_key = {}", key);
+        let matches = d.scan_line(&line);
+        assert_eq!(matches.len(), 1);
+    }
+
+    #[test]
+    fn test_feedier_api_key_detected() {
+        let detectors = builtin_detectors();
+        let d = detectors.iter().find(|d| d.id() == "feedier-api-key").unwrap();
+        let key = "a".repeat(25);
+        let line = format!("feedier_api_key = {}", key);
+        let matches = d.scan_line(&line);
+        assert_eq!(matches.len(), 1);
+    }
+
+    #[test]
+    fn test_zonka_feedback_api_key_detected() {
+        let detectors = builtin_detectors();
+        let d = detectors.iter().find(|d| d.id() == "zonka-feedback-api-key").unwrap();
+        let key = "a".repeat(25);
+        let line = format!("zonka_feedback_api_key = {}", key);
+        let matches = d.scan_line(&line);
+        assert_eq!(matches.len(), 1);
+    }
+
+    #[test]
+    fn test_satismeter_project_key_detected() {
+        let detectors = builtin_detectors();
+        let d = detectors.iter().find(|d| d.id() == "satismeter-project-key").unwrap();
+        let key = "a".repeat(25);
+        let line = format!("satismeter_project_key = {}", key);
+        let matches = d.scan_line(&line);
+        assert_eq!(matches.len(), 1);
+    }
+
+    #[test]
+    fn test_satismeter_write_key_detected() {
+        let detectors = builtin_detectors();
+        let d = detectors.iter().find(|d| d.id() == "satismeter-write-key").unwrap();
+        let key = "a".repeat(25);
+        let line = format!("satismeter_write_key = {}", key);
+        let matches = d.scan_line(&line);
+        assert_eq!(matches.len(), 1);
+    }
+
+    #[test]
+    fn test_simplesat_api_key_detected() {
+        let detectors = builtin_detectors();
+        let d = detectors.iter().find(|d| d.id() == "simplesat-api-key").unwrap();
+        let key = "a".repeat(25);
+        let line = format!("simplesat_api_key = {}", key);
+        let matches = d.scan_line(&line);
+        assert_eq!(matches.len(), 1);
+    }
+
+    #[test]
+    fn test_surveyanyplace_api_key_detected() {
+        let detectors = builtin_detectors();
+        let d = detectors.iter().find(|d| d.id() == "surveyanyplace-api-key").unwrap();
+        let key = "a".repeat(25);
+        let line = format!("surveyanyplace_api_key = {}", key);
+        let matches = d.scan_line(&line);
+        assert_eq!(matches.len(), 1);
+    }
+
+    #[test]
+    fn test_surveybot_api_key_detected() {
+        let detectors = builtin_detectors();
+        let d = detectors.iter().find(|d| d.id() == "surveybot-api-key").unwrap();
+        let key = "a".repeat(25);
+        let line = format!("surveybot_api_key = {}", key);
+        let matches = d.scan_line(&line);
+        assert_eq!(matches.len(), 1);
+    }
+
+    #[test]
+    fn test_qualaroo_api_key_detected() {
+        let detectors = builtin_detectors();
+        let d = detectors.iter().find(|d| d.id() == "qualaroo-api-key").unwrap();
+        let key = "a".repeat(25);
+        let line = format!("qualaroo_api_key = {}", key);
+        let matches = d.scan_line(&line);
+        assert_eq!(matches.len(), 1);
+    }
+
+    #[test]
+    fn test_customerguru_api_key_detected() {
+        let detectors = builtin_detectors();
+        let d = detectors.iter().find(|d| d.id() == "customerguru-api-key").unwrap();
+        let key = "a".repeat(25);
+        let line = format!("customerguru_api_key = {}", key);
+        let matches = d.scan_line(&line);
+        assert_eq!(matches.len(), 1);
+    }
+
+    #[test]
+    fn test_abyssale_api_key_detected() {
+        let detectors = builtin_detectors();
+        let d = detectors.iter().find(|d| d.id() == "abyssale-api-key").unwrap();
+        let key = "a".repeat(25);
+        let line = format!("abyssale_api_key = {}", key);
+        let matches = d.scan_line(&line);
+        assert_eq!(matches.len(), 1);
+    }
+
+    #[test]
+    fn test_magnetic_api_key_detected() {
+        let detectors = builtin_detectors();
+        let d = detectors.iter().find(|d| d.id() == "magnetic-api-key").unwrap();
+        let key = "a".repeat(25);
+        let line = format!("magnetic_api_key = {}", key);
+        let matches = d.scan_line(&line);
+        assert_eq!(matches.len(), 1);
+    }
+
+    #[test]
+    fn test_refiner_api_key_detected() {
+        let detectors = builtin_detectors();
+        let d = detectors.iter().find(|d| d.id() == "refiner-api-key").unwrap();
+        let key = "a".repeat(25);
+        let line = format!("refiner_api_key = {}", key);
+        let matches = d.scan_line(&line);
+        assert_eq!(matches.len(), 1);
+    }
+
+    #[test]
+    fn test_simvoly_api_key_detected() {
+        let detectors = builtin_detectors();
+        let d = detectors.iter().find(|d| d.id() == "simvoly-api-key").unwrap();
+        let key = "a".repeat(25);
+        let line = format!("simvoly_api_key = {}", key);
+        let matches = d.scan_line(&line);
+        assert_eq!(matches.len(), 1);
+    }
+
+    #[test]
+    fn test_checkmarket_api_key_detected() {
+        let detectors = builtin_detectors();
+        let d = detectors.iter().find(|d| d.id() == "checkmarket-api-key").unwrap();
+        let key = "a".repeat(25);
+        let line = format!("checkmarket_api_key = {}", key);
+        let matches = d.scan_line(&line);
+        assert_eq!(matches.len(), 1);
+    }
+
+    #[test]
+    fn test_webengage_api_key_detected() {
+        let detectors = builtin_detectors();
+        let d = detectors.iter().find(|d| d.id() == "webengage-api-key").unwrap();
+        let key = "a".repeat(25);
+        let line = format!("webengage_api_key = {}", key);
+        let matches = d.scan_line(&line);
+        assert_eq!(matches.len(), 1);
+    }
+
+    // ── Financial & Trading APIs (TruffleHog) ──────────────────────────
+
+    #[test]
+    fn test_twelve_data_api_key_detected() {
+        let detectors = builtin_detectors();
+        let d = detectors.iter().find(|d| d.id() == "twelve-data-api-key").unwrap();
+        let key = "a".repeat(25);
+        let line = format!("twelve_data_api_key = {}", key);
+        let matches = d.scan_line(&line);
+        assert_eq!(matches.len(), 1);
+    }
+
+    #[test]
+    fn test_fixer_io_api_key_detected() {
+        let detectors = builtin_detectors();
+        let d = detectors.iter().find(|d| d.id() == "fixer-io-api-key").unwrap();
+        let key = "a".repeat(25);
+        let line = format!("fixer_io_api_key = {}", key);
+        let matches = d.scan_line(&line);
+        assert_eq!(matches.len(), 1);
+    }
+
+    #[test]
+    fn test_alpha_vantage_api_key_detected() {
+        let detectors = builtin_detectors();
+        let d = detectors.iter().find(|d| d.id() == "alpha-vantage-api-key").unwrap();
+        let key = "a".repeat(25);
+        let line = format!("alpha_vantage_api_key = {}", key);
+        let matches = d.scan_line(&line);
+        assert_eq!(matches.len(), 1);
+    }
+
+    #[test]
+    fn test_tradier_api_key_detected() {
+        let detectors = builtin_detectors();
+        let d = detectors.iter().find(|d| d.id() == "tradier-api-key").unwrap();
+        let key = "a".repeat(25);
+        let line = format!("tradier_api_key = {}", key);
+        let matches = d.scan_line(&line);
+        assert_eq!(matches.len(), 1);
+    }
+
+    #[test]
+    fn test_finnhub_api_key_detected() {
+        let detectors = builtin_detectors();
+        let d = detectors.iter().find(|d| d.id() == "finnhub-api-key").unwrap();
+        let key = "a".repeat(25);
+        let line = format!("finnhub_api_key = {}", key);
+        let matches = d.scan_line(&line);
+        assert_eq!(matches.len(), 1);
+    }
+
+    #[test]
+    fn test_tiingo_api_key_detected() {
+        let detectors = builtin_detectors();
+        let d = detectors.iter().find(|d| d.id() == "tiingo-api-key").unwrap();
+        let key = "a".repeat(25);
+        let line = format!("tiingo_api_key = {}", key);
+        let matches = d.scan_line(&line);
+        assert_eq!(matches.len(), 1);
+    }
+
+    #[test]
+    fn test_finage_api_key_detected() {
+        let detectors = builtin_detectors();
+        let d = detectors.iter().find(|d| d.id() == "finage-api-key").unwrap();
+        let key = "a".repeat(25);
+        let line = format!("finage_api_key = {}", key);
+        let matches = d.scan_line(&line);
+        assert_eq!(matches.len(), 1);
+    }
+
+    #[test]
+    fn test_iex_cloud_api_key_detected() {
+        let detectors = builtin_detectors();
+        let d = detectors.iter().find(|d| d.id() == "iex-cloud-api-key").unwrap();
+        let key = "a".repeat(25);
+        let line = format!("iex_cloud_api_key = {}", key);
+        let matches = d.scan_line(&line);
+        assert_eq!(matches.len(), 1);
+    }
+
+    #[test]
+    fn test_intrinio_api_key_detected() {
+        let detectors = builtin_detectors();
+        let d = detectors.iter().find(|d| d.id() == "intrinio-api-key").unwrap();
+        let key = "a".repeat(25);
+        let line = format!("intrinio_api_key = {}", key);
+        let matches = d.scan_line(&line);
+        assert_eq!(matches.len(), 1);
+    }
+
+    #[test]
+    fn test_financial_modeling_prep_api_key_detected() {
+        let detectors = builtin_detectors();
+        let d = detectors.iter().find(|d| d.id() == "financial-modeling-prep-api-key").unwrap();
+        let key = "a".repeat(25);
+        let line = format!("financial_modeling_prep_api_key = {}", key);
+        let matches = d.scan_line(&line);
+        assert_eq!(matches.len(), 1);
+    }
+
+    #[test]
+    fn test_nasdaq_data_link_api_key_detected() {
+        let detectors = builtin_detectors();
+        let d = detectors.iter().find(|d| d.id() == "nasdaq-data-link-api-key").unwrap();
+        let key = "a".repeat(25);
+        let line = format!("nasdaq_data_link_api_key = {}", key);
+        let matches = d.scan_line(&line);
+        assert_eq!(matches.len(), 1);
+    }
+
+    #[test]
+    fn test_qubole_api_key_detected() {
+        let detectors = builtin_detectors();
+        let d = detectors.iter().find(|d| d.id() == "qubole-api-key").unwrap();
+        let key = "a".repeat(25);
+        let line = format!("qubole_api_key = {}", key);
+        let matches = d.scan_line(&line);
+        assert_eq!(matches.len(), 1);
+    }
+
+    #[test]
+    fn test_enigma_api_key_detected() {
+        let detectors = builtin_detectors();
+        let d = detectors.iter().find(|d| d.id() == "enigma-api-key").unwrap();
+        let key = "a".repeat(25);
+        let line = format!("enigma_api_key = {}", key);
+        let matches = d.scan_line(&line);
+        assert_eq!(matches.len(), 1);
+    }
+
+    #[test]
+    fn test_datagov_api_key_detected() {
+        let detectors = builtin_detectors();
+        let d = detectors.iter().find(|d| d.id() == "datagov-api-key").unwrap();
+        let key = "a".repeat(25);
+        let line = format!("data_gov_api_key = {}", key);
+        let matches = d.scan_line(&line);
+        assert_eq!(matches.len(), 1);
+    }
+
+    #[test]
+    fn test_stockdata_api_key_detected() {
+        let detectors = builtin_detectors();
+        let d = detectors.iter().find(|d| d.id() == "stockdata-api-key").unwrap();
+        let key = "a".repeat(25);
+        let line = format!("stockdata_api_key = {}", key);
+        let matches = d.scan_line(&line);
+        assert_eq!(matches.len(), 1);
+    }
+
+    #[test]
+    fn test_marketstack_api_key_detected() {
+        let detectors = builtin_detectors();
+        let d = detectors.iter().find(|d| d.id() == "marketstack-api-key").unwrap();
+        let key = "a".repeat(25);
+        let line = format!("marketstack_api_key = {}", key);
+        let matches = d.scan_line(&line);
+        assert_eq!(matches.len(), 1);
+    }
+
+    #[test]
+    fn test_commodities_api_key_detected() {
+        let detectors = builtin_detectors();
+        let d = detectors.iter().find(|d| d.id() == "commodities-api-key").unwrap();
+        let key = "a".repeat(25);
+        let line = format!("commodities_api_key = {}", key);
+        let matches = d.scan_line(&line);
+        assert_eq!(matches.len(), 1);
+    }
+
+    #[test]
+    fn test_baremetrics_api_key_detected() {
+        let detectors = builtin_detectors();
+        let d = detectors.iter().find(|d| d.id() == "baremetrics-api-key").unwrap();
+        let key = "a".repeat(25);
+        let line = format!("baremetrics_api_key = {}", key);
+        let matches = d.scan_line(&line);
+        assert_eq!(matches.len(), 1);
+    }
+
+    #[test]
+    fn test_dwolla_api_key_detected() {
+        let detectors = builtin_detectors();
+        let d = detectors.iter().find(|d| d.id() == "dwolla-api-key").unwrap();
+        let key = "a".repeat(25);
+        let line = format!("dwolla_api_key = {}", key);
+        let matches = d.scan_line(&line);
+        assert_eq!(matches.len(), 1);
+    }
+
+    #[test]
+    fn test_wepay_api_key_detected() {
+        let detectors = builtin_detectors();
+        let d = detectors.iter().find(|d| d.id() == "wepay-api-key").unwrap();
+        let key = "a".repeat(25);
+        let line = format!("wepay_api_key = {}", key);
+        let matches = d.scan_line(&line);
+        assert_eq!(matches.len(), 1);
+    }
+
+    #[test]
+    fn test_checkout_com_api_key_detected() {
+        let detectors = builtin_detectors();
+        let d = detectors.iter().find(|d| d.id() == "checkout-com-api-key").unwrap();
+        let key = "a".repeat(25);
+        let line = format!("checkout_com_api_key = {}", key);
+        let matches = d.scan_line(&line);
+        assert_eq!(matches.len(), 1);
+    }
+
+    #[test]
+    fn test_paymongo_api_key_detected() {
+        let detectors = builtin_detectors();
+        let d = detectors.iter().find(|d| d.id() == "paymongo-api-key").unwrap();
+        let key = "a".repeat(25);
+        let line = format!("paymongo_api_key = {}", key);
+        let matches = d.scan_line(&line);
+        assert_eq!(matches.len(), 1);
+    }
+
+    #[test]
+    fn test_avalara_api_key_detected() {
+        let detectors = builtin_detectors();
+        let d = detectors.iter().find(|d| d.id() == "avalara-api-key").unwrap();
+        let key = "a".repeat(25);
+        let line = format!("avalara_api_key = {}", key);
+        let matches = d.scan_line(&line);
+        assert_eq!(matches.len(), 1);
+    }
+
+    #[test]
+    fn test_carbon_interface_api_key_detected() {
+        let detectors = builtin_detectors();
+        let d = detectors.iter().find(|d| d.id() == "carbon-interface-api-key").unwrap();
+        let key = "a".repeat(25);
+        let line = format!("carbon_interface_api_key = {}", key);
+        let matches = d.scan_line(&line);
+        assert_eq!(matches.len(), 1);
+    }
+
+    #[test]
+    fn test_currency_layer_api_key_detected() {
+        let detectors = builtin_detectors();
+        let d = detectors.iter().find(|d| d.id() == "currency-layer-api-key").unwrap();
+        let key = "a".repeat(25);
+        let line = format!("currency_layer_api_key = {}", key);
+        let matches = d.scan_line(&line);
+        assert_eq!(matches.len(), 1);
+    }
+
+    #[test]
+    fn test_exchange_rates_api_key_detected() {
+        let detectors = builtin_detectors();
+        let d = detectors.iter().find(|d| d.id() == "exchange-rates-api-key").unwrap();
+        let key = "a".repeat(25);
+        let line = format!("exchange_rates_api_key = {}", key);
+        let matches = d.scan_line(&line);
+        assert_eq!(matches.len(), 1);
+    }
+
+    #[test]
+    fn test_currencyscoop_api_key_detected() {
+        let detectors = builtin_detectors();
+        let d = detectors.iter().find(|d| d.id() == "currencyscoop-api-key").unwrap();
+        let key = "a".repeat(25);
+        let line = format!("currencyscoop_api_key = {}", key);
+        let matches = d.scan_line(&line);
+        assert_eq!(matches.len(), 1);
+    }
+
+    #[test]
+    fn test_currencyfreaks_api_key_detected() {
+        let detectors = builtin_detectors();
+        let d = detectors.iter().find(|d| d.id() == "currencyfreaks-api-key").unwrap();
+        let key = "a".repeat(25);
+        let line = format!("currencyfreaks_api_key = {}", key);
+        let matches = d.scan_line(&line);
+        assert_eq!(matches.len(), 1);
+    }
+
+    #[test]
+    fn test_country_layer_api_key_detected() {
+        let detectors = builtin_detectors();
+        let d = detectors.iter().find(|d| d.id() == "country-layer-api-key").unwrap();
+        let key = "a".repeat(25);
+        let line = format!("country_layer_api_key = {}", key);
+        let matches = d.scan_line(&line);
+        assert_eq!(matches.len(), 1);
+    }
+
+    #[test]
+    fn test_fxmarket_api_key_detected() {
+        let detectors = builtin_detectors();
+        let d = detectors.iter().find(|d| d.id() == "fxmarket-api-key").unwrap();
+        let key = "a".repeat(25);
+        let line = format!("fx_market_api_key = {}", key);
+        let matches = d.scan_line(&line);
+        assert_eq!(matches.len(), 1);
+    }
+
+    #[test]
+    fn test_currencycloud_api_key_detected() {
+        let detectors = builtin_detectors();
+        let d = detectors.iter().find(|d| d.id() == "currencycloud-api-key").unwrap();
+        let key = "a".repeat(25);
+        let line = format!("currency_cloud_api_key = {}", key);
+        let matches = d.scan_line(&line);
+        assert_eq!(matches.len(), 1);
+    }
+
+    // ── Crypto & Blockchain Additional (TruffleHog) ────────────────────
+
+    #[test]
+    fn test_kraken_api_key_detected() {
+        let detectors = builtin_detectors();
+        let d = detectors.iter().find(|d| d.id() == "kraken-api-key").unwrap();
+        let key = "a".repeat(25);
+        let line = format!("kraken_api_key = {}", key);
+        let matches = d.scan_line(&line);
+        assert_eq!(matches.len(), 1);
+    }
+
+    #[test]
+    fn test_poloniex_api_key_detected() {
+        let detectors = builtin_detectors();
+        let d = detectors.iter().find(|d| d.id() == "poloniex-api-key").unwrap();
+        let key = "a".repeat(25);
+        let line = format!("poloniex_api_key = {}", key);
+        let matches = d.scan_line(&line);
+        assert_eq!(matches.len(), 1);
+    }
+
+    #[test]
+    fn test_bitmex_api_key_detected() {
+        let detectors = builtin_detectors();
+        let d = detectors.iter().find(|d| d.id() == "bitmex-api-key").unwrap();
+        let key = "a".repeat(25);
+        let line = format!("bitmex_api_key = {}", key);
+        let matches = d.scan_line(&line);
+        assert_eq!(matches.len(), 1);
+    }
+
+    #[test]
+    fn test_coinapi_key_detected() {
+        let detectors = builtin_detectors();
+        let d = detectors.iter().find(|d| d.id() == "coinapi-key").unwrap();
+        let key = "a".repeat(25);
+        let line = format!("coinapi_key = {}", key);
+        let matches = d.scan_line(&line);
+        assert_eq!(matches.len(), 1);
+    }
+
+    #[test]
+    fn test_coinlayer_api_key_detected() {
+        let detectors = builtin_detectors();
+        let d = detectors.iter().find(|d| d.id() == "coinlayer-api-key").unwrap();
+        let key = "a".repeat(25);
+        let line = format!("coinlayer_api_key = {}", key);
+        let matches = d.scan_line(&line);
+        assert_eq!(matches.len(), 1);
+    }
+
+    #[test]
+    fn test_coinlib_api_key_detected() {
+        let detectors = builtin_detectors();
+        let d = detectors.iter().find(|d| d.id() == "coinlib-api-key").unwrap();
+        let key = "a".repeat(25);
+        let line = format!("coinlib_api_key = {}", key);
+        let matches = d.scan_line(&line);
+        assert_eq!(matches.len(), 1);
+    }
+
+    #[test]
+    fn test_cryptocompare_api_key_detected() {
+        let detectors = builtin_detectors();
+        let d = detectors.iter().find(|d| d.id() == "cryptocompare-api-key").unwrap();
+        let key = "a".repeat(25);
+        let line = format!("cryptocompare_api_key = {}", key);
+        let matches = d.scan_line(&line);
+        assert_eq!(matches.len(), 1);
+    }
+
+    #[test]
+    fn test_bitcoinaverage_api_key_detected() {
+        let detectors = builtin_detectors();
+        let d = detectors.iter().find(|d| d.id() == "bitcoinaverage-api-key").unwrap();
+        let key = "a".repeat(25);
+        let line = format!("bitcoin_average_api_key = {}", key);
+        let matches = d.scan_line(&line);
+        assert_eq!(matches.len(), 1);
+    }
+
+    #[test]
+    fn test_worldcoinindex_api_key_detected() {
+        let detectors = builtin_detectors();
+        let d = detectors.iter().find(|d| d.id() == "worldcoinindex-api-key").unwrap();
+        let key = "a".repeat(25);
+        let line = format!("world_coin_index_api_key = {}", key);
+        let matches = d.scan_line(&line);
+        assert_eq!(matches.len(), 1);
+    }
+
+    #[test]
+    fn test_glassnode_api_key_detected() {
+        let detectors = builtin_detectors();
+        let d = detectors.iter().find(|d| d.id() == "glassnode-api-key").unwrap();
+        let key = "a".repeat(25);
+        let line = format!("glassnode_api_key = {}", key);
+        let matches = d.scan_line(&line);
+        assert_eq!(matches.len(), 1);
+    }
+
+    #[test]
+    fn test_tatum_api_key_detected() {
+        let detectors = builtin_detectors();
+        let d = detectors.iter().find(|d| d.id() == "tatum-api-key").unwrap();
+        let key = "a".repeat(25);
+        let line = format!("tatum_api_key = {}", key);
+        let matches = d.scan_line(&line);
+        assert_eq!(matches.len(), 1);
+    }
+
+    #[test]
+    fn test_ethplorer_api_key_detected() {
+        let detectors = builtin_detectors();
+        let d = detectors.iter().find(|d| d.id() == "ethplorer-api-key").unwrap();
+        let key = "a".repeat(25);
+        let line = format!("ethplorer_api_key = {}", key);
+        let matches = d.scan_line(&line);
+        assert_eq!(matches.len(), 1);
+    }
+
+    #[test]
+    fn test_nftport_api_key_detected() {
+        let detectors = builtin_detectors();
+        let d = detectors.iter().find(|d| d.id() == "nftport-api-key").unwrap();
+        let key = "a".repeat(25);
+        let line = format!("nftport_api_key = {}", key);
+        let matches = d.scan_line(&line);
+        assert_eq!(matches.len(), 1);
+    }
+
+    #[test]
+    fn test_messari_api_key_detected() {
+        let detectors = builtin_detectors();
+        let d = detectors.iter().find(|d| d.id() == "messari-api-key").unwrap();
+        let key = "a".repeat(25);
+        let line = format!("messari_api_key = {}", key);
+        let matches = d.scan_line(&line);
+        assert_eq!(matches.len(), 1);
+    }
+
+    #[test]
+    fn test_coingecko_api_key_detected() {
+        let detectors = builtin_detectors();
+        let d = detectors.iter().find(|d| d.id() == "coingecko-api-key").unwrap();
+        let key = "a".repeat(25);
+        let line = format!("coingecko_api_key = {}", key);
+        let matches = d.scan_line(&line);
+        assert_eq!(matches.len(), 1);
+    }
+
+    // ── Weather & Environment APIs (TruffleHog) ────────────────────────
+
+    #[test]
+    fn test_openweather_api_key_detected() {
+        let detectors = builtin_detectors();
+        let d = detectors.iter().find(|d| d.id() == "openweather-api-key").unwrap();
+        let key = "a".repeat(25);
+        let line = format!("openweather_api_key = {}", key);
+        let matches = d.scan_line(&line);
+        assert_eq!(matches.len(), 1);
+    }
+
+    #[test]
+    fn test_weatherstack_api_key_detected() {
+        let detectors = builtin_detectors();
+        let d = detectors.iter().find(|d| d.id() == "weatherstack-api-key").unwrap();
+        let key = "a".repeat(25);
+        let line = format!("weatherstack_api_key = {}", key);
+        let matches = d.scan_line(&line);
+        assert_eq!(matches.len(), 1);
+    }
+
+    #[test]
+    fn test_accuweather_api_key_detected() {
+        let detectors = builtin_detectors();
+        let d = detectors.iter().find(|d| d.id() == "accuweather-api-key").unwrap();
+        let key = "a".repeat(25);
+        let line = format!("accuweather_api_key = {}", key);
+        let matches = d.scan_line(&line);
+        assert_eq!(matches.len(), 1);
+    }
+
+    #[test]
+    fn test_worldweather_api_key_detected() {
+        let detectors = builtin_detectors();
+        let d = detectors.iter().find(|d| d.id() == "worldweather-api-key").unwrap();
+        let key = "a".repeat(25);
+        let line = format!("world_weather_api_key = {}", key);
+        let matches = d.scan_line(&line);
+        assert_eq!(matches.len(), 1);
+    }
+
+    #[test]
+    fn test_tomorrow_io_api_key_detected() {
+        let detectors = builtin_detectors();
+        let d = detectors.iter().find(|d| d.id() == "tomorrow-io-api-key").unwrap();
+        let key = "a".repeat(25);
+        let line = format!("tomorrow_io_api_key = {}", key);
+        let matches = d.scan_line(&line);
+        assert_eq!(matches.len(), 1);
+    }
+
+    #[test]
+    fn test_airvisual_api_key_detected() {
+        let detectors = builtin_detectors();
+        let d = detectors.iter().find(|d| d.id() == "airvisual-api-key").unwrap();
+        let key = "a".repeat(25);
+        let line = format!("airvisual_api_key = {}", key);
+        let matches = d.scan_line(&line);
+        assert_eq!(matches.len(), 1);
+    }
+
+    #[test]
+    fn test_visualcrossing_api_key_detected() {
+        let detectors = builtin_detectors();
+        let d = detectors.iter().find(|d| d.id() == "visualcrossing-api-key").unwrap();
+        let key = "a".repeat(25);
+        let line = format!("visual_crossing_api_key = {}", key);
+        let matches = d.scan_line(&line);
+        assert_eq!(matches.len(), 1);
+    }
+
+    #[test]
+    fn test_stormglass_api_key_detected() {
+        let detectors = builtin_detectors();
+        let d = detectors.iter().find(|d| d.id() == "stormglass-api-key").unwrap();
+        let key = "a".repeat(25);
+        let line = format!("stormglass_api_key = {}", key);
+        let matches = d.scan_line(&line);
+        assert_eq!(matches.len(), 1);
+    }
+
+    #[test]
+    fn test_aeris_weather_api_key_detected() {
+        let detectors = builtin_detectors();
+        let d = detectors.iter().find(|d| d.id() == "aeris-weather-api-key").unwrap();
+        let key = "a".repeat(25);
+        let line = format!("aeris_weather_api_key = {}", key);
+        let matches = d.scan_line(&line);
+        assert_eq!(matches.len(), 1);
+    }
+
+    #[test]
+    fn test_ambee_api_key_detected() {
+        let detectors = builtin_detectors();
+        let d = detectors.iter().find(|d| d.id() == "ambee-api-key").unwrap();
+        let key = "a".repeat(25);
+        let line = format!("ambee_api_key = {}", key);
+        let matches = d.scan_line(&line);
+        assert_eq!(matches.len(), 1);
+    }
+
+    #[test]
+    fn test_openuv_api_key_detected() {
+        let detectors = builtin_detectors();
+        let d = detectors.iter().find(|d| d.id() == "openuv-api-key").unwrap();
+        let key = "a".repeat(25);
+        let line = format!("openuv_api_key = {}", key);
         let matches = d.scan_line(&line);
         assert_eq!(matches.len(), 1);
     }

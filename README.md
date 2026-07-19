@@ -9,7 +9,7 @@ Rust-native secret scanner — a TruffleHog/Gitleaks alternative.
 ## Status
 
 **v0.2.0 — comprehensive feature set.** PledgeGuard is a working secret
-scanner with 416 built-in detectors, 34 live verification providers, git history
+scanner with 512 built-in detectors, 34 live verification providers, git history
 scanning, WASM plugins, MCP server, 6 output formats (Table/JSON/SARIF/CSV/JUnit/Template),
 baseline/allowlist mode, pre-commit hook installer, AST-based false-positive
 refinement for JS/TS, custom TOML rules with entropy/allowlists/path filters,
@@ -88,7 +88,7 @@ to be inside a git working tree.
 
 ## Built-in detectors
 
-416 detectors covering AWS (Access Key, Secret, Session Token, MWS, Bedrock,
+512 detectors covering AWS (Access Key, Secret, Session Token, MWS, Bedrock,
 Account ID), Azure (Storage, SAS, Client Secret, AD/Entra ID, Batch, Function,
 DevOps PAT, Cosmos DB), Google Cloud (API Key, OAuth, Service Account, Client ID,
 Gemini/PaLM), Alibaba, Tencent, DigitalOcean, IBM Cloud, Oracle Cloud, Scaleway,
@@ -147,6 +147,23 @@ Axonaut, FlowFlu, Clientary, Clinchpad, CompanyHub, Campayn, Hiveage, Billomat,
 Alegra, Loyverse, CommerceJS, Snipcart, PartnerStack, Vouchery, Monday.com,
 Smartsheets, Wrike, Apollo.io, UpLead, RocketReach, Clearbit, Brandfetch,
 Leadfeeder, GetEmail, GetEmails, Skrappio, Powrbot,
+ClickUp, Todoist, Shortcut, TMetric, Clockify, Everhour, Harvest, Humanity,
+Toggl Track, RunRunIt, Workstack, EasyInsight, Dovico, Mavenlink, Float,
+Daily.co, T.ly, Rebrandly, Timezone, Jotform,
+Typeform, SurveySparrow, Survicate, Delighted, Feedier, Zonka Feedback,
+Satismeter (Project, Write), Simplesat, SurveyAnyplace, SurveyBot, Qualaroo,
+CustomerGuru, Abyssale, Magnetic, Refiner, Simvoly, Checkmarket, Webengage,
+Twelve Data, Fixer.io, Alpha Vantage, Tradier, Finnhub, Tiingo, Finage,
+IEX Cloud, Intrinio, Financial Modeling Prep, Nasdaq Data Link, Qubole,
+Enigma, Data.gov, Stockdata, Marketstack, Commodities, Baremetrics, Dwolla,
+WePay, Checkout.com, Paymongo, Avalara, Carbon Interface, Currency Layer,
+Exchange Rates, CurrencyScoop, CurrencyFreaks, Country Layer, FX Market,
+Currency Cloud,
+Kraken, Poloniex, BitMEX, CoinAPI, Coinlayer, Coinlib, CryptoCompare,
+Bitcoin Average, World Coin Index, Glassnode, Tatum.io, Ethplorer, NFTPort,
+Messari, CoinGecko,
+OpenWeather, WeatherStack, AccuWeather, World Weather, Tomorrow.io,
+AirVisual, Visual Crossing, Stormglass, Aeris Weather, Ambee, OpenUV,
 Auth0, Okta, Vercel, Netlify, Supabase, CircleCI, Heroku, Travis CI, DroneCI,
 Buildkite, TeamCity, Jenkins, GoCD, ArgoCD, Spinnaker, Harness, Codecov,
 SonarQube, Snyk, Artifactory, Terraform Cloud, Pivotal Tracker, Clojars, Linear,
