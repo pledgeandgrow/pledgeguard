@@ -256,17 +256,17 @@ Features not found in any other scanner:
 | Gap | Leader | What's Needed |
 |---|---|---|
 | **Detector count** | TruffleHog (800+) | Add ~100 more detectors to match |
-| **Verification coverage** | TruffleHog (800+), GitGuardian (500+) | Expand from 48 to 100+ verified providers |
+| **Verification coverage** | TruffleHog (800+), GitGuardian (500+) | Expand from 191 to 200+ verified rule IDs (143 unique verifier functions) |
 | **Hugging Face scanning** | TruffleHog, Betterleaks | Add HF models/datasets/Spaces scanning |
 | **SharePoint scanning** | TruffleHog, GitGuardian | Add SharePoint document scanning |
 | **MS Teams scanning** | TruffleHog, GitGuardian | Add Teams message/channel scanning |
 | **PyPI package scanning** | GitGuardian | Add PyPI package download + scan |
-| **GitHub Action** | TruffleHog, Gitleaks, GitGuardian | Publish official GitHub Action |
+| **GitHub Action** | ~~TruffleHog, Gitleaks, GitGuardian~~ ✅ Done | Published composite GitHub Action with SARIF support |
 | **Expr-based filtering** | Betterleaks | Consider Expr or similar for contextual rules |
 | **BPE tokenization** | Betterleaks | Consider token-efficiency FP filtering |
 | **Custom verifier config** | TruffleHog, Betterleaks | Allow user-defined verification endpoints in TOML config |
 | **AI coding tool hooks** | ~~GitGuardian~~ ✅ Done | Added in Phase 3 — Cursor, Claude Code, Copilot, Codex |
-| **Private key verification (Driftwood)** | TruffleHog | Verify private keys against GitHub/TLS certs |
+| **Enterprise features** | ~~GitGuardian~~ ✅ Done | RBAC, audit logging, compliance reporting, scan diffing, finding lifecycle, webhook notifications |
 | **HTML decoding** | TruffleHog | Decode HTML-encoded content from Confluence/Teams before scanning |
 
 ---
@@ -283,8 +283,10 @@ Features not found in any other scanner:
 | **Extensibility** | ★★★★☆ | ★★★☆☆ | ★★★☆☆ | ★★★★☆ | ★★★☆☆ | ★★★☆☆ |
 | **Performance** | ★★★★★ | ★★★★☆ | ★★★★★ | ★★★★★ | ★★☆☆☆ | ★★★★☆ |
 | **AI integration** | ★★★★★ | ☆☆☆☆☆ | ☆☆☆☆☆ | ☆☆☆☆☆ | ★★★☆☆ | ☆☆☆☆☆ |
-| **CI/CD** | ★★★☆☆ | ★★★★☆ | ★★★★☆ | ★★★☆☆ | ★★★★★ | ★★★★☆ |
+| **CI/CD** | ★★★★☆ | ★★★★☆ | ★★★★☆ | ★★★☆☆ | ★★★★★ | ★★★★☆ |
 | **Offline** | ✅ | ✅ | ✅ | ✅ | ❌ | ✅ |
+| **Enterprise** | ★★★★☆ | ★★★☆☆ | ☆☆☆☆☆ | ☆☆☆☆☆ | ★★★★★ | ☆☆☆☆☆ |
+
 | **Overall** | **★★★★☆** | **★★★★★** | **★★★☆☆** | **★★★★☆** | **★★★★☆** | **★★★☆☆** |
 
 ---

@@ -621,11 +621,11 @@
 | **FP reduction** | ★★★★☆ | ★★★★★ | Goals 249-280 |
 | **Extensibility** | ★★★★☆ | ★★★★★ | Goals 281-300 |
 | **Performance** | ★★★★★ | ★★★★★ | Goals 301-320 (maintain + expand) |
-| **AI integration** | ★★★★☆ | ★★★★★ | Goals 321-340 |
-| **CI/CD** | ★★★☆☆ | ★★★★★ | Goals 341-370 |
+| **AI integration** | ★★★★★ | ★★★★★ | Goals 321-340 |
+| **CI/CD** | ★★★★☆ | ★★★★★ | Goals 341-370 |
 | **Offline** | ✅ | ✅ | Goals 371-380 (maintain + expand) |
 | **Content decoding** | — | ★★★★★ | Goals 381-400 |
-| **Enterprise** | — | ★★★★★ | Goals 401-420 |
+| **Enterprise** | ★★★★☆ | ★★★★★ | Goals 401-420 |
 | **Ecosystem** | — | ★★★★★ | Goals 421-450 |
 | **Quality** | — | ★★★★★ | Goals 451-470 |
 | **Advanced detection** | — | ★★★★★ | Goals 471-500 |
@@ -656,6 +656,13 @@
 - Add RBAC, audit logging, compliance reporting
 - Add IaC/CICD-aware secret detection
 - Add finding lifecycle management
+- ✅ RBAC for MCP server (goal 401)
+- ✅ Audit logging (goal 402)
+- ✅ Scan diffing (goal 405)
+- ✅ Finding lifecycle management (goal 406)
+- ✅ Suppression with expiry (goal 407)
+- ✅ Compliance reporting — SOC2, PCI-DSS, ISO27001, HIPAA, GDPR, NIST CSF (goal 415)
+- ✅ Webhook notifications — Slack, Teams, Discord (goal 419)
 
 ### Phase 5: Lead in Ecosystem (Goals 421-450)
 - Add package managers (Homebrew, Scoop, Chocolatey, etc.)
