@@ -9,9 +9,10 @@ static GLOBAL: tikv_jemallocator::Jemalloc = tikv_jemallocator::Jemalloc;
 
 use clap::{Parser, ValueEnum};
 use pledgeguard_core::{
-    Allowlist, Detector, Finding, Scanner, Severity, VerificationStatus, baseline,
+    AiConfig, AiTool, Allowlist, Detector, Finding, Scanner, Severity, VerificationStatus, baseline,
     detectors::builtin_detectors, load_config, scan_git_history,
     verify_findings, verify_findings_with_options, VerifyOptions,
+    ai, ai_hooks,
 };
 use std::io::Read;
 use std::path::PathBuf;
@@ -263,14 +264,66 @@ enum Command {
         verbose: bool,
     },
 
-    /// Run a Model Context Protocol (MCP) server over stdio, exposing scan
-    /// results as tools for AI agents to call directly.
+    /// Run a Model Context Protocol (MCP) server, exposing scan tools for
+    /// AI agents. Supports stdio (default) and TCP remote mode.
     Mcp {
         /// Directory containing `.wasm` plugin detectors to load in addition
         /// to the built-in detectors, for every scan/history tool call. May
         /// be given multiple times.
         #[arg(long = "plugin-dir")]
         plugin_dirs: Vec<PathBuf>,
+
+        /// Authentication token for remote MCP connections (goal 327).
+        /// If set, all requests must include this token in params.auth.
+        #[arg(long)]
+        auth_token: Option<String>,
+
+        /// Listen on a TCP address (e.g. "127.0.0.1:9470") for remote
+        /// MCP connections instead of using stdio (goal 328).
+        #[arg(long)]
+        tcp: Option<String>,
+    },
+
+    /// Install AI tool hook scripts (Cursor, Claude Code, Copilot, Codex)
+    /// into the current project to scan prompts and file contents before
+    /// AI execution (goals 321-324).
+    InstallAiHooks {
+        /// Which AI tool(s) to install hooks for. If not specified, all
+        /// supported tools are installed.
+        #[arg(long = "tool", value_enum)]
+        tools: Vec<AiToolArg>,
+
+        /// Path to the project root. Defaults to the current directory.
+        #[arg(default_value = ".")]
+        path: PathBuf,
+    },
+
+    /// Run AI-powered analysis on scan findings (goals 329-340).
+    /// Requires PLEDGEGUARD_AI_API_KEY or OPENAI_API_KEY environment variable.
+    AiAnalyze {
+        /// Path to scan for secrets before AI analysis.
+        #[arg(default_value = ".")]
+        path: PathBuf,
+
+        /// Which AI analysis to perform.
+        #[arg(long, value_enum, default_value_t = AiAnalysisArg::Summary)]
+        analysis: AiAnalysisArg,
+
+        /// Output format (json or text).
+        #[arg(long, value_enum, default_value_t = OutputFormat::Json)]
+        format: OutputFormat,
+
+        /// Minimum severity to report.
+        #[arg(long, value_enum, default_value_t = CliSeverity::Low)]
+        min_severity: CliSeverity,
+
+        /// Include findings flagged as likely false positives.
+        #[arg(long)]
+        show_all: bool,
+
+        /// Verify findings via provider APIs before analysis.
+        #[arg(long)]
+        verify: bool,
     },
 
     /// Install a git pre-commit hook that runs `pledgeguard scan --fail-on-findings`.
@@ -285,7 +338,7 @@ enum Command {
     },
 }
 
-#[derive(Copy, Clone, ValueEnum)]
+#[derive(Copy, Clone, PartialEq, ValueEnum)]
 enum OutputFormat {
     Table,
     Json,
@@ -313,6 +366,26 @@ impl From<CliSeverity> for Severity {
             CliSeverity::Critical => Severity::Critical,
         }
     }
+}
+
+#[derive(Copy, Clone, Debug, ValueEnum)]
+enum AiToolArg {
+    Cursor,
+    ClaudeCode,
+    Copilot,
+    Codex,
+}
+
+#[derive(Copy, Clone, Debug, ValueEnum)]
+enum AiAnalysisArg {
+    Summary,
+    Classify,
+    Remediation,
+    FpDetection,
+    RiskScore,
+    Rotation,
+    Impact,
+    Prioritize,
 }
 
 #[derive(Copy, Clone, Debug, ValueEnum)]
@@ -681,8 +754,115 @@ fn main() -> ExitCode {
                 },
             )
         }
-        Command::Mcp { plugin_dirs } => {
-            mcp::run(&plugin_dirs);
+        Command::Mcp { plugin_dirs, auth_token, tcp } => {
+            let config = mcp::McpConfig {
+                plugin_dirs,
+                auth_token,
+                transport: tcp
+                    .map(|addr| mcp::McpTransport::Tcp { addr })
+                    .unwrap_or(mcp::McpTransport::Stdio),
+            };
+            mcp::run(&config);
+            ExitCode::SUCCESS
+        }
+        Command::InstallAiHooks { tools, path } => {
+            let tools: Vec<AiTool> = if tools.is_empty() {
+                AiTool::all().to_vec()
+            } else {
+                tools.iter().map(|t| match t {
+                    AiToolArg::Cursor => AiTool::Cursor,
+                    AiToolArg::ClaudeCode => AiTool::ClaudeCode,
+                    AiToolArg::Copilot => AiTool::Copilot,
+                    AiToolArg::Codex => AiTool::Codex,
+                }).collect()
+            };
+            let results = ai_hooks::install_hooks(&path, &tools);
+            println!("Installed AI hooks:");
+            print!("{}", ai_hooks::format_install_summary(&results));
+            let failed = results.iter().filter(|r| !r.success).count();
+            if failed > 0 {
+                eprintln!("{failed} hook(s) failed to install.");
+                ExitCode::FAILURE
+            } else {
+                println!("All hooks installed successfully.");
+                ExitCode::SUCCESS
+            }
+        }
+        Command::AiAnalyze { path, analysis, format: _, min_severity, show_all, verify } => {
+            let config = AiConfig::default();
+            if !config.is_enabled() {
+                eprintln!("AI analysis requires PLEDGEGUARD_AI_API_KEY or OPENAI_API_KEY environment variable.");
+                eprintln!("Set one of these to enable LLM-powered analysis.");
+                return ExitCode::FAILURE;
+            }
+
+            let detectors = builtin_detectors();
+            let scanner = Scanner::new(detectors);
+            let mut findings = match scanner.scan_path(&path) {
+                Ok(f) => f,
+                Err(e) => {
+                    eprintln!("error scanning {}: {}", path.display(), e);
+                    return ExitCode::FAILURE;
+                }
+            };
+
+            findings.retain(|f| f.severity >= min_severity.into());
+            if !show_all {
+                findings.retain(|f| !f.likely_false_positive);
+            }
+            if verify {
+                verify_findings(&mut findings);
+            }
+
+            let output = match analysis {
+                AiAnalysisArg::Summary => {
+                    let result = ai::scan_summary(&config, &findings);
+                    serde_json::to_string_pretty(&result).unwrap_or_default()
+                }
+                AiAnalysisArg::Classify => {
+                    let results: Vec<_> = findings.iter()
+                        .map(|f| ai::classify_finding(&config, f))
+                        .collect();
+                    serde_json::to_string_pretty(&results).unwrap_or_default()
+                }
+                AiAnalysisArg::Remediation => {
+                    let results: Vec<_> = findings.iter()
+                        .map(|f| ai::remediation_suggestion(&config, f))
+                        .collect();
+                    serde_json::to_string_pretty(&results).unwrap_or_default()
+                }
+                AiAnalysisArg::FpDetection => {
+                    let results: Vec<_> = findings.iter()
+                        .map(|f| ai::assess_false_positive(&config, f))
+                        .collect();
+                    serde_json::to_string_pretty(&results).unwrap_or_default()
+                }
+                AiAnalysisArg::RiskScore => {
+                    let results: Vec<_> = findings.iter()
+                        .map(|f| ai::risk_score(&config, f))
+                        .collect();
+                    serde_json::to_string_pretty(&results).unwrap_or_default()
+                }
+                AiAnalysisArg::Rotation => {
+                    let rules: std::collections::HashSet<&str> = findings.iter().map(|f| f.rule_id.as_str()).collect();
+                    let results: Vec<_> = rules.iter()
+                        .map(|r| ai::rotation_guidance(&config, r))
+                        .collect();
+                    serde_json::to_string_pretty(&results).unwrap_or_default()
+                }
+                AiAnalysisArg::Impact => {
+                    let results: Vec<_> = findings.iter()
+                        .map(|f| ai::impact_analysis(&config, f))
+                        .collect();
+                    serde_json::to_string_pretty(&results).unwrap_or_default()
+                }
+                AiAnalysisArg::Prioritize => {
+                    let results = ai::prioritize_findings(&config, &findings);
+                    serde_json::to_string_pretty(&results).unwrap_or_default()
+                }
+            };
+
+            println!("{output}");
             ExitCode::SUCCESS
         }
         Command::InstallPreCommit { force, path } => install_pre_commit(&path, force),

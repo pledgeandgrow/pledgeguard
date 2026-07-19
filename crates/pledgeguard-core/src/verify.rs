@@ -107,7 +107,7 @@ pub fn verify_findings_with_options(findings: &mut [Finding], opts: &VerifyOptio
 
 /// Returns `Some(status)` if `rule_id` has a known live-verification
 /// strategy, `None` if this rule can't be verified this way.
-fn verify_one(rule_id: &str, matched: &str) -> Option<VerificationStatus> {
+pub fn verify_one(rule_id: &str, matched: &str) -> Option<VerificationStatus> {
     verifier_for(rule_id).map(|verifier| verifier(matched))
 }
 

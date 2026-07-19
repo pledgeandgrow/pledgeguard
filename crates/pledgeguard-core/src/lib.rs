@@ -19,6 +19,8 @@
 //! assert!(!findings.is_empty());
 //! ```
 
+pub mod ai;
+pub mod ai_hooks;
 pub mod api_scan;
 pub mod archive;
 pub mod ast;
@@ -93,4 +95,17 @@ pub use stream_scan::{
     scan_syslog_tcp, scan_vault_tokens_in_logs,
     SyslogScanConfig, StreamScanError,
 };
-pub use verify::{verify_findings, verify_findings_with_options, VerifyOptions};
+pub use verify::{verify_findings, verify_findings_with_options, verify_one, VerifyOptions};
+pub use ai::{
+    AiConfig, Classification, ClassificationResult, RemediationSuggestion,
+    FpAssessment, RotationGuidance, RiskScore, GeneratedDescription,
+    GeneratedRegex, GeneratedTests, TestCase, ConfigMigration,
+    ScanSummary, ImpactAnalysis, PrioritizedFinding,
+    classify_finding, remediation_suggestion, assess_false_positive,
+    rotation_guidance, risk_score, generate_description, generate_regex,
+    generate_tests, migrate_config, scan_summary, impact_analysis,
+    prioritize_findings,
+};
+pub use ai_hooks::{
+    AiTool, HookInstallResult, install_hooks, format_install_summary,
+};
