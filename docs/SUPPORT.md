@@ -6,7 +6,7 @@ This document lists all detectors, verification providers, output formats, scann
 
 ## Built-in Detectors
 
-PledgeGuard ships with **60+ regex-based detectors** covering major cloud providers, SaaS platforms, CI/CD systems, and generic secret patterns. Each detector has a prefilter (Aho-Corasick) for fast scanning and a regex for precise matching.
+PledgeGuard ships with **76 regex-based detectors** covering major cloud providers, SaaS platforms, CI/CD systems, and generic secret patterns. Each detector has a prefilter (Aho-Corasick) for fast scanning and a regex for precise matching.
 
 ### Cloud Providers
 

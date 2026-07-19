@@ -9,7 +9,7 @@ Rust-native secret scanner — a TruffleHog/Gitleaks alternative.
 ## Status
 
 **v0.2.0 — comprehensive feature set.** PledgeGuard is a working secret
-scanner with 60+ built-in detectors, 34 live verification providers, git history
+scanner with 76 built-in detectors, 34 live verification providers, git history
 scanning, WASM plugins, MCP server, 6 output formats (Table/JSON/SARIF/CSV/JUnit/Template),
 baseline/allowlist mode, pre-commit hook installer, AST-based false-positive
 refinement for JS/TS, custom TOML rules with entropy/allowlists/path filters,
@@ -88,7 +88,7 @@ to be inside a git working tree.
 
 ## Built-in detectors
 
-60+ detectors covering AWS (Access Key, Secret, Session Token, MWS, Bedrock,
+76 detectors covering AWS (Access Key, Secret, Session Token, MWS, Bedrock,
 Account ID), Azure (Storage, SAS, Client Secret, AD/Entra ID, Batch, Function,
 DevOps PAT, Cosmos DB), Google Cloud (API Key, OAuth, Service Account, Client ID),
 Alibaba, Tencent, DigitalOcean,

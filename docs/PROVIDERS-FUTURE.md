@@ -542,7 +542,7 @@ Beyond the current scanning sources (working tree, stdin, git history, Docker, G
 
 | Metric | Current | Future (Total Potential) |
 |---|---|---|
-| **Detectors** | 50+ | 300+ |
+| **Detectors** | 76 | 300+ |
 | **Verification providers** | 34 | 150+ |
 | **Scanning sources** | 10 | 25+ |
 | **Output formats** | 6 | 6 (competitive) |
@@ -562,18 +562,21 @@ Beyond the current scanning sources (working tree, stdin, git history, Docker, G
 8. **Databricks detector + verifier** — data platform
 9. **Terraform Cloud token** — IaC platform
 10. **HashiCorp Vault token** — secrets management irony
-
-### Medium Priority (Expand ecosystem)
-11. **Postman API key** — API development
-12. **Snowflake token** — data warehouse
-13. **Dynatrace token** — APM
-14. **Asana token** — project management
-15. **Airtable token** — no-code database
-16. **Contentful token** — headless CMS
-17. **Fastly API key** — CDN/edge
-18. **Scaleway key** — European cloud
-19. **Vultr API key** — cloud provider
-20. **Snyk API key** — security scanning
+11. **Alibaba Cloud Secret Key** — detector only, needs verifier
+12. **Tencent Cloud Secret Key** — detector only, needs verifier
+13. **IBM Cloud User Key** — major enterprise cloud
+14. **Oracle Cloud (OCI)** — growing enterprise cloud
+15. **Snowflake token** — data warehouse
+16. **Dynatrace token** — APM
+17. **Asana token** — project management
+18. **Airtable token** — no-code database
+19. **Contentful token** — headless CMS
+20. **Fastly API key** — CDN/edge
+21. **Scaleway key** — European cloud
+22. **Vultr API key** — cloud provider
+23. **Snyk API key** — security scanning
+24. **Postman API key** — API development
+25. **Segment API key** — analytics pipeline
 
 ### Low Priority (Long tail)
 - All remaining providers from the lists above
