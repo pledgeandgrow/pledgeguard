@@ -56,6 +56,8 @@ pub mod verify;
 pub mod output_formats;
 pub mod fp_filters;
 pub mod extensibility;
+pub mod offline;
+pub mod content_decode;
 
 pub use baseline::{
     Baseline, BaselineEntry, filter as baseline_filter, from_findings as baseline_from_findings,
@@ -165,4 +167,29 @@ pub use extensibility::{
     MultiPatternRule, LookaheadRule, CaptureTransform, Transform,
     RuleDeprecation, RuleTestCase, RuleTestResult, test_rule, run_rule_tests,
     generate_rule_docs, DocRule, ConfigError as ExtensibilityConfigError,
+};
+pub use offline::{
+    OfflineConfig, DetectorUpdate, check_for_updates, apply_detector_update,
+    VerificationCache, VerificationCacheEntry,
+    get_help_topic, list_help_topics,
+    TelemetryEvent, TelemetryCollector,
+    redact_for_logging, sanitize_log_line,
+    save_encrypted_baseline, load_encrypted_baseline,
+    save_encrypted_report, load_encrypted_report,
+    ZeroKnowledgeProof,
+    generate_replacement_secret, rotate_secret, RotationResult,
+    OfflineError,
+};
+pub use content_decode::{
+    decode_html_entities, strip_html_tags, decode_html_content,
+    url_decode, normalize_nfc, unescape_json_string,
+    split_yaml_documents, extract_yaml_values,
+    extract_xml_values,
+    parse_csv_line, parse_csv,
+    parse_ini, parse_env_file, parse_dockerfile, parse_hcl,
+    extract_markdown_code_blocks, extract_jupyter_cells,
+    extract_pdf_text, extract_docx_text, extract_xlsx_cells, extract_pptx_text,
+    extract_image_text, is_ocr_available,
+    extract_binary_strings, extract_binary_strings_min,
+    detect_content_type, decode_content, scan_decoded_content, ContentType,
 };

@@ -452,41 +452,41 @@
 
 ## Offline & Privacy (Current: ✅ — Target: ✅ maintain + expand)
 
-371. **Add air-gapped mode** — `--offline` flag disables all network calls (no verification, no updates)
-372. **Add local detector updates** — `pledgeguard update` fetches new detector rules from repo
-373. **Add offline verification cache** — persist verification results for offline reference
-374. **Add offline documentation** — `pledgeguard help <topic>` with bundled docs
-375. **Add no-telemetry mode** — `--no-telemetry` disables all anonymous usage stats
-376. **Add secret redaction in logs** — ensure no secret values appear in debug/verbose output
-377. **Add secure baseline storage** — encrypt baseline files at rest
-378. **Add secure report storage** — encrypt report files at rest
-379. **Add zero-knowledge verification** — verify secrets without sending full value to API
-380. **Add local secret rotation** — `pledgeguard rotate <finding>` generates replacement secret
+371. ✅ **Add air-gapped mode** — `--offline` flag disables all network calls (no verification, no updates)
+372. ✅ **Add local detector updates** — `pledgeguard update` fetches new detector rules from repo
+373. ✅ **Add offline verification cache** — persist verification results for offline reference
+374. ✅ **Add offline documentation** — `pledgeguard help <topic>` with bundled docs
+375. ✅ **Add no-telemetry mode** — `--no-telemetry` disables all anonymous usage stats
+376. ✅ **Add secret redaction in logs** — ensure no secret values appear in debug/verbose output
+377. ✅ **Add secure baseline storage** — encrypt baseline files at rest
+378. ✅ **Add secure report storage** — encrypt report files at rest
+379. ✅ **Add zero-knowledge verification** — verify secrets without sending full value to API
+380. ✅ **Add local secret rotation** — `pledgeguard rotate <finding>` generates replacement secret
 
 ---
 
 ## HTML & Content Decoding
 
-381. **Add HTML entity decoder** — decode &lt; &gt; &amp; &#x27; etc. before scanning
-382. **Add HTML tag stripper** — strip HTML tags from Confluence/Teams content
-383. **Add URL decoder** — decode percent-encoded secrets in URLs
-384. **Add Unicode normalization** — normalize Unicode to NFC before scanning
-385. **Add JSON string unescaper** — unescape \n \t \uXXXX in JSON values
-386. **Add YAML multi-document parser** — scan multi-doc YAML (--- separators)
-387. **Add XML parser** — scan XML attribute values and text nodes
-388. **Add CSV parser** — scan CSV cells for secrets
-389. **Add INI parser** — scan INI/properties file values
-390. **Add .env parser** — parse .env files with KEY=VALUE, skip comments
-391. **Add Dockerfile parser** — parse ENV, ARG, LABEL instructions
-392. **Add HCL parser** — parse Terraform/HCL variable and local blocks
-393. **Add Markdown code block extractor** — scan code blocks in .md files
-394. **Add Jupyter notebook cell scanner** — scan .ipynb code and output cells
-395. **Add PDF text extractor** — extract and scan text from PDF files
-396. **Add Word document text extractor** — extract text from .docx files
-397. **Add Excel cell scanner** — scan .xlsx cell values
-398. **Add PowerPoint text scanner** — scan .pptx slide text
-399. **Add image OCR scanning** — extract text from images via Tesseract OCR
-400. **Add binary string extraction** — extract printable strings from binary files (strings-like)
+381. ✅ **Add HTML entity decoder** — decode &lt; &gt; &amp; &#x27; etc. before scanning
+382. ✅ **Add HTML tag stripper** — strip HTML tags from Confluence/Teams content
+383. ✅ **Add URL decoder** — decode percent-encoded secrets in URLs
+384. ✅ **Add Unicode normalization** — normalize Unicode to NFC before scanning
+385. ✅ **Add JSON string unescaper** — unescape \n \t \uXXXX in JSON values
+386. ✅ **Add YAML multi-document parser** — scan multi-doc YAML (--- separators)
+387. ✅ **Add XML parser** — scan XML attribute values and text nodes
+388. ✅ **Add CSV parser** — scan CSV cells for secrets
+389. ✅ **Add INI parser** — scan INI/properties file values
+390. ✅ **Add .env parser** — parse .env files with KEY=VALUE, skip comments
+391. ✅ **Add Dockerfile parser** — parse ENV, ARG, LABEL instructions
+392. ✅ **Add HCL parser** — parse Terraform/HCL variable and local blocks
+393. ✅ **Add Markdown code block extractor** — scan code blocks in .md files
+394. ✅ **Add Jupyter notebook cell scanner** — scan .ipynb code and output cells
+395. ✅ **Add PDF text extractor** — extract and scan text from PDF files
+396. ✅ **Add Word document text extractor** — extract text from .docx files
+397. ✅ **Add Excel cell scanner** — scan .xlsx cell values
+398. ✅ **Add PowerPoint text scanner** — scan .pptx slide text
+399. ✅ **Add image OCR scanning** — extract text from images via Tesseract OCR
+400. ✅ **Add binary string extraction** — extract printable strings from binary files (strings-like)
 
 ---
 
@@ -623,8 +623,8 @@
 | **Performance** | ★★★★★ | ★★★★★ | Goals 301-320 | ★★★★★ Maintain |
 | **AI integration** | ★★★★★ | ★★★★★ | Goals 321-340 | ✅ Done |
 | **CI/CD** | ★★★★☆ | ★★★★★ | Goals 341-370 | ★★★★☆ In progress |
-| **Offline** | ✅ | ✅ | Goals 371-380 | ✅ Maintain |
-| **Content decoding** | — | ★★★★★ | Goals 381-400 | ★★☆☆☆ Pending |
+| **Offline** | ✅ | ✅ | Goals 371-380 | ✅ Done |
+| **Content decoding** | ★★★★★ | ★★★★★ | Goals 381-400 | ✅ Done |
 | **Enterprise** | ★★★★★ | ★★★★★ | Goals 401-420 | ✅ Done |
 | **Ecosystem** | ★★★★☆ | ★★★★★ | Goals 421-450 | ★★★★☆ In progress |
 | **Quality** | ★★★★☆ | ★★★★★ | Goals 451-470 | ★★★★☆ In progress |

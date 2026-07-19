@@ -317,6 +317,11 @@ Features not found in any other scanner:
 - **Plugin marketplace** — community-contributed detector/verifier plugins
 - **Multi-pattern regex & negative lookahead** — advanced regex features for rule definitions
 - **Capture group transformation** — extract and transform captured groups from regex matches
+- **Air-gapped mode** — `--offline` flag disables all network calls, with offline verification cache and bundled documentation
+- **Zero-knowledge verification** — verify secrets without sending full value to API (challenge-response proof)
+- **Local secret rotation** — generate replacement secrets matching the format of detected secret types
+- **Encrypted baseline & report storage** — encrypt sensitive files at rest with passphrase-derived keys
+- **20 content decoders** — HTML entities, HTML tags, URL decoding, Unicode NFC, JSON unescaping, YAML multi-doc, XML, CSV, INI, .env, Dockerfile, HCL, Markdown code blocks, Jupyter notebooks, PDF, Word, Excel, PowerPoint, OCR, binary strings
 - **Rust-native** — memory-safe, fast, small binary
 
 ---
@@ -352,10 +357,10 @@ Features not found in any other scanner:
 | ~~Markdown report format~~ | ~~Competitors~~ ✅ Done | Markdown format for PR comment integration |
 | ~~SPDX + CycloneDX~~ | ~~Competitors~~ ✅ Done | SBOM-compatible output formats |
 | ~~Prometheus + JSONL + XML~~ | ~~Competitors~~ ✅ Done | Monitoring, streaming, and enterprise output formats |
-| **Expr-based filtering** | Betterleaks | Consider Expr or similar for contextual rules |
-| **BPE tokenization** | Betterleaks | Consider token-efficiency FP filtering |
-| **Custom verifier config** | TruffleHog, Betterleaks | Allow user-defined verification endpoints in TOML config |
-| **HTML decoding** | TruffleHog | Decode HTML-encoded content from Confluence/Teams before scanning |
+| ~~Expr-based filtering~~ | ~~Betterleaks~~ ✅ Done | Expr filter language with regex matching and field comparisons |
+| ~~BPE tokenization~~ | ~~Betterleaks~~ ✅ Done | BPE tokenizer optimized for secret detection |
+| ~~Custom verifier config~~ | ~~TruffleHog, Betterleaks~~ ✅ Done | TOML + Expr + WASM verifiers, rule profiles, conditional rules |
+| ~~HTML decoding~~ | ~~TruffleHog~~ ✅ Done | 20 content decoders: HTML, PDF, Word, Excel, PowerPoint, OCR, binary strings, YAML, XML, CSV, INI, .env, Dockerfile, HCL, Markdown, Jupyter, URL, Unicode, JSON |
 
 ---
 
@@ -372,7 +377,8 @@ Features not found in any other scanner:
 | **Performance** | ★★★★★ | ★★★★☆ | ★★★★★ | ★★★★★ | ★★☆☆☆ | ★★★★☆ |
 | **AI integration** | ★★★★★ | ☆☆☆☆☆ | ☆☆☆☆☆ | ☆☆☆☆☆ | ★★★☆☆ | ☆☆☆☆☆ |
 | **CI/CD** | ★★★★☆ | ★★★★☆ | ★★★★☆ | ★★★☆☆ | ★★★★★ | ★★★★☆ |
-| **Offline** | ✅ | ✅ | ✅ | ✅ | ❌ | ✅ |
+| **Offline** | ★★★★★ | ★★★☆☆ | ★★★☆☆ | ★★★☆☆ | ❌ | ★★★☆☆ |
+| **Content decoding** | ★★★★★ | ★★☆☆☆ | ★☆☆☆☆ | ★★☆☆☆ | ★★★☆☆ | ★☆☆☆☆ |
 | **Enterprise** | ★★★★★ | ★★★☆☆ | ☆☆☆☆☆ | ☆☆☆☆☆ | ★★★★★ | ☆☆☆☆☆ |
 
 | **Overall** | **★★★★★** | **★★★★★** | **★★★☆☆** | **★★★★☆** | **★★★★☆** | **★★★☆☆** |
@@ -384,10 +390,10 @@ Features not found in any other scanner:
 1. ~~Expand verification to 100+ providers~~ ✅ Done (191 rule IDs)
 2. ~~Add Hugging Face scanning~~ ✅ Done
 3. ~~Publish GitHub Action~~ ✅ Done
-4. **Add HTML decoder** — improve Confluence/Teams/Jira scan results
+4. ~~Add HTML decoder~~ ✅ Done — HTML entity decoder, tag stripper, URL decoder, Unicode NFC, JSON unescaper, YAML multi-doc, XML, CSV, INI, .env, Dockerfile, HCL, Markdown, Jupyter, PDF, Word, Excel, PowerPoint, OCR, binary strings (20 decoders)
 5. ~~Add Expr-based filtering~~ ✅ Done — match Betterleaks FP reduction (Expr filters, BPE, AST comments for 13 languages, 17 FP filters)
 6. ~~Add more scanning sources~~ ✅ Done (40 sources: Gitea, Bitbucket, Azure DevOps, KV stores, cloud secret managers, password managers, K8s, PaaS env vars, GitHub/GitLab integrations, Discord, Mattermost, RSS)
-7. **Add content decoders** — HTML, PDF, Word, Excel, OCR
+7. ~~Add content decoders~~ ✅ Done — 20 content decoders (HTML, PDF, Word, Excel, PowerPoint, OCR, binary strings, YAML, XML, CSV, INI, .env, Dockerfile, HCL, Markdown, Jupyter, URL, Unicode, JSON)
 8. **Add advanced IaC detection** — goals 471-500
 9. ~~Add custom verifier config~~ ✅ Done — TOML + Expr + WASM verifiers, rule profiles, conditional rules, rule deprecation, testing framework, docs generator
 10. ~~Add SharePoint + MS Teams sources~~ ✅ Done
