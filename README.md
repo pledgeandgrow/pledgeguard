@@ -17,13 +17,15 @@ inline comment suppression, recursive base64 decoding, composite/proximity rules
 Docker image scanning, GitHub/GitLab API scanning, S3/GCS bucket scanning, and
 archive (zip/tar) scanning.
 
-> **Full list of supported detectors, verifiers, and platforms:** see **[SUPPORT.md](SUPPORT.md)**
+> **Full list of supported detectors, verifiers, and platforms:** see **[SUPPORT.md](docs/SUPPORT.md)**
+>
+> **Future providers roadmap (competitor comparison):** see **[PROVIDERS-FUTURE.md](docs/PROVIDERS-FUTURE.md)**
 
 It is functional and tested but **not yet production-hardened** — detector
 regexes may need tuning for precision/recall on large codebases, and it has
 not been audited against real-world repositories at scale.
 
-> **New here?** Read the **[Tutorial](TUTORIAL.md)** for a hands-on walkthrough.
+> **New here?** Read the **[Tutorial](docs/TUTORIAL.md)** for a hands-on walkthrough.
 
 ## Installation
 
@@ -94,7 +96,7 @@ CircleCI, Heroku, Atlassian, Notion, Linear, Figma, Twitch, Twitter/X,
 Facebook, LinkedIn, npm, PEM private keys, JWTs, PostgreSQL/MySQL/MongoDB/Redis
 connection strings, and generic entropy-based detection.
 
-See **[SUPPORT.md](SUPPORT.md)** for the complete list.
+See **[SUPPORT.md](docs/SUPPORT.md)** for the complete list.
 
 All matched secrets are redacted by default in CLI output (`--no-redact` to disable).
 
@@ -130,7 +132,7 @@ Telegram, Twilio, OpenAI, Anthropic, PyPI, Docker Hub, SendGrid, Mailgun,
 Mailchimp, Opsgenie, PagerDuty, Google API, Google OAuth, HuggingFace, Shopify,
 Heroku, Vercel, Datadog, Cloudflare, Linear, Okta, Auth0, Supabase, CircleCI,
 Discord, Atlassian, New Relic, and Notion. Use `--only-verified` to show only
-findings confirmed as Active. See **[SUPPORT.md](SUPPORT.md)** for the full list.
+findings confirmed as Active. See **[SUPPORT.md](docs/SUPPORT.md)** for the full list.
 
 ### Baseline / allowlist mode
 
@@ -220,7 +222,7 @@ install-pre-commit options:
 
 - **AST refinement is JS/TS only** — Python, Go, Ruby, etc. use the lexical heuristic.
 - **Git history scans use lexical-only filtering** — only added-line text is available, not the full file.
-- **Live verification covers 34 providers** — see [SUPPORT.md](SUPPORT.md) for the full list. AWS keys, PEM keys, JWTs, and connection strings cannot be verified.
+- **Live verification covers 34 providers** — see [SUPPORT.md](docs/SUPPORT.md) for the full list. AWS keys, PEM keys, JWTs, and connection strings cannot be verified.
 - **Docker/GitHub/GitLab/S3/GCS scanning via library API** — not yet wired to CLI subcommands.
 - **Baseline files contain raw secret values** — treat as sensitive.
 - **Early-stage / unaudited** — detector regexes may need tuning; limited real-world testing.
