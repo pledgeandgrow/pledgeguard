@@ -30,12 +30,13 @@ pub fn scan_docker_image(
             entry.read_to_string(&mut manifest_str)?;
             if let Ok(manifest) = serde_json::from_str::<Vec<serde_json::Value>>(&manifest_str)
                 && let Some(first) = manifest.first()
-                && let Some(layers) = first.get("Layers").and_then(|l| l.as_array()) {
-                        for layer in layers {
-                            if let Some(layer_path) = layer.as_str() {
-                                layer_tars.push(layer_path.to_string());
-                            }
-                        }
+                && let Some(layers) = first.get("Layers").and_then(|l| l.as_array())
+            {
+                for layer in layers {
+                    if let Some(layer_path) = layer.as_str() {
+                        layer_tars.push(layer_path.to_string());
+                    }
+                }
             }
         }
     }
@@ -66,7 +67,8 @@ pub fn scan_docker_image(
                 let mut layer_data = Vec::new();
                 entry.read_to_end(&mut layer_data)?;
                 // Scan the layer tarball.
-                let layer_findings = scan_layer_tar(&layer_data, image_path, layer_path, detectors)?;
+                let layer_findings =
+                    scan_layer_tar(&layer_data, image_path, layer_path, detectors)?;
                 findings.extend(layer_findings);
                 break;
             }

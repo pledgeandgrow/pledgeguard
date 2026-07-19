@@ -1,0 +1,27 @@
+# Goal 317: Cross-compilation targets.
+# Install targets with: rustup target add <target>
+# Build with: cargo build --release --target <target>
+
+[target.x86_64-unknown-linux-musl]
+# Goal 318: Static linking for Linux
+linker = "musl-gcc"
+rustflags = ["-C", "target-feature=+crt-static"]
+
+[target.aarch64-unknown-linux-musl]
+linker = "aarch64-linux-musl-gcc"
+rustflags = ["-C", "target-feature=+crt-static"]
+
+[target.x86_64-pc-windows-gnu]
+# Goal 319: Stripped release binaries for Windows (GNU toolchain)
+rustflags = ["-C", "strip=symbols"]
+
+[target.x86_64-apple-darwin]
+# macOS x86_64 — uses system linker
+
+[target.aarch64-apple-darwin]
+# macOS Apple Silicon — uses system linker
+
+# Default build settings
+[build]
+# Uncomment to set a default target:
+# target = "x86_64-unknown-linux-musl"

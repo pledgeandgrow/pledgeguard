@@ -1,0 +1,3 @@
+{
+  "**/*": "pledgeguard scan --diff --fail-on-findings --format github-actions"
+}

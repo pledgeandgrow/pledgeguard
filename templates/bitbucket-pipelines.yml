@@ -1,0 +1,20 @@
+# PledgeGuard Bitbucket Pipelines Pipe
+# Usage in your bitbucket-pipelines.yml:
+
+pipelines:
+  default:
+    - step:
+        name: Scan for secrets
+        image: pledgeandgrow/pledgeguard:latest
+        script:
+          - pledgeguard scan . --format sarif --report-file pledgeguard-report.sarif --fail-on-findings
+        artifacts:
+          - pledgeguard-report.sarif
+
+  pull-requests:
+    '**':
+      - step:
+          name: PR secret scan
+          image: pledgeandgrow/pledgeguard:latest
+          script:
+            - pledgeguard scan . --format sarif --fail-on-findings

@@ -25,11 +25,7 @@ pub struct CompositeRule {
 /// Scan a file's contents for composite rule matches.
 /// Returns findings for each primary match where all required patterns
 /// are found within the proximity window.
-pub fn scan_composite(
-    contents: &str,
-    path: &Path,
-    rules: &[CompositeRule],
-) -> Vec<Finding> {
+pub fn scan_composite(contents: &str, path: &Path, rules: &[CompositeRule]) -> Vec<Finding> {
     let lines: Vec<&str> = contents.lines().collect();
     let mut findings = Vec::new();
 
@@ -88,7 +84,8 @@ mod tests {
             proximity: 3,
         };
 
-        let contents = "AWS_ACCESS_KEY_ID=AKIAIOSFODNN7EXAMPLE\nAWS_SECRET_ACCESS_KEY=wJalrXUtnFEMI/K7MDENG\n";
+        let contents =
+            "AWS_ACCESS_KEY_ID=AKIAIOSFODNN7EXAMPLE\nAWS_SECRET_ACCESS_KEY=wJalrXUtnFEMI/K7MDENG\n";
         let findings = scan_composite(contents, Path::new("test.env"), &[rule]);
         assert_eq!(findings.len(), 1);
         assert_eq!(findings[0].rule_id, "aws-keypair");

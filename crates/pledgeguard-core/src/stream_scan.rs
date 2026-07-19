@@ -271,7 +271,12 @@ mod tests {
     #[test]
     fn test_scan_line_finds_secrets() {
         let detectors = crate::detectors::builtin_detectors();
-        let findings = scan_line("aws_access_key_id = AKIAIOSFODNN7EXAMPLE", 1, "test://file", &detectors);
+        let findings = scan_line(
+            "aws_access_key_id = AKIAIOSFODNN7EXAMPLE",
+            1,
+            "test://file",
+            &detectors,
+        );
         assert!(!findings.is_empty());
     }
 
@@ -334,7 +339,8 @@ mod tests {
     #[test]
     fn test_scan_vault_tokens_in_log_file() {
         let detectors = crate::detectors::builtin_detectors();
-        let log_content = "2024-01-01 app: Starting with token s.abcdefghijklmnopqrstuvwxyz1234567890\n";
+        let log_content =
+            "2024-01-01 app: Starting with token s.abcdefghijklmnopqrstuvwxyz1234567890\n";
         let temp = tempfile::NamedTempFile::new().unwrap();
         std::fs::write(temp.path(), log_content).unwrap();
         let findings = scan_vault_tokens_in_logs(temp.path(), &detectors).unwrap();

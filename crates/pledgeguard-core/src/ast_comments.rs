@@ -26,10 +26,24 @@ pub fn is_supported(path: &Path) -> bool {
         .map(|s| s.to_lowercase());
     matches!(
         ext.as_deref(),
-        Some("py" | "go" | "rb" | "java" | "kt" | "kts" | "scala" | "groovy"
-          | "c" | "h" | "cpp" | "hpp" | "cc" | "cxx"
-          | "cs"
-          | "php" | "phtml")
+        Some(
+            "py" | "go"
+                | "rb"
+                | "java"
+                | "kt"
+                | "kts"
+                | "scala"
+                | "groovy"
+                | "c"
+                | "h"
+                | "cpp"
+                | "hpp"
+                | "cc"
+                | "cxx"
+                | "cs"
+                | "php"
+                | "phtml"
+        )
     )
 }
 
@@ -330,9 +344,7 @@ fn extract_php_comments(source: &str) -> Vec<(usize, usize)> {
         }
 
         // Line comment // or #
-        if (i + 1 < bytes.len() && bytes[i] == b'/' && bytes[i + 1] == b'/')
-            || bytes[i] == b'#'
-        {
+        if (i + 1 < bytes.len() && bytes[i] == b'/' && bytes[i + 1] == b'/') || bytes[i] == b'#' {
             let start = i;
             while i < bytes.len() && bytes[i] != b'\n' {
                 i += 1;

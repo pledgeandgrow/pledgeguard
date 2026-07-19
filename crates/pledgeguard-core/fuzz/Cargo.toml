@@ -1,0 +1,24 @@
+[package]
+name = "pledgeguard-core-fuzz"
+version = "0.1.0"
+edition = "2021"
+publish = false
+
+[package.metadata]
+cargo-fuzz = true
+
+[dependencies]
+libfuzzer-sys = "0.4"
+pledgeguard-core = { path = ".." }
+
+[[bin]]
+name = "scan_bytes"
+path = "fuzz_targets/scan_bytes.rs"
+test = false
+doc = false
+
+[[bin]]
+name = "scan_line"
+path = "fuzz_targets/scan_line.rs"
+test = false
+doc = false

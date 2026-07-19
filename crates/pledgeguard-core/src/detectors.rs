@@ -13,7 +13,9 @@ pub fn builtin_detectors() -> Vec<Box<dyn Detector>> {
             "AWS Access Key ID",
             Severity::Critical,
             r"\b(AKIA|ASIA|AGPA|AIDA|AROA|AIPA|ANPA|ANVA|ASCA)[0-9A-Z]{16}\b",
-            &["AKIA", "ASIA", "AGPA", "AIDA", "AROA", "AIPA", "ANPA", "ANVA", "ASCA"],
+            &[
+                "AKIA", "ASIA", "AGPA", "AIDA", "AROA", "AIPA", "ANPA", "ANVA", "ASCA",
+            ],
         )),
         Box::new(RegexDetector::with_prefilter(
             "aws-secret-access-key",
@@ -93,7 +95,12 @@ pub fn builtin_detectors() -> Vec<Box<dyn Detector>> {
             "Stripe Secret Key",
             Severity::Critical,
             r"\b(sk|rk)_(live|test)_[A-Za-z0-9]{16,247}\b",
-            &[concat!("sk", "_live_"), concat!("sk", "_test_"), concat!("rk", "_live_"), concat!("rk", "_test_")],
+            &[
+                concat!("sk", "_live_"),
+                concat!("sk", "_test_"),
+                concat!("rk", "_live_"),
+                concat!("rk", "_test_"),
+            ],
         )),
         Box::new(RegexDetector::with_prefilter(
             "stripe-publishable-key",
@@ -129,7 +136,12 @@ pub fn builtin_detectors() -> Vec<Box<dyn Detector>> {
             "GCP Service Account Private Key",
             Severity::Critical,
             r#"(?i)"private_key"\s*:\s*"-----BEGIN (RSA |EC )?PRIVATE KEY-----"#,
-            &["private_key", "BEGIN PRIVATE KEY", "BEGIN RSA PRIVATE KEY", "BEGIN EC PRIVATE KEY"],
+            &[
+                "private_key",
+                "BEGIN PRIVATE KEY",
+                "BEGIN RSA PRIVATE KEY",
+                "BEGIN EC PRIVATE KEY",
+            ],
         )),
         Box::new(RegexDetector::with_prefilter(
             "gcp-oauth-client-id",
@@ -258,7 +270,12 @@ pub fn builtin_detectors() -> Vec<Box<dyn Detector>> {
             "Atlassian (Jira) API Token",
             Severity::High,
             r#"(?i)(jira|atlassian)[_\-./\s]{0,20}(api[_-]?token|pat)\s*[:=]\s*['"]?([A-Za-z0-9]{24,})['"]?"#,
-            &["jira_api_token", "JIRA_API_TOKEN", "jira_token", "JIRA_TOKEN"],
+            &[
+                "jira_api_token",
+                "JIRA_API_TOKEN",
+                "jira_token",
+                "JIRA_TOKEN",
+            ],
         )),
         Box::new(RegexDetector::with_prefilter(
             "gitter-token",
@@ -710,7 +727,11 @@ pub fn builtin_detectors() -> Vec<Box<dyn Detector>> {
             "Bitbucket Data Center Token",
             Severity::High,
             r#"(?i)bitbucket[_-]?(?:dc|datacenter)[_-]?token\s*[:=]\s*['"]?([A-Za-z0-9_\-]{20,})['"]?"#,
-            &["bitbucket_dc_token", "BITBUCKET_DC_TOKEN", "bitbucket_datacenter"],
+            &[
+                "bitbucket_dc_token",
+                "BITBUCKET_DC_TOKEN",
+                "bitbucket_datacenter",
+            ],
         )),
         Box::new(RegexDetector::with_prefilter(
             "travis-ci-token",
@@ -986,7 +1007,12 @@ pub fn builtin_detectors() -> Vec<Box<dyn Detector>> {
             "Alibaba Cloud Secret Key",
             Severity::Critical,
             r#"(?i)(alibaba|aliyun)[_\-./\s]{0,20}(secret[_-]?key|secretkey)\s*[:=]\s*['"]?([A-Za-z0-9+/]{30})['"]?"#,
-            &["alibaba_secret_key", "ALIBABA_SECRET_KEY", "aliyun_secret_key", "ALIYUN_SECRET_KEY"],
+            &[
+                "alibaba_secret_key",
+                "ALIBABA_SECRET_KEY",
+                "aliyun_secret_key",
+                "ALIYUN_SECRET_KEY",
+            ],
         )),
         Box::new(RegexDetector::with_prefilter(
             "tencent-secret-key",
@@ -1353,7 +1379,11 @@ pub fn builtin_detectors() -> Vec<Box<dyn Detector>> {
             "Plaid Access Token",
             Severity::High,
             r"\baccess-(?:sandbox|production|development)-[A-Za-z0-9_\-]{20,}\b",
-            &["access-sandbox-", "access-production-", "access-development-"],
+            &[
+                "access-sandbox-",
+                "access-production-",
+                "access-development-",
+            ],
         )),
         Box::new(RegexDetector::with_prefilter(
             "plaid-key",
@@ -2341,7 +2371,12 @@ pub fn builtin_detectors() -> Vec<Box<dyn Detector>> {
             "Twilio API Key",
             Severity::High,
             r#"(?i)twilio[_-]?(?:api[_-]?key|apikey)\s*[:=]\s*['"]?(SK[A-Za-z0-9]{32})['"]?"#,
-            &["twilio_api_key", "twilio_apikey", "TWILIO_API_KEY", "TWILIO_APIKEY"],
+            &[
+                "twilio_api_key",
+                "twilio_apikey",
+                "TWILIO_API_KEY",
+                "TWILIO_APIKEY",
+            ],
         )),
         Box::new(RegexDetector::with_prefilter(
             "line-messaging-api-token",
@@ -2594,7 +2629,12 @@ pub fn builtin_detectors() -> Vec<Box<dyn Detector>> {
             "Freshworks API Key",
             Severity::High,
             r#"(?i)fresh(?:works|desk)[_\-]?(?:api[_\-]?)?key\s*[:=]\s*['"]?([A-Za-z0-9_\-]{20,})['"]?"#,
-            &["freshworks_api", "FRESHWORKS_API", "freshdesk_api", "FRESHDESK_API"],
+            &[
+                "freshworks_api",
+                "FRESHWORKS_API",
+                "freshdesk_api",
+                "FRESHDESK_API",
+            ],
         )),
         Box::new(RegexDetector::with_prefilter(
             "close-crm-api-key",
@@ -2954,7 +2994,6 @@ pub fn builtin_detectors() -> Vec<Box<dyn Detector>> {
             &["powrbot_api", "POWRBOT_API", "powrbotApi"],
         )),
         // ── Project Management & Productivity (TruffleHog) ───────────────
-
         Box::new(RegexDetector::with_prefilter(
             "clickup-personal-token",
             "ClickUp Personal Token",
@@ -3095,9 +3134,7 @@ pub fn builtin_detectors() -> Vec<Box<dyn Detector>> {
             r#"(?i)jotform[_\-]?(?:api[_\-]?)?key\s*[:=]\s*['"]?([A-Za-z0-9_\-]{20,})['"]?"#,
             &["jotform_api", "JOTFORM_API", "jotformApi"],
         )),
-
         // ── Forms & Survey Platforms (TruffleHog) ────────────────────────
-
         Box::new(RegexDetector::with_prefilter(
             "typeform-api-key",
             "Typeform API Key",
@@ -3145,7 +3182,11 @@ pub fn builtin_detectors() -> Vec<Box<dyn Detector>> {
             "Satismeter Project Key",
             Severity::Medium,
             r#"(?i)satismeter[_\-]?project[_\-]?key\s*[:=]\s*['"]?([A-Za-z0-9_\-]{20,})['"]?"#,
-            &["satismeter_project", "SATISMETER_PROJECT", "satismeterProject"],
+            &[
+                "satismeter_project",
+                "SATISMETER_PROJECT",
+                "satismeterProject",
+            ],
         )),
         Box::new(RegexDetector::with_prefilter(
             "satismeter-write-key",
@@ -3231,9 +3272,7 @@ pub fn builtin_detectors() -> Vec<Box<dyn Detector>> {
             r#"(?i)webengage[_\-]?(?:api[_\-]?)?key\s*[:=]\s*['"]?([A-Za-z0-9_\-]{20,})['"]?"#,
             &["webengage_api", "WEBENGAGE_API", "webengageApi"],
         )),
-
         // ── Financial & Trading APIs (TruffleHog) ────────────────────────
-
         Box::new(RegexDetector::with_prefilter(
             "twelve-data-api-key",
             "Twelve Data API Key",
@@ -3302,7 +3341,11 @@ pub fn builtin_detectors() -> Vec<Box<dyn Detector>> {
             "Financial Modeling Prep API Key",
             Severity::Medium,
             r#"(?i)financial[_\-]?modeling[_\-]?prep[_\-]?(?:api[_\-]?)?key\s*[:=]\s*['"]?([A-Za-z0-9_\-]{20,})['"]?"#,
-            &["financial_modeling_prep", "FINANCIAL_MODELING_PREP", "financialModelingPrep"],
+            &[
+                "financial_modeling_prep",
+                "FINANCIAL_MODELING_PREP",
+                "financialModelingPrep",
+            ],
         )),
         Box::new(RegexDetector::with_prefilter(
             "nasdaq-data-link-api-key",
@@ -3400,21 +3443,33 @@ pub fn builtin_detectors() -> Vec<Box<dyn Detector>> {
             "Carbon Interface API Key",
             Severity::Medium,
             r#"(?i)carbon[_\-]?interface[_\-]?(?:api[_\-]?)?key\s*[:=]\s*['"]?([A-Za-z0-9_\-]{20,})['"]?"#,
-            &["carbon_interface_api", "CARBON_INTERFACE_API", "carbonInterfaceApi"],
+            &[
+                "carbon_interface_api",
+                "CARBON_INTERFACE_API",
+                "carbonInterfaceApi",
+            ],
         )),
         Box::new(RegexDetector::with_prefilter(
             "currency-layer-api-key",
             "Currency Layer API Key",
             Severity::Medium,
             r#"(?i)currency[_\-]?layer[_\-]?(?:api[_\-]?)?key\s*[:=]\s*['"]?([A-Za-z0-9_\-]{20,})['"]?"#,
-            &["currency_layer_api", "CURRENCY_LAYER_API", "currencyLayerApi"],
+            &[
+                "currency_layer_api",
+                "CURRENCY_LAYER_API",
+                "currencyLayerApi",
+            ],
         )),
         Box::new(RegexDetector::with_prefilter(
             "exchange-rates-api-key",
             "Exchange Rates API Key",
             Severity::Low,
             r#"(?i)exchange[_\-]?rates[_\-]?(?:api[_\-]?)?key\s*[:=]\s*['"]?([A-Za-z0-9_\-]{20,})['"]?"#,
-            &["exchange_rates_api", "EXCHANGE_RATES_API", "exchangeRatesApi"],
+            &[
+                "exchange_rates_api",
+                "EXCHANGE_RATES_API",
+                "exchangeRatesApi",
+            ],
         )),
         Box::new(RegexDetector::with_prefilter(
             "currencyscoop-api-key",
@@ -3428,7 +3483,11 @@ pub fn builtin_detectors() -> Vec<Box<dyn Detector>> {
             "Currency Freaks API Key",
             Severity::Medium,
             r#"(?i)currencyfreaks[_\-]?(?:api[_\-]?)?key\s*[:=]\s*['"]?([A-Za-z0-9_\-]{20,})['"]?"#,
-            &["currencyfreaks_api", "CURRENCYFREAKS_API", "currencyFreaksApi"],
+            &[
+                "currencyfreaks_api",
+                "CURRENCYFREAKS_API",
+                "currencyFreaksApi",
+            ],
         )),
         Box::new(RegexDetector::with_prefilter(
             "country-layer-api-key",
@@ -3449,11 +3508,13 @@ pub fn builtin_detectors() -> Vec<Box<dyn Detector>> {
             "Currency Cloud API Key",
             Severity::High,
             r#"(?i)currency[_\-]?cloud[_\-]?(?:api[_\-]?)?key\s*[:=]\s*['"]?([A-Za-z0-9_\-]{20,})['"]?"#,
-            &["currency_cloud_api", "CURRENCY_CLOUD_API", "currencyCloudApi"],
+            &[
+                "currency_cloud_api",
+                "CURRENCY_CLOUD_API",
+                "currencyCloudApi",
+            ],
         )),
-
         // ── Crypto & Blockchain Additional (TruffleHog) ──────────────────
-
         Box::new(RegexDetector::with_prefilter(
             "kraken-api-key",
             "Kraken API Key",
@@ -3508,14 +3569,22 @@ pub fn builtin_detectors() -> Vec<Box<dyn Detector>> {
             "Bitcoin Average API Key",
             Severity::Medium,
             r#"(?i)bitcoin[_\-]?average[_\-]?(?:api[_\-]?)?key\s*[:=]\s*['"]?([A-Za-z0-9_\-]{20,})['"]?"#,
-            &["bitcoin_average_api", "BITCOIN_AVERAGE_API", "bitcoinAverageApi"],
+            &[
+                "bitcoin_average_api",
+                "BITCOIN_AVERAGE_API",
+                "bitcoinAverageApi",
+            ],
         )),
         Box::new(RegexDetector::with_prefilter(
             "worldcoinindex-api-key",
             "World Coin Index API Key",
             Severity::Medium,
             r#"(?i)world[_\-]?coin[_\-]?index[_\-]?(?:api[_\-]?)?key\s*[:=]\s*['"]?([A-Za-z0-9_\-]{20,})['"]?"#,
-            &["world_coin_index_api", "WORLD_COIN_INDEX_API", "worldCoinIndexApi"],
+            &[
+                "world_coin_index_api",
+                "WORLD_COIN_INDEX_API",
+                "worldCoinIndexApi",
+            ],
         )),
         Box::new(RegexDetector::with_prefilter(
             "glassnode-api-key",
@@ -3559,9 +3628,7 @@ pub fn builtin_detectors() -> Vec<Box<dyn Detector>> {
             r#"(?i)coingecko[_\-]?(?:api[_\-]?)?key\s*[:=]\s*['"]?([A-Za-z0-9_\-]{20,})['"]?"#,
             &["coingecko_api", "COINGECKO_API", "coingeckoApi"],
         )),
-
         // ── Weather & Environment APIs (TruffleHog) ──────────────────────
-
         Box::new(RegexDetector::with_prefilter(
             "openweather-api-key",
             "OpenWeather API Key",
@@ -3609,7 +3676,11 @@ pub fn builtin_detectors() -> Vec<Box<dyn Detector>> {
             "Visual Crossing API Key",
             Severity::Medium,
             r#"(?i)visual[_\-]?crossing[_\-]?(?:api[_\-]?)?key\s*[:=]\s*['"]?([A-Za-z0-9_\-]{20,})['"]?"#,
-            &["visual_crossing_api", "VISUAL_CROSSING_API", "visualCrossingApi"],
+            &[
+                "visual_crossing_api",
+                "VISUAL_CROSSING_API",
+                "visualCrossingApi",
+            ],
         )),
         Box::new(RegexDetector::with_prefilter(
             "stormglass-api-key",
@@ -3639,7 +3710,6 @@ pub fn builtin_detectors() -> Vec<Box<dyn Detector>> {
             r#"(?i)openuv[_\-]?(?:api[_\-]?)?key\s*[:=]\s*['"]?([A-Za-z0-9_\-]{20,})['"]?"#,
             &["openuv_api", "OPENUV_API", "openuvApi"],
         )),
-
         // ── Edge Token (TruffleHog) ───────────────────────────────────────
         Box::new(RegexDetector::with_prefilter(
             "edge-token",
@@ -3656,7 +3726,6 @@ pub fn builtin_detectors() -> Vec<Box<dyn Detector>> {
             r#"(?i)calendly[_\-]?webhook[_\-]?(?:url|secret)\s*[:=]\s*['"]?([A-Za-z0-9_\-]{20,})['"]?"#,
             &["calendly_webhook", "CALENDLY_WEBHOOK", "calendlyWebhook"],
         )),
-
         // ── Geocoding & Location (TruffleHog) ────────────────────────────
         Box::new(RegexDetector::with_prefilter(
             "tomtom-api-key",
@@ -3826,7 +3895,6 @@ pub fn builtin_detectors() -> Vec<Box<dyn Detector>> {
             r#"(?i)samsara[_\-]?(?:api[_\-]?)?key\s*[:=]\s*['"]?([A-Za-z0-9_\-]{20,})['"]?"#,
             &["samsara_api", "SAMSARA_API", "samsaraApi"],
         )),
-
         // ── Media & Image APIs (TruffleHog) ──────────────────────────────
         Box::new(RegexDetector::with_prefilter(
             "unsplash-api-key",
@@ -3868,7 +3936,11 @@ pub fn builtin_detectors() -> Vec<Box<dyn Detector>> {
             "Shutterstock OAuth Token",
             Severity::High,
             r#"(?i)shutterstock[_\-]?oauth[_\-]?token\s*[:=]\s*['"]?([A-Za-z0-9_\-]{20,})['"]?"#,
-            &["shutterstock_oauth", "SHUTTERSTOCK_OAUTH", "shutterstockOauth"],
+            &[
+                "shutterstock_oauth",
+                "SHUTTERSTOCK_OAUTH",
+                "shutterstockOauth",
+            ],
         )),
         Box::new(RegexDetector::with_prefilter(
             "iconfinder-api-key",
@@ -3931,7 +4003,11 @@ pub fn builtin_detectors() -> Vec<Box<dyn Detector>> {
             "ScreenshotLayer API Key",
             Severity::Medium,
             r#"(?i)screenshotlayer[_\-]?(?:api[_\-]?)?key\s*[:=]\s*['"]?([A-Za-z0-9_\-]{20,})['"]?"#,
-            &["screenshotlayer_api", "SCREENSHOTLAYER_API", "screenshotlayerApi"],
+            &[
+                "screenshotlayer_api",
+                "SCREENSHOTLAYER_API",
+                "screenshotlayerApi",
+            ],
         )),
         Box::new(RegexDetector::with_prefilter(
             "browshot-api-key",
@@ -4052,7 +4128,6 @@ pub fn builtin_detectors() -> Vec<Box<dyn Detector>> {
             r#"(?i)hypeauditor[_\-]?(?:api[_\-]?)?key\s*[:=]\s*['"]?([A-Za-z0-9_\-]{20,})['"]?"#,
             &["hypeauditor_api", "HYPEAUDITOR_API", "hypeauditorApi"],
         )),
-
         // ── News & Content APIs (TruffleHog) ─────────────────────────────
         Box::new(RegexDetector::with_prefilter(
             "newsapi-key",
@@ -4187,7 +4262,6 @@ pub fn builtin_detectors() -> Vec<Box<dyn Detector>> {
             r#"(?i)ritekit[_\-]?(?:api[_\-]?)?key\s*[:=]\s*['"]?([A-Za-z0-9_\-]{20,})['"]?"#,
             &["ritekit_api", "RITEKIT_API", "ritekitApi"],
         )),
-
         // ── Developer & Code Tools (TruffleHog) ──────────────────────────
         Box::new(RegexDetector::with_prefilter(
             "rubygems-api-token",
@@ -4390,7 +4464,11 @@ pub fn builtin_detectors() -> Vec<Box<dyn Detector>> {
             "DetectLanguage API Key",
             Severity::Medium,
             r#"(?i)detectlanguage[_\-]?(?:api[_\-]?)?key\s*[:=]\s*['"]?([A-Za-z0-9_\-]{20,})['"]?"#,
-            &["detectlanguage_api", "DETECTLANGUAGE_API", "detectlanguageApi"],
+            &[
+                "detectlanguage_api",
+                "DETECTLANGUAGE_API",
+                "detectlanguageApi",
+            ],
         )),
         Box::new(RegexDetector::with_prefilter(
             "languagelayer-api-key",
@@ -4488,7 +4566,11 @@ pub fn builtin_detectors() -> Vec<Box<dyn Detector>> {
             "SecurityTrails API Key",
             Severity::High,
             r#"(?i)securitytrails[_\-]?(?:api[_\-]?)?key\s*[:=]\s*['"]?([A-Za-z0-9_\-]{20,})['"]?"#,
-            &["securitytrails_api", "SECURITYTRAILS_API", "securitytrailsApi"],
+            &[
+                "securitytrails_api",
+                "SECURITYTRAILS_API",
+                "securitytrailsApi",
+            ],
         )),
         Box::new(RegexDetector::with_prefilter(
             "urlscan-api-key",
@@ -4537,7 +4619,11 @@ pub fn builtin_detectors() -> Vec<Box<dyn Detector>> {
             "YouNeedABudget API Key",
             Severity::Medium,
             r#"(?i)youneedabudget[_\-]?(?:api[_\-]?)?key\s*[:=]\s*['"]?([A-Za-z0-9_\-]{20,})['"]?"#,
-            &["youneedabudget_api", "YOUNEEDABUDGET_API", "youneedabudgetApi"],
+            &[
+                "youneedabudget_api",
+                "YOUNEEDABUDGET_API",
+                "youneedabudgetApi",
+            ],
         )),
         Box::new(RegexDetector::with_prefilter(
             "filestack-api-key",
@@ -4644,7 +4730,6 @@ pub fn builtin_detectors() -> Vec<Box<dyn Detector>> {
             r#"(?i)bored[_\-]?(?:api[_\-]?)?key\s*[:=]\s*['"]?([A-Za-z0-9_\-]{20,})['"]?"#,
             &["bored_api", "BORED_API", "boredApi"],
         )),
-
         // ── Document & PDF APIs (TruffleHog) ─────────────────────────────
         Box::new(RegexDetector::with_prefilter(
             "html2pdf-api-key",
@@ -4679,7 +4764,11 @@ pub fn builtin_detectors() -> Vec<Box<dyn Detector>> {
             "Restpack Screenshot API Key",
             Severity::Medium,
             r#"(?i)restpack[_\-]?screenshot[_\-]?(?:api[_\-]?)?key\s*[:=]\s*['"]?([A-Za-z0-9_\-]{20,})['"]?"#,
-            &["restpack_screenshot", "RESTPACK_SCREENSHOT", "restpackScreenshot"],
+            &[
+                "restpack_screenshot",
+                "RESTPACK_SCREENSHOT",
+                "restpackScreenshot",
+            ],
         )),
         Box::new(RegexDetector::with_prefilter(
             "documo-api-key",
@@ -4737,7 +4826,6 @@ pub fn builtin_detectors() -> Vec<Box<dyn Detector>> {
             r#"(?i)upc[_\-]?database[_\-]?(?:api[_\-]?)?key\s*[:=]\s*['"]?([A-Za-z0-9_\-]{20,})['"]?"#,
             &["upcdatabase_api", "UPCDATABASE_API", "upcdatabaseApi"],
         )),
-
         // ── Scraping & Web Automation (TruffleHog) ───────────────────────
         Box::new(RegexDetector::with_prefilter(
             "scraperapi-key",
@@ -4816,7 +4904,6 @@ pub fn builtin_detectors() -> Vec<Box<dyn Detector>> {
             r#"(?i)proxycrawl[_\-]?(?:api[_\-]?)?key\s*[:=]\s*['"]?([A-Za-z0-9_\-]{20,})['"]?"#,
             &["proxycrawl_api", "PROXYCRAWL_API", "proxycrawlApi"],
         )),
-
         // ── Email Verification (TruffleHog) ──────────────────────────────
         Box::new(RegexDetector::with_prefilter(
             "debounce-api-key",
@@ -4860,7 +4947,6 @@ pub fn builtin_detectors() -> Vec<Box<dyn Detector>> {
             r#"(?i)numverify[_\-]?(?:api[_\-]?)?key\s*[:=]\s*['"]?([A-Za-z0-9_\-]{20,})['"]?"#,
             &["numverify_api", "NUMVERIFY_API", "numverifyApi"],
         )),
-
         // ── CMS & Web Builders (TruffleHog) ──────────────────────────────
         Box::new(RegexDetector::with_prefilter(
             "webflow-api-key",
@@ -4897,7 +4983,6 @@ pub fn builtin_detectors() -> Vec<Box<dyn Detector>> {
             r#"(?i)kontent[_\-]?(?:api[_\-]?)?key\s*[:=]\s*['"]?([A-Za-z0-9_\-]{20,})['"]?"#,
             &["kontent_api", "KONTENT_API", "kontentApi"],
         )),
-
         // ── Miscellaneous APIs (TruffleHog) ──────────────────────────────
         Box::new(RegexDetector::with_prefilter(
             "wakatime-api-key",
@@ -4939,7 +5024,11 @@ pub fn builtin_detectors() -> Vec<Box<dyn Detector>> {
             "Technical Analysis API Key",
             Severity::Medium,
             r#"(?i)technical[_\-]?analysis[_\-]?(?:api[_\-]?)?key\s*[:=]\s*['"]?([A-Za-z0-9_\-]{20,})['"]?"#,
-            &["technicalanalysis_api", "TECHNICALANALYSIS_API", "technicalanalysisApi"],
+            &[
+                "technicalanalysis_api",
+                "TECHNICALANALYSIS_API",
+                "technicalanalysisApi",
+            ],
         )),
         Box::new(RegexDetector::with_prefilter(
             "impala-api-key",
@@ -5025,7 +5114,6 @@ pub fn builtin_detectors() -> Vec<Box<dyn Detector>> {
             r"\bpul-[A-Za-z0-9]{40}\b",
             &["pul-"],
         )),
-
         // ── Phase 1: Additional Cloud Providers ──────────────────────────
         Box::new(RegexDetector::with_prefilter(
             "huawei-cloud-access-key",
@@ -5067,7 +5155,11 @@ pub fn builtin_detectors() -> Vec<Box<dyn Detector>> {
             "Backblaze B2 Application Key",
             Severity::Critical,
             r#"(?i)b2[_-]?(?:application[_-]?)?key\s*[:=]\s*['"]?([A-Za-z0-9_\-]{40,})['"]?"#,
-            &["b2_application_key", "B2_APPLICATION_KEY", "backblaze_app_key"],
+            &[
+                "b2_application_key",
+                "B2_APPLICATION_KEY",
+                "backblaze_app_key",
+            ],
         )),
         Box::new(RegexDetector::with_prefilter(
             "wasabi-api-key",
@@ -5720,7 +5812,6 @@ pub fn builtin_detectors() -> Vec<Box<dyn Detector>> {
             r#"(?i)wepay[_-]?(?:access[_-]?)?token\s*[:=]\s*['"]?([A-Za-z0-9_\-]{20,})['"]?"#,
             &["wepay_access_token", "WEPAY_ACCESS_TOKEN", "wepay"],
         )),
-
         // ── Phase 1: More SaaS, DevOps, and Infrastructure ──────────────
         Box::new(RegexDetector::with_prefilter(
             "coda-api-key",
@@ -6079,7 +6170,6 @@ pub fn builtin_detectors() -> Vec<Box<dyn Detector>> {
             r#"(?i)cargo[_-]?registry[_-]?token\s*[:=]\s*['"]?([A-Za-z0-9]{36,})['"]?"#,
             &["cargo_registry_token", "CARGO_REGISTRY_TOKEN"],
         )),
-
         Box::new(EntropyDetector::default()),
     ]
 }
@@ -6181,7 +6271,9 @@ mod tests {
             .iter()
             .find(|d| d.id() == "azure-batch-key")
             .unwrap();
-        let matches = batch.scan_line("BatchAccountKey=ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=");
+        let matches = batch.scan_line(
+            "BatchAccountKey=ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=",
+        );
         assert_eq!(matches.len(), 1);
     }
 
@@ -6214,14 +6306,18 @@ mod tests {
             .iter()
             .find(|d| d.id() == "gcp-oauth-client-id")
             .unwrap();
-        let matches = gcp.scan_line("123456789-abcdefghijklmnopqrstuvwxyz012345.apps.googleusercontent.com");
+        let matches =
+            gcp.scan_line("123456789-abcdefghijklmnopqrstuvwxyz012345.apps.googleusercontent.com");
         assert_eq!(matches.len(), 1);
     }
 
     #[test]
     fn test_alibaba_secret_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "alibaba-secret-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "alibaba-secret-key")
+            .unwrap();
         let matches = d.scan_line("alibaba_secret_key = ABCDEF1234567890ABCDEFGHIJKLMN12");
         assert_eq!(matches.len(), 1);
     }
@@ -6229,7 +6325,10 @@ mod tests {
     #[test]
     fn test_tencent_secret_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "tencent-secret-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "tencent-secret-key")
+            .unwrap();
         let matches = d.scan_line("tencent_secret_key = ABCDEF1234567890ABCDEFGHIJKLMN1234567890");
         assert_eq!(matches.len(), 1);
     }
@@ -6237,7 +6336,10 @@ mod tests {
     #[test]
     fn test_ibm_cloud_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "ibm-cloud-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "ibm-cloud-key")
+            .unwrap();
         let matches = d.scan_line("ibm_cloud_key = ABCDEfghIJklMNopQRstUVwxYZ1234567890123456-_");
         assert_eq!(matches.len(), 1);
     }
@@ -6245,7 +6347,10 @@ mod tests {
     #[test]
     fn test_oracle_cloud_token_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "oracle-cloud-token").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "oracle-cloud-token")
+            .unwrap();
         let matches = d.scan_line("oracle_cloud_token = ABCDEfghIJklMNopQRstUVwxYZ1234567890abcd");
         assert_eq!(matches.len(), 1);
     }
@@ -6261,7 +6366,10 @@ mod tests {
     #[test]
     fn test_vultr_api_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "vultr-api-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "vultr-api-key")
+            .unwrap();
         let matches = d.scan_line("vultr_api_key = ABCDEF1234567890ABCDEF1234567890ABCD");
         assert_eq!(matches.len(), 1);
     }
@@ -6270,22 +6378,31 @@ mod tests {
     fn test_linode_token_detected() {
         let detectors = builtin_detectors();
         let d = detectors.iter().find(|d| d.id() == "linode-token").unwrap();
-        let matches = d.scan_line("linode_token = abcdef1234567890abcdef1234567890abcdef1234567890abcdef1234567890");
+        let matches = d.scan_line(
+            "linode_token = abcdef1234567890abcdef1234567890abcdef1234567890abcdef1234567890",
+        );
         assert_eq!(matches.len(), 1);
     }
 
     #[test]
     fn test_cloudflare_global_api_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "cloudflare-global-api-key").unwrap();
-        let matches = d.scan_line("cloudflare_global_api_key = 1234567890abcdef1234567890abcdef1234567");
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "cloudflare-global-api-key")
+            .unwrap();
+        let matches =
+            d.scan_line("cloudflare_global_api_key = 1234567890abcdef1234567890abcdef1234567");
         assert_eq!(matches.len(), 1);
     }
 
     #[test]
     fn test_github_old_pat_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "github-old-pat").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "github-old-pat")
+            .unwrap();
         let matches = d.scan_line("github_token = abc123def4567890abc123def4567890abc123de");
         assert_eq!(matches.len(), 1);
     }
@@ -6293,7 +6410,10 @@ mod tests {
     #[test]
     fn test_bitbucket_client_id_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "bitbucket-client-id").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "bitbucket-client-id")
+            .unwrap();
         let matches = d.scan_line("bitbucket_client_id = ABCDEFGHIJKLMNOPQRSTUVWXYZ123456");
         assert_eq!(matches.len(), 1);
     }
@@ -6301,7 +6421,10 @@ mod tests {
     #[test]
     fn test_bitbucket_client_secret_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "bitbucket-client-secret").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "bitbucket-client-secret")
+            .unwrap();
         let matches = d.scan_line("bitbucket_client_secret = ABCDEFGHIJKLMNOPQRSTUVWXYZ123456");
         assert_eq!(matches.len(), 1);
     }
@@ -6309,7 +6432,10 @@ mod tests {
     #[test]
     fn test_travis_ci_token_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "travis-ci-token").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "travis-ci-token")
+            .unwrap();
         let matches = d.scan_line("travis_ci_token = abcdefghijklmnopqrst");
         assert_eq!(matches.len(), 1);
     }
@@ -6317,7 +6443,10 @@ mod tests {
     #[test]
     fn test_droneci_token_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "droneci-token").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "droneci-token")
+            .unwrap();
         let matches = d.scan_line("drone_token = abcdefghijklmnopqrst");
         assert_eq!(matches.len(), 1);
     }
@@ -6325,7 +6454,10 @@ mod tests {
     #[test]
     fn test_buildkite_token_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "buildkite-token").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "buildkite-token")
+            .unwrap();
         let matches = d.scan_line("bkc_1234567890abcdef1234567890abcdef12345678");
         assert_eq!(matches.len(), 1);
     }
@@ -6333,7 +6465,10 @@ mod tests {
     #[test]
     fn test_teamcity_token_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "teamcity-token").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "teamcity-token")
+            .unwrap();
         let matches = d.scan_line("teamcity_token = abcdefghijklmnopqrst");
         assert_eq!(matches.len(), 1);
     }
@@ -6341,7 +6476,10 @@ mod tests {
     #[test]
     fn test_jenkins_token_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "jenkins-token").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "jenkins-token")
+            .unwrap();
         let matches = d.scan_line("jenkins_token = abcdefghijklmnopqrstuvwxyz123456");
         assert_eq!(matches.len(), 1);
     }
@@ -6365,7 +6503,10 @@ mod tests {
     #[test]
     fn test_spinnaker_token_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "spinnaker-token").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "spinnaker-token")
+            .unwrap();
         let matches = d.scan_line("spinnaker_token = abcdefghijklmnopqrst");
         assert_eq!(matches.len(), 1);
     }
@@ -6373,7 +6514,10 @@ mod tests {
     #[test]
     fn test_harness_api_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "harness-api-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "harness-api-key")
+            .unwrap();
         let matches = d.scan_line("harness_api_key = abcdefghijklmnopqrst");
         assert_eq!(matches.len(), 1);
     }
@@ -6381,7 +6525,10 @@ mod tests {
     #[test]
     fn test_codecov_token_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "codecov-token").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "codecov-token")
+            .unwrap();
         let matches = d.scan_line("codecov_token = abcdef1234567890abcdef1234567890");
         assert_eq!(matches.len(), 1);
     }
@@ -6389,7 +6536,10 @@ mod tests {
     #[test]
     fn test_sonarqube_token_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "sonarqube-token").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "sonarqube-token")
+            .unwrap();
         let matches = d.scan_line("squ_1234567890abcdef1234567890abcdef12345678");
         assert_eq!(matches.len(), 1);
     }
@@ -6405,7 +6555,10 @@ mod tests {
     #[test]
     fn test_artifactory_api_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "artifactory-api-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "artifactory-api-key")
+            .unwrap();
         let key = format!("AKC{}", "A".repeat(70));
         let matches = d.scan_line(&key);
         assert_eq!(matches.len(), 1);
@@ -6414,7 +6567,10 @@ mod tests {
     #[test]
     fn test_artifactory_reference_token_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "artifactory-reference-token").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "artifactory-reference-token")
+            .unwrap();
         let key = format!("cmV{}", "A".repeat(60));
         let matches = d.scan_line(&key);
         assert_eq!(matches.len(), 1);
@@ -6423,7 +6579,10 @@ mod tests {
     #[test]
     fn test_terraform_cloud_token_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "terraform-cloud-token").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "terraform-cloud-token")
+            .unwrap();
         let token = format!("app.abc123.def456.ghi789.jkl012.atlasv1.{}", "A".repeat(70));
         let matches = d.scan_line(&token);
         assert_eq!(matches.len(), 1);
@@ -6432,7 +6591,10 @@ mod tests {
     #[test]
     fn test_pivotal_tracker_token_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "pivotal-tracker-token").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "pivotal-tracker-token")
+            .unwrap();
         let matches = d.scan_line("pivotal_tracker_token = abcdefghijklmnopqrstuvwxyz123456");
         assert_eq!(matches.len(), 1);
     }
@@ -6440,7 +6602,10 @@ mod tests {
     #[test]
     fn test_clojars_token_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "clojars-token").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "clojars-token")
+            .unwrap();
         let key = format!("CLOJARS_{}", "A".repeat(60));
         let matches = d.scan_line(&key);
         assert_eq!(matches.len(), 1);
@@ -6451,7 +6616,10 @@ mod tests {
     #[test]
     fn test_discord_client_id_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "discord-client-id").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "discord-client-id")
+            .unwrap();
         let matches = d.scan_line("discord_client_id = 123456789012345678");
         assert_eq!(matches.len(), 1);
     }
@@ -6459,7 +6627,10 @@ mod tests {
     #[test]
     fn test_discord_client_secret_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "discord-client-secret").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "discord-client-secret")
+            .unwrap();
         let matches = d.scan_line("discord_client_secret = abcdefghijklmnopqrstuvwxyz012345");
         assert_eq!(matches.len(), 1);
     }
@@ -6467,7 +6638,10 @@ mod tests {
     #[test]
     fn test_ms_teams_webhook_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "microsoft-teams-webhook").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "microsoft-teams-webhook")
+            .unwrap();
         let matches = d.scan_line("https://test.webhook.office.com/webhookb2/aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee/@aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee/IncomingWebhook/abcdefghijklmnop/aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee");
         assert_eq!(matches.len(), 1);
     }
@@ -6475,7 +6649,10 @@ mod tests {
     #[test]
     fn test_atlassian_jira_token_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "atlassian-jira-token").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "atlassian-jira-token")
+            .unwrap();
         let matches = d.scan_line("jira_api_token = abcdefghijklmnopqrstuvwxyz1234");
         assert_eq!(matches.len(), 1);
     }
@@ -6499,7 +6676,10 @@ mod tests {
     #[test]
     fn test_intercom_token_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "intercom-token").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "intercom-token")
+            .unwrap();
         let matches = d.scan_line("intercom_token = abcdefghijklmnopqrst");
         assert_eq!(matches.len(), 1);
     }
@@ -6507,7 +6687,10 @@ mod tests {
     #[test]
     fn test_helpscout_token_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "helpscout-token").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "helpscout-token")
+            .unwrap();
         let matches = d.scan_line("helpscout_api_key = abcdefghijklmnopqrst");
         assert_eq!(matches.len(), 1);
     }
@@ -6515,7 +6698,10 @@ mod tests {
     #[test]
     fn test_helpcrunch_token_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "helpcrunch-token").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "helpcrunch-token")
+            .unwrap();
         let matches = d.scan_line("helpcrunch_secret_key = abcdefghijklmnopqrst");
         assert_eq!(matches.len(), 1);
     }
@@ -6531,7 +6717,10 @@ mod tests {
     #[test]
     fn test_pipedrive_token_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "pipedrive-token").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "pipedrive-token")
+            .unwrap();
         let matches = d.scan_line("pipedrive_api_token = abcdefghijklmnopqrstuvwxyz0123456789ABCD");
         assert_eq!(matches.len(), 1);
     }
@@ -6547,7 +6736,10 @@ mod tests {
     #[test]
     fn test_frameio_token_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "frameio-token").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "frameio-token")
+            .unwrap();
         let key = format!("fio-{}", "A".repeat(64));
         let matches = d.scan_line(&key);
         assert_eq!(matches.len(), 1);
@@ -6564,7 +6756,10 @@ mod tests {
     #[test]
     fn test_trello_api_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "trello-api-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "trello-api-key")
+            .unwrap();
         let matches = d.scan_line("trello_api_key = abcdefghijklmnopqrstuvwxyz123456");
         assert_eq!(matches.len(), 1);
     }
@@ -6572,7 +6767,10 @@ mod tests {
     #[test]
     fn test_asana_client_id_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "asana-client-id").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "asana-client-id")
+            .unwrap();
         let matches = d.scan_line("asana_client_id = 1234567890123456");
         assert_eq!(matches.len(), 1);
     }
@@ -6580,7 +6778,10 @@ mod tests {
     #[test]
     fn test_asana_client_secret_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "asana-client-secret").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "asana-client-secret")
+            .unwrap();
         let matches = d.scan_line("asana_client_secret = abcdefghijklmnopqrstuvwxyz123456");
         assert_eq!(matches.len(), 1);
     }
@@ -6598,7 +6799,10 @@ mod tests {
     #[test]
     fn test_shopify_shared_secret_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "shopify-shared-secret").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "shopify-shared-secret")
+            .unwrap();
         let matches = d.scan_line("shpss_abcdefghijklmnopqrstuvwxyz012345");
         assert_eq!(matches.len(), 1);
     }
@@ -6606,7 +6810,10 @@ mod tests {
     #[test]
     fn test_shopify_custom_app_token_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "shopify-custom-app-token").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "shopify-custom-app-token")
+            .unwrap();
         let matches = d.scan_line("shpca_abcdefghijklmnopqrstuvwxyz012345");
         assert_eq!(matches.len(), 1);
     }
@@ -6614,7 +6821,10 @@ mod tests {
     #[test]
     fn test_shopify_private_app_token_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "shopify-private-app-token").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "shopify-private-app-token")
+            .unwrap();
         let matches = d.scan_line("shppa_abcdefghijklmnopqrstuvwxyz012345");
         assert_eq!(matches.len(), 1);
     }
@@ -6622,7 +6832,10 @@ mod tests {
     #[test]
     fn test_paypal_oauth_token_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "paypal-oauth-token").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "paypal-oauth-token")
+            .unwrap();
         let matches = d.scan_line("paypal_token = Aabcdefghijklmnopqrstuvwxyz0123");
         assert_eq!(matches.len(), 1);
     }
@@ -6630,7 +6843,10 @@ mod tests {
     #[test]
     fn test_paypal_client_secret_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "paypal-client-secret").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "paypal-client-secret")
+            .unwrap();
         let key = format!("paypal_client_secret = {}", "A".repeat(80));
         let matches = d.scan_line(&key);
         assert_eq!(matches.len(), 1);
@@ -6648,7 +6864,10 @@ mod tests {
     #[test]
     fn test_square_app_token_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "square-app-token").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "square-app-token")
+            .unwrap();
         let key = format!("sq0csp-{}", "A".repeat(43));
         let matches = d.scan_line(&key);
         assert_eq!(matches.len(), 1);
@@ -6657,7 +6876,10 @@ mod tests {
     #[test]
     fn test_coinbase_token_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "coinbase-access-token").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "coinbase-access-token")
+            .unwrap();
         let matches = d.scan_line("coinbase_access_token = abcdefghijklmnopqrst");
         assert_eq!(matches.len(), 1);
     }
@@ -6673,7 +6895,10 @@ mod tests {
     #[test]
     fn test_paystack_token_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "paystack-token").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "paystack-token")
+            .unwrap();
         let key = format!("sk_{}_{}", "live", "a".repeat(40));
         let line = format!("paystack {}", key);
         let matches = d.scan_line(&line);
@@ -6699,7 +6924,10 @@ mod tests {
     #[test]
     fn test_flutterwave_secret_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "flutterwave-secret-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "flutterwave-secret-key")
+            .unwrap();
         let matches = d.scan_line("FLWSECK-abcdefghijklmnopqrstuvwxyz0123456789ABCD");
         assert_eq!(matches.len(), 1);
     }
@@ -6707,7 +6935,10 @@ mod tests {
     #[test]
     fn test_flutterwave_encryption_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "flutterwave-encryption-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "flutterwave-encryption-key")
+            .unwrap();
         let matches = d.scan_line("FLWSECK_TEST-abcdefghijkl");
         assert_eq!(matches.len(), 1);
     }
@@ -6723,7 +6954,10 @@ mod tests {
     #[test]
     fn test_fastspring_token_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "fastspring-token").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "fastspring-token")
+            .unwrap();
         let matches = d.scan_line("fastspring_api_key = abcdefghijklmnopqrst");
         assert_eq!(matches.len(), 1);
     }
@@ -6748,7 +6982,10 @@ mod tests {
     #[test]
     fn test_easypost_api_token_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "easypost-api-token").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "easypost-api-token")
+            .unwrap();
         let key = format!("EZ{}", "A".repeat(54));
         let matches = d.scan_line(&key);
         assert_eq!(matches.len(), 1);
@@ -6757,7 +6994,10 @@ mod tests {
     #[test]
     fn test_easypost_test_api_token_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "easypost-test-api-token").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "easypost-test-api-token")
+            .unwrap();
         let key = format!("EZTK{}", "A".repeat(52));
         let matches = d.scan_line(&key);
         assert_eq!(matches.len(), 1);
@@ -6766,7 +7006,10 @@ mod tests {
     #[test]
     fn test_finicity_api_token_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "finicity-api-token").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "finicity-api-token")
+            .unwrap();
         let matches = d.scan_line("finicity_api_token = abcdefghijklmnopqrst");
         assert_eq!(matches.len(), 1);
     }
@@ -6774,7 +7017,10 @@ mod tests {
     #[test]
     fn test_finicity_client_secret_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "finicity-client-secret").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "finicity-client-secret")
+            .unwrap();
         let matches = d.scan_line("finicity_client_secret = abcdefghijklmnopqrst");
         assert_eq!(matches.len(), 1);
     }
@@ -6782,7 +7028,10 @@ mod tests {
     #[test]
     fn test_freshbooks_token_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "freshbooks-token").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "freshbooks-token")
+            .unwrap();
         let matches = d.scan_line("freshbooks_access_token = abcdefghijklmnopqrst");
         assert_eq!(matches.len(), 1);
     }
@@ -6790,7 +7039,10 @@ mod tests {
     #[test]
     fn test_gocardless_token_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "gocardless-token").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "gocardless-token")
+            .unwrap();
         let matches = d.scan_line("gocardless_api_token = abcdefghijklmnopqrst");
         assert_eq!(matches.len(), 1);
     }
@@ -6798,7 +7050,10 @@ mod tests {
     #[test]
     fn test_taxjar_api_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "taxjar-api-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "taxjar-api-key")
+            .unwrap();
         let matches = d.scan_line("taxjar_api_key = abcdefghijklmnopqrst");
         assert_eq!(matches.len(), 1);
     }
@@ -6816,7 +7071,10 @@ mod tests {
     #[test]
     fn test_anthropic_admin_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "anthropic-admin-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "anthropic-admin-key")
+            .unwrap();
         let key = format!("sk-ant-admin{}", "A".repeat(80));
         let matches = d.scan_line(&key);
         assert_eq!(matches.len(), 1);
@@ -6825,7 +7083,10 @@ mod tests {
     #[test]
     fn test_google_gemini_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "google-gemini-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "google-gemini-key")
+            .unwrap();
         let key = format!("AIza{}", "A".repeat(35));
         let matches = d.scan_line(&key);
         assert_eq!(matches.len(), 1);
@@ -6834,7 +7095,10 @@ mod tests {
     #[test]
     fn test_cohere_api_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "cohere-api-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "cohere-api-key")
+            .unwrap();
         let key = format!("cohere_api_key = {}", "A".repeat(40));
         let matches = d.scan_line(&key);
         assert_eq!(matches.len(), 1);
@@ -6843,7 +7107,10 @@ mod tests {
     #[test]
     fn test_replicate_api_token_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "replicate-api-token").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "replicate-api-token")
+            .unwrap();
         let key = format!("r8_{}", "A".repeat(37));
         let matches = d.scan_line(&key);
         assert_eq!(matches.len(), 1);
@@ -6852,7 +7119,10 @@ mod tests {
     #[test]
     fn test_stability_ai_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "stability-ai-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "stability-ai-key")
+            .unwrap();
         let key = format!("stability_api_key = sk-{}", "A".repeat(40));
         let matches = d.scan_line(&key);
         assert_eq!(matches.len(), 1);
@@ -6861,7 +7131,10 @@ mod tests {
     #[test]
     fn test_assemblyai_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "assemblyai-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "assemblyai-key")
+            .unwrap();
         let matches = d.scan_line("assemblyai_api_key = abcdefghijklmnopqrstuvwxyz012345");
         assert_eq!(matches.len(), 1);
     }
@@ -6877,7 +7150,10 @@ mod tests {
     #[test]
     fn test_openrouter_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "openrouter-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "openrouter-key")
+            .unwrap();
         let key = format!("sk-or-{}", "A".repeat(40));
         let matches = d.scan_line(&key);
         assert_eq!(matches.len(), 1);
@@ -6886,7 +7162,10 @@ mod tests {
     #[test]
     fn test_together_ai_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "together-ai-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "together-ai-key")
+            .unwrap();
         let matches = d.scan_line("together_ai_api_key = abcdefghijklmnopqrstuvwxyz0123456789ABCD");
         assert_eq!(matches.len(), 1);
     }
@@ -6894,7 +7173,10 @@ mod tests {
     #[test]
     fn test_perplexity_api_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "perplexity-api-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "perplexity-api-key")
+            .unwrap();
         let key = format!("pplx-{}", "A".repeat(48));
         let matches = d.scan_line(&key);
         assert_eq!(matches.len(), 1);
@@ -6903,7 +7185,10 @@ mod tests {
     #[test]
     fn test_mistral_api_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "mistral-api-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "mistral-api-key")
+            .unwrap();
         let matches = d.scan_line("mistral_api_key = abcdefghijklmnopqrstuvwxyz012345");
         assert_eq!(matches.len(), 1);
     }
@@ -6920,7 +7205,10 @@ mod tests {
     #[test]
     fn test_deepseek_api_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "deepseek-api-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "deepseek-api-key")
+            .unwrap();
         let key = format!("deepseek_api_key = sk-{}", "A".repeat(32));
         let matches = d.scan_line(&key);
         assert_eq!(matches.len(), 1);
@@ -6929,7 +7217,10 @@ mod tests {
     #[test]
     fn test_elevenlabs_api_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "elevenlabs-api-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "elevenlabs-api-key")
+            .unwrap();
         let matches = d.scan_line("elevenlabs_api_key = abcdefghijklmnopqrstuvwxyz012345");
         assert_eq!(matches.len(), 1);
     }
@@ -6939,7 +7230,10 @@ mod tests {
     #[test]
     fn test_postmark_token_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "postmark-token").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "postmark-token")
+            .unwrap();
         let key = format!("po_-{}", "A".repeat(36));
         let matches = d.scan_line(&key);
         assert_eq!(matches.len(), 1);
@@ -6948,7 +7242,10 @@ mod tests {
     #[test]
     fn test_mailjet_basic_auth_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "mailjet-basic-auth").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "mailjet-basic-auth")
+            .unwrap();
         let key = format!("MJ{}", "A".repeat(30));
         let matches = d.scan_line(&key);
         assert_eq!(matches.len(), 1);
@@ -6957,7 +7254,10 @@ mod tests {
     #[test]
     fn test_mailjet_sms_token_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "mailjet-sms-token").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "mailjet-sms-token")
+            .unwrap();
         let matches = d.scan_line("mailjet_sms_token = abcdefghijklmnopqrstuvwxyz012345");
         assert_eq!(matches.len(), 1);
     }
@@ -6974,7 +7274,10 @@ mod tests {
     #[test]
     fn test_elastic_email_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "elastic-email-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "elastic-email-key")
+            .unwrap();
         let matches = d.scan_line("elastic_email_api_key = abcdefghijklmnopqrstuvwxyz012345");
         assert_eq!(matches.len(), 1);
     }
@@ -6982,7 +7285,10 @@ mod tests {
     #[test]
     fn test_pepipost_token_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "pepipost-token").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "pepipost-token")
+            .unwrap();
         let matches = d.scan_line("pepipost_api_token = abcdefghijklmnopqrst");
         assert_eq!(matches.len(), 1);
     }
@@ -6990,7 +7296,10 @@ mod tests {
     #[test]
     fn test_mailmodo_token_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "mailmodo-token").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "mailmodo-token")
+            .unwrap();
         let matches = d.scan_line("mailmodo_api_key = abcdefghijklmnopqrst");
         assert_eq!(matches.len(), 1);
     }
@@ -6998,7 +7307,10 @@ mod tests {
     #[test]
     fn test_verimail_token_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "verimail-token").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "verimail-token")
+            .unwrap();
         let matches = d.scan_line("verimail_api_token = abcdefghijklmnopqrst");
         assert_eq!(matches.len(), 1);
     }
@@ -7006,7 +7318,10 @@ mod tests {
     #[test]
     fn test_zerobounce_token_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "zerobounce-token").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "zerobounce-token")
+            .unwrap();
         let matches = d.scan_line("zerobounce_api_key = abcdefghijklmnopqrst");
         assert_eq!(matches.len(), 1);
     }
@@ -7014,7 +7329,10 @@ mod tests {
     #[test]
     fn test_mailboxlayer_token_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "mailboxlayer-token").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "mailboxlayer-token")
+            .unwrap();
         let matches = d.scan_line("mailboxlayer_access_key = abcdefghijklmnopqrstuvwxyz012345");
         assert_eq!(matches.len(), 1);
     }
@@ -7022,7 +7340,10 @@ mod tests {
     #[test]
     fn test_d7network_token_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "d7network-token").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "d7network-token")
+            .unwrap();
         let matches = d.scan_line("d7network_api_token = abcdefghijklmnopqrst");
         assert_eq!(matches.len(), 1);
     }
@@ -7030,7 +7351,10 @@ mod tests {
     #[test]
     fn test_sinch_message_token_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "sinch-message-token").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "sinch-message-token")
+            .unwrap();
         let matches = d.scan_line("sinch_message_token = abcdefghijklmnopqrst");
         assert_eq!(matches.len(), 1);
     }
@@ -7038,7 +7362,10 @@ mod tests {
     #[test]
     fn test_messagebird_token_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "messagebird-token").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "messagebird-token")
+            .unwrap();
         let matches = d.scan_line("messagebird_api_key = abcdefghijklmnopqrstuvwxy");
         assert_eq!(matches.len(), 1);
     }
@@ -7046,7 +7373,10 @@ mod tests {
     #[test]
     fn test_vonage_api_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "vonage-api-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "vonage-api-key")
+            .unwrap();
         let matches = d.scan_line("vonage_api_key = abcdefgh");
         assert_eq!(matches.len(), 1);
     }
@@ -7062,7 +7392,10 @@ mod tests {
     #[test]
     fn test_postman_api_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "postman-api-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "postman-api-key")
+            .unwrap();
         let key = format!("PMAK-{}", "A".repeat(59));
         let matches = d.scan_line(&key);
         assert_eq!(matches.len(), 1);
@@ -7087,7 +7420,10 @@ mod tests {
     #[test]
     fn test_pushbullet_api_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "pushbullet-api-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "pushbullet-api-key")
+            .unwrap();
         let matches = d.scan_line("pushbullet_api_key = abcdefghijklmnopqrstuvwxyz012345");
         assert_eq!(matches.len(), 1);
     }
@@ -7095,7 +7431,10 @@ mod tests {
     #[test]
     fn test_doppler_token_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "doppler-token").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "doppler-token")
+            .unwrap();
         let key = format!("dp.pt.{}", "A".repeat(40));
         let matches = d.scan_line(&key);
         assert_eq!(matches.len(), 1);
@@ -7106,7 +7445,10 @@ mod tests {
     #[test]
     fn test_datadog_access_token_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "datadog-access-token").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "datadog-access-token")
+            .unwrap();
         let key = format!("dt0{}.{}", "A".repeat(23), "B".repeat(64));
         let matches = d.scan_line(&key);
         assert_eq!(matches.len(), 1);
@@ -7115,7 +7457,10 @@ mod tests {
     #[test]
     fn test_new_relic_personal_api_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "new-relic-personal-api-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "new-relic-personal-api-key")
+            .unwrap();
         let key = format!("NRAK{}", "A".repeat(22));
         let matches = d.scan_line(&key);
         assert_eq!(matches.len(), 1);
@@ -7133,15 +7478,22 @@ mod tests {
     #[test]
     fn test_sumologic_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "sumologic-key").unwrap();
-        let matches = d.scan_line("sumologic_access_key = abcdefghijklmnopqrstuvwxyz0123456789ABCD");
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "sumologic-key")
+            .unwrap();
+        let matches =
+            d.scan_line("sumologic_access_key = abcdefghijklmnopqrstuvwxyz0123456789ABCD");
         assert_eq!(matches.len(), 1);
     }
 
     #[test]
     fn test_splunk_observability_token_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "splunk-observability-token").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "splunk-observability-token")
+            .unwrap();
         let key = format!("SPL{}", "A".repeat(40));
         let matches = d.scan_line(&key);
         assert_eq!(matches.len(), 1);
@@ -7150,7 +7502,10 @@ mod tests {
     #[test]
     fn test_appoptics_token_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "appoptics-token").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "appoptics-token")
+            .unwrap();
         let matches = d.scan_line("appoptics_api_token = abcdefghijklmnopqrstuvwxyz0123456789ABCD");
         assert_eq!(matches.len(), 1);
     }
@@ -7182,7 +7537,10 @@ mod tests {
     #[test]
     fn test_better_stack_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "better-stack-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "better-stack-key")
+            .unwrap();
         let matches = d.scan_line("better_stack_api_key = abcdefghijklmnopqrst");
         assert_eq!(matches.len(), 1);
     }
@@ -7190,7 +7548,10 @@ mod tests {
     #[test]
     fn test_statuspage_api_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "statuspage-api-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "statuspage-api-key")
+            .unwrap();
         let matches = d.scan_line("statuspage_api_key = abcdefghijklmnopqrst");
         assert_eq!(matches.len(), 1);
     }
@@ -7198,7 +7559,10 @@ mod tests {
     #[test]
     fn test_uptimerobot_api_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "uptimerobot-api-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "uptimerobot-api-key")
+            .unwrap();
         let key = format!("u{}", "A".repeat(40));
         let matches = d.scan_line(&key);
         assert_eq!(matches.len(), 1);
@@ -7207,7 +7571,10 @@ mod tests {
     #[test]
     fn test_pingdom_token_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "pingdom-token").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "pingdom-token")
+            .unwrap();
         let matches = d.scan_line("pingdom_api_token = abcdefghijklmnopqrst");
         assert_eq!(matches.len(), 1);
     }
@@ -7217,7 +7584,10 @@ mod tests {
     #[test]
     fn test_posthog_api_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "posthog-api-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "posthog-api-key")
+            .unwrap();
         let key = format!("phc_{}", "A".repeat(43));
         let matches = d.scan_line(&key);
         assert_eq!(matches.len(), 1);
@@ -7226,7 +7596,10 @@ mod tests {
     #[test]
     fn test_amplitude_api_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "amplitude-api-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "amplitude-api-key")
+            .unwrap();
         let matches = d.scan_line("amplitude_api_key = abcdefghijklmnopqrstuvwxyz012345");
         assert_eq!(matches.len(), 1);
     }
@@ -7234,7 +7607,10 @@ mod tests {
     #[test]
     fn test_segment_api_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "segment-api-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "segment-api-key")
+            .unwrap();
         let matches = d.scan_line("segment_api_key = abcdefghijklmnopqrstuvwxyz012345");
         assert_eq!(matches.len(), 1);
     }
@@ -7242,7 +7618,10 @@ mod tests {
     #[test]
     fn test_mixpanel_token_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "mixpanel-token").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "mixpanel-token")
+            .unwrap();
         let matches = d.scan_line("mixpanel_project_token = abcdefghijklmnopqrstuvwxyz012345");
         assert_eq!(matches.len(), 1);
     }
@@ -7258,7 +7637,10 @@ mod tests {
     #[test]
     fn test_pendo_integration_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "pendo-integration-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "pendo-integration-key")
+            .unwrap();
         let matches = d.scan_line("pendo_integration_key = abcdefghijklmnopqrst");
         assert_eq!(matches.len(), 1);
     }
@@ -7275,7 +7657,10 @@ mod tests {
     #[test]
     fn test_fathom_analytics_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "fathom-analytics-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "fathom-analytics-key")
+            .unwrap();
         let matches = d.scan_line("fathom_analytics_api_key = abcdefghijklmnopqrst");
         assert_eq!(matches.len(), 1);
     }
@@ -7283,7 +7668,10 @@ mod tests {
     #[test]
     fn test_plausible_analytics_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "plausible-analytics-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "plausible-analytics-key")
+            .unwrap();
         let matches = d.scan_line("plausible_analytics_api_key = abcdefghijklmnopqrst");
         assert_eq!(matches.len(), 1);
     }
@@ -7299,7 +7687,10 @@ mod tests {
     #[test]
     fn test_fullstory_token_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "fullstory-token").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "fullstory-token")
+            .unwrap();
         let matches = d.scan_line("full_story_api_token = abcdefghijklmnopqrst");
         assert_eq!(matches.len(), 1);
     }
@@ -7307,7 +7698,10 @@ mod tests {
     #[test]
     fn test_bitly_access_token_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "bitly-access-token").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "bitly-access-token")
+            .unwrap();
         let matches = d.scan_line("bitly_access_token = abcdefghijklmnopqrstuvwxyz012345");
         assert_eq!(matches.len(), 1);
     }
@@ -7315,7 +7709,10 @@ mod tests {
     #[test]
     fn test_calendly_api_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "calendly-api-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "calendly-api-key")
+            .unwrap();
         let matches = d.scan_line("calendly_api_key = abcdefghijklmnopqrst");
         assert_eq!(matches.len(), 1);
     }
@@ -7323,7 +7720,10 @@ mod tests {
     #[test]
     fn test_calendarific_token_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "calendarific-token").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "calendarific-token")
+            .unwrap();
         let matches = d.scan_line("calendarific_api_token = abcdefghijklmnopqrst");
         assert_eq!(matches.len(), 1);
     }
@@ -7331,7 +7731,10 @@ mod tests {
     #[test]
     fn test_appfollow_token_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "appfollow-token").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "appfollow-token")
+            .unwrap();
         let matches = d.scan_line("appfollow_api_token = abcdefghijklmnopqrst");
         assert_eq!(matches.len(), 1);
     }
@@ -7339,7 +7742,10 @@ mod tests {
     #[test]
     fn test_appcues_token_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "appcues-token").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "appcues-token")
+            .unwrap();
         let matches = d.scan_line("appcues_api_token = abcdefghijklmnopqrst");
         assert_eq!(matches.len(), 1);
     }
@@ -7349,7 +7755,10 @@ mod tests {
     #[test]
     fn test_auth0_management_token_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "auth0-management-token").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "auth0-management-token")
+            .unwrap();
         let key = format!("auth0_management_api_token = {}", "A".repeat(40));
         let matches = d.scan_line(&key);
         assert_eq!(matches.len(), 1);
@@ -7358,7 +7767,10 @@ mod tests {
     #[test]
     fn test_auth0_oauth_token_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "auth0-oauth-token").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "auth0-oauth-token")
+            .unwrap();
         let key = format!("auth0_oauth_token = {}", "A".repeat(40));
         let matches = d.scan_line(&key);
         assert_eq!(matches.len(), 1);
@@ -7367,7 +7779,10 @@ mod tests {
     #[test]
     fn test_onelogin_token_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "onelogin-token").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "onelogin-token")
+            .unwrap();
         let key = format!("onelogin_api_token = {}", "A".repeat(40));
         let matches = d.scan_line(&key);
         assert_eq!(matches.len(), 1);
@@ -7376,7 +7791,10 @@ mod tests {
     #[test]
     fn test_jumpcloud_token_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "jumpcloud-token").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "jumpcloud-token")
+            .unwrap();
         let key = format!("jumpcloud_api_token = {}", "A".repeat(40));
         let matches = d.scan_line(&key);
         assert_eq!(matches.len(), 1);
@@ -7385,7 +7803,10 @@ mod tests {
     #[test]
     fn test_authress_service_client_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "authress-service-client-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "authress-service-client-key")
+            .unwrap();
         let key = format!("sc_{}.{}", "A".repeat(20), "B".repeat(20));
         let matches = d.scan_line(&key);
         assert_eq!(matches.len(), 1);
@@ -7394,7 +7815,10 @@ mod tests {
     #[test]
     fn test_keycloak_token_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "keycloak-token").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "keycloak-token")
+            .unwrap();
         let matches = d.scan_line("keycloak_api_token = abcdefghijklmnopqrst");
         assert_eq!(matches.len(), 1);
     }
@@ -7402,7 +7826,10 @@ mod tests {
     #[test]
     fn test_fusionauth_token_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "fusionauth-token").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "fusionauth-token")
+            .unwrap();
         let matches = d.scan_line("fusion_auth_api_token = abcdefghijklmnopqrst");
         assert_eq!(matches.len(), 1);
     }
@@ -7435,8 +7862,16 @@ mod tests {
     #[test]
     fn test_supabase_anon_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "supabase-anon-key").unwrap();
-        let key = format!("eyJ{}.eyJ{}.{}", "A".repeat(20), "B".repeat(20), "C".repeat(20));
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "supabase-anon-key")
+            .unwrap();
+        let key = format!(
+            "eyJ{}.eyJ{}.{}",
+            "A".repeat(20),
+            "B".repeat(20),
+            "C".repeat(20)
+        );
         let matches = d.scan_line(&key);
         assert_eq!(matches.len(), 1);
     }
@@ -7444,7 +7879,10 @@ mod tests {
     #[test]
     fn test_firebase_token_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "firebase-token").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "firebase-token")
+            .unwrap();
         let matches = d.scan_line("firebase_auth_token = abcdefghijklmnopqrst");
         assert_eq!(matches.len(), 1);
     }
@@ -7452,7 +7890,10 @@ mod tests {
     #[test]
     fn test_firebase_fcm_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "firebase-fcm-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "firebase-fcm-key")
+            .unwrap();
         let key = format!("AAAA{}", "A".repeat(60));
         let matches = d.scan_line(&key);
         assert_eq!(matches.len(), 1);
@@ -7470,7 +7911,10 @@ mod tests {
     #[test]
     fn test_hashicorp_vault_token_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "hashicorp-vault-token").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "hashicorp-vault-token")
+            .unwrap();
         let key = format!("hvs.{}", "A".repeat(20));
         let matches = d.scan_line(&key);
         assert_eq!(matches.len(), 1);
@@ -7479,7 +7923,10 @@ mod tests {
     #[test]
     fn test_onepassword_secret_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "onepassword-secret-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "onepassword-secret-key")
+            .unwrap();
         let matches = d.scan_line("a3-ABC123-ABC123-ABC123-ABC123-ABC123");
         assert_eq!(matches.len(), 1);
     }
@@ -7487,7 +7934,10 @@ mod tests {
     #[test]
     fn test_onepassword_service_account_token_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "onepassword-service-account-token").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "onepassword-service-account-token")
+            .unwrap();
         let key = format!("ops_{}", "A".repeat(20));
         let matches = d.scan_line(&key);
         assert_eq!(matches.len(), 1);
@@ -7498,7 +7948,10 @@ mod tests {
     #[test]
     fn test_wpengine_token_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "wpengine-token").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "wpengine-token")
+            .unwrap();
         let matches = d.scan_line("wp_engine_api_token = abcdefghijklmnopqrst");
         assert_eq!(matches.len(), 1);
     }
@@ -7506,7 +7959,10 @@ mod tests {
     #[test]
     fn test_fastly_api_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "fastly-api-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "fastly-api-key")
+            .unwrap();
         let matches = d.scan_line("fastly_api_key = abcdefghijklmnopqrst");
         assert_eq!(matches.len(), 1);
     }
@@ -7522,7 +7978,10 @@ mod tests {
     #[test]
     fn test_equinix_oauth_token_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "equinix-oauth-token").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "equinix-oauth-token")
+            .unwrap();
         let matches = d.scan_line("equinix_oauth_token = abcdefghijklmnopqrst");
         assert_eq!(matches.len(), 1);
     }
@@ -7539,7 +7998,10 @@ mod tests {
     #[test]
     fn test_railway_token_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "railway-token").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "railway-token")
+            .unwrap();
         let matches = d.scan_line("railway_api_token = abcdefghijklmnopqrst");
         assert_eq!(matches.len(), 1);
     }
@@ -7566,7 +8028,10 @@ mod tests {
     #[test]
     fn test_facebook_access_token_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "facebook-access-token").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "facebook-access-token")
+            .unwrap();
         let key = format!("EAAD{}", "A".repeat(20));
         let matches = d.scan_line(&key);
         assert_eq!(matches.len(), 1);
@@ -7575,7 +8040,10 @@ mod tests {
     #[test]
     fn test_facebook_oauth_token_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "facebook-oauth-token").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "facebook-oauth-token")
+            .unwrap();
         let key = format!("facebook_oauth_token = {}", "A".repeat(40));
         let matches = d.scan_line(&key);
         assert_eq!(matches.len(), 1);
@@ -7584,7 +8052,10 @@ mod tests {
     #[test]
     fn test_figma_personal_access_token_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "figma-personal-access-token").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "figma-personal-access-token")
+            .unwrap();
         let key = format!("figd_{}", "A".repeat(20));
         let matches = d.scan_line(&key);
         assert_eq!(matches.len(), 1);
@@ -7610,7 +8081,10 @@ mod tests {
     #[test]
     fn test_youtube_api_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "youtube-api-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "youtube-api-key")
+            .unwrap();
         let key = format!("AIza{}", "A".repeat(35));
         let matches = d.scan_line(&key);
         assert_eq!(matches.len(), 1);
@@ -7619,7 +8093,10 @@ mod tests {
     #[test]
     fn test_twitch_access_token_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "twitch-access-token").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "twitch-access-token")
+            .unwrap();
         let key = format!("twitch_access_token = {}", "A".repeat(30));
         let matches = d.scan_line(&key);
         assert_eq!(matches.len(), 1);
@@ -7628,7 +8105,10 @@ mod tests {
     #[test]
     fn test_flickr_access_token_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "flickr-access-token").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "flickr-access-token")
+            .unwrap();
         let matches = d.scan_line("flickr_access_token = abcdefghijklmnopqrst");
         assert_eq!(matches.len(), 1);
     }
@@ -7636,7 +8116,10 @@ mod tests {
     #[test]
     fn test_dropbox_api_secret_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "dropbox-api-secret").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "dropbox-api-secret")
+            .unwrap();
         let matches = d.scan_line("dropbox_api_secret = abcdefghijklmno");
         assert_eq!(matches.len(), 1);
     }
@@ -7644,7 +8127,10 @@ mod tests {
     #[test]
     fn test_dropbox_long_lived_token_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "dropbox-long-lived-token").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "dropbox-long-lived-token")
+            .unwrap();
         let key = format!("sl.{}", "A".repeat(20));
         let matches = d.scan_line(&key);
         assert_eq!(matches.len(), 1);
@@ -7653,7 +8139,10 @@ mod tests {
     #[test]
     fn test_dropbox_short_lived_token_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "dropbox-short-lived-token").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "dropbox-short-lived-token")
+            .unwrap();
         let key = format!("sl.{}.{}", "A".repeat(20), "B".repeat(20));
         let matches = d.scan_line(&key);
         assert_eq!(matches.len(), 1);
@@ -7662,7 +8151,10 @@ mod tests {
     #[test]
     fn test_reddit_client_secret_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "reddit-client-secret").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "reddit-client-secret")
+            .unwrap();
         let matches = d.scan_line("reddit_client_secret = abcdefghijklmnopqrst");
         assert_eq!(matches.len(), 1);
     }
@@ -7670,7 +8162,10 @@ mod tests {
     #[test]
     fn test_reddit_access_token_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "reddit-access-token").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "reddit-access-token")
+            .unwrap();
         let matches = d.scan_line("reddit_access_token = abcdefghijklmnopqrst");
         assert_eq!(matches.len(), 1);
     }
@@ -7678,7 +8173,10 @@ mod tests {
     #[test]
     fn test_instagram_access_token_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "instagram-access-token").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "instagram-access-token")
+            .unwrap();
         let key = format!("instagram_access_token = IG{}", "A".repeat(30));
         let matches = d.scan_line(&key);
         assert_eq!(matches.len(), 1);
@@ -7687,7 +8185,10 @@ mod tests {
     #[test]
     fn test_pinterest_token_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "pinterest-token").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "pinterest-token")
+            .unwrap();
         let matches = d.scan_line("pinterest_api_token = abcdefghijklmnopqrst");
         assert_eq!(matches.len(), 1);
     }
@@ -7695,7 +8196,10 @@ mod tests {
     #[test]
     fn test_tiktok_access_token_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "tiktok-access-token").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "tiktok-access-token")
+            .unwrap();
         let matches = d.scan_line("tiktok_access_token = abcdefghijklmnopqrst");
         assert_eq!(matches.len(), 1);
     }
@@ -7703,7 +8207,10 @@ mod tests {
     #[test]
     fn test_zoom_api_secret_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "zoom-api-secret").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "zoom-api-secret")
+            .unwrap();
         let matches = d.scan_line("zoom_api_secret = abcdefghijklmnopqrst");
         assert_eq!(matches.len(), 1);
     }
@@ -7711,7 +8218,10 @@ mod tests {
     #[test]
     fn test_zapier_webhook_url_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "zapier-webhook-url").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "zapier-webhook-url")
+            .unwrap();
         let matches = d.scan_line("https://hooks.zapier.com/hooks/catch/123456/abc123");
         assert_eq!(matches.len(), 1);
     }
@@ -7721,7 +8231,10 @@ mod tests {
     #[test]
     fn test_jdbc_connection_string_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "jdbc-connection-string").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "jdbc-connection-string")
+            .unwrap();
         let matches = d.scan_line("jdbc:postgresql://user:pass@localhost:5432/db");
         assert_eq!(matches.len(), 1);
     }
@@ -7729,7 +8242,10 @@ mod tests {
     #[test]
     fn test_sqlserver_connection_string_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "sqlserver-connection-string").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "sqlserver-connection-string")
+            .unwrap();
         let matches = d.scan_line("server=localhost;user id=admin;password=secretpass123");
         assert_eq!(matches.len(), 1);
     }
@@ -7737,7 +8253,10 @@ mod tests {
     #[test]
     fn test_elasticsearch_connection_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "elasticsearch-connection").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "elasticsearch-connection")
+            .unwrap();
         let matches = d.scan_line("https://user:pass@elastic.example.com:9200");
         assert_eq!(matches.len(), 1);
     }
@@ -7745,7 +8264,10 @@ mod tests {
     #[test]
     fn test_influxdb_token_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "influxdb-token").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "influxdb-token")
+            .unwrap();
         let matches = d.scan_line("influx_db_api_token = abcdefghijklmnopqrst");
         assert_eq!(matches.len(), 1);
     }
@@ -7753,7 +8275,10 @@ mod tests {
     #[test]
     fn test_couchbase_connection_string_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "couchbase-connection-string").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "couchbase-connection-string")
+            .unwrap();
         let matches = d.scan_line("couchbase://user:pass@localhost:8091");
         assert_eq!(matches.len(), 1);
     }
@@ -7761,7 +8286,10 @@ mod tests {
     #[test]
     fn test_cassandra_connection_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "cassandra-connection").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "cassandra-connection")
+            .unwrap();
         let matches = d.scan_line("cassandra_password = abcdefghijklmnopqrst");
         assert_eq!(matches.len(), 1);
     }
@@ -7769,7 +8297,10 @@ mod tests {
     #[test]
     fn test_neo4j_connection_string_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "neo4j-connection-string").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "neo4j-connection-string")
+            .unwrap();
         let matches = d.scan_line("neo4j://user:pass@localhost:7687");
         assert_eq!(matches.len(), 1);
     }
@@ -7777,7 +8308,10 @@ mod tests {
     #[test]
     fn test_supabase_db_connection_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "supabase-db-connection").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "supabase-db-connection")
+            .unwrap();
         let matches = d.scan_line("postgresql://user:pass@db.abcdefgh.supabase.co:5432/postgres");
         assert_eq!(matches.len(), 1);
     }
@@ -7785,7 +8319,10 @@ mod tests {
     #[test]
     fn test_planetscale_token_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "planetscale-token").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "planetscale-token")
+            .unwrap();
         let key = format!("pscale_{}", "A".repeat(20));
         let matches = d.scan_line(&key);
         assert_eq!(matches.len(), 1);
@@ -7794,7 +8331,10 @@ mod tests {
     #[test]
     fn test_neon_database_token_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "neon-database-token").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "neon-database-token")
+            .unwrap();
         let matches = d.scan_line("neon_database_api_token = abcdefghijklmnopqrst");
         assert_eq!(matches.len(), 1);
     }
@@ -7820,7 +8360,10 @@ mod tests {
     #[test]
     fn test_age_secret_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "age-secret-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "age-secret-key")
+            .unwrap();
         let key = format!("AGE-SECRET-KEY-1{}", "A".repeat(58));
         let matches = d.scan_line(&key);
         assert_eq!(matches.len(), 1);
@@ -7829,7 +8372,10 @@ mod tests {
     #[test]
     fn test_kubernetes_secret_manifest_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "kubernetes-secret-manifest").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "kubernetes-secret-manifest")
+            .unwrap();
         let manifest = "kind: Secret\nmetadata:\n  name: my-secret\ndata:\n  password: c2VjcmV0cGFzc3dvcmQxMjM=";
         let matches = d.scan_line(manifest);
         assert_eq!(matches.len(), 1);
@@ -7838,7 +8384,10 @@ mod tests {
     #[test]
     fn test_hashicorp_terraform_token_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "hashicorp-terraform-token").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "hashicorp-terraform-token")
+            .unwrap();
         let key = format!("terraform_cloud_token = {}", "A".repeat(20));
         let matches = d.scan_line(&key);
         assert_eq!(matches.len(), 1);
@@ -7847,7 +8396,10 @@ mod tests {
     #[test]
     fn test_ansible_vault_password_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "ansible-vault-password").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "ansible-vault-password")
+            .unwrap();
         let matches = d.scan_line("ansible_vault_password = mypassword123");
         assert_eq!(matches.len(), 1);
     }
@@ -7855,7 +8407,10 @@ mod tests {
     #[test]
     fn test_docker_registry_token_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "docker-registry-token").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "docker-registry-token")
+            .unwrap();
         let key = format!("docker_registry_token = {}", "A".repeat(20));
         let matches = d.scan_line(&key);
         assert_eq!(matches.len(), 1);
@@ -7880,7 +8435,10 @@ mod tests {
     #[test]
     fn test_confluent_access_token_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "confluent-access-token").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "confluent-access-token")
+            .unwrap();
         let matches = d.scan_line("confluent_cloud_access_token = abcdefghijklmnopqrst");
         assert_eq!(matches.len(), 1);
     }
@@ -7888,7 +8446,10 @@ mod tests {
     #[test]
     fn test_confluent_secret_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "confluent-secret-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "confluent-secret-key")
+            .unwrap();
         let matches = d.scan_line("confluent_cloud_secret_key = abcdefghijklmnopqrst");
         assert_eq!(matches.len(), 1);
     }
@@ -7896,7 +8457,10 @@ mod tests {
     #[test]
     fn test_databricks_token_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "databricks-token").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "databricks-token")
+            .unwrap();
         let key = format!("dapi{}", "A".repeat(20));
         let matches = d.scan_line(&key);
         assert_eq!(matches.len(), 1);
@@ -7905,7 +8469,10 @@ mod tests {
     #[test]
     fn test_snowflake_token_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "snowflake-token").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "snowflake-token")
+            .unwrap();
         let matches = d.scan_line("snowflake_api_token = abcdefghijklmnopqrst");
         assert_eq!(matches.len(), 1);
     }
@@ -7913,7 +8480,10 @@ mod tests {
     #[test]
     fn test_dynatrace_api_token_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "dynatrace-api-token").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "dynatrace-api-token")
+            .unwrap();
         let key = format!("dt0c01{}", "A".repeat(20));
         let matches = d.scan_line(&key);
         assert_eq!(matches.len(), 1);
@@ -7922,7 +8492,10 @@ mod tests {
     #[test]
     fn test_launchdarkly_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "launchdarkly-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "launchdarkly-key")
+            .unwrap();
         let matches = d.scan_line("launchdarkly_api_key = abcdefghijklmnopqrst");
         assert_eq!(matches.len(), 1);
     }
@@ -7930,7 +8503,10 @@ mod tests {
     #[test]
     fn test_configcat_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "configcat-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "configcat-key")
+            .unwrap();
         let matches = d.scan_line("configcat_api_key = abcdefghijklmnopqrst");
         assert_eq!(matches.len(), 1);
     }
@@ -7938,7 +8514,10 @@ mod tests {
     #[test]
     fn test_flagsmith_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "flagsmith-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "flagsmith-key")
+            .unwrap();
         let matches = d.scan_line("flagsmith_api_key = abcdefghijklmnopqrst");
         assert_eq!(matches.len(), 1);
     }
@@ -7948,7 +8527,10 @@ mod tests {
     #[test]
     fn test_shodan_api_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "shodan-api-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "shodan-api-key")
+            .unwrap();
         let key = format!("shodan_api_key = {}", "A".repeat(32));
         let matches = d.scan_line(&key);
         assert_eq!(matches.len(), 1);
@@ -7957,7 +8539,10 @@ mod tests {
     #[test]
     fn test_abuseipdb_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "abuseipdb-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "abuseipdb-key")
+            .unwrap();
         let key = format!("abuseipdb_api_key = {}", "A".repeat(80));
         let matches = d.scan_line(&key);
         assert_eq!(matches.len(), 1);
@@ -7966,7 +8551,10 @@ mod tests {
     #[test]
     fn test_alienvault_otx_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "alienvault-otx-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "alienvault-otx-key")
+            .unwrap();
         let key = format!("alienvault_otx_api_key = {}", "A".repeat(40));
         let matches = d.scan_line(&key);
         assert_eq!(matches.len(), 1);
@@ -7975,7 +8563,10 @@ mod tests {
     #[test]
     fn test_virustotal_api_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "virustotal-api-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "virustotal-api-key")
+            .unwrap();
         let key = format!("virustotal_api_key = {}", "A".repeat(64));
         let matches = d.scan_line(&key);
         assert_eq!(matches.len(), 1);
@@ -7984,7 +8575,10 @@ mod tests {
     #[test]
     fn test_hunterio_api_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "hunterio-api-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "hunterio-api-key")
+            .unwrap();
         let key = format!("hunter_io_api_key = {}", "A".repeat(32));
         let matches = d.scan_line(&key);
         assert_eq!(matches.len(), 1);
@@ -8002,7 +8596,10 @@ mod tests {
     #[test]
     fn test_maxmind_license_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "maxmind-license-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "maxmind-license-key")
+            .unwrap();
         let matches = d.scan_line("maxmind_license_key = abcdefghijklmnopqrst");
         assert_eq!(matches.len(), 1);
     }
@@ -8010,7 +8607,10 @@ mod tests {
     #[test]
     fn test_cloudsight_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "cloudsight-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "cloudsight-key")
+            .unwrap();
         let key = format!("cloudsight_api_key = {}", "A".repeat(32));
         let matches = d.scan_line(&key);
         assert_eq!(matches.len(), 1);
@@ -8028,7 +8628,10 @@ mod tests {
     #[test]
     fn test_scrapingbee_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "scrapingbee-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "scrapingbee-key")
+            .unwrap();
         let key = format!("scrapingbee_api_key = {}", "A".repeat(32));
         let matches = d.scan_line(&key);
         assert_eq!(matches.len(), 1);
@@ -8048,7 +8651,10 @@ mod tests {
     #[test]
     fn test_google_maps_api_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "google-maps-api-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "google-maps-api-key")
+            .unwrap();
         let key = format!("AIza{}", "A".repeat(35));
         let matches = d.scan_line(&key);
         assert_eq!(matches.len(), 1);
@@ -8075,7 +8681,10 @@ mod tests {
     #[test]
     fn test_here_maps_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "here-maps-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "here-maps-key")
+            .unwrap();
         let key = format!("here_maps_api_key = {}", "A".repeat(43));
         let matches = d.scan_line(&key);
         assert_eq!(matches.len(), 1);
@@ -8095,7 +8704,10 @@ mod tests {
     #[test]
     fn test_hubspot_api_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "hubspot-api-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "hubspot-api-key")
+            .unwrap();
         let key = format!("hubspot_api_key = {}", "A".repeat(36));
         let matches = d.scan_line(&key);
         assert_eq!(matches.len(), 1);
@@ -8104,7 +8716,10 @@ mod tests {
     #[test]
     fn test_hubspot_oauth_token_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "hubspot-oauth-token").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "hubspot-oauth-token")
+            .unwrap();
         let key = format!("hubspot_oauth_token = {}", "A".repeat(30));
         let matches = d.scan_line(&key);
         assert_eq!(matches.len(), 1);
@@ -8113,7 +8728,10 @@ mod tests {
     #[test]
     fn test_salesforce_oauth2_token_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "salesforce-oauth2-token").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "salesforce-oauth2-token")
+            .unwrap();
         let matches = d.scan_line("salesforce_oauth2_token = abcdefghijklmnopqrst");
         assert_eq!(matches.len(), 1);
     }
@@ -8121,7 +8739,10 @@ mod tests {
     #[test]
     fn test_zendesk_api_token_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "zendesk-api-token").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "zendesk-api-token")
+            .unwrap();
         let key = format!("zendesk_api_token = {}", "A".repeat(40));
         let matches = d.scan_line(&key);
         assert_eq!(matches.len(), 1);
@@ -8130,7 +8751,10 @@ mod tests {
     #[test]
     fn test_elastic_path_token_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "elastic-path-token").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "elastic-path-token")
+            .unwrap();
         let matches = d.scan_line("elastic_path_api_token = abcdefghijklmnopqrst");
         assert_eq!(matches.len(), 1);
     }
@@ -8138,7 +8762,10 @@ mod tests {
     #[test]
     fn test_buttercms_token_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "buttercms-token").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "buttercms-token")
+            .unwrap();
         let key = format!("buttercms_api_token = {}", "A".repeat(20));
         let matches = d.scan_line(&key);
         assert_eq!(matches.len(), 1);
@@ -8147,7 +8774,10 @@ mod tests {
     #[test]
     fn test_contentful_delivery_token_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "contentful-delivery-token").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "contentful-delivery-token")
+            .unwrap();
         let key = format!("contentful_delivery_api_token = {}", "A".repeat(43));
         let matches = d.scan_line(&key);
         assert_eq!(matches.len(), 1);
@@ -8156,7 +8786,10 @@ mod tests {
     #[test]
     fn test_contentful_personal_access_token_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "contentful-personal-access-token").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "contentful-personal-access-token")
+            .unwrap();
         let key = format!("CFPAT-{}", "A".repeat(43));
         let matches = d.scan_line(&key);
         assert_eq!(matches.len(), 1);
@@ -8165,7 +8798,10 @@ mod tests {
     #[test]
     fn test_sanity_api_token_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "sanity-api-token").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "sanity-api-token")
+            .unwrap();
         let key = format!("sanity_api_token = {}", "A".repeat(40));
         let matches = d.scan_line(&key);
         assert_eq!(matches.len(), 1);
@@ -8174,7 +8810,10 @@ mod tests {
     #[test]
     fn test_storyblok_token_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "storyblok-token").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "storyblok-token")
+            .unwrap();
         let matches = d.scan_line("storyblok_api_token = abcdefghijklmnopqrst");
         assert_eq!(matches.len(), 1);
     }
@@ -8182,7 +8821,10 @@ mod tests {
     #[test]
     fn test_strapi_api_token_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "strapi-api-token").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "strapi-api-token")
+            .unwrap();
         let matches = d.scan_line("strapi_api_token = abcdefghijklmnopqrst");
         assert_eq!(matches.len(), 1);
     }
@@ -8190,7 +8832,10 @@ mod tests {
     #[test]
     fn test_airtable_api_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "airtable-api-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "airtable-api-key")
+            .unwrap();
         let key = format!("key{}", "A".repeat(16));
         let matches = d.scan_line(&key);
         assert_eq!(matches.len(), 1);
@@ -8199,7 +8844,10 @@ mod tests {
     #[test]
     fn test_airtable_personal_access_token_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "airtable-personal-access-token").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "airtable-personal-access-token")
+            .unwrap();
         let key = format!("pat{}", "A".repeat(16));
         let matches = d.scan_line(&key);
         assert_eq!(matches.len(), 1);
@@ -8208,7 +8856,10 @@ mod tests {
     #[test]
     fn test_airtable_oauth_token_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "airtable-oauth-token").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "airtable-oauth-token")
+            .unwrap();
         let matches = d.scan_line("airtable_oauth_token = abcdefghijklmnopqrst");
         assert_eq!(matches.len(), 1);
     }
@@ -8216,7 +8867,10 @@ mod tests {
     #[test]
     fn test_algolia_admin_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "algolia-admin-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "algolia-admin-key")
+            .unwrap();
         let key = format!("algolia_admin_api_key = {}", "A".repeat(32));
         let matches = d.scan_line(&key);
         assert_eq!(matches.len(), 1);
@@ -8225,7 +8879,10 @@ mod tests {
     #[test]
     fn test_lokalise_token_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "lokalise-token").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "lokalise-token")
+            .unwrap();
         let matches = d.scan_line("lokalise_api_token = abcdefghijklmnopqrst");
         assert_eq!(matches.len(), 1);
     }
@@ -8235,7 +8892,10 @@ mod tests {
     #[test]
     fn test_bitcoin_private_key_wif_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "bitcoin-private-key-wif").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "bitcoin-private-key-wif")
+            .unwrap();
         let key = format!("5K{}", "A".repeat(50));
         let matches = d.scan_line(&key);
         assert_eq!(matches.len(), 1);
@@ -8244,7 +8904,10 @@ mod tests {
     #[test]
     fn test_ethereum_private_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "ethereum-private-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "ethereum-private-key")
+            .unwrap();
         let key = format!("0x{}", "a".repeat(64));
         let matches = d.scan_line(&key);
         assert_eq!(matches.len(), 1);
@@ -8253,7 +8916,10 @@ mod tests {
     #[test]
     fn test_solana_private_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "solana-private-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "solana-private-key")
+            .unwrap();
         let key = "1".repeat(88);
         let matches = d.scan_line(&key);
         assert_eq!(matches.len(), 1);
@@ -8262,7 +8928,10 @@ mod tests {
     #[test]
     fn test_infura_api_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "infura-api-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "infura-api-key")
+            .unwrap();
         let key = format!("infura_api_key = {}", "A".repeat(32));
         let matches = d.scan_line(&key);
         assert_eq!(matches.len(), 1);
@@ -8271,7 +8940,10 @@ mod tests {
     #[test]
     fn test_alchemy_api_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "alchemy-api-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "alchemy-api-key")
+            .unwrap();
         let key = format!("alchemy_api_key = {}", "A".repeat(32));
         let matches = d.scan_line(&key);
         assert_eq!(matches.len(), 1);
@@ -8280,7 +8952,10 @@ mod tests {
     #[test]
     fn test_moralis_api_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "moralis-api-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "moralis-api-key")
+            .unwrap();
         let key = format!("moralis_api_key = {}", "A".repeat(32));
         let matches = d.scan_line(&key);
         assert_eq!(matches.len(), 1);
@@ -8289,7 +8964,10 @@ mod tests {
     #[test]
     fn test_quicknode_token_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "quicknode-token").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "quicknode-token")
+            .unwrap();
         let matches = d.scan_line("quicknode_api_token = abcdefghijklmnopqrst");
         assert_eq!(matches.len(), 1);
     }
@@ -8297,7 +8975,10 @@ mod tests {
     #[test]
     fn test_bitfinex_api_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "bitfinex-api-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "bitfinex-api-key")
+            .unwrap();
         let matches = d.scan_line("bitfinex_api_key = abcdefghijklmnopqrst");
         assert_eq!(matches.len(), 1);
     }
@@ -8305,7 +8986,10 @@ mod tests {
     #[test]
     fn test_bittrex_access_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "bittrex-access-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "bittrex-access-key")
+            .unwrap();
         let matches = d.scan_line("bittrex_access_key = abcdefghijklmnopqrst");
         assert_eq!(matches.len(), 1);
     }
@@ -8313,7 +8997,10 @@ mod tests {
     #[test]
     fn test_bittrex_secret_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "bittrex-secret-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "bittrex-secret-key")
+            .unwrap();
         let matches = d.scan_line("bittrex_secret_key = abcdefghijklmnopqrst");
         assert_eq!(matches.len(), 1);
     }
@@ -8323,7 +9010,10 @@ mod tests {
     #[test]
     fn test_curl_auth_string_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "curl-auth-string").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "curl-auth-string")
+            .unwrap();
         let matches = d.scan_line("curl -u myuser:mypassword123 https://example.com");
         assert_eq!(matches.len(), 1);
     }
@@ -8331,7 +9021,10 @@ mod tests {
     #[test]
     fn test_uri_embedded_credentials_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "uri-embedded-credentials").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "uri-embedded-credentials")
+            .unwrap();
         let matches = d.scan_line("https://user:password123@internal.example.com");
         assert_eq!(matches.len(), 1);
     }
@@ -8339,7 +9032,10 @@ mod tests {
     #[test]
     fn test_generic_oauth_client_secret_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "generic-oauth-client-secret").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "generic-oauth-client-secret")
+            .unwrap();
         let key = format!("oauth_client_secret = {}", "A".repeat(20));
         let matches = d.scan_line(&key);
         assert_eq!(matches.len(), 1);
@@ -8348,7 +9044,10 @@ mod tests {
     #[test]
     fn test_env_file_secret_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "env-file-secret").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "env-file-secret")
+            .unwrap();
         let key = format!("API_KEY = {}", "A".repeat(32));
         let matches = d.scan_line(&key);
         assert_eq!(matches.len(), 1);
@@ -8357,7 +9056,10 @@ mod tests {
     #[test]
     fn test_firebase_config_web_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "firebase-config-web").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "firebase-config-web")
+            .unwrap();
         let api_key = format!("AIza{}", "A".repeat(35));
         let line = format!("firebaseConfig = {{ apiKey: \"{}\" }}", api_key);
         let matches = d.scan_line(&line);
@@ -8369,7 +9071,10 @@ mod tests {
     #[test]
     fn test_twilio_api_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "twilio-api-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "twilio-api-key")
+            .unwrap();
         let key = format!("SK{}", "a".repeat(32));
         let line = format!("twilio_api_key = {}", key);
         let matches = d.scan_line(&line);
@@ -8379,7 +9084,10 @@ mod tests {
     #[test]
     fn test_line_messaging_api_token_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "line-messaging-api-token").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "line-messaging-api-token")
+            .unwrap();
         let token = "a".repeat(30);
         let line = format!("line_messaging_api_token = {}", token);
         let matches = d.scan_line(&line);
@@ -8389,7 +9097,10 @@ mod tests {
     #[test]
     fn test_line_notify_token_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "line-notify-token").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "line-notify-token")
+            .unwrap();
         let token = "a".repeat(43);
         let line = format!("line_notify_token = {}", token);
         let matches = d.scan_line(&line);
@@ -8399,7 +9110,10 @@ mod tests {
     #[test]
     fn test_mattermost_personal_token_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "mattermost-personal-token").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "mattermost-personal-token")
+            .unwrap();
         let token = "a".repeat(26);
         let line = format!("mattermost_personal_token = {}", token);
         let matches = d.scan_line(&line);
@@ -8409,7 +9123,10 @@ mod tests {
     #[test]
     fn test_wechat_app_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "wechat-app-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "wechat-app-key")
+            .unwrap();
         let key = "a".repeat(32);
         let line = format!("wechat_app_key = {}", key);
         let matches = d.scan_line(&line);
@@ -8419,7 +9136,10 @@ mod tests {
     #[test]
     fn test_kakaotalk_api_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "kakaotalk-api-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "kakaotalk-api-key")
+            .unwrap();
         let key = "a".repeat(32);
         let line = format!("kakao_api_key = {}", key);
         let matches = d.scan_line(&line);
@@ -8429,7 +9149,10 @@ mod tests {
     #[test]
     fn test_liveagent_api_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "liveagent-api-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "liveagent-api-key")
+            .unwrap();
         let key = "a".repeat(25);
         let line = format!("liveagent_api_key = {}", key);
         let matches = d.scan_line(&line);
@@ -8439,7 +9162,10 @@ mod tests {
     #[test]
     fn test_front_api_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "front-api-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "front-api-key")
+            .unwrap();
         let key = format!("front_{}", "a".repeat(25));
         let line = format!("front_api_key = {}", key);
         let matches = d.scan_line(&line);
@@ -8449,7 +9175,10 @@ mod tests {
     #[test]
     fn test_ringcentral_api_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "ringcentral-api-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "ringcentral-api-key")
+            .unwrap();
         let key = "a".repeat(25);
         let line = format!("ringcentral_api_key = {}", key);
         let matches = d.scan_line(&line);
@@ -8459,7 +9188,10 @@ mod tests {
     #[test]
     fn test_telesign_api_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "telesign-api-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "telesign-api-key")
+            .unwrap();
         let key = "a".repeat(25);
         let line = format!("telesign_api_key = {}", key);
         let matches = d.scan_line(&line);
@@ -8469,7 +9201,10 @@ mod tests {
     #[test]
     fn test_teamviewer_api_token_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "teamviewer-api-token").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "teamviewer-api-token")
+            .unwrap();
         let token = "a".repeat(25);
         let line = format!("teamviewer_api_token = {}", token);
         let matches = d.scan_line(&line);
@@ -8479,7 +9214,10 @@ mod tests {
     #[test]
     fn test_cometchat_api_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "cometchat-api-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "cometchat-api-key")
+            .unwrap();
         let key = "a".repeat(25);
         let line = format!("cometchat_api_key = {}", key);
         let matches = d.scan_line(&line);
@@ -8489,7 +9227,10 @@ mod tests {
     #[test]
     fn test_mesibo_api_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "mesibo-api-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "mesibo-api-key")
+            .unwrap();
         let key = "a".repeat(25);
         let line = format!("mesibo_api_key = {}", key);
         let matches = d.scan_line(&line);
@@ -8499,7 +9240,10 @@ mod tests {
     #[test]
     fn test_bulbul_api_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "bulbul-api-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "bulbul-api-key")
+            .unwrap();
         let key = "a".repeat(25);
         let line = format!("bulbul_api_key = {}", key);
         let matches = d.scan_line(&line);
@@ -8509,7 +9253,10 @@ mod tests {
     #[test]
     fn test_tyntec_api_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "tyntec-api-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "tyntec-api-key")
+            .unwrap();
         let key = "a".repeat(25);
         let line = format!("tyntec_api_key = {}", key);
         let matches = d.scan_line(&line);
@@ -8519,7 +9266,10 @@ mod tests {
     #[test]
     fn test_kaleyra_api_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "kaleyra-api-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "kaleyra-api-key")
+            .unwrap();
         let key = "a".repeat(25);
         let line = format!("kaleyra_api_key = {}", key);
         let matches = d.scan_line(&line);
@@ -8529,7 +9279,10 @@ mod tests {
     #[test]
     fn test_onbuka_api_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "onbuka-api-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "onbuka-api-key")
+            .unwrap();
         let key = "a".repeat(25);
         let line = format!("onbuka_api_key = {}", key);
         let matches = d.scan_line(&line);
@@ -8539,7 +9292,10 @@ mod tests {
     #[test]
     fn test_clicksend_api_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "clicksend-api-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "clicksend-api-key")
+            .unwrap();
         let key = "a".repeat(25);
         let line = format!("clicksend_api_key = {}", key);
         let matches = d.scan_line(&line);
@@ -8549,7 +9305,10 @@ mod tests {
     #[test]
     fn test_clockwork_sms_api_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "clockwork-sms-api-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "clockwork-sms-api-key")
+            .unwrap();
         let key = "a".repeat(25);
         let line = format!("clockwork_sms_api_key = {}", key);
         let matches = d.scan_line(&line);
@@ -8569,7 +9328,10 @@ mod tests {
     #[test]
     fn test_bombbomb_api_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "bombbomb-api-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "bombbomb-api-key")
+            .unwrap();
         let key = "a".repeat(25);
         let line = format!("bombbomb_api_key = {}", key);
         let matches = d.scan_line(&line);
@@ -8579,7 +9341,10 @@ mod tests {
     #[test]
     fn test_dfuse_api_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "dfuse-api-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "dfuse-api-key")
+            .unwrap();
         let key = format!("server_{}", "a".repeat(25));
         let line = format!("dfuse_api_key = {}", key);
         let matches = d.scan_line(&line);
@@ -8589,7 +9354,10 @@ mod tests {
     #[test]
     fn test_apifonica_api_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "apifonica-api-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "apifonica-api-key")
+            .unwrap();
         let key = "a".repeat(25);
         let line = format!("apifonica_api_key = {}", key);
         let matches = d.scan_line(&line);
@@ -8599,7 +9367,10 @@ mod tests {
     #[test]
     fn test_mandrill_api_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "mandrill-api-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "mandrill-api-key")
+            .unwrap();
         let key = "a".repeat(22);
         let line = format!("mandrill_api_key = {}", key);
         let matches = d.scan_line(&line);
@@ -8609,7 +9380,10 @@ mod tests {
     #[test]
     fn test_sparkpost_api_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "sparkpost-api-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "sparkpost-api-key")
+            .unwrap();
         let key = "a".repeat(64);
         let line = format!("sparkpost_api_key = {}", key);
         let matches = d.scan_line(&line);
@@ -8619,7 +9393,10 @@ mod tests {
     #[test]
     fn test_mailerlite_api_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "mailerlite-api-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "mailerlite-api-key")
+            .unwrap();
         let key = "a".repeat(25);
         let line = format!("mailerlite_api_key = {}", key);
         let matches = d.scan_line(&line);
@@ -8629,7 +9406,10 @@ mod tests {
     #[test]
     fn test_convertkit_api_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "convertkit-api-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "convertkit-api-key")
+            .unwrap();
         let key = "a".repeat(25);
         let line = format!("convertkit_api_key = {}", key);
         let matches = d.scan_line(&line);
@@ -8639,7 +9419,10 @@ mod tests {
     #[test]
     fn test_omnisend_api_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "omnisend-api-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "omnisend-api-key")
+            .unwrap();
         let key = "a".repeat(25);
         let line = format!("omnisend_api_key = {}", key);
         let matches = d.scan_line(&line);
@@ -8649,7 +9432,10 @@ mod tests {
     #[test]
     fn test_customerio_api_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "customerio-api-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "customerio-api-key")
+            .unwrap();
         let key = "a".repeat(25);
         let line = format!("customer.io_api_key = {}", key);
         let matches = d.scan_line(&line);
@@ -8659,7 +9445,10 @@ mod tests {
     #[test]
     fn test_moosend_api_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "moosend-api-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "moosend-api-key")
+            .unwrap();
         let key = "a".repeat(25);
         let line = format!("moosend_api_key = {}", key);
         let matches = d.scan_line(&line);
@@ -8669,7 +9458,10 @@ mod tests {
     #[test]
     fn test_dotdigital_api_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "dotdigital-api-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "dotdigital-api-key")
+            .unwrap();
         let key = "a".repeat(25);
         let line = format!("dotdigital_api_key = {}", key);
         let matches = d.scan_line(&line);
@@ -8679,7 +9471,10 @@ mod tests {
     #[test]
     fn test_dyspatch_api_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "dyspatch-api-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "dyspatch-api-key")
+            .unwrap();
         let key = "a".repeat(25);
         let line = format!("dyspatch_api_key = {}", key);
         let matches = d.scan_line(&line);
@@ -8689,7 +9484,10 @@ mod tests {
     #[test]
     fn test_postageapp_api_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "postageapp-api-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "postageapp-api-key")
+            .unwrap();
         let key = "a".repeat(25);
         let line = format!("postageapp_api_key = {}", key);
         let matches = d.scan_line(&line);
@@ -8699,7 +9497,10 @@ mod tests {
     #[test]
     fn test_nicereply_api_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "nicereply-api-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "nicereply-api-key")
+            .unwrap();
         let key = "a".repeat(25);
         let line = format!("nicereply_api_key = {}", key);
         let matches = d.scan_line(&line);
@@ -8709,7 +9510,10 @@ mod tests {
     #[test]
     fn test_autopilot_api_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "autopilot-api-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "autopilot-api-key")
+            .unwrap();
         let key = "a".repeat(25);
         let line = format!("autopilot_api_key = {}", key);
         let matches = d.scan_line(&line);
@@ -8719,7 +9523,10 @@ mod tests {
     #[test]
     fn test_airship_api_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "airship-api-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "airship-api-key")
+            .unwrap();
         let key = "a".repeat(25);
         let line = format!("airship_api_key = {}", key);
         let matches = d.scan_line(&line);
@@ -8731,7 +9538,10 @@ mod tests {
     #[test]
     fn test_freshworks_api_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "freshworks-api-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "freshworks-api-key")
+            .unwrap();
         let key = "a".repeat(25);
         let line = format!("freshworks_api_key = {}", key);
         let matches = d.scan_line(&line);
@@ -8741,7 +9551,10 @@ mod tests {
     #[test]
     fn test_close_crm_api_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "close-crm-api-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "close-crm-api-key")
+            .unwrap();
         let key = "a".repeat(25);
         let line = format!("close_crm_api_key = {}", key);
         let matches = d.scan_line(&line);
@@ -8751,7 +9564,10 @@ mod tests {
     #[test]
     fn test_copper_crm_api_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "copper-crm-api-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "copper-crm-api-key")
+            .unwrap();
         let key = "a".repeat(25);
         let line = format!("copper_crm_api_key = {}", key);
         let matches = d.scan_line(&line);
@@ -8761,7 +9577,10 @@ mod tests {
     #[test]
     fn test_streak_crm_api_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "streak-crm-api-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "streak-crm-api-key")
+            .unwrap();
         let key = "a".repeat(25);
         let line = format!("streak_api_key = {}", key);
         let matches = d.scan_line(&line);
@@ -8771,7 +9590,10 @@ mod tests {
     #[test]
     fn test_groovehq_api_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "groovehq-api-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "groovehq-api-key")
+            .unwrap();
         let key = "a".repeat(25);
         let line = format!("groovehq_api_key = {}", key);
         let matches = d.scan_line(&line);
@@ -8781,7 +9603,10 @@ mod tests {
     #[test]
     fn test_getgist_api_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "getgist-api-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "getgist-api-key")
+            .unwrap();
         let key = "a".repeat(25);
         let line = format!("getgist_api_key = {}", key);
         let matches = d.scan_line(&line);
@@ -8791,7 +9616,10 @@ mod tests {
     #[test]
     fn test_autoklose_api_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "autoklose-api-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "autoklose-api-key")
+            .unwrap();
         let key = "a".repeat(25);
         let line = format!("autoklose_api_key = {}", key);
         let matches = d.scan_line(&line);
@@ -8801,7 +9629,10 @@ mod tests {
     #[test]
     fn test_salesflare_api_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "salesflare-api-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "salesflare-api-key")
+            .unwrap();
         let key = "a".repeat(25);
         let line = format!("salesflare_api_key = {}", key);
         let matches = d.scan_line(&line);
@@ -8811,7 +9642,10 @@ mod tests {
     #[test]
     fn test_salesblink_api_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "salesblink-api-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "salesblink-api-key")
+            .unwrap();
         let key = "a".repeat(25);
         let line = format!("salesblink_api_key = {}", key);
         let matches = d.scan_line(&line);
@@ -8821,7 +9655,10 @@ mod tests {
     #[test]
     fn test_salescookie_api_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "salescookie-api-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "salescookie-api-key")
+            .unwrap();
         let key = "a".repeat(25);
         let line = format!("salescookie_api_key = {}", key);
         let matches = d.scan_line(&line);
@@ -8831,7 +9668,10 @@ mod tests {
     #[test]
     fn test_metrilo_api_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "metrilo-api-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "metrilo-api-key")
+            .unwrap();
         let key = "a".repeat(25);
         let line = format!("metrilo_api_key = {}", key);
         let matches = d.scan_line(&line);
@@ -8841,7 +9681,10 @@ mod tests {
     #[test]
     fn test_revampcrm_api_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "revampcrm-api-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "revampcrm-api-key")
+            .unwrap();
         let key = "a".repeat(25);
         let line = format!("revampcrm_api_key = {}", key);
         let matches = d.scan_line(&line);
@@ -8851,7 +9694,10 @@ mod tests {
     #[test]
     fn test_karmacrm_api_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "karmacrm-api-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "karmacrm-api-key")
+            .unwrap();
         let key = "a".repeat(25);
         let line = format!("karma_crm_api_key = {}", key);
         let matches = d.scan_line(&line);
@@ -8861,7 +9707,10 @@ mod tests {
     #[test]
     fn test_lessannoyingcrm_api_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "lessannoyingcrm-api-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "lessannoyingcrm-api-key")
+            .unwrap();
         let key = "a".repeat(25);
         let line = format!("less_annoying_crm_api_key = {}", key);
         let matches = d.scan_line(&line);
@@ -8871,7 +9720,10 @@ mod tests {
     #[test]
     fn test_nethunt_crm_api_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "nethunt-crm-api-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "nethunt-crm-api-key")
+            .unwrap();
         let key = "a".repeat(25);
         let line = format!("nethunt_crm_api_key = {}", key);
         let matches = d.scan_line(&line);
@@ -8881,7 +9733,10 @@ mod tests {
     #[test]
     fn test_nimble_crm_api_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "nimble-crm-api-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "nimble-crm-api-key")
+            .unwrap();
         let key = "a".repeat(25);
         let line = format!("nimble_api_key = {}", key);
         let matches = d.scan_line(&line);
@@ -8891,7 +9746,10 @@ mod tests {
     #[test]
     fn test_apptivo_crm_api_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "apptivo-crm-api-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "apptivo-crm-api-key")
+            .unwrap();
         let key = "a".repeat(25);
         let line = format!("apptivo_api_key = {}", key);
         let matches = d.scan_line(&line);
@@ -8901,7 +9759,10 @@ mod tests {
     #[test]
     fn test_capsule_crm_api_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "capsule-crm-api-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "capsule-crm-api-key")
+            .unwrap();
         let key = "a".repeat(25);
         let line = format!("capsule_crm_api_key = {}", key);
         let matches = d.scan_line(&line);
@@ -8911,7 +9772,10 @@ mod tests {
     #[test]
     fn test_insightly_crm_api_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "insightly-crm-api-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "insightly-crm-api-key")
+            .unwrap();
         let key = "a".repeat(25);
         let line = format!("insightly_api_key = {}", key);
         let matches = d.scan_line(&line);
@@ -8921,7 +9785,10 @@ mod tests {
     #[test]
     fn test_kylas_crm_api_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "kylas-crm-api-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "kylas-crm-api-key")
+            .unwrap();
         let key = "a".repeat(25);
         let line = format!("kylas_api_key = {}", key);
         let matches = d.scan_line(&line);
@@ -8931,7 +9798,10 @@ mod tests {
     #[test]
     fn test_onepagecrm_api_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "onepagecrm-api-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "onepagecrm-api-key")
+            .unwrap();
         let key = "a".repeat(25);
         let line = format!("onepagecrm_api_key = {}", key);
         let matches = d.scan_line(&line);
@@ -8941,7 +9811,10 @@ mod tests {
     #[test]
     fn test_prospectcrm_api_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "prospectcrm-api-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "prospectcrm-api-key")
+            .unwrap();
         let key = "a".repeat(25);
         let line = format!("prospectcrm_api_key = {}", key);
         let matches = d.scan_line(&line);
@@ -8951,7 +9824,10 @@ mod tests {
     #[test]
     fn test_reallysimplesystems_crm_api_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "reallysimplesystems-crm-api-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "reallysimplesystems-crm-api-key")
+            .unwrap();
         let key = "a".repeat(25);
         let line = format!("really_simple_systems_api_key = {}", key);
         let matches = d.scan_line(&line);
@@ -8961,7 +9837,10 @@ mod tests {
     #[test]
     fn test_centralstation_crm_api_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "centralstation-crm-api-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "centralstation-crm-api-key")
+            .unwrap();
         let key = "a".repeat(25);
         let line = format!("central_station_crm_api_key = {}", key);
         let matches = d.scan_line(&line);
@@ -8971,7 +9850,10 @@ mod tests {
     #[test]
     fn test_teamgate_crm_api_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "teamgate-crm-api-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "teamgate-crm-api-key")
+            .unwrap();
         let key = "a".repeat(25);
         let line = format!("teamgate_api_key = {}", key);
         let matches = d.scan_line(&line);
@@ -8981,7 +9863,10 @@ mod tests {
     #[test]
     fn test_axonaut_api_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "axonaut-api-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "axonaut-api-key")
+            .unwrap();
         let key = "a".repeat(25);
         let line = format!("axonaut_api_key = {}", key);
         let matches = d.scan_line(&line);
@@ -8991,7 +9876,10 @@ mod tests {
     #[test]
     fn test_flowflu_api_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "flowflu-api-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "flowflu-api-key")
+            .unwrap();
         let key = "a".repeat(25);
         let line = format!("flowflu_api_key = {}", key);
         let matches = d.scan_line(&line);
@@ -9001,7 +9889,10 @@ mod tests {
     #[test]
     fn test_clientary_api_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "clientary-api-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "clientary-api-key")
+            .unwrap();
         let key = "a".repeat(25);
         let line = format!("clientary_api_key = {}", key);
         let matches = d.scan_line(&line);
@@ -9011,7 +9902,10 @@ mod tests {
     #[test]
     fn test_clinchpad_api_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "clinchpad-api-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "clinchpad-api-key")
+            .unwrap();
         let key = "a".repeat(25);
         let line = format!("clinchpad_api_key = {}", key);
         let matches = d.scan_line(&line);
@@ -9021,7 +9915,10 @@ mod tests {
     #[test]
     fn test_companyhub_api_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "companyhub-api-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "companyhub-api-key")
+            .unwrap();
         let key = "a".repeat(25);
         let line = format!("companyhub_api_key = {}", key);
         let matches = d.scan_line(&line);
@@ -9031,7 +9928,10 @@ mod tests {
     #[test]
     fn test_campayn_api_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "campayn-api-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "campayn-api-key")
+            .unwrap();
         let key = "a".repeat(25);
         let line = format!("campayn_api_key = {}", key);
         let matches = d.scan_line(&line);
@@ -9041,7 +9941,10 @@ mod tests {
     #[test]
     fn test_hiveage_api_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "hiveage-api-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "hiveage-api-key")
+            .unwrap();
         let key = "a".repeat(25);
         let line = format!("hiveage_api_key = {}", key);
         let matches = d.scan_line(&line);
@@ -9051,7 +9954,10 @@ mod tests {
     #[test]
     fn test_billomat_api_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "billomat-api-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "billomat-api-key")
+            .unwrap();
         let key = "a".repeat(25);
         let line = format!("billomat_api_key = {}", key);
         let matches = d.scan_line(&line);
@@ -9061,7 +9967,10 @@ mod tests {
     #[test]
     fn test_alegra_api_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "alegra-api-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "alegra-api-key")
+            .unwrap();
         let key = "a".repeat(25);
         let line = format!("alegra_api_key = {}", key);
         let matches = d.scan_line(&line);
@@ -9071,7 +9980,10 @@ mod tests {
     #[test]
     fn test_loyverse_api_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "loyverse-api-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "loyverse-api-key")
+            .unwrap();
         let key = "a".repeat(25);
         let line = format!("loyverse_api_key = {}", key);
         let matches = d.scan_line(&line);
@@ -9081,7 +9993,10 @@ mod tests {
     #[test]
     fn test_commercejs_api_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "commercejs-api-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "commercejs-api-key")
+            .unwrap();
         let key = format!("pk_{}", "a".repeat(25));
         let line = format!("commercejs_api_key = {}", key);
         let matches = d.scan_line(&line);
@@ -9091,7 +10006,10 @@ mod tests {
     #[test]
     fn test_snipcart_api_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "snipcart-api-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "snipcart-api-key")
+            .unwrap();
         let key = format!("SNIP_{}", "a".repeat(25));
         let line = format!("snipcart_api_key = {}", key);
         let matches = d.scan_line(&line);
@@ -9101,7 +10019,10 @@ mod tests {
     #[test]
     fn test_partnerstack_api_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "partnerstack-api-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "partnerstack-api-key")
+            .unwrap();
         let key = "a".repeat(25);
         let line = format!("partnerstack_api_key = {}", key);
         let matches = d.scan_line(&line);
@@ -9111,7 +10032,10 @@ mod tests {
     #[test]
     fn test_vouchery_api_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "vouchery-api-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "vouchery-api-key")
+            .unwrap();
         let key = "a".repeat(25);
         let line = format!("vouchery_api_key = {}", key);
         let matches = d.scan_line(&line);
@@ -9121,7 +10045,10 @@ mod tests {
     #[test]
     fn test_monday_api_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "monday-api-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "monday-api-key")
+            .unwrap();
         let key = "a".repeat(25);
         let line = format!("monday_api_key = {}", key);
         let matches = d.scan_line(&line);
@@ -9131,7 +10058,10 @@ mod tests {
     #[test]
     fn test_smartsheets_api_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "smartsheets-api-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "smartsheets-api-key")
+            .unwrap();
         let key = "a".repeat(25);
         let line = format!("smartsheets_api_key = {}", key);
         let matches = d.scan_line(&line);
@@ -9141,7 +10071,10 @@ mod tests {
     #[test]
     fn test_wrike_api_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "wrike-api-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "wrike-api-key")
+            .unwrap();
         let key = "a".repeat(25);
         let line = format!("wrike_api_key = {}", key);
         let matches = d.scan_line(&line);
@@ -9151,7 +10084,10 @@ mod tests {
     #[test]
     fn test_apollo_io_api_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "apollo-io-api-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "apollo-io-api-key")
+            .unwrap();
         let key = "a".repeat(25);
         let line = format!("apollo_api_key = {}", key);
         let matches = d.scan_line(&line);
@@ -9161,7 +10097,10 @@ mod tests {
     #[test]
     fn test_uplead_api_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "uplead-api-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "uplead-api-key")
+            .unwrap();
         let key = "a".repeat(25);
         let line = format!("uplead_api_key = {}", key);
         let matches = d.scan_line(&line);
@@ -9171,7 +10110,10 @@ mod tests {
     #[test]
     fn test_rocketreach_api_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "rocketreach-api-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "rocketreach-api-key")
+            .unwrap();
         let key = "a".repeat(25);
         let line = format!("rocketreach_api_key = {}", key);
         let matches = d.scan_line(&line);
@@ -9181,7 +10123,10 @@ mod tests {
     #[test]
     fn test_clearbit_api_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "clearbit-api-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "clearbit-api-key")
+            .unwrap();
         let key = format!("cb_{}", "a".repeat(25));
         let line = format!("clearbit_api_key = {}", key);
         let matches = d.scan_line(&line);
@@ -9191,7 +10136,10 @@ mod tests {
     #[test]
     fn test_brandfetch_api_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "brandfetch-api-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "brandfetch-api-key")
+            .unwrap();
         let key = "a".repeat(25);
         let line = format!("brandfetch_api_key = {}", key);
         let matches = d.scan_line(&line);
@@ -9201,7 +10149,10 @@ mod tests {
     #[test]
     fn test_leadfeeder_api_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "leadfeeder-api-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "leadfeeder-api-key")
+            .unwrap();
         let key = "a".repeat(25);
         let line = format!("leadfeeder_api_key = {}", key);
         let matches = d.scan_line(&line);
@@ -9211,7 +10162,10 @@ mod tests {
     #[test]
     fn test_getemail_api_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "getemail-api-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "getemail-api-key")
+            .unwrap();
         let key = "a".repeat(25);
         let line = format!("getemail_api_key = {}", key);
         let matches = d.scan_line(&line);
@@ -9221,7 +10175,10 @@ mod tests {
     #[test]
     fn test_getemails_api_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "getemails-api-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "getemails-api-key")
+            .unwrap();
         let key = "a".repeat(25);
         let line = format!("getemails_api_key = {}", key);
         let matches = d.scan_line(&line);
@@ -9231,7 +10188,10 @@ mod tests {
     #[test]
     fn test_skrappio_api_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "skrappio-api-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "skrappio-api-key")
+            .unwrap();
         let key = "a".repeat(25);
         let line = format!("skrappio_api_key = {}", key);
         let matches = d.scan_line(&line);
@@ -9241,7 +10201,10 @@ mod tests {
     #[test]
     fn test_powrbot_api_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "powrbot-api-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "powrbot-api-key")
+            .unwrap();
         let key = "a".repeat(25);
         let line = format!("powrbot_api_key = {}", key);
         let matches = d.scan_line(&line);
@@ -9253,7 +10216,10 @@ mod tests {
     #[test]
     fn test_clickup_personal_token_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "clickup-personal-token").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "clickup-personal-token")
+            .unwrap();
         let token = "a".repeat(25);
         let line = format!("clickup_token = {}", token);
         let matches = d.scan_line(&line);
@@ -9263,7 +10229,10 @@ mod tests {
     #[test]
     fn test_todoist_api_token_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "todoist-api-token").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "todoist-api-token")
+            .unwrap();
         let token = "a".repeat(25);
         let line = format!("todoist_token = {}", token);
         let matches = d.scan_line(&line);
@@ -9273,7 +10242,10 @@ mod tests {
     #[test]
     fn test_shortcut_api_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "shortcut-api-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "shortcut-api-key")
+            .unwrap();
         let key = "a".repeat(25);
         let line = format!("shortcut_api_key = {}", key);
         let matches = d.scan_line(&line);
@@ -9283,7 +10255,10 @@ mod tests {
     #[test]
     fn test_tmetric_api_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "tmetric-api-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "tmetric-api-key")
+            .unwrap();
         let key = "a".repeat(25);
         let line = format!("tmetric_api_key = {}", key);
         let matches = d.scan_line(&line);
@@ -9293,7 +10268,10 @@ mod tests {
     #[test]
     fn test_clockify_api_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "clockify-api-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "clockify-api-key")
+            .unwrap();
         let key = "a".repeat(25);
         let line = format!("clockify_api_key = {}", key);
         let matches = d.scan_line(&line);
@@ -9303,7 +10281,10 @@ mod tests {
     #[test]
     fn test_everhour_api_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "everhour-api-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "everhour-api-key")
+            .unwrap();
         let key = "a".repeat(25);
         let line = format!("everhour_api_key = {}", key);
         let matches = d.scan_line(&line);
@@ -9313,7 +10294,10 @@ mod tests {
     #[test]
     fn test_harvest_api_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "harvest-api-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "harvest-api-key")
+            .unwrap();
         let key = "a".repeat(25);
         let line = format!("harvest_api_key = {}", key);
         let matches = d.scan_line(&line);
@@ -9323,7 +10307,10 @@ mod tests {
     #[test]
     fn test_humanity_api_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "humanity-api-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "humanity-api-key")
+            .unwrap();
         let key = "a".repeat(25);
         let line = format!("humanity_api_key = {}", key);
         let matches = d.scan_line(&line);
@@ -9333,7 +10320,10 @@ mod tests {
     #[test]
     fn test_toggl_track_api_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "toggl-track-api-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "toggl-track-api-key")
+            .unwrap();
         let key = "a".repeat(25);
         let line = format!("toggl_track_api_key = {}", key);
         let matches = d.scan_line(&line);
@@ -9343,7 +10333,10 @@ mod tests {
     #[test]
     fn test_runrunit_api_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "runrunit-api-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "runrunit-api-key")
+            .unwrap();
         let key = "a".repeat(25);
         let line = format!("runrunit_api_key = {}", key);
         let matches = d.scan_line(&line);
@@ -9353,7 +10346,10 @@ mod tests {
     #[test]
     fn test_workstack_api_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "workstack-api-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "workstack-api-key")
+            .unwrap();
         let key = "a".repeat(25);
         let line = format!("workstack_api_key = {}", key);
         let matches = d.scan_line(&line);
@@ -9363,7 +10359,10 @@ mod tests {
     #[test]
     fn test_easyinsight_api_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "easyinsight-api-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "easyinsight-api-key")
+            .unwrap();
         let key = "a".repeat(25);
         let line = format!("easyinsight_api_key = {}", key);
         let matches = d.scan_line(&line);
@@ -9373,7 +10372,10 @@ mod tests {
     #[test]
     fn test_dovico_api_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "dovico-api-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "dovico-api-key")
+            .unwrap();
         let key = "a".repeat(25);
         let line = format!("dovico_api_key = {}", key);
         let matches = d.scan_line(&line);
@@ -9383,7 +10385,10 @@ mod tests {
     #[test]
     fn test_mavenlink_api_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "mavenlink-api-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "mavenlink-api-key")
+            .unwrap();
         let key = "a".repeat(25);
         let line = format!("mavenlink_api_key = {}", key);
         let matches = d.scan_line(&line);
@@ -9393,7 +10398,10 @@ mod tests {
     #[test]
     fn test_float_api_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "float-api-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "float-api-key")
+            .unwrap();
         let key = "a".repeat(25);
         let line = format!("float_api_key = {}", key);
         let matches = d.scan_line(&line);
@@ -9403,7 +10411,10 @@ mod tests {
     #[test]
     fn test_daily_co_api_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "daily-co-api-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "daily-co-api-key")
+            .unwrap();
         let key = "a".repeat(25);
         let line = format!("daily_co_api_key = {}", key);
         let matches = d.scan_line(&line);
@@ -9423,7 +10434,10 @@ mod tests {
     #[test]
     fn test_rebrandly_api_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "rebrandly-api-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "rebrandly-api-key")
+            .unwrap();
         let key = "a".repeat(25);
         let line = format!("rebrandly_api_key = {}", key);
         let matches = d.scan_line(&line);
@@ -9433,7 +10447,10 @@ mod tests {
     #[test]
     fn test_timezone_api_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "timezone-api-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "timezone-api-key")
+            .unwrap();
         let key = "a".repeat(25);
         let line = format!("timezone_api_key = {}", key);
         let matches = d.scan_line(&line);
@@ -9443,7 +10460,10 @@ mod tests {
     #[test]
     fn test_jotform_api_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "jotform-api-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "jotform-api-key")
+            .unwrap();
         let key = "a".repeat(25);
         let line = format!("jotform_api_key = {}", key);
         let matches = d.scan_line(&line);
@@ -9455,7 +10475,10 @@ mod tests {
     #[test]
     fn test_typeform_api_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "typeform-api-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "typeform-api-key")
+            .unwrap();
         let key = "a".repeat(25);
         let line = format!("typeform_api_key = {}", key);
         let matches = d.scan_line(&line);
@@ -9465,7 +10488,10 @@ mod tests {
     #[test]
     fn test_surveysparrow_api_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "surveysparrow-api-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "surveysparrow-api-key")
+            .unwrap();
         let key = "a".repeat(25);
         let line = format!("surveysparrow_api_key = {}", key);
         let matches = d.scan_line(&line);
@@ -9475,7 +10501,10 @@ mod tests {
     #[test]
     fn test_survicate_api_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "survicate-api-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "survicate-api-key")
+            .unwrap();
         let key = "a".repeat(25);
         let line = format!("survicate_api_key = {}", key);
         let matches = d.scan_line(&line);
@@ -9485,7 +10514,10 @@ mod tests {
     #[test]
     fn test_delighted_api_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "delighted-api-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "delighted-api-key")
+            .unwrap();
         let key = "a".repeat(25);
         let line = format!("delighted_api_key = {}", key);
         let matches = d.scan_line(&line);
@@ -9495,7 +10527,10 @@ mod tests {
     #[test]
     fn test_feedier_api_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "feedier-api-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "feedier-api-key")
+            .unwrap();
         let key = "a".repeat(25);
         let line = format!("feedier_api_key = {}", key);
         let matches = d.scan_line(&line);
@@ -9505,7 +10540,10 @@ mod tests {
     #[test]
     fn test_zonka_feedback_api_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "zonka-feedback-api-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "zonka-feedback-api-key")
+            .unwrap();
         let key = "a".repeat(25);
         let line = format!("zonka_feedback_api_key = {}", key);
         let matches = d.scan_line(&line);
@@ -9515,7 +10553,10 @@ mod tests {
     #[test]
     fn test_satismeter_project_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "satismeter-project-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "satismeter-project-key")
+            .unwrap();
         let key = "a".repeat(25);
         let line = format!("satismeter_project_key = {}", key);
         let matches = d.scan_line(&line);
@@ -9525,7 +10566,10 @@ mod tests {
     #[test]
     fn test_satismeter_write_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "satismeter-write-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "satismeter-write-key")
+            .unwrap();
         let key = "a".repeat(25);
         let line = format!("satismeter_write_key = {}", key);
         let matches = d.scan_line(&line);
@@ -9535,7 +10579,10 @@ mod tests {
     #[test]
     fn test_simplesat_api_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "simplesat-api-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "simplesat-api-key")
+            .unwrap();
         let key = "a".repeat(25);
         let line = format!("simplesat_api_key = {}", key);
         let matches = d.scan_line(&line);
@@ -9545,7 +10592,10 @@ mod tests {
     #[test]
     fn test_surveyanyplace_api_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "surveyanyplace-api-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "surveyanyplace-api-key")
+            .unwrap();
         let key = "a".repeat(25);
         let line = format!("surveyanyplace_api_key = {}", key);
         let matches = d.scan_line(&line);
@@ -9555,7 +10605,10 @@ mod tests {
     #[test]
     fn test_surveybot_api_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "surveybot-api-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "surveybot-api-key")
+            .unwrap();
         let key = "a".repeat(25);
         let line = format!("surveybot_api_key = {}", key);
         let matches = d.scan_line(&line);
@@ -9565,7 +10618,10 @@ mod tests {
     #[test]
     fn test_qualaroo_api_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "qualaroo-api-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "qualaroo-api-key")
+            .unwrap();
         let key = "a".repeat(25);
         let line = format!("qualaroo_api_key = {}", key);
         let matches = d.scan_line(&line);
@@ -9575,7 +10631,10 @@ mod tests {
     #[test]
     fn test_customerguru_api_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "customerguru-api-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "customerguru-api-key")
+            .unwrap();
         let key = "a".repeat(25);
         let line = format!("customerguru_api_key = {}", key);
         let matches = d.scan_line(&line);
@@ -9585,7 +10644,10 @@ mod tests {
     #[test]
     fn test_abyssale_api_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "abyssale-api-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "abyssale-api-key")
+            .unwrap();
         let key = "a".repeat(25);
         let line = format!("abyssale_api_key = {}", key);
         let matches = d.scan_line(&line);
@@ -9595,7 +10657,10 @@ mod tests {
     #[test]
     fn test_magnetic_api_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "magnetic-api-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "magnetic-api-key")
+            .unwrap();
         let key = "a".repeat(25);
         let line = format!("magnetic_api_key = {}", key);
         let matches = d.scan_line(&line);
@@ -9605,7 +10670,10 @@ mod tests {
     #[test]
     fn test_refiner_api_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "refiner-api-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "refiner-api-key")
+            .unwrap();
         let key = "a".repeat(25);
         let line = format!("refiner_api_key = {}", key);
         let matches = d.scan_line(&line);
@@ -9615,7 +10683,10 @@ mod tests {
     #[test]
     fn test_simvoly_api_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "simvoly-api-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "simvoly-api-key")
+            .unwrap();
         let key = "a".repeat(25);
         let line = format!("simvoly_api_key = {}", key);
         let matches = d.scan_line(&line);
@@ -9625,7 +10696,10 @@ mod tests {
     #[test]
     fn test_checkmarket_api_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "checkmarket-api-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "checkmarket-api-key")
+            .unwrap();
         let key = "a".repeat(25);
         let line = format!("checkmarket_api_key = {}", key);
         let matches = d.scan_line(&line);
@@ -9635,7 +10709,10 @@ mod tests {
     #[test]
     fn test_webengage_api_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "webengage-api-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "webengage-api-key")
+            .unwrap();
         let key = "a".repeat(25);
         let line = format!("webengage_api_key = {}", key);
         let matches = d.scan_line(&line);
@@ -9647,7 +10724,10 @@ mod tests {
     #[test]
     fn test_twelve_data_api_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "twelve-data-api-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "twelve-data-api-key")
+            .unwrap();
         let key = "a".repeat(25);
         let line = format!("twelve_data_api_key = {}", key);
         let matches = d.scan_line(&line);
@@ -9657,7 +10737,10 @@ mod tests {
     #[test]
     fn test_fixer_io_api_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "fixer-io-api-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "fixer-io-api-key")
+            .unwrap();
         let key = "a".repeat(25);
         let line = format!("fixer_io_api_key = {}", key);
         let matches = d.scan_line(&line);
@@ -9667,7 +10750,10 @@ mod tests {
     #[test]
     fn test_alpha_vantage_api_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "alpha-vantage-api-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "alpha-vantage-api-key")
+            .unwrap();
         let key = "a".repeat(25);
         let line = format!("alpha_vantage_api_key = {}", key);
         let matches = d.scan_line(&line);
@@ -9677,7 +10763,10 @@ mod tests {
     #[test]
     fn test_tradier_api_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "tradier-api-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "tradier-api-key")
+            .unwrap();
         let key = "a".repeat(25);
         let line = format!("tradier_api_key = {}", key);
         let matches = d.scan_line(&line);
@@ -9687,7 +10776,10 @@ mod tests {
     #[test]
     fn test_finnhub_api_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "finnhub-api-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "finnhub-api-key")
+            .unwrap();
         let key = "a".repeat(25);
         let line = format!("finnhub_api_key = {}", key);
         let matches = d.scan_line(&line);
@@ -9697,7 +10789,10 @@ mod tests {
     #[test]
     fn test_tiingo_api_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "tiingo-api-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "tiingo-api-key")
+            .unwrap();
         let key = "a".repeat(25);
         let line = format!("tiingo_api_key = {}", key);
         let matches = d.scan_line(&line);
@@ -9707,7 +10802,10 @@ mod tests {
     #[test]
     fn test_finage_api_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "finage-api-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "finage-api-key")
+            .unwrap();
         let key = "a".repeat(25);
         let line = format!("finage_api_key = {}", key);
         let matches = d.scan_line(&line);
@@ -9717,7 +10815,10 @@ mod tests {
     #[test]
     fn test_iex_cloud_api_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "iex-cloud-api-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "iex-cloud-api-key")
+            .unwrap();
         let key = "a".repeat(25);
         let line = format!("iex_cloud_api_key = {}", key);
         let matches = d.scan_line(&line);
@@ -9727,7 +10828,10 @@ mod tests {
     #[test]
     fn test_intrinio_api_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "intrinio-api-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "intrinio-api-key")
+            .unwrap();
         let key = "a".repeat(25);
         let line = format!("intrinio_api_key = {}", key);
         let matches = d.scan_line(&line);
@@ -9737,7 +10841,10 @@ mod tests {
     #[test]
     fn test_financial_modeling_prep_api_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "financial-modeling-prep-api-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "financial-modeling-prep-api-key")
+            .unwrap();
         let key = "a".repeat(25);
         let line = format!("financial_modeling_prep_api_key = {}", key);
         let matches = d.scan_line(&line);
@@ -9747,7 +10854,10 @@ mod tests {
     #[test]
     fn test_nasdaq_data_link_api_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "nasdaq-data-link-api-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "nasdaq-data-link-api-key")
+            .unwrap();
         let key = "a".repeat(25);
         let line = format!("nasdaq_data_link_api_key = {}", key);
         let matches = d.scan_line(&line);
@@ -9757,7 +10867,10 @@ mod tests {
     #[test]
     fn test_qubole_api_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "qubole-api-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "qubole-api-key")
+            .unwrap();
         let key = "a".repeat(25);
         let line = format!("qubole_api_key = {}", key);
         let matches = d.scan_line(&line);
@@ -9767,7 +10880,10 @@ mod tests {
     #[test]
     fn test_enigma_api_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "enigma-api-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "enigma-api-key")
+            .unwrap();
         let key = "a".repeat(25);
         let line = format!("enigma_api_key = {}", key);
         let matches = d.scan_line(&line);
@@ -9777,7 +10893,10 @@ mod tests {
     #[test]
     fn test_datagov_api_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "datagov-api-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "datagov-api-key")
+            .unwrap();
         let key = "a".repeat(25);
         let line = format!("data_gov_api_key = {}", key);
         let matches = d.scan_line(&line);
@@ -9787,7 +10906,10 @@ mod tests {
     #[test]
     fn test_stockdata_api_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "stockdata-api-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "stockdata-api-key")
+            .unwrap();
         let key = "a".repeat(25);
         let line = format!("stockdata_api_key = {}", key);
         let matches = d.scan_line(&line);
@@ -9797,7 +10919,10 @@ mod tests {
     #[test]
     fn test_marketstack_api_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "marketstack-api-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "marketstack-api-key")
+            .unwrap();
         let key = "a".repeat(25);
         let line = format!("marketstack_api_key = {}", key);
         let matches = d.scan_line(&line);
@@ -9807,7 +10932,10 @@ mod tests {
     #[test]
     fn test_commodities_api_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "commodities-api-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "commodities-api-key")
+            .unwrap();
         let key = "a".repeat(25);
         let line = format!("commodities_api_key = {}", key);
         let matches = d.scan_line(&line);
@@ -9817,7 +10945,10 @@ mod tests {
     #[test]
     fn test_baremetrics_api_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "baremetrics-api-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "baremetrics-api-key")
+            .unwrap();
         let key = "a".repeat(25);
         let line = format!("baremetrics_api_key = {}", key);
         let matches = d.scan_line(&line);
@@ -9827,7 +10958,10 @@ mod tests {
     #[test]
     fn test_dwolla_api_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "dwolla-api-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "dwolla-api-key")
+            .unwrap();
         let key = "a".repeat(25);
         let line = format!("dwolla_api_key = {}", key);
         let matches = d.scan_line(&line);
@@ -9837,7 +10971,10 @@ mod tests {
     #[test]
     fn test_wepay_api_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "wepay-api-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "wepay-api-key")
+            .unwrap();
         let key = "a".repeat(25);
         let line = format!("wepay_api_key = {}", key);
         let matches = d.scan_line(&line);
@@ -9847,7 +10984,10 @@ mod tests {
     #[test]
     fn test_checkout_com_api_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "checkout-com-api-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "checkout-com-api-key")
+            .unwrap();
         let key = "a".repeat(25);
         let line = format!("checkout_com_api_key = {}", key);
         let matches = d.scan_line(&line);
@@ -9857,7 +10997,10 @@ mod tests {
     #[test]
     fn test_paymongo_api_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "paymongo-api-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "paymongo-api-key")
+            .unwrap();
         let key = "a".repeat(25);
         let line = format!("paymongo_api_key = {}", key);
         let matches = d.scan_line(&line);
@@ -9867,7 +11010,10 @@ mod tests {
     #[test]
     fn test_avalara_api_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "avalara-api-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "avalara-api-key")
+            .unwrap();
         let key = "a".repeat(25);
         let line = format!("avalara_api_key = {}", key);
         let matches = d.scan_line(&line);
@@ -9877,7 +11023,10 @@ mod tests {
     #[test]
     fn test_carbon_interface_api_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "carbon-interface-api-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "carbon-interface-api-key")
+            .unwrap();
         let key = "a".repeat(25);
         let line = format!("carbon_interface_api_key = {}", key);
         let matches = d.scan_line(&line);
@@ -9887,7 +11036,10 @@ mod tests {
     #[test]
     fn test_currency_layer_api_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "currency-layer-api-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "currency-layer-api-key")
+            .unwrap();
         let key = "a".repeat(25);
         let line = format!("currency_layer_api_key = {}", key);
         let matches = d.scan_line(&line);
@@ -9897,7 +11049,10 @@ mod tests {
     #[test]
     fn test_exchange_rates_api_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "exchange-rates-api-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "exchange-rates-api-key")
+            .unwrap();
         let key = "a".repeat(25);
         let line = format!("exchange_rates_api_key = {}", key);
         let matches = d.scan_line(&line);
@@ -9907,7 +11062,10 @@ mod tests {
     #[test]
     fn test_currencyscoop_api_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "currencyscoop-api-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "currencyscoop-api-key")
+            .unwrap();
         let key = "a".repeat(25);
         let line = format!("currencyscoop_api_key = {}", key);
         let matches = d.scan_line(&line);
@@ -9917,7 +11075,10 @@ mod tests {
     #[test]
     fn test_currencyfreaks_api_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "currencyfreaks-api-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "currencyfreaks-api-key")
+            .unwrap();
         let key = "a".repeat(25);
         let line = format!("currencyfreaks_api_key = {}", key);
         let matches = d.scan_line(&line);
@@ -9927,7 +11088,10 @@ mod tests {
     #[test]
     fn test_country_layer_api_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "country-layer-api-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "country-layer-api-key")
+            .unwrap();
         let key = "a".repeat(25);
         let line = format!("country_layer_api_key = {}", key);
         let matches = d.scan_line(&line);
@@ -9937,7 +11101,10 @@ mod tests {
     #[test]
     fn test_fxmarket_api_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "fxmarket-api-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "fxmarket-api-key")
+            .unwrap();
         let key = "a".repeat(25);
         let line = format!("fx_market_api_key = {}", key);
         let matches = d.scan_line(&line);
@@ -9947,7 +11114,10 @@ mod tests {
     #[test]
     fn test_currencycloud_api_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "currencycloud-api-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "currencycloud-api-key")
+            .unwrap();
         let key = "a".repeat(25);
         let line = format!("currency_cloud_api_key = {}", key);
         let matches = d.scan_line(&line);
@@ -9959,7 +11129,10 @@ mod tests {
     #[test]
     fn test_kraken_api_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "kraken-api-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "kraken-api-key")
+            .unwrap();
         let key = "a".repeat(25);
         let line = format!("kraken_api_key = {}", key);
         let matches = d.scan_line(&line);
@@ -9969,7 +11142,10 @@ mod tests {
     #[test]
     fn test_poloniex_api_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "poloniex-api-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "poloniex-api-key")
+            .unwrap();
         let key = "a".repeat(25);
         let line = format!("poloniex_api_key = {}", key);
         let matches = d.scan_line(&line);
@@ -9979,7 +11155,10 @@ mod tests {
     #[test]
     fn test_bitmex_api_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "bitmex-api-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "bitmex-api-key")
+            .unwrap();
         let key = "a".repeat(25);
         let line = format!("bitmex_api_key = {}", key);
         let matches = d.scan_line(&line);
@@ -9999,7 +11178,10 @@ mod tests {
     #[test]
     fn test_coinlayer_api_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "coinlayer-api-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "coinlayer-api-key")
+            .unwrap();
         let key = "a".repeat(25);
         let line = format!("coinlayer_api_key = {}", key);
         let matches = d.scan_line(&line);
@@ -10009,7 +11191,10 @@ mod tests {
     #[test]
     fn test_coinlib_api_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "coinlib-api-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "coinlib-api-key")
+            .unwrap();
         let key = "a".repeat(25);
         let line = format!("coinlib_api_key = {}", key);
         let matches = d.scan_line(&line);
@@ -10019,7 +11204,10 @@ mod tests {
     #[test]
     fn test_cryptocompare_api_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "cryptocompare-api-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "cryptocompare-api-key")
+            .unwrap();
         let key = "a".repeat(25);
         let line = format!("cryptocompare_api_key = {}", key);
         let matches = d.scan_line(&line);
@@ -10029,7 +11217,10 @@ mod tests {
     #[test]
     fn test_bitcoinaverage_api_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "bitcoinaverage-api-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "bitcoinaverage-api-key")
+            .unwrap();
         let key = "a".repeat(25);
         let line = format!("bitcoin_average_api_key = {}", key);
         let matches = d.scan_line(&line);
@@ -10039,7 +11230,10 @@ mod tests {
     #[test]
     fn test_worldcoinindex_api_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "worldcoinindex-api-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "worldcoinindex-api-key")
+            .unwrap();
         let key = "a".repeat(25);
         let line = format!("world_coin_index_api_key = {}", key);
         let matches = d.scan_line(&line);
@@ -10049,7 +11243,10 @@ mod tests {
     #[test]
     fn test_glassnode_api_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "glassnode-api-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "glassnode-api-key")
+            .unwrap();
         let key = "a".repeat(25);
         let line = format!("glassnode_api_key = {}", key);
         let matches = d.scan_line(&line);
@@ -10059,7 +11256,10 @@ mod tests {
     #[test]
     fn test_tatum_api_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "tatum-api-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "tatum-api-key")
+            .unwrap();
         let key = "a".repeat(25);
         let line = format!("tatum_api_key = {}", key);
         let matches = d.scan_line(&line);
@@ -10069,7 +11269,10 @@ mod tests {
     #[test]
     fn test_ethplorer_api_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "ethplorer-api-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "ethplorer-api-key")
+            .unwrap();
         let key = "a".repeat(25);
         let line = format!("ethplorer_api_key = {}", key);
         let matches = d.scan_line(&line);
@@ -10079,7 +11282,10 @@ mod tests {
     #[test]
     fn test_nftport_api_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "nftport-api-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "nftport-api-key")
+            .unwrap();
         let key = "a".repeat(25);
         let line = format!("nftport_api_key = {}", key);
         let matches = d.scan_line(&line);
@@ -10089,7 +11295,10 @@ mod tests {
     #[test]
     fn test_messari_api_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "messari-api-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "messari-api-key")
+            .unwrap();
         let key = "a".repeat(25);
         let line = format!("messari_api_key = {}", key);
         let matches = d.scan_line(&line);
@@ -10099,7 +11308,10 @@ mod tests {
     #[test]
     fn test_coingecko_api_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "coingecko-api-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "coingecko-api-key")
+            .unwrap();
         let key = "a".repeat(25);
         let line = format!("coingecko_api_key = {}", key);
         let matches = d.scan_line(&line);
@@ -10111,7 +11323,10 @@ mod tests {
     #[test]
     fn test_openweather_api_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "openweather-api-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "openweather-api-key")
+            .unwrap();
         let key = "a".repeat(25);
         let line = format!("openweather_api_key = {}", key);
         let matches = d.scan_line(&line);
@@ -10121,7 +11336,10 @@ mod tests {
     #[test]
     fn test_weatherstack_api_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "weatherstack-api-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "weatherstack-api-key")
+            .unwrap();
         let key = "a".repeat(25);
         let line = format!("weatherstack_api_key = {}", key);
         let matches = d.scan_line(&line);
@@ -10131,7 +11349,10 @@ mod tests {
     #[test]
     fn test_accuweather_api_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "accuweather-api-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "accuweather-api-key")
+            .unwrap();
         let key = "a".repeat(25);
         let line = format!("accuweather_api_key = {}", key);
         let matches = d.scan_line(&line);
@@ -10141,7 +11362,10 @@ mod tests {
     #[test]
     fn test_worldweather_api_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "worldweather-api-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "worldweather-api-key")
+            .unwrap();
         let key = "a".repeat(25);
         let line = format!("world_weather_api_key = {}", key);
         let matches = d.scan_line(&line);
@@ -10151,7 +11375,10 @@ mod tests {
     #[test]
     fn test_tomorrow_io_api_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "tomorrow-io-api-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "tomorrow-io-api-key")
+            .unwrap();
         let key = "a".repeat(25);
         let line = format!("tomorrow_io_api_key = {}", key);
         let matches = d.scan_line(&line);
@@ -10161,7 +11388,10 @@ mod tests {
     #[test]
     fn test_airvisual_api_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "airvisual-api-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "airvisual-api-key")
+            .unwrap();
         let key = "a".repeat(25);
         let line = format!("airvisual_api_key = {}", key);
         let matches = d.scan_line(&line);
@@ -10171,7 +11401,10 @@ mod tests {
     #[test]
     fn test_visualcrossing_api_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "visualcrossing-api-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "visualcrossing-api-key")
+            .unwrap();
         let key = "a".repeat(25);
         let line = format!("visual_crossing_api_key = {}", key);
         let matches = d.scan_line(&line);
@@ -10181,7 +11414,10 @@ mod tests {
     #[test]
     fn test_stormglass_api_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "stormglass-api-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "stormglass-api-key")
+            .unwrap();
         let key = "a".repeat(25);
         let line = format!("stormglass_api_key = {}", key);
         let matches = d.scan_line(&line);
@@ -10191,7 +11427,10 @@ mod tests {
     #[test]
     fn test_aeris_weather_api_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "aeris-weather-api-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "aeris-weather-api-key")
+            .unwrap();
         let key = "a".repeat(25);
         let line = format!("aeris_weather_api_key = {}", key);
         let matches = d.scan_line(&line);
@@ -10201,7 +11440,10 @@ mod tests {
     #[test]
     fn test_ambee_api_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "ambee-api-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "ambee-api-key")
+            .unwrap();
         let key = "a".repeat(25);
         let line = format!("ambee_api_key = {}", key);
         let matches = d.scan_line(&line);
@@ -10211,7 +11453,10 @@ mod tests {
     #[test]
     fn test_openuv_api_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "openuv-api-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "openuv-api-key")
+            .unwrap();
         let key = "a".repeat(25);
         let line = format!("openuv_api_key = {}", key);
         let matches = d.scan_line(&line);
@@ -10233,7 +11478,10 @@ mod tests {
     #[test]
     fn test_calendly_webhook_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "calendly-webhook").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "calendly-webhook")
+            .unwrap();
         let key = "a".repeat(25);
         let line = format!("calendly_webhook_secret = {}", key);
         let matches = d.scan_line(&line);
@@ -10243,7 +11491,10 @@ mod tests {
     #[test]
     fn test_tomtom_api_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "tomtom-api-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "tomtom-api-key")
+            .unwrap();
         let key = "a".repeat(25);
         let line = format!("tomtom_api_key = {}", key);
         let matches = d.scan_line(&line);
@@ -10253,7 +11504,10 @@ mod tests {
     #[test]
     fn test_geoapify_api_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "geoapify-api-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "geoapify-api-key")
+            .unwrap();
         let key = "a".repeat(25);
         let line = format!("geoapify_api_key = {}", key);
         let matches = d.scan_line(&line);
@@ -10263,7 +11517,10 @@ mod tests {
     #[test]
     fn test_geocodify_api_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "geocodify-api-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "geocodify-api-key")
+            .unwrap();
         let key = "a".repeat(25);
         let line = format!("geocodify_api_key = {}", key);
         let matches = d.scan_line(&line);
@@ -10273,7 +11530,10 @@ mod tests {
     #[test]
     fn test_geocode_api_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "geocode-api-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "geocode-api-key")
+            .unwrap();
         let key = "a".repeat(25);
         let line = format!("geocode_api_key = {}", key);
         let matches = d.scan_line(&line);
@@ -10283,7 +11543,10 @@ mod tests {
     #[test]
     fn test_geocodio_api_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "geocodio-api-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "geocodio-api-key")
+            .unwrap();
         let key = "a".repeat(25);
         let line = format!("geocodio_api_key = {}", key);
         let matches = d.scan_line(&line);
@@ -10293,7 +11556,10 @@ mod tests {
     #[test]
     fn test_positionstack_api_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "positionstack-api-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "positionstack-api-key")
+            .unwrap();
         let key = "a".repeat(25);
         let line = format!("positionstack_api_key = {}", key);
         let matches = d.scan_line(&line);
@@ -10303,7 +11569,10 @@ mod tests {
     #[test]
     fn test_locationiq_api_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "locationiq-api-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "locationiq-api-key")
+            .unwrap();
         let key = "a".repeat(25);
         let line = format!("locationiq_api_key = {}", key);
         let matches = d.scan_line(&line);
@@ -10313,7 +11582,10 @@ mod tests {
     #[test]
     fn test_graphhopper_api_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "graphhopper-api-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "graphhopper-api-key")
+            .unwrap();
         let key = "a".repeat(25);
         let line = format!("graphhopper_api_key = {}", key);
         let matches = d.scan_line(&line);
@@ -10323,7 +11595,10 @@ mod tests {
     #[test]
     fn test_smartystreets_api_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "smartystreets-api-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "smartystreets-api-key")
+            .unwrap();
         let key = "a".repeat(25);
         let line = format!("smartystreets_api_key = {}", key);
         let matches = d.scan_line(&line);
@@ -10333,7 +11608,10 @@ mod tests {
     #[test]
     fn test_route4me_api_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "route4me-api-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "route4me-api-key")
+            .unwrap();
         let key = "a".repeat(25);
         let line = format!("route4me_api_key = {}", key);
         let matches = d.scan_line(&line);
@@ -10343,7 +11621,10 @@ mod tests {
     #[test]
     fn test_zipcode_api_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "zipcode-api-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "zipcode-api-key")
+            .unwrap();
         let key = "a".repeat(25);
         let line = format!("zipcode_api_key = {}", key);
         let matches = d.scan_line(&line);
@@ -10353,7 +11634,10 @@ mod tests {
     #[test]
     fn test_onwater_api_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "onwater-api-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "onwater-api-key")
+            .unwrap();
         let key = "a".repeat(25);
         let line = format!("onwater_api_key = {}", key);
         let matches = d.scan_line(&line);
@@ -10363,7 +11647,10 @@ mod tests {
     #[test]
     fn test_geoipify_api_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "geoipify-api-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "geoipify-api-key")
+            .unwrap();
         let key = "a".repeat(25);
         let line = format!("geoipify_api_key = {}", key);
         let matches = d.scan_line(&line);
@@ -10373,7 +11660,10 @@ mod tests {
     #[test]
     fn test_ipgeolocation_api_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "ipgeolocation-api-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "ipgeolocation-api-key")
+            .unwrap();
         let key = "a".repeat(25);
         let line = format!("ipgeolocation_api_key = {}", key);
         let matches = d.scan_line(&line);
@@ -10383,7 +11673,10 @@ mod tests {
     #[test]
     fn test_ipinfodb_api_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "ipinfodb-api-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "ipinfodb-api-key")
+            .unwrap();
         let key = "a".repeat(25);
         let line = format!("ipinfodb_api_key = {}", key);
         let matches = d.scan_line(&line);
@@ -10393,7 +11686,10 @@ mod tests {
     #[test]
     fn test_ipify_api_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "ipify-api-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "ipify-api-key")
+            .unwrap();
         let key = "a".repeat(25);
         let line = format!("ipify_api_key = {}", key);
         let matches = d.scan_line(&line);
@@ -10403,7 +11699,10 @@ mod tests {
     #[test]
     fn test_ipapi_api_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "ipapi-api-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "ipapi-api-key")
+            .unwrap();
         let key = "a".repeat(25);
         let line = format!("ipapi_api_key = {}", key);
         let matches = d.scan_line(&line);
@@ -10423,7 +11722,10 @@ mod tests {
     #[test]
     fn test_dnscheck_api_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "dnscheck-api-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "dnscheck-api-key")
+            .unwrap();
         let key = "a".repeat(25);
         let line = format!("dnscheck_api_key = {}", key);
         let matches = d.scan_line(&line);
@@ -10433,7 +11735,10 @@ mod tests {
     #[test]
     fn test_walkscore_api_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "walkscore-api-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "walkscore-api-key")
+            .unwrap();
         let key = "a".repeat(25);
         let line = format!("walkscore_api_key = {}", key);
         let matches = d.scan_line(&line);
@@ -10443,7 +11748,10 @@ mod tests {
     #[test]
     fn test_besttime_api_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "besttime-api-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "besttime-api-key")
+            .unwrap();
         let key = "a".repeat(25);
         let line = format!("besttime_api_key = {}", key);
         let matches = d.scan_line(&line);
@@ -10453,7 +11761,10 @@ mod tests {
     #[test]
     fn test_hypertrack_api_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "hypertrack-api-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "hypertrack-api-key")
+            .unwrap();
         let key = "a".repeat(25);
         let line = format!("hypertrack_api_key = {}", key);
         let matches = d.scan_line(&line);
@@ -10463,7 +11774,10 @@ mod tests {
     #[test]
     fn test_fulcrum_api_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "fulcrum-api-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "fulcrum-api-key")
+            .unwrap();
         let key = "a".repeat(25);
         let line = format!("fulcrum_api_key = {}", key);
         let matches = d.scan_line(&line);
@@ -10473,7 +11787,10 @@ mod tests {
     #[test]
     fn test_samsara_api_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "samsara-api-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "samsara-api-key")
+            .unwrap();
         let key = "a".repeat(25);
         let line = format!("samsara_api_key = {}", key);
         let matches = d.scan_line(&line);
@@ -10485,7 +11802,10 @@ mod tests {
     #[test]
     fn test_unsplash_api_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "unsplash-api-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "unsplash-api-key")
+            .unwrap();
         let key = "a".repeat(25);
         let line = format!("unsplash_api_key = {}", key);
         let matches = d.scan_line(&line);
@@ -10495,7 +11815,10 @@ mod tests {
     #[test]
     fn test_pixabay_api_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "pixabay-api-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "pixabay-api-key")
+            .unwrap();
         let key = "a".repeat(25);
         let line = format!("pixabay_api_key = {}", key);
         let matches = d.scan_line(&line);
@@ -10505,7 +11828,10 @@ mod tests {
     #[test]
     fn test_gyazo_api_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "gyazo-api-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "gyazo-api-key")
+            .unwrap();
         let key = "a".repeat(25);
         let line = format!("gyazo_api_key = {}", key);
         let matches = d.scan_line(&line);
@@ -10515,7 +11841,10 @@ mod tests {
     #[test]
     fn test_imgur_api_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "imgur-api-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "imgur-api-key")
+            .unwrap();
         let key = "a".repeat(25);
         let line = format!("imgur_api_key = {}", key);
         let matches = d.scan_line(&line);
@@ -10525,7 +11854,10 @@ mod tests {
     #[test]
     fn test_shutterstock_api_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "shutterstock-api-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "shutterstock-api-key")
+            .unwrap();
         let key = "a".repeat(25);
         let line = format!("shutterstock_api_key = {}", key);
         let matches = d.scan_line(&line);
@@ -10535,7 +11867,10 @@ mod tests {
     #[test]
     fn test_shutterstock_oauth_token_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "shutterstock-oauth-token").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "shutterstock-oauth-token")
+            .unwrap();
         let key = "a".repeat(25);
         let line = format!("shutterstock_oauth_token = {}", key);
         let matches = d.scan_line(&line);
@@ -10545,7 +11880,10 @@ mod tests {
     #[test]
     fn test_iconfinder_api_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "iconfinder-api-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "iconfinder-api-key")
+            .unwrap();
         let key = "a".repeat(25);
         let line = format!("iconfinder_api_key = {}", key);
         let matches = d.scan_line(&line);
@@ -10555,7 +11893,10 @@ mod tests {
     #[test]
     fn test_imagekit_api_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "imagekit-api-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "imagekit-api-key")
+            .unwrap();
         let key = "a".repeat(25);
         let line = format!("imagekit_api_key = {}", key);
         let matches = d.scan_line(&line);
@@ -10565,7 +11906,10 @@ mod tests {
     #[test]
     fn test_bannerbear_api_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "bannerbear-api-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "bannerbear-api-key")
+            .unwrap();
         let key = "a".repeat(25);
         let line = format!("bannerbear_api_key = {}", key);
         let matches = d.scan_line(&line);
@@ -10575,7 +11919,10 @@ mod tests {
     #[test]
     fn test_imagga_api_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "imagga-api-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "imagga-api-key")
+            .unwrap();
         let key = "a".repeat(25);
         let line = format!("imagga_api_key = {}", key);
         let matches = d.scan_line(&line);
@@ -10585,7 +11932,10 @@ mod tests {
     #[test]
     fn test_faceplusplus_api_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "faceplusplus-api-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "faceplusplus-api-key")
+            .unwrap();
         let key = "a".repeat(25);
         let line = format!("faceplusplus_api_key = {}", key);
         let matches = d.scan_line(&line);
@@ -10595,7 +11945,10 @@ mod tests {
     #[test]
     fn test_skybiometry_api_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "skybiometry-api-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "skybiometry-api-key")
+            .unwrap();
         let key = "a".repeat(25);
         let line = format!("skybiometry_api_key = {}", key);
         let matches = d.scan_line(&line);
@@ -10605,7 +11958,10 @@ mod tests {
     #[test]
     fn test_cloudmersive_api_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "cloudmersive-api-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "cloudmersive-api-key")
+            .unwrap();
         let key = "a".repeat(25);
         let line = format!("cloudmersive_api_key = {}", key);
         let matches = d.scan_line(&line);
@@ -10615,7 +11971,10 @@ mod tests {
     #[test]
     fn test_screenshotapi_api_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "screenshotapi-api-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "screenshotapi-api-key")
+            .unwrap();
         let key = "a".repeat(25);
         let line = format!("screenshotapi_api_key = {}", key);
         let matches = d.scan_line(&line);
@@ -10625,7 +11984,10 @@ mod tests {
     #[test]
     fn test_screenshotlayer_api_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "screenshotlayer-api-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "screenshotlayer-api-key")
+            .unwrap();
         let key = "a".repeat(25);
         let line = format!("screenshotlayer_api_key = {}", key);
         let matches = d.scan_line(&line);
@@ -10635,7 +11997,10 @@ mod tests {
     #[test]
     fn test_browshot_api_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "browshot-api-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "browshot-api-key")
+            .unwrap();
         let key = "a".repeat(25);
         let line = format!("browshot_api_key = {}", key);
         let matches = d.scan_line(&line);
@@ -10645,7 +12010,10 @@ mod tests {
     #[test]
     fn test_linkpreview_api_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "linkpreview-api-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "linkpreview-api-key")
+            .unwrap();
         let key = "a".repeat(25);
         let line = format!("linkpreview_api_key = {}", key);
         let matches = d.scan_line(&line);
@@ -10655,7 +12023,10 @@ mod tests {
     #[test]
     fn test_mixcloud_api_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "mixcloud-api-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "mixcloud-api-key")
+            .unwrap();
         let key = "a".repeat(25);
         let line = format!("mixcloud_api_key = {}", key);
         let matches = d.scan_line(&line);
@@ -10675,7 +12046,10 @@ mod tests {
     #[test]
     fn test_strava_api_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "strava-api-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "strava-api-key")
+            .unwrap();
         let key = "a".repeat(25);
         let line = format!("strava_api_key = {}", key);
         let matches = d.scan_line(&line);
@@ -10685,7 +12059,10 @@ mod tests {
     #[test]
     fn test_foursquare_api_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "foursquare-api-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "foursquare-api-key")
+            .unwrap();
         let key = "a".repeat(25);
         let line = format!("foursquare_api_key = {}", key);
         let matches = d.scan_line(&line);
@@ -10695,7 +12072,10 @@ mod tests {
     #[test]
     fn test_ticketmaster_api_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "ticketmaster-api-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "ticketmaster-api-key")
+            .unwrap();
         let key = "a".repeat(25);
         let line = format!("ticketmaster_api_key = {}", key);
         let matches = d.scan_line(&line);
@@ -10705,7 +12085,10 @@ mod tests {
     #[test]
     fn test_riotgames_api_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "riotgames-api-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "riotgames-api-key")
+            .unwrap();
         let key = "a".repeat(25);
         let line = format!("riotgames_api_key = {}", key);
         let matches = d.scan_line(&line);
@@ -10715,7 +12098,10 @@ mod tests {
     #[test]
     fn test_cricket_api_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "cricket-api-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "cricket-api-key")
+            .unwrap();
         let key = "a".repeat(25);
         let line = format!("cricket_api_key = {}", key);
         let matches = d.scan_line(&line);
@@ -10725,7 +12111,10 @@ mod tests {
     #[test]
     fn test_allsports_api_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "allsports-api-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "allsports-api-key")
+            .unwrap();
         let key = "a".repeat(25);
         let line = format!("allsports_api_key = {}", key);
         let matches = d.scan_line(&line);
@@ -10735,7 +12124,10 @@ mod tests {
     #[test]
     fn test_sportsmonk_api_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "sportsmonk-api-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "sportsmonk-api-key")
+            .unwrap();
         let key = "a".repeat(25);
         let line = format!("sportsmonk_api_key = {}", key);
         let matches = d.scan_line(&line);
@@ -10745,7 +12137,10 @@ mod tests {
     #[test]
     fn test_edamam_api_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "edamam-api-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "edamam-api-key")
+            .unwrap();
         let key = "a".repeat(25);
         let line = format!("edamam_api_key = {}", key);
         let matches = d.scan_line(&line);
@@ -10755,7 +12150,10 @@ mod tests {
     #[test]
     fn test_nutritionix_api_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "nutritionix-api-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "nutritionix-api-key")
+            .unwrap();
         let key = "a".repeat(25);
         let line = format!("nutritionix_api_key = {}", key);
         let matches = d.scan_line(&line);
@@ -10765,7 +12163,10 @@ mod tests {
     #[test]
     fn test_spoonacular_api_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "spoonacular-api-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "spoonacular-api-key")
+            .unwrap();
         let key = "a".repeat(25);
         let line = format!("spoonacular_api_key = {}", key);
         let matches = d.scan_line(&line);
@@ -10775,7 +12176,10 @@ mod tests {
     #[test]
     fn test_calorieninja_api_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "calorieninja-api-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "calorieninja-api-key")
+            .unwrap();
         let key = "a".repeat(25);
         let line = format!("calorieninja_api_key = {}", key);
         let matches = d.scan_line(&line);
@@ -10785,7 +12189,10 @@ mod tests {
     #[test]
     fn test_protocolsio_api_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "protocolsio-api-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "protocolsio-api-key")
+            .unwrap();
         let key = "a".repeat(25);
         let line = format!("protocolsio_api_key = {}", key);
         let matches = d.scan_line(&line);
@@ -10795,7 +12202,10 @@ mod tests {
     #[test]
     fn test_hypeauditor_api_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "hypeauditor-api-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "hypeauditor-api-key")
+            .unwrap();
         let key = "a".repeat(25);
         let line = format!("hypeauditor_api_key = {}", key);
         let matches = d.scan_line(&line);
@@ -10817,7 +12227,10 @@ mod tests {
     #[test]
     fn test_newscatcher_api_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "newscatcher-api-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "newscatcher-api-key")
+            .unwrap();
         let key = "a".repeat(25);
         let line = format!("newscatcher_api_key = {}", key);
         let matches = d.scan_line(&line);
@@ -10827,7 +12240,10 @@ mod tests {
     #[test]
     fn test_currents_api_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "currents-api-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "currents-api-key")
+            .unwrap();
         let key = "a".repeat(25);
         let line = format!("currents_api_key = {}", key);
         let matches = d.scan_line(&line);
@@ -10837,7 +12253,10 @@ mod tests {
     #[test]
     fn test_guardian_api_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "guardian-api-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "guardian-api-key")
+            .unwrap();
         let key = "a".repeat(25);
         let line = format!("guardian_api_key = {}", key);
         let matches = d.scan_line(&line);
@@ -10847,7 +12266,10 @@ mod tests {
     #[test]
     fn test_aylien_api_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "aylien-api-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "aylien-api-key")
+            .unwrap();
         let key = "a".repeat(25);
         let line = format!("aylien_api_key = {}", key);
         let matches = d.scan_line(&line);
@@ -10857,7 +12279,10 @@ mod tests {
     #[test]
     fn test_cicero_api_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "cicero-api-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "cicero-api-key")
+            .unwrap();
         let key = "a".repeat(25);
         let line = format!("cicero_api_key = {}", key);
         let matches = d.scan_line(&line);
@@ -10867,7 +12292,10 @@ mod tests {
     #[test]
     fn test_lexigram_api_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "lexigram-api-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "lexigram-api-key")
+            .unwrap();
         let key = "a".repeat(25);
         let line = format!("lexigram_api_key = {}", key);
         let matches = d.scan_line(&line);
@@ -10877,7 +12305,10 @@ mod tests {
     #[test]
     fn test_blogger_api_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "blogger-api-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "blogger-api-key")
+            .unwrap();
         let key = "a".repeat(25);
         let line = format!("blogger_api_key = {}", key);
         let matches = d.scan_line(&line);
@@ -10887,7 +12318,10 @@ mod tests {
     #[test]
     fn test_mediastack_api_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "mediastack-api-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "mediastack-api-key")
+            .unwrap();
         let key = "a".repeat(25);
         let line = format!("mediastack_api_key = {}", key);
         let matches = d.scan_line(&line);
@@ -10897,7 +12331,10 @@ mod tests {
     #[test]
     fn test_clickhelp_api_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "clickhelp-api-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "clickhelp-api-key")
+            .unwrap();
         let key = "a".repeat(25);
         let line = format!("clickhelp_api_key = {}", key);
         let matches = d.scan_line(&line);
@@ -10907,7 +12344,10 @@ mod tests {
     #[test]
     fn test_storychief_api_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "storychief-api-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "storychief-api-key")
+            .unwrap();
         let key = "a".repeat(25);
         let line = format!("storychief_api_key = {}", key);
         let matches = d.scan_line(&line);
@@ -10917,7 +12357,10 @@ mod tests {
     #[test]
     fn test_noticeable_api_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "noticeable-api-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "noticeable-api-key")
+            .unwrap();
         let key = "a".repeat(25);
         let line = format!("noticeable_api_key = {}", key);
         let matches = d.scan_line(&line);
@@ -10927,7 +12370,10 @@ mod tests {
     #[test]
     fn test_readme_api_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "readme-api-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "readme-api-key")
+            .unwrap();
         let key = "a".repeat(25);
         let line = format!("readme_api_key = {}", key);
         let matches = d.scan_line(&line);
@@ -10937,7 +12383,10 @@ mod tests {
     #[test]
     fn test_pastebin_api_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "pastebin-api-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "pastebin-api-key")
+            .unwrap();
         let key = "a".repeat(25);
         let line = format!("pastebin_api_key = {}", key);
         let matches = d.scan_line(&line);
@@ -10947,7 +12396,10 @@ mod tests {
     #[test]
     fn test_crowdin_api_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "crowdin-api-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "crowdin-api-key")
+            .unwrap();
         let key = "a".repeat(25);
         let line = format!("crowdin_api_key = {}", key);
         let matches = d.scan_line(&line);
@@ -10957,7 +12409,10 @@ mod tests {
     #[test]
     fn test_alconost_api_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "alconost-api-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "alconost-api-key")
+            .unwrap();
         let key = "a".repeat(25);
         let line = format!("alconost_api_key = {}", key);
         let matches = d.scan_line(&line);
@@ -10967,7 +12422,10 @@ mod tests {
     #[test]
     fn test_gengo_api_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "gengo-api-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "gengo-api-key")
+            .unwrap();
         let key = "a".repeat(25);
         let line = format!("gengo_api_key = {}", key);
         let matches = d.scan_line(&line);
@@ -10977,7 +12435,10 @@ mod tests {
     #[test]
     fn test_happyscribe_api_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "happyscribe-api-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "happyscribe-api-key")
+            .unwrap();
         let key = "a".repeat(25);
         let line = format!("happyscribe_api_key = {}", key);
         let matches = d.scan_line(&line);
@@ -10987,7 +12448,10 @@ mod tests {
     #[test]
     fn test_ritekit_api_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "ritekit-api-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "ritekit-api-key")
+            .unwrap();
         let key = "a".repeat(25);
         let line = format!("ritekit_api_key = {}", key);
         let matches = d.scan_line(&line);
@@ -10999,7 +12463,10 @@ mod tests {
     #[test]
     fn test_rubygems_api_token_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "rubygems-api-token").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "rubygems-api-token")
+            .unwrap();
         let key = "a".repeat(25);
         let line = format!("rubygems_api_token = {}", key);
         let matches = d.scan_line(&line);
@@ -11009,7 +12476,10 @@ mod tests {
     #[test]
     fn test_codacy_api_token_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "codacy-api-token").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "codacy-api-token")
+            .unwrap();
         let key = "a".repeat(25);
         let line = format!("codacy_api_token = {}", key);
         let matches = d.scan_line(&line);
@@ -11019,7 +12489,10 @@ mod tests {
     #[test]
     fn test_coveralls_api_token_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "coveralls-api-token").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "coveralls-api-token")
+            .unwrap();
         let key = "a".repeat(25);
         let line = format!("coveralls_api_token = {}", key);
         let matches = d.scan_line(&line);
@@ -11029,7 +12502,10 @@ mod tests {
     #[test]
     fn test_saucelabs_api_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "saucelabs-api-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "saucelabs-api-key")
+            .unwrap();
         let key = "a".repeat(25);
         let line = format!("saucelabs_api_key = {}", key);
         let matches = d.scan_line(&line);
@@ -11039,7 +12515,10 @@ mod tests {
     #[test]
     fn test_bitbar_api_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "bitbar-api-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "bitbar-api-key")
+            .unwrap();
         let key = "a".repeat(25);
         let line = format!("bitbar_api_key = {}", key);
         let matches = d.scan_line(&line);
@@ -11049,7 +12528,10 @@ mod tests {
     #[test]
     fn test_bugsnag_api_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "bugsnag-api-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "bugsnag-api-key")
+            .unwrap();
         let key = "a".repeat(25);
         let line = format!("bugsnag_api_key = {}", key);
         let matches = d.scan_line(&line);
@@ -11059,7 +12541,10 @@ mod tests {
     #[test]
     fn test_adafruit_io_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "adafruit-io-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "adafruit-io-key")
+            .unwrap();
         let key = "a".repeat(25);
         let line = format!("adafruit_io_key = {}", key);
         let matches = d.scan_line(&line);
@@ -11069,7 +12554,10 @@ mod tests {
     #[test]
     fn test_apify_api_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "apify-api-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "apify-api-key")
+            .unwrap();
         let key = "a".repeat(25);
         let line = format!("apify_api_key = {}", key);
         let matches = d.scan_line(&line);
@@ -11079,7 +12567,10 @@ mod tests {
     #[test]
     fn test_keygen_api_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "keygen-api-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "keygen-api-key")
+            .unwrap();
         let key = "a".repeat(25);
         let line = format!("keygen_api_key = {}", key);
         let matches = d.scan_line(&line);
@@ -11089,7 +12580,10 @@ mod tests {
     #[test]
     fn test_aiven_api_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "aiven-api-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "aiven-api-key")
+            .unwrap();
         let key = "a".repeat(25);
         let line = format!("aiven_api_key = {}", key);
         let matches = d.scan_line(&line);
@@ -11099,7 +12593,10 @@ mod tests {
     #[test]
     fn test_fileio_api_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "fileio-api-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "fileio-api-key")
+            .unwrap();
         let key = "a".repeat(25);
         let line = format!("file_io_api_key = {}", key);
         let matches = d.scan_line(&line);
@@ -11109,7 +12606,10 @@ mod tests {
     #[test]
     fn test_flatio_api_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "flatio-api-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "flatio-api-key")
+            .unwrap();
         let key = "a".repeat(25);
         let line = format!("flat_io_api_key = {}", key);
         let matches = d.scan_line(&line);
@@ -11119,7 +12619,10 @@ mod tests {
     #[test]
     fn test_dynalist_api_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "dynalist-api-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "dynalist-api-key")
+            .unwrap();
         let key = "a".repeat(25);
         let line = format!("dynalist_api_key = {}", key);
         let matches = d.scan_line(&line);
@@ -11129,7 +12632,10 @@ mod tests {
     #[test]
     fn test_sheety_api_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "sheety-api-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "sheety-api-key")
+            .unwrap();
         let key = "a".repeat(25);
         let line = format!("sheety_api_key = {}", key);
         let matches = d.scan_line(&line);
@@ -11139,7 +12645,10 @@ mod tests {
     #[test]
     fn test_swell_api_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "swell-api-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "swell-api-key")
+            .unwrap();
         let key = "a".repeat(25);
         let line = format!("swell_api_key = {}", key);
         let matches = d.scan_line(&line);
@@ -11159,7 +12668,10 @@ mod tests {
     #[test]
     fn test_jsonbin_api_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "jsonbin-api-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "jsonbin-api-key")
+            .unwrap();
         let key = "a".repeat(25);
         let line = format!("jsonbin_api_key = {}", key);
         let matches = d.scan_line(&line);
@@ -11169,7 +12681,10 @@ mod tests {
     #[test]
     fn test_userstack_api_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "userstack-api-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "userstack-api-key")
+            .unwrap();
         let key = "a".repeat(25);
         let line = format!("userstack_api_key = {}", key);
         let matches = d.scan_line(&line);
@@ -11179,7 +12694,10 @@ mod tests {
     #[test]
     fn test_purestake_api_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "purestake-api-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "purestake-api-key")
+            .unwrap();
         let key = "a".repeat(25);
         let line = format!("purestake_api_key = {}", key);
         let matches = d.scan_line(&line);
@@ -11199,7 +12717,10 @@ mod tests {
     #[test]
     fn test_baseapi_api_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "baseapi-api-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "baseapi-api-key")
+            .unwrap();
         let key = "a".repeat(25);
         let line = format!("baseapi_io_api_key = {}", key);
         let matches = d.scan_line(&line);
@@ -11209,7 +12730,10 @@ mod tests {
     #[test]
     fn test_sslmate_api_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "sslmate-api-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "sslmate-api-key")
+            .unwrap();
         let key = "a".repeat(25);
         let line = format!("sslmate_api_key = {}", key);
         let matches = d.scan_line(&line);
@@ -11219,7 +12743,10 @@ mod tests {
     #[test]
     fn test_adobeio_api_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "adobeio-api-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "adobeio-api-key")
+            .unwrap();
         let key = "a".repeat(25);
         let line = format!("adobe_io_api_key = {}", key);
         let matches = d.scan_line(&line);
@@ -11229,7 +12756,10 @@ mod tests {
     #[test]
     fn test_edenai_api_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "edenai-api-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "edenai-api-key")
+            .unwrap();
         let key = "a".repeat(25);
         let line = format!("edenai_api_key = {}", key);
         let matches = d.scan_line(&line);
@@ -11239,7 +12769,10 @@ mod tests {
     #[test]
     fn test_deepgram_api_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "deepgram-api-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "deepgram-api-key")
+            .unwrap();
         let key = "a".repeat(25);
         let line = format!("deepgram_api_key = {}", key);
         let matches = d.scan_line(&line);
@@ -11249,7 +12782,10 @@ mod tests {
     #[test]
     fn test_voicegain_api_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "voicegain-api-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "voicegain-api-key")
+            .unwrap();
         let key = "a".repeat(25);
         let line = format!("voicegain_api_key = {}", key);
         let matches = d.scan_line(&line);
@@ -11259,7 +12795,10 @@ mod tests {
     #[test]
     fn test_auddio_api_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "auddio-api-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "auddio-api-key")
+            .unwrap();
         let key = "a".repeat(25);
         let line = format!("audd_io_api_key = {}", key);
         let matches = d.scan_line(&line);
@@ -11269,7 +12808,10 @@ mod tests {
     #[test]
     fn test_owlbot_api_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "owlbot-api-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "owlbot-api-key")
+            .unwrap();
         let key = "a".repeat(25);
         let line = format!("owlbot_api_key = {}", key);
         let matches = d.scan_line(&line);
@@ -11279,7 +12821,10 @@ mod tests {
     #[test]
     fn test_detectlanguage_api_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "detectlanguage-api-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "detectlanguage-api-key")
+            .unwrap();
         let key = "a".repeat(25);
         let line = format!("detectlanguage_api_key = {}", key);
         let matches = d.scan_line(&line);
@@ -11289,7 +12834,10 @@ mod tests {
     #[test]
     fn test_languagelayer_api_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "languagelayer-api-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "languagelayer-api-key")
+            .unwrap();
         let key = "a".repeat(25);
         let line = format!("languagelayer_api_key = {}", key);
         let matches = d.scan_line(&line);
@@ -11299,7 +12847,10 @@ mod tests {
     #[test]
     fn test_paralleldots_api_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "paralleldots-api-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "paralleldots-api-key")
+            .unwrap();
         let key = "a".repeat(25);
         let line = format!("paralleldots_api_key = {}", key);
         let matches = d.scan_line(&line);
@@ -11309,7 +12860,10 @@ mod tests {
     #[test]
     fn test_veriphone_api_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "veriphone-api-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "veriphone-api-key")
+            .unwrap();
         let key = "a".repeat(25);
         let line = format!("veriphone_api_key = {}", key);
         let matches = d.scan_line(&line);
@@ -11319,7 +12873,10 @@ mod tests {
     #[test]
     fn test_verifier_api_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "verifier-api-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "verifier-api-key")
+            .unwrap();
         let key = "a".repeat(25);
         let line = format!("verifier_api_key = {}", key);
         let matches = d.scan_line(&line);
@@ -11329,7 +12886,10 @@ mod tests {
     #[test]
     fn test_api2cart_api_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "api2cart-api-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "api2cart-api-key")
+            .unwrap();
         let key = "a".repeat(25);
         let line = format!("api2cart_api_key = {}", key);
         let matches = d.scan_line(&line);
@@ -11339,7 +12899,10 @@ mod tests {
     #[test]
     fn test_apideck_api_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "apideck-api-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "apideck-api-key")
+            .unwrap();
         let key = "a".repeat(25);
         let line = format!("apideck_api_key = {}", key);
         let matches = d.scan_line(&line);
@@ -11349,7 +12912,10 @@ mod tests {
     #[test]
     fn test_apiflash_api_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "apiflash-api-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "apiflash-api-key")
+            .unwrap();
         let key = "a".repeat(25);
         let line = format!("apiflash_api_key = {}", key);
         let matches = d.scan_line(&line);
@@ -11359,7 +12925,10 @@ mod tests {
     #[test]
     fn test_fleetbase_api_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "fleetbase-api-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "fleetbase-api-key")
+            .unwrap();
         let key = "a".repeat(25);
         let line = format!("fleetbase_api_key = {}", key);
         let matches = d.scan_line(&line);
@@ -11369,7 +12938,10 @@ mod tests {
     #[test]
     fn test_agora_api_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "agora-api-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "agora-api-key")
+            .unwrap();
         let key = "a".repeat(25);
         let line = format!("agora_api_key = {}", key);
         let matches = d.scan_line(&line);
@@ -11379,7 +12951,10 @@ mod tests {
     #[test]
     fn test_yandex_api_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "yandex-api-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "yandex-api-key")
+            .unwrap();
         let key = "a".repeat(25);
         let line = format!("yandex_api_key = {}", key);
         let matches = d.scan_line(&line);
@@ -11389,7 +12964,10 @@ mod tests {
     #[test]
     fn test_artsy_api_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "artsy-api-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "artsy-api-key")
+            .unwrap();
         let key = "a".repeat(25);
         let line = format!("artsy_api_key = {}", key);
         let matches = d.scan_line(&line);
@@ -11399,7 +12977,10 @@ mod tests {
     #[test]
     fn test_blitapp_api_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "blitapp-api-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "blitapp-api-key")
+            .unwrap();
         let key = "a".repeat(25);
         let line = format!("blit_app_api_key = {}", key);
         let matches = d.scan_line(&line);
@@ -11409,7 +12990,10 @@ mod tests {
     #[test]
     fn test_censys_api_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "censys-api-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "censys-api-key")
+            .unwrap();
         let key = "a".repeat(25);
         let line = format!("censys_api_key = {}", key);
         let matches = d.scan_line(&line);
@@ -11419,7 +13003,10 @@ mod tests {
     #[test]
     fn test_securitytrails_api_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "securitytrails-api-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "securitytrails-api-key")
+            .unwrap();
         let key = "a".repeat(25);
         let line = format!("securitytrails_api_key = {}", key);
         let matches = d.scan_line(&line);
@@ -11429,7 +13016,10 @@ mod tests {
     #[test]
     fn test_urlscan_api_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "urlscan-api-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "urlscan-api-key")
+            .unwrap();
         let key = "a".repeat(25);
         let line = format!("urlscan_api_key = {}", key);
         let matches = d.scan_line(&line);
@@ -11439,7 +13029,10 @@ mod tests {
     #[test]
     fn test_aletheia_api_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "aletheia-api-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "aletheia-api-key")
+            .unwrap();
         let key = "a".repeat(25);
         let line = format!("aletheia_api_key = {}", key);
         let matches = d.scan_line(&line);
@@ -11449,7 +13042,10 @@ mod tests {
     #[test]
     fn test_whoxy_api_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "whoxy-api-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "whoxy-api-key")
+            .unwrap();
         let key = "a".repeat(25);
         let line = format!("whoxy_api_key = {}", key);
         let matches = d.scan_line(&line);
@@ -11459,7 +13055,10 @@ mod tests {
     #[test]
     fn test_mailsac_api_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "mailsac-api-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "mailsac-api-key")
+            .unwrap();
         let key = "a".repeat(25);
         let line = format!("mailsac_api_key = {}", key);
         let matches = d.scan_line(&line);
@@ -11469,7 +13068,10 @@ mod tests {
     #[test]
     fn test_loginradius_api_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "loginradius-api-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "loginradius-api-key")
+            .unwrap();
         let key = "a".repeat(25);
         let line = format!("loginradius_api_key = {}", key);
         let matches = d.scan_line(&line);
@@ -11489,7 +13091,10 @@ mod tests {
     #[test]
     fn test_youneedabudget_api_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "youneedabudget-api-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "youneedabudget-api-key")
+            .unwrap();
         let key = "a".repeat(25);
         let line = format!("youneedabudget_api_key = {}", key);
         let matches = d.scan_line(&line);
@@ -11499,7 +13104,10 @@ mod tests {
     #[test]
     fn test_filestack_api_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "filestack-api-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "filestack-api-key")
+            .unwrap();
         let key = "a".repeat(25);
         let line = format!("filestack_api_key = {}", key);
         let matches = d.scan_line(&line);
@@ -11509,7 +13117,10 @@ mod tests {
     #[test]
     fn test_bubble_api_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "bubble-api-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "bubble-api-key")
+            .unwrap();
         let key = "a".repeat(25);
         let line = format!("bubble_api_key = {}", key);
         let matches = d.scan_line(&line);
@@ -11519,7 +13130,10 @@ mod tests {
     #[test]
     fn test_shopee_api_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "shopee-api-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "shopee-api-key")
+            .unwrap();
         let key = "a".repeat(25);
         let line = format!("shopee_api_key = {}", key);
         let matches = d.scan_line(&line);
@@ -11529,7 +13143,10 @@ mod tests {
     #[test]
     fn test_kiteconnect_api_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "kiteconnect-api-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "kiteconnect-api-key")
+            .unwrap();
         let key = "a".repeat(25);
         let line = format!("kiteconnect_api_key = {}", key);
         let matches = d.scan_line(&line);
@@ -11539,7 +13156,10 @@ mod tests {
     #[test]
     fn test_veevavault_api_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "veevavault-api-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "veevavault-api-key")
+            .unwrap();
         let key = "a".repeat(25);
         let line = format!("veevavault_api_key = {}", key);
         let matches = d.scan_line(&line);
@@ -11549,7 +13169,10 @@ mod tests {
     #[test]
     fn test_cloudways_api_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "cloudways-api-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "cloudways-api-key")
+            .unwrap();
         let key = "a".repeat(25);
         let line = format!("cloudways_api_key = {}", key);
         let matches = d.scan_line(&line);
@@ -11579,7 +13202,10 @@ mod tests {
     #[test]
     fn test_contentstack_api_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "contentstack-api-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "contentstack-api-key")
+            .unwrap();
         let key = "a".repeat(25);
         let line = format!("contentstack_api_key = {}", key);
         let matches = d.scan_line(&line);
@@ -11589,7 +13215,10 @@ mod tests {
     #[test]
     fn test_surge_api_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "surge-api-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "surge-api-key")
+            .unwrap();
         let key = "a".repeat(25);
         let line = format!("surge_api_key = {}", key);
         let matches = d.scan_line(&line);
@@ -11599,7 +13228,10 @@ mod tests {
     #[test]
     fn test_kairos_api_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "kairos-api-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "kairos-api-key")
+            .unwrap();
         let key = "a".repeat(25);
         let line = format!("kairos_api_key = {}", key);
         let matches = d.scan_line(&line);
@@ -11609,7 +13241,10 @@ mod tests {
     #[test]
     fn test_fullcontact_api_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "fullcontact-api-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "fullcontact-api-key")
+            .unwrap();
         let key = "a".repeat(25);
         let line = format!("fullcontact_api_key = {}", key);
         let matches = d.scan_line(&line);
@@ -11619,7 +13254,10 @@ mod tests {
     #[test]
     fn test_eversign_api_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "eversign-api-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "eversign-api-key")
+            .unwrap();
         let key = "a".repeat(25);
         let line = format!("eversign_api_key = {}", key);
         let matches = d.scan_line(&line);
@@ -11629,7 +13267,10 @@ mod tests {
     #[test]
     fn test_netcore_api_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "netcore-api-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "netcore-api-key")
+            .unwrap();
         let key = "a".repeat(25);
         let line = format!("netcore_api_key = {}", key);
         let matches = d.scan_line(&line);
@@ -11639,7 +13280,10 @@ mod tests {
     #[test]
     fn test_bored_api_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "bored-api-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "bored-api-key")
+            .unwrap();
         let key = "a".repeat(25);
         let line = format!("bored_api_key = {}", key);
         let matches = d.scan_line(&line);
@@ -11651,7 +13295,10 @@ mod tests {
     #[test]
     fn test_html2pdf_api_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "html2pdf-api-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "html2pdf-api-key")
+            .unwrap();
         let key = "a".repeat(25);
         let line = format!("html2pdf_api_key = {}", key);
         let matches = d.scan_line(&line);
@@ -11661,7 +13308,10 @@ mod tests {
     #[test]
     fn test_pdflayer_api_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "pdflayer-api-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "pdflayer-api-key")
+            .unwrap();
         let key = "a".repeat(25);
         let line = format!("pdf_layer_api_key = {}", key);
         let matches = d.scan_line(&line);
@@ -11671,7 +13321,10 @@ mod tests {
     #[test]
     fn test_pdfshift_api_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "pdfshift-api-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "pdfshift-api-key")
+            .unwrap();
         let key = "a".repeat(25);
         let line = format!("pdf_shift_api_key = {}", key);
         let matches = d.scan_line(&line);
@@ -11681,7 +13334,10 @@ mod tests {
     #[test]
     fn test_restpack_html_to_pdf_api_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "restpack-html-to-pdf-api-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "restpack-html-to-pdf-api-key")
+            .unwrap();
         let key = "a".repeat(25);
         let line = format!("restpack_html_to_pdf_api_key = {}", key);
         let matches = d.scan_line(&line);
@@ -11691,7 +13347,10 @@ mod tests {
     #[test]
     fn test_restpack_screenshot_api_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "restpack-screenshot-api-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "restpack-screenshot-api-key")
+            .unwrap();
         let key = "a".repeat(25);
         let line = format!("restpack_screenshot_api_key = {}", key);
         let matches = d.scan_line(&line);
@@ -11701,7 +13360,10 @@ mod tests {
     #[test]
     fn test_documo_api_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "documo-api-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "documo-api-key")
+            .unwrap();
         let key = "a".repeat(25);
         let line = format!("documo_api_key = {}", key);
         let matches = d.scan_line(&line);
@@ -11711,7 +13373,10 @@ mod tests {
     #[test]
     fn test_clustdoc_api_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "clustdoc-api-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "clustdoc-api-key")
+            .unwrap();
         let key = "a".repeat(25);
         let line = format!("clustdoc_api_key = {}", key);
         let matches = d.scan_line(&line);
@@ -11721,7 +13386,10 @@ mod tests {
     #[test]
     fn test_pandadoc_api_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "pandadoc-api-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "pandadoc-api-key")
+            .unwrap();
         let key = "a".repeat(25);
         let line = format!("pandadoc_api_key = {}", key);
         let matches = d.scan_line(&line);
@@ -11731,7 +13399,10 @@ mod tests {
     #[test]
     fn test_hellosign_api_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "hellosign-api-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "hellosign-api-key")
+            .unwrap();
         let key = "a".repeat(25);
         let line = format!("hellosign_api_key = {}", key);
         let matches = d.scan_line(&line);
@@ -11751,7 +13422,10 @@ mod tests {
     #[test]
     fn test_yousign_api_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "yousign-api-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "yousign-api-key")
+            .unwrap();
         let key = "a".repeat(25);
         let line = format!("yousign_api_key = {}", key);
         let matches = d.scan_line(&line);
@@ -11761,7 +13435,10 @@ mod tests {
     #[test]
     fn test_vatlayer_api_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "vatlayer-api-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "vatlayer-api-key")
+            .unwrap();
         let key = "a".repeat(25);
         let line = format!("vatlayer_api_key = {}", key);
         let matches = d.scan_line(&line);
@@ -11771,7 +13448,10 @@ mod tests {
     #[test]
     fn test_upcdatabase_api_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "upcdatabase-api-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "upcdatabase-api-key")
+            .unwrap();
         let key = "a".repeat(25);
         let line = format!("upc_database_api_key = {}", key);
         let matches = d.scan_line(&line);
@@ -11783,7 +13463,10 @@ mod tests {
     #[test]
     fn test_scraperapi_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "scraperapi-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "scraperapi-key")
+            .unwrap();
         let key = "a".repeat(25);
         let line = format!("scraperapi_key = {}", key);
         let matches = d.scan_line(&line);
@@ -11793,7 +13476,10 @@ mod tests {
     #[test]
     fn test_scrapingdog_api_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "scrapingdog-api-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "scrapingdog-api-key")
+            .unwrap();
         let key = "a".repeat(25);
         let line = format!("scrapingdog_api_key = {}", key);
         let matches = d.scan_line(&line);
@@ -11803,7 +13489,10 @@ mod tests {
     #[test]
     fn test_scrapeowl_api_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "scrapeowl-api-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "scrapeowl-api-key")
+            .unwrap();
         let key = "a".repeat(25);
         let line = format!("scrapeowl_api_key = {}", key);
         let matches = d.scan_line(&line);
@@ -11813,7 +13502,10 @@ mod tests {
     #[test]
     fn test_webscraping_api_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "webscraping-api-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "webscraping-api-key")
+            .unwrap();
         let key = "a".repeat(25);
         let line = format!("webscraping_api_key = {}", key);
         let matches = d.scan_line(&line);
@@ -11823,7 +13515,10 @@ mod tests {
     #[test]
     fn test_zenscrape_api_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "zenscrape-api-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "zenscrape-api-key")
+            .unwrap();
         let key = "a".repeat(25);
         let line = format!("zenscrape_api_key = {}", key);
         let matches = d.scan_line(&line);
@@ -11833,7 +13528,10 @@ mod tests {
     #[test]
     fn test_zenserp_api_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "zenserp-api-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "zenserp-api-key")
+            .unwrap();
         let key = "a".repeat(25);
         let line = format!("zenserp_api_key = {}", key);
         let matches = d.scan_line(&line);
@@ -11843,7 +13541,10 @@ mod tests {
     #[test]
     fn test_serpstack_api_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "serpstack-api-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "serpstack-api-key")
+            .unwrap();
         let key = "a".repeat(25);
         let line = format!("serpstack_api_key = {}", key);
         let matches = d.scan_line(&line);
@@ -11853,7 +13554,10 @@ mod tests {
     #[test]
     fn test_scraperbox_api_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "scraperbox-api-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "scraperbox-api-key")
+            .unwrap();
         let key = "a".repeat(25);
         let line = format!("scraperbox_api_key = {}", key);
         let matches = d.scan_line(&line);
@@ -11863,7 +13567,10 @@ mod tests {
     #[test]
     fn test_scrapingant_api_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "scrapingant-api-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "scrapingant-api-key")
+            .unwrap();
         let key = "a".repeat(25);
         let line = format!("scrapingant_api_key = {}", key);
         let matches = d.scan_line(&line);
@@ -11873,7 +13580,10 @@ mod tests {
     #[test]
     fn test_scrapestack_api_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "scrapestack-api-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "scrapestack-api-key")
+            .unwrap();
         let key = "a".repeat(25);
         let line = format!("scrapestack_api_key = {}", key);
         let matches = d.scan_line(&line);
@@ -11883,7 +13593,10 @@ mod tests {
     #[test]
     fn test_proxycrawl_api_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "proxycrawl-api-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "proxycrawl-api-key")
+            .unwrap();
         let key = "a".repeat(25);
         let line = format!("proxycrawl_api_key = {}", key);
         let matches = d.scan_line(&line);
@@ -11895,7 +13608,10 @@ mod tests {
     #[test]
     fn test_debounce_api_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "debounce-api-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "debounce-api-key")
+            .unwrap();
         let key = "a".repeat(25);
         let line = format!("debounce_api_key = {}", key);
         let matches = d.scan_line(&line);
@@ -11905,7 +13621,10 @@ mod tests {
     #[test]
     fn test_kickbox_api_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "kickbox-api-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "kickbox-api-key")
+            .unwrap();
         let key = "a".repeat(25);
         let line = format!("kickbox_api_key = {}", key);
         let matches = d.scan_line(&line);
@@ -11915,7 +13634,10 @@ mod tests {
     #[test]
     fn test_ipquality_api_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "ipquality-api-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "ipquality-api-key")
+            .unwrap();
         let key = "a".repeat(25);
         let line = format!("ipquality_api_key = {}", key);
         let matches = d.scan_line(&line);
@@ -11925,7 +13647,10 @@ mod tests {
     #[test]
     fn test_roaring_api_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "roaring-api-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "roaring-api-key")
+            .unwrap();
         let key = "a".repeat(25);
         let line = format!("roaring_api_key = {}", key);
         let matches = d.scan_line(&line);
@@ -11935,7 +13660,10 @@ mod tests {
     #[test]
     fn test_oopspam_api_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "oopspam-api-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "oopspam-api-key")
+            .unwrap();
         let key = "a".repeat(25);
         let line = format!("oopspam_api_key = {}", key);
         let matches = d.scan_line(&line);
@@ -11945,7 +13673,10 @@ mod tests {
     #[test]
     fn test_numverify_api_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "numverify-api-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "numverify-api-key")
+            .unwrap();
         let key = "a".repeat(25);
         let line = format!("numverify_api_key = {}", key);
         let matches = d.scan_line(&line);
@@ -11957,7 +13688,10 @@ mod tests {
     #[test]
     fn test_webflow_api_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "webflow-api-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "webflow-api-key")
+            .unwrap();
         let key = "a".repeat(25);
         let line = format!("webflow_api_key = {}", key);
         let matches = d.scan_line(&line);
@@ -11967,7 +13701,10 @@ mod tests {
     #[test]
     fn test_squarespace_api_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "squarespace-api-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "squarespace-api-key")
+            .unwrap();
         let key = "a".repeat(25);
         let line = format!("squarespace_api_key = {}", key);
         let matches = d.scan_line(&line);
@@ -11977,7 +13714,10 @@ mod tests {
     #[test]
     fn test_siteleaf_api_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "siteleaf-api-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "siteleaf-api-key")
+            .unwrap();
         let key = "a".repeat(25);
         let line = format!("siteleaf_api_key = {}", key);
         let matches = d.scan_line(&line);
@@ -11987,7 +13727,10 @@ mod tests {
     #[test]
     fn test_graphcms_api_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "graphcms-api-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "graphcms-api-key")
+            .unwrap();
         let key = "a".repeat(25);
         let line = format!("graphcms_api_key = {}", key);
         let matches = d.scan_line(&line);
@@ -11997,7 +13740,10 @@ mod tests {
     #[test]
     fn test_kontent_api_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "kontent-api-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "kontent-api-key")
+            .unwrap();
         let key = "a".repeat(25);
         let line = format!("kontent_api_key = {}", key);
         let matches = d.scan_line(&line);
@@ -12009,7 +13755,10 @@ mod tests {
     #[test]
     fn test_wakatime_api_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "wakatime-api-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "wakatime-api-key")
+            .unwrap();
         let key = "a".repeat(25);
         let line = format!("wakatime_api_key = {}", key);
         let matches = d.scan_line(&line);
@@ -12019,7 +13768,10 @@ mod tests {
     #[test]
     fn test_ubidots_api_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "ubidots-api-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "ubidots-api-key")
+            .unwrap();
         let key = "a".repeat(25);
         let line = format!("ubidots_api_key = {}", key);
         let matches = d.scan_line(&line);
@@ -12029,7 +13781,10 @@ mod tests {
     #[test]
     fn test_raven_api_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "raven-api-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "raven-api-key")
+            .unwrap();
         let key = "a".repeat(25);
         let line = format!("raven_api_key = {}", key);
         let matches = d.scan_line(&line);
@@ -12059,7 +13814,10 @@ mod tests {
     #[test]
     fn test_technicalanalysis_api_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "technicalanalysis-api-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "technicalanalysis-api-key")
+            .unwrap();
         let key = "a".repeat(25);
         let line = format!("technicalanalysis_api_key = {}", key);
         let matches = d.scan_line(&line);
@@ -12069,7 +13827,10 @@ mod tests {
     #[test]
     fn test_impala_api_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "impala-api-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "impala-api-key")
+            .unwrap();
         let key = "a".repeat(25);
         let line = format!("impala_api_key = {}", key);
         let matches = d.scan_line(&line);
@@ -12079,7 +13840,10 @@ mod tests {
     #[test]
     fn test_unplugg_api_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "unplugg-api-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "unplugg-api-key")
+            .unwrap();
         let key = "a".repeat(25);
         let line = format!("unplugg_api_key = {}", key);
         let matches = d.scan_line(&line);
@@ -12089,7 +13853,10 @@ mod tests {
     #[test]
     fn test_cloverly_api_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "cloverly-api-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "cloverly-api-key")
+            .unwrap();
         let key = "a".repeat(25);
         let line = format!("cloverly_api_key = {}", key);
         let matches = d.scan_line(&line);
@@ -12099,7 +13866,10 @@ mod tests {
     #[test]
     fn test_flight_api_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "flight-api-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "flight-api-key")
+            .unwrap();
         let key = "a".repeat(25);
         let line = format!("flight_api_key = {}", key);
         let matches = d.scan_line(&line);
@@ -12109,7 +13879,10 @@ mod tests {
     #[test]
     fn test_aviationstack_api_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "aviationstack-api-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "aviationstack-api-key")
+            .unwrap();
         let key = "a".repeat(25);
         let line = format!("aviationstack_api_key = {}", key);
         let matches = d.scan_line(&line);
@@ -12119,7 +13892,10 @@ mod tests {
     #[test]
     fn test_distribusion_api_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "distribusion-api-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "distribusion-api-key")
+            .unwrap();
         let key = "a".repeat(25);
         let line = format!("distribusion_api_key = {}", key);
         let matches = d.scan_line(&line);
@@ -12129,7 +13905,10 @@ mod tests {
     #[test]
     fn test_words_api_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "words-api-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "words-api-key")
+            .unwrap();
         let key = "a".repeat(25);
         let line = format!("words_api_key = {}", key);
         let matches = d.scan_line(&line);
@@ -12139,7 +13918,10 @@ mod tests {
     #[test]
     fn test_holiday_api_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "holiday-api-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "holiday-api-key")
+            .unwrap();
         let key = "a".repeat(25);
         let line = format!("holiday_api_key = {}", key);
         let matches = d.scan_line(&line);
@@ -12149,7 +13931,10 @@ mod tests {
     #[test]
     fn test_amadeus_api_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "amadeus-api-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "amadeus-api-key")
+            .unwrap();
         let key = "a".repeat(25);
         let line = format!("amadeus_api_key = {}", key);
         let matches = d.scan_line(&line);
@@ -12159,7 +13944,10 @@ mod tests {
     #[test]
     fn test_exchangerate_api_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "exchangerate-api-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "exchangerate-api-key")
+            .unwrap();
         let key = "a".repeat(25);
         let line = format!("exchange_rate_api_key = {}", key);
         let matches = d.scan_line(&line);
@@ -12169,7 +13957,10 @@ mod tests {
     #[test]
     fn test_abstract_api_key_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "abstract-api-key").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "abstract-api-key")
+            .unwrap();
         let key = "a".repeat(25);
         let line = format!("abstract_api_key = {}", key);
         let matches = d.scan_line(&line);
@@ -12179,7 +13970,10 @@ mod tests {
     #[test]
     fn test_pulumi_api_token_detected() {
         let detectors = builtin_detectors();
-        let d = detectors.iter().find(|d| d.id() == "pulumi-api-token").unwrap();
+        let d = detectors
+            .iter()
+            .find(|d| d.id() == "pulumi-api-token")
+            .unwrap();
         let key = format!("pul-{}", "a".repeat(40));
         let matches = d.scan_line(&key);
         assert_eq!(matches.len(), 1);

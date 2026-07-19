@@ -9,11 +9,12 @@ static GLOBAL: tikv_jemallocator::Jemalloc = tikv_jemallocator::Jemalloc;
 
 use clap::{Parser, ValueEnum};
 use pledgeguard_core::{
-    AiConfig, AiTool, Allowlist, Detector, Finding, Scanner, Severity, VerificationStatus, baseline,
-    detectors::builtin_detectors, load_config, scan_git_history,
-    verify_findings, verify_findings_with_options, VerifyOptions,
-    ai, ai_hooks,
-    enterprise,
+    AiConfig, AiTool, Allowlist, BaselineCiConfig, CiPlatform, Detector, ExitCodeConfig, Finding,
+    PrCommentConfig, ScanScope, Scanner, Severity, VerificationStatus, VerifyOptions, ai, ai_hooks,
+    append_report, baseline, detectors::builtin_detectors, enterprise, load_config,
+    post_azure_devops_pr_comment, post_github_pr_comment, post_gitlab_mr_comment, scan_git_history,
+    scan_git_history_parallel, scan_git_history_with_scope, upload_sarif_to_github,
+    verify_findings, verify_findings_with_options,
 };
 use std::io::Read;
 use std::path::PathBuf;
@@ -130,6 +131,116 @@ enum Command {
         /// Uses `git diff` to determine changed files. Great for PR checks.
         #[arg(long)]
         diff: bool,
+
+        // ── Goals 352-357: Incremental / PR-scoped scanning ──
+        /// Scan only commits after this commit SHA (incremental history scan).
+        #[arg(long)]
+        since_commit: Option<String>,
+
+        /// Scan only commits after this date (ISO 8601, e.g. 2024-01-01).
+        #[arg(long)]
+        since_date: Option<String>,
+
+        /// Scan only this branch.
+        #[arg(long)]
+        branch: Option<String>,
+
+        /// PR number to scan (used for PR comment integration).
+        #[arg(long)]
+        pr_number: Option<u64>,
+
+        /// Commit range A..B to scan (e.g. abc123..def456).
+        #[arg(long)]
+        commit_range: Option<String>,
+
+        // ── Goals 358-362: Exit code and CI mode ──
+        /// Custom exit code when findings are detected (default: 1).
+        #[arg(long)]
+        exit_code: Option<i32>,
+
+        /// Always exit 0 regardless of findings (reporting-only mode).
+        #[arg(long)]
+        ignore_exit_code: bool,
+
+        /// Fail only on findings at or above this severity level.
+        #[arg(long, value_enum)]
+        fail_on_severity: Option<CliSeverity>,
+
+        /// Stop after N findings (CI timeout protection).
+        #[arg(long)]
+        max_findings: Option<usize>,
+
+        /// CI-optimized mode: no color, JSON output, fail-on-findings.
+        #[arg(long)]
+        ci_mode: bool,
+
+        // ── Goal 363: Report append ──
+        /// Append output to the report file instead of overwriting (for multi-scan aggregation).
+        #[arg(long)]
+        report_append: bool,
+
+        // ── Goals 364-365: Baseline auto and enforce ──
+        /// Auto-create baseline on first run, enforce on subsequent runs.
+        #[arg(long)]
+        baseline_auto: bool,
+
+        /// Fail if baseline is missing or outdated.
+        #[arg(long)]
+        enforce_baseline: bool,
+
+        // ── Goals 366-370: PR comments and auto-upload ──
+        /// Post findings as a PR/MR comment (requires --pr-number and platform env vars).
+        #[arg(long, value_enum)]
+        pr_comment_platform: Option<CiPlatformArg>,
+
+        /// Repository slug for PR comments (e.g. "owner/repo").
+        #[arg(long)]
+        pr_comment_repo: Option<String>,
+
+        /// API token for PR comment posting (defaults to env vars).
+        #[arg(long)]
+        pr_comment_token: Option<String>,
+
+        /// Auto-upload SARIF report to GitHub Code Scanning.
+        #[arg(long)]
+        sarif_upload: bool,
+
+        /// GitHub token for SARIF upload (defaults to GITHUB_TOKEN env var).
+        #[arg(long)]
+        sarif_upload_token: Option<String>,
+
+        /// Auto-upload JUnit report to CI test runner.
+        #[arg(long)]
+        junit_upload: bool,
+
+        // ── Goals 302-308, 311, 315: Performance flags ──
+        /// Number of parallel worker threads (0 = auto-detect).
+        #[arg(long)]
+        workers: Option<usize>,
+
+        /// Per-file scan timeout in seconds (0 = no timeout).
+        #[arg(long)]
+        timeout_per_file: Option<u64>,
+
+        /// Disable memory-mapped I/O (use regular file reads).
+        #[arg(long)]
+        no_mmap: bool,
+
+        /// Disable streaming scan for large files.
+        #[arg(long)]
+        no_streaming: bool,
+
+        /// Path to incremental scan cache file (skips unchanged files).
+        #[arg(long)]
+        incremental_cache: Option<PathBuf>,
+
+        /// Show scan progress on stderr.
+        #[arg(long)]
+        progress: bool,
+
+        /// Maximum file size in MB to scan (default: 5).
+        #[arg(long)]
+        max_file_size_mb: Option<u64>,
     },
 
     /// Scan git commit history (all refs) for secrets introduced in past commits.
@@ -215,6 +326,56 @@ enum Command {
         /// Timeout in seconds for the scan.
         #[arg(long, default_value_t = 300)]
         timeout: u64,
+
+        // ── Goals 352-357: Incremental / PR-scoped history scanning ──
+        /// Scan only commits after this commit SHA (incremental history scan).
+        #[arg(long)]
+        since_commit: Option<String>,
+
+        /// Scan only commits after this date (ISO 8601, e.g. 2024-01-01).
+        #[arg(long)]
+        since_date: Option<String>,
+
+        /// Scan only this branch.
+        #[arg(long)]
+        branch: Option<String>,
+
+        /// PR number (used for PR comment integration).
+        #[arg(long)]
+        pr_number: Option<u64>,
+
+        /// Commit range A..B to scan (e.g. abc123..def456).
+        #[arg(long)]
+        commit_range: Option<String>,
+
+        // ── Goals 358-362: Exit code and CI mode ──
+        /// Custom exit code when findings are detected (default: 1).
+        #[arg(long)]
+        exit_code: Option<i32>,
+
+        /// Always exit 0 regardless of findings (reporting-only mode).
+        #[arg(long)]
+        ignore_exit_code: bool,
+
+        /// Fail only on findings at or above this severity level.
+        #[arg(long, value_enum)]
+        fail_on_severity: Option<CliSeverity>,
+
+        /// Stop after N findings (CI timeout protection).
+        #[arg(long)]
+        max_findings: Option<usize>,
+
+        /// CI-optimized mode: no color, JSON output, fail-on-findings.
+        #[arg(long)]
+        ci_mode: bool,
+
+        /// Append output to the report file instead of overwriting.
+        #[arg(long)]
+        report_append: bool,
+
+        /// Use parallel git history scanning (splits commits across rayon workers).
+        #[arg(long)]
+        parallel: bool,
     },
 
     /// Scan a remote source (Confluence, Slack, Jira, S3, GCS, Azure Blob,
@@ -413,6 +574,98 @@ enum Command {
         #[arg(long)]
         only_verified_active: bool,
     },
+
+    /// Benchmark scan throughput on a directory (goal 315).
+    Bench {
+        /// Path to benchmark scan.
+        #[arg(default_value = ".")]
+        path: PathBuf,
+
+        /// Number of iterations to run (default: 3).
+        #[arg(long, default_value_t = 3)]
+        iterations: usize,
+
+        /// Output format: table or json.
+        #[arg(long, default_value = "table")]
+        format: DiffFormat,
+    },
+
+    /// Manage scheduled scans (goal 404).
+    Schedule {
+        /// Action: list, add, remove, run.
+        #[arg(long, default_value = "list")]
+        action: String,
+
+        /// Schedule name (for add/remove).
+        #[arg(long)]
+        name: Option<String>,
+
+        /// Cron expression (for add).
+        #[arg(long)]
+        cron: Option<String>,
+
+        /// Paths to scan, comma-separated (for add).
+        #[arg(long)]
+        paths: Option<String>,
+
+        /// Config file path for schedules.
+        #[arg(long, default_value = ".pledgeguard-schedules.json")]
+        config: PathBuf,
+    },
+
+    /// Scan multiple projects from a registry (goal 416).
+    MultiScan {
+        /// Project registry file (JSON).
+        #[arg(long, default_value = ".pledgeguard-projects.json")]
+        registry: PathBuf,
+
+        /// Only scan projects belonging to this team.
+        #[arg(long)]
+        team: Option<String>,
+
+        /// Output format.
+        #[arg(long, default_value = "json")]
+        format: DiffFormat,
+
+        /// Minimum severity to report.
+        #[arg(long, default_value = "low")]
+        min_severity: CliSeverity,
+    },
+
+    /// Send email notification for critical findings (goal 420).
+    EmailNotify {
+        /// SMTP host.
+        #[arg(long)]
+        smtp_host: String,
+
+        /// SMTP port.
+        #[arg(long, default_value_t = 587)]
+        smtp_port: u16,
+
+        /// SMTP username.
+        #[arg(long)]
+        username: String,
+
+        /// SMTP password.
+        #[arg(long)]
+        password: String,
+
+        /// From email address.
+        #[arg(long)]
+        from: String,
+
+        /// Recipient email addresses, comma-separated.
+        #[arg(long)]
+        to: String,
+
+        /// Path to scan.
+        #[arg(default_value = ".")]
+        path: PathBuf,
+
+        /// Disable TLS.
+        #[arg(long)]
+        no_tls: bool,
+    },
 }
 
 #[derive(Copy, Clone, PartialEq, ValueEnum)]
@@ -448,6 +701,23 @@ impl From<CliSeverity> for Severity {
             CliSeverity::Medium => Severity::Medium,
             CliSeverity::High => Severity::High,
             CliSeverity::Critical => Severity::Critical,
+        }
+    }
+}
+
+#[derive(Copy, Clone, Debug, ValueEnum)]
+enum CiPlatformArg {
+    Github,
+    Gitlab,
+    AzureDevops,
+}
+
+impl From<CiPlatformArg> for CiPlatform {
+    fn from(p: CiPlatformArg) -> Self {
+        match p {
+            CiPlatformArg::Github => CiPlatform::GitHub,
+            CiPlatformArg::Gitlab => CiPlatform::GitLab,
+            CiPlatformArg::AzureDevops => CiPlatform::AzureDevOps,
         }
     }
 }
@@ -600,17 +870,56 @@ fn main() -> ExitCode {
             verify_cache,
             timeout: _,
             diff,
+            since_commit: _,
+            since_date: _,
+            branch: _,
+            pr_number,
+            commit_range: _,
+            exit_code,
+            ignore_exit_code,
+            fail_on_severity,
+            max_findings,
+            ci_mode,
+            report_append,
+            baseline_auto,
+            enforce_baseline,
+            pr_comment_platform,
+            pr_comment_repo,
+            pr_comment_token,
+            sarif_upload,
+            sarif_upload_token,
+            junit_upload,
+            workers,
+            timeout_per_file,
+            no_mmap,
+            no_streaming,
+            incremental_cache,
+            progress,
+            max_file_size_mb,
         } => {
             if verbose {
                 eprintln!("pledgeguard: loading detectors...");
             }
-            let (detectors, global_allowlist) = load_all_detectors_and_allowlist(&plugin_dirs, config_path.as_deref());
+            let (detectors, global_allowlist) =
+                load_all_detectors_and_allowlist(&plugin_dirs, config_path.as_deref());
 
             let scan_opts = pledgeguard_core::ScanOptions {
-                max_file_size: 5 * 1024 * 1024,
+                max_file_size: max_file_size_mb
+                    .map(|mb| mb * 1024 * 1024)
+                    .unwrap_or(5 * 1024 * 1024),
                 respect_gitignore: true,
                 ignore_paths,
-                enable_rules: if enable_rules.is_empty() { None } else { Some(enable_rules) },
+                enable_rules: if enable_rules.is_empty() {
+                    None
+                } else {
+                    Some(enable_rules)
+                },
+                workers: workers.unwrap_or(0),
+                per_file_timeout_secs: timeout_per_file.unwrap_or(0),
+                use_mmap: !no_mmap,
+                streaming: !no_streaming,
+                incremental_cache,
+                show_progress: progress,
             };
             let scanner = Scanner::with_allowlist(detectors, scan_opts, global_allowlist);
 
@@ -627,7 +936,10 @@ fn main() -> ExitCode {
                     Vec::new()
                 } else {
                     if verbose {
-                        eprintln!("pledgeguard: scanning {} changed file(s).", changed_files.len());
+                        eprintln!(
+                            "pledgeguard: scanning {} changed file(s).",
+                            changed_files.len()
+                        );
                     }
                     let mut all_findings = Vec::new();
                     for file in &changed_files {
@@ -678,6 +990,40 @@ fn main() -> ExitCode {
                 eprintln!("pledgeguard: {} raw finding(s)", findings.len());
             }
 
+            // ── Goals 364-365: Baseline auto and enforce ──
+            let baseline_path = if baseline_auto || enforce_baseline {
+                let bl_path = path.join(".pledgeguard-baseline.json");
+                let bl_cfg = BaselineCiConfig {
+                    auto: baseline_auto,
+                    enforce: enforce_baseline,
+                };
+                let (should_create, should_enforce) = bl_cfg.determine_action(&bl_path);
+                if should_create {
+                    if verbose {
+                        eprintln!(
+                            "pledgeguard: auto-creating baseline at {}",
+                            bl_path.display()
+                        );
+                    }
+                } else if should_enforce && !bl_path.exists() {
+                    eprintln!(
+                        "pledgeguard: baseline enforcement failed — baseline file not found at {}",
+                        bl_path.display()
+                    );
+                    return ExitCode::FAILURE;
+                }
+                Some(bl_path)
+            } else {
+                baseline_path
+            };
+
+            let save_baseline =
+                if baseline_auto && !path.join(".pledgeguard-baseline.json").exists() {
+                    Some(path.join(".pledgeguard-baseline.json"))
+                } else {
+                    save_baseline
+                };
+
             report(
                 findings,
                 ReportOptions {
@@ -694,6 +1040,23 @@ fn main() -> ExitCode {
                     verify_detectors,
                     no_verify_detectors,
                     use_verify_cache: verify_cache,
+                    exit_code_config: ExitCodeConfig {
+                        exit_code,
+                        ignore_exit_code,
+                        fail_on_severity: fail_on_severity.map(|s| s.into()),
+                        max_findings,
+                        ci_mode,
+                    },
+                    report_append,
+                    baseline_auto,
+                    enforce_baseline,
+                    pr_comment_platform: pr_comment_platform.map(|p| p.into()),
+                    pr_comment_repo,
+                    pr_comment_token,
+                    pr_number,
+                    sarif_upload,
+                    sarif_upload_token,
+                    junit_upload,
                 },
             )
         }
@@ -717,28 +1080,85 @@ fn main() -> ExitCode {
             no_verify_detectors,
             verify_cache,
             timeout: _,
+            since_commit,
+            since_date,
+            branch,
+            pr_number,
+            commit_range,
+            exit_code,
+            ignore_exit_code,
+            fail_on_severity,
+            max_findings,
+            ci_mode,
+            report_append,
+            parallel,
         } => {
             if verbose {
                 eprintln!("pledgeguard: loading detectors...");
             }
-            let (detectors, _global_allowlist) = load_all_detectors_and_allowlist(&plugin_dirs, config_path.as_deref());
+            let (detectors, _global_allowlist) =
+                load_all_detectors_and_allowlist(&plugin_dirs, config_path.as_deref());
             // For history scanning, we filter detectors by enable_rules manually.
             let detectors = if enable_rules.is_empty() {
                 detectors
             } else {
-                let enabled: std::collections::HashSet<&str> = enable_rules.iter().map(|s| s.as_str()).collect();
-                detectors.into_iter().filter(|d| enabled.contains(d.id())).collect()
+                let enabled: std::collections::HashSet<&str> =
+                    enable_rules.iter().map(|s| s.as_str()).collect();
+                detectors
+                    .into_iter()
+                    .filter(|d| enabled.contains(d.id()))
+                    .collect()
             };
+
+            // Build scan scope from CLI flags (goals 352-357).
+            let scope = ScanScope {
+                since_commit,
+                since_date,
+                branch,
+                pr_number,
+                commit_range,
+            };
+
             if verbose {
-                eprintln!("pledgeguard: scanning git history at {}", path.display());
+                if scope.is_scoped() {
+                    eprintln!(
+                        "pledgeguard: scanning git history at {} (scoped)",
+                        path.display()
+                    );
+                } else {
+                    eprintln!("pledgeguard: scanning git history at {}", path.display());
+                }
             }
-            let findings = match scan_git_history(&path, &detectors) {
-                Ok(f) => f,
-                Err(e) => {
-                    eprintln!("error scanning git history at {}: {}", path.display(), e);
-                    return ExitCode::FAILURE;
+
+            let findings = if scope.is_scoped() {
+                match scan_git_history_with_scope(&path, &detectors, Some(&scope)) {
+                    Ok(f) => f,
+                    Err(e) => {
+                        eprintln!("error scanning git history at {}: {}", path.display(), e);
+                        return ExitCode::FAILURE;
+                    }
+                }
+            } else if parallel {
+                if verbose {
+                    eprintln!("pledgeguard: using parallel history scanning");
+                }
+                match scan_git_history_parallel(&path, &detectors) {
+                    Ok(f) => f,
+                    Err(e) => {
+                        eprintln!("error scanning git history at {}: {}", path.display(), e);
+                        return ExitCode::FAILURE;
+                    }
+                }
+            } else {
+                match scan_git_history(&path, &detectors) {
+                    Ok(f) => f,
+                    Err(e) => {
+                        eprintln!("error scanning git history at {}: {}", path.display(), e);
+                        return ExitCode::FAILURE;
+                    }
                 }
             };
+
             if verbose {
                 eprintln!("pledgeguard: {} raw finding(s)", findings.len());
             }
@@ -758,6 +1178,23 @@ fn main() -> ExitCode {
                     verify_detectors,
                     no_verify_detectors,
                     use_verify_cache: verify_cache,
+                    exit_code_config: ExitCodeConfig {
+                        exit_code,
+                        ignore_exit_code,
+                        fail_on_severity: fail_on_severity.map(|s| s.into()),
+                        max_findings,
+                        ci_mode,
+                    },
+                    report_append,
+                    baseline_auto: false,
+                    enforce_baseline: false,
+                    pr_comment_platform: None,
+                    pr_comment_repo: None,
+                    pr_comment_token: None,
+                    pr_number,
+                    sarif_upload: false,
+                    sarif_upload_token: None,
+                    junit_upload: false,
                 },
             )
         }
@@ -794,7 +1231,11 @@ fn main() -> ExitCode {
                 ScanSourceType::Slack => {
                     let config = pledgeguard_core::SlackScanConfig {
                         token,
-                        channel_ids: target.unwrap_or_default().split(',').map(String::from).collect(),
+                        channel_ids: target
+                            .unwrap_or_default()
+                            .split(',')
+                            .map(String::from)
+                            .collect(),
                         max_messages: 1000,
                     };
                     pledgeguard_core::scan_slack(&config, &detectors).unwrap_or_default()
@@ -853,7 +1294,8 @@ fn main() -> ExitCode {
                         name_prefix: target2,
                         max_secrets: 100,
                     };
-                    pledgeguard_core::scan_aws_secrets_manager(&config, &detectors).unwrap_or_default()
+                    pledgeguard_core::scan_aws_secrets_manager(&config, &detectors)
+                        .unwrap_or_default()
                 }
                 ScanSourceType::S3 => {
                     let config = pledgeguard_core::S3ScanConfig {
@@ -888,7 +1330,8 @@ fn main() -> ExitCode {
                 ScanSourceType::AlibabaOss => {
                     let config = pledgeguard_core::OssScanConfig {
                         bucket: target.unwrap_or_default(),
-                        endpoint: target2.unwrap_or_else(|| "oss-cn-hangzhou.aliyuncs.com".to_string()),
+                        endpoint: target2
+                            .unwrap_or_else(|| "oss-cn-hangzhou.aliyuncs.com".to_string()),
                         access_key_id: std::env::var("ALIBABA_ACCESS_KEY_ID").unwrap_or_default(),
                         access_key_secret: token,
                         prefix: None,
@@ -902,7 +1345,8 @@ fn main() -> ExitCode {
                         project_slug: target.unwrap_or_default(),
                         max_builds: 30,
                     };
-                    pledgeguard_core::scan_circleci_artifacts(&config, &detectors).unwrap_or_default()
+                    pledgeguard_core::scan_circleci_artifacts(&config, &detectors)
+                        .unwrap_or_default()
                 }
                 ScanSourceType::TravisCi => {
                     let config = pledgeguard_core::TravisCiScanConfig {
@@ -1030,7 +1474,8 @@ fn main() -> ExitCode {
                         project_id: target.unwrap_or_default(),
                         max_secrets: 50,
                     };
-                    pledgeguard_core::scan_gcp_secret_manager(&config, &detectors).unwrap_or_default()
+                    pledgeguard_core::scan_gcp_secret_manager(&config, &detectors)
+                        .unwrap_or_default()
                 }
                 ScanSourceType::AzureKeyVault => {
                     let config = pledgeguard_core::AzureKeyVaultScanConfig {
@@ -1074,7 +1519,8 @@ fn main() -> ExitCode {
                 }
                 ScanSourceType::Bitwarden => {
                     let config = pledgeguard_core::BitwardenScanConfig {
-                        base_url: target.unwrap_or_else(|| "https://vault.bitwarden.com".to_string()),
+                        base_url: target
+                            .unwrap_or_else(|| "https://vault.bitwarden.com".to_string()),
                         access_token: token,
                         max_items: 200,
                     };
@@ -1104,7 +1550,8 @@ fn main() -> ExitCode {
                         account_id: target.unwrap_or_default(),
                         max_workers: 50,
                     };
-                    pledgeguard_core::scan_cloudflare_workers(&config, &detectors).unwrap_or_default()
+                    pledgeguard_core::scan_cloudflare_workers(&config, &detectors)
+                        .unwrap_or_default()
                 }
                 ScanSourceType::Vercel => {
                     let config = pledgeguard_core::VercelScanConfig {
@@ -1179,7 +1626,8 @@ fn main() -> ExitCode {
                         repo: parts.get(1).unwrap_or(&"").to_string(),
                         max_runs: 20,
                     };
-                    pledgeguard_core::scan_github_actions_logs(&config, &detectors).unwrap_or_default()
+                    pledgeguard_core::scan_github_actions_logs(&config, &detectors)
+                        .unwrap_or_default()
                 }
                 ScanSourceType::GitlabIssues => {
                     let config = pledgeguard_core::GitLabIssuesScanConfig {
@@ -1202,7 +1650,11 @@ fn main() -> ExitCode {
                 ScanSourceType::Discord => {
                     let config = pledgeguard_core::DiscordScanConfig {
                         bot_token: token,
-                        channel_ids: target.unwrap_or_default().split(',').map(String::from).collect(),
+                        channel_ids: target
+                            .unwrap_or_default()
+                            .split(',')
+                            .map(String::from)
+                            .collect(),
                         max_messages: 100,
                     };
                     pledgeguard_core::scan_discord(&config, &detectors).unwrap_or_default()
@@ -1218,7 +1670,11 @@ fn main() -> ExitCode {
                 }
                 ScanSourceType::RssFeeds => {
                     let config = pledgeguard_core::RssFeedScanConfig {
-                        feed_urls: target.unwrap_or_default().split(',').map(String::from).collect(),
+                        feed_urls: target
+                            .unwrap_or_default()
+                            .split(',')
+                            .map(String::from)
+                            .collect(),
                         max_items_per_feed: 50,
                     };
                     pledgeguard_core::scan_rss_feeds(&config, &detectors).unwrap_or_default()
@@ -1245,10 +1701,25 @@ fn main() -> ExitCode {
                     verify_detectors: vec![],
                     no_verify_detectors: vec![],
                     use_verify_cache: false,
+                    exit_code_config: ExitCodeConfig::default(),
+                    report_append: false,
+                    baseline_auto: false,
+                    enforce_baseline: false,
+                    pr_comment_platform: None,
+                    pr_comment_repo: None,
+                    pr_comment_token: None,
+                    pr_number: None,
+                    sarif_upload: false,
+                    sarif_upload_token: None,
+                    junit_upload: false,
                 },
             )
         }
-        Command::Mcp { plugin_dirs, auth_token, tcp } => {
+        Command::Mcp {
+            plugin_dirs,
+            auth_token,
+            tcp,
+        } => {
             let config = mcp::McpConfig {
                 plugin_dirs,
                 auth_token,
@@ -1263,12 +1734,15 @@ fn main() -> ExitCode {
             let tools: Vec<AiTool> = if tools.is_empty() {
                 AiTool::all().to_vec()
             } else {
-                tools.iter().map(|t| match t {
-                    AiToolArg::Cursor => AiTool::Cursor,
-                    AiToolArg::ClaudeCode => AiTool::ClaudeCode,
-                    AiToolArg::Copilot => AiTool::Copilot,
-                    AiToolArg::Codex => AiTool::Codex,
-                }).collect()
+                tools
+                    .iter()
+                    .map(|t| match t {
+                        AiToolArg::Cursor => AiTool::Cursor,
+                        AiToolArg::ClaudeCode => AiTool::ClaudeCode,
+                        AiToolArg::Copilot => AiTool::Copilot,
+                        AiToolArg::Codex => AiTool::Codex,
+                    })
+                    .collect()
             };
             let results = ai_hooks::install_hooks(&path, &tools);
             println!("Installed AI hooks:");
@@ -1282,10 +1756,19 @@ fn main() -> ExitCode {
                 ExitCode::SUCCESS
             }
         }
-        Command::AiAnalyze { path, analysis, format: _, min_severity, show_all, verify } => {
+        Command::AiAnalyze {
+            path,
+            analysis,
+            format: _,
+            min_severity,
+            show_all,
+            verify,
+        } => {
             let config = AiConfig::default();
             if !config.is_enabled() {
-                eprintln!("AI analysis requires PLEDGEGUARD_AI_API_KEY or OPENAI_API_KEY environment variable.");
+                eprintln!(
+                    "AI analysis requires PLEDGEGUARD_AI_API_KEY or OPENAI_API_KEY environment variable."
+                );
                 eprintln!("Set one of these to enable LLM-powered analysis.");
                 return ExitCode::FAILURE;
             }
@@ -1314,38 +1797,45 @@ fn main() -> ExitCode {
                     serde_json::to_string_pretty(&result).unwrap_or_default()
                 }
                 AiAnalysisArg::Classify => {
-                    let results: Vec<_> = findings.iter()
+                    let results: Vec<_> = findings
+                        .iter()
                         .map(|f| ai::classify_finding(&config, f))
                         .collect();
                     serde_json::to_string_pretty(&results).unwrap_or_default()
                 }
                 AiAnalysisArg::Remediation => {
-                    let results: Vec<_> = findings.iter()
+                    let results: Vec<_> = findings
+                        .iter()
                         .map(|f| ai::remediation_suggestion(&config, f))
                         .collect();
                     serde_json::to_string_pretty(&results).unwrap_or_default()
                 }
                 AiAnalysisArg::FpDetection => {
-                    let results: Vec<_> = findings.iter()
+                    let results: Vec<_> = findings
+                        .iter()
                         .map(|f| ai::assess_false_positive(&config, f))
                         .collect();
                     serde_json::to_string_pretty(&results).unwrap_or_default()
                 }
                 AiAnalysisArg::RiskScore => {
-                    let results: Vec<_> = findings.iter()
+                    let results: Vec<_> = findings
+                        .iter()
                         .map(|f| ai::risk_score(&config, f))
                         .collect();
                     serde_json::to_string_pretty(&results).unwrap_or_default()
                 }
                 AiAnalysisArg::Rotation => {
-                    let rules: std::collections::HashSet<&str> = findings.iter().map(|f| f.rule_id.as_str()).collect();
-                    let results: Vec<_> = rules.iter()
+                    let rules: std::collections::HashSet<&str> =
+                        findings.iter().map(|f| f.rule_id.as_str()).collect();
+                    let results: Vec<_> = rules
+                        .iter()
                         .map(|r| ai::rotation_guidance(&config, r))
                         .collect();
                     serde_json::to_string_pretty(&results).unwrap_or_default()
                 }
                 AiAnalysisArg::Impact => {
-                    let results: Vec<_> = findings.iter()
+                    let results: Vec<_> = findings
+                        .iter()
                         .map(|f| ai::impact_analysis(&config, f))
                         .collect();
                     serde_json::to_string_pretty(&results).unwrap_or_default()
@@ -1361,7 +1851,13 @@ fn main() -> ExitCode {
         }
         Command::InstallPreCommit { force, path } => install_pre_commit(&path, force),
         Command::Init { path, force } => init_config(&path, force),
-        Command::Compliance { path, framework, min_severity, show_all, verify } => {
+        Command::Compliance {
+            path,
+            framework,
+            min_severity,
+            show_all,
+            verify,
+        } => {
             let detectors = builtin_detectors();
             let scanner = Scanner::new(detectors);
             let mut findings = match scanner.scan_path(&path) {
@@ -1393,7 +1889,11 @@ fn main() -> ExitCode {
                 ExitCode::SUCCESS
             }
         }
-        Command::Diff { previous, current, format } => {
+        Command::Diff {
+            previous,
+            current,
+            format,
+        } => {
             let prev_json = match std::fs::read_to_string(&previous) {
                 Ok(s) => s,
                 Err(e) => {
@@ -1421,7 +1921,10 @@ fn main() -> ExitCode {
                         "summary": &summary,
                         "findings": &diff,
                     });
-                    println!("{}", serde_json::to_string_pretty(&output).unwrap_or_default());
+                    println!(
+                        "{}",
+                        serde_json::to_string_pretty(&output).unwrap_or_default()
+                    );
                 }
                 DiffFormat::Table => {
                     println!("═══════════════════════════════════════════════");
@@ -1435,15 +1938,27 @@ fn main() -> ExitCode {
 
                     if summary.new_count > 0 {
                         println!("── New Findings ──");
-                        for d in diff.iter().filter(|d| d.status == enterprise::DiffStatus::New) {
+                        for d in diff
+                            .iter()
+                            .filter(|d| d.status == enterprise::DiffStatus::New)
+                        {
                             let f = &d.finding;
-                            println!("  [{}] {}:{} — {}", f.severity, f.path.display(), f.line, f.rule_id);
+                            println!(
+                                "  [{}] {}:{} — {}",
+                                f.severity,
+                                f.path.display(),
+                                f.line,
+                                f.rule_id
+                            );
                         }
                         println!();
                     }
                     if summary.resolved_count > 0 {
                         println!("── Resolved Findings ──");
-                        for d in diff.iter().filter(|d| d.status == enterprise::DiffStatus::Resolved) {
+                        for d in diff
+                            .iter()
+                            .filter(|d| d.status == enterprise::DiffStatus::Resolved)
+                        {
                             let f = &d.finding;
                             println!("  {}:{} — {}", f.path.display(), f.line, f.rule_id);
                         }
@@ -1452,7 +1967,13 @@ fn main() -> ExitCode {
             }
             ExitCode::SUCCESS
         }
-        Command::Notify { url, webhook_type, path, min_severity, only_verified_active } => {
+        Command::Notify {
+            url,
+            webhook_type,
+            path,
+            min_severity,
+            only_verified_active,
+        } => {
             let detectors = builtin_detectors();
             let scanner = Scanner::new(detectors);
             let mut findings = match scanner.scan_path(&path) {
@@ -1478,7 +1999,8 @@ fn main() -> ExitCode {
 
             match enterprise::send_webhook(&config, &findings, &path.display().to_string()) {
                 Ok(_) => {
-                    let count = findings.iter()
+                    let count = findings
+                        .iter()
                         .filter(|f| f.severity >= min_severity.into())
                         .count();
                     println!("Webhook notification sent ({count} findings).");
@@ -1486,6 +2008,302 @@ fn main() -> ExitCode {
                 }
                 Err(e) => {
                     eprintln!("webhook error: {e}");
+                    ExitCode::FAILURE
+                }
+            }
+        }
+        Command::Bench {
+            path,
+            iterations,
+            format,
+        } => {
+            let detectors = builtin_detectors();
+            let scanner = Scanner::new(detectors);
+
+            let mut results = Vec::new();
+            for i in 0..iterations {
+                eprintln!("  Iteration {}/{iterations}...", i + 1);
+                match pledgeguard_core::benchmark_scan(&scanner, &path) {
+                    Ok(result) => {
+                        eprintln!(
+                            "  {:.2} MB/s, {}ms, {} findings, {} bytes",
+                            result.throughput_mbps,
+                            result.elapsed_ms,
+                            result.findings,
+                            result.bytes,
+                        );
+                        results.push(result);
+                    }
+                    Err(e) => {
+                        eprintln!("error benchmarking {}: {}", path.display(), e);
+                        return ExitCode::FAILURE;
+                    }
+                }
+            }
+
+            // Print summary.
+            if results.is_empty() {
+                eprintln!("No benchmark results.");
+                return ExitCode::FAILURE;
+            }
+
+            let avg_mbps =
+                results.iter().map(|r| r.throughput_mbps).sum::<f64>() / results.len() as f64;
+            let avg_ms = results.iter().map(|r| r.elapsed_ms).sum::<u64>() / results.len() as u64;
+            let total_findings = results.iter().map(|r| r.findings).sum::<usize>();
+            let total_bytes = results.first().map(|r| r.bytes).unwrap_or(0);
+
+            match format {
+                DiffFormat::Table => {
+                    println!("Benchmark Results ({} iterations)", results.len());
+                    println!("  Path:       {}", path.display());
+                    println!("  Bytes:      {}", total_bytes);
+                    println!("  Findings:   {}", total_findings);
+                    println!("  Avg time:   {}ms", avg_ms);
+                    println!("  Avg throughput: {:.2} MB/s", avg_mbps);
+                }
+                DiffFormat::Json => {
+                    let summary = serde_json::json!({
+                        "iterations": results.len(),
+                        "path": path.display().to_string(),
+                        "bytes": total_bytes,
+                        "findings": total_findings,
+                        "avg_elapsed_ms": avg_ms,
+                        "avg_throughput_mbps": avg_mbps,
+                        "results": results,
+                    });
+                    println!("{}", serde_json::to_string_pretty(&summary).unwrap());
+                }
+            }
+
+            ExitCode::SUCCESS
+        }
+        Command::Schedule {
+            action,
+            name,
+            cron,
+            paths,
+            config,
+        } => match action.as_str() {
+            "list" => {
+                let schedules =
+                    pledgeguard_core::ScanScheduleConfig::load(&config).unwrap_or_default();
+                if schedules.schedules.is_empty() {
+                    println!("No scheduled scans configured.");
+                } else {
+                    println!("Scheduled scans ({}):", schedules.schedules.len());
+                    for s in &schedules.schedules {
+                        println!(
+                            "  {} — cron: {}, paths: {}",
+                            s.name,
+                            s.cron,
+                            s.paths.join(", ")
+                        );
+                    }
+                }
+                ExitCode::SUCCESS
+            }
+            "add" => {
+                let name = match name {
+                    Some(n) => n,
+                    None => {
+                        eprintln!("--name is required for add");
+                        return ExitCode::FAILURE;
+                    }
+                };
+                let cron = match cron {
+                    Some(c) => c,
+                    None => {
+                        eprintln!("--cron is required for add");
+                        return ExitCode::FAILURE;
+                    }
+                };
+                let paths_str = match paths {
+                    Some(p) => p,
+                    None => {
+                        eprintln!("--paths is required for add");
+                        return ExitCode::FAILURE;
+                    }
+                };
+                if let Err(e) = pledgeguard_core::ScanScheduleConfig::validate_cron(&cron) {
+                    eprintln!("invalid cron: {e}");
+                    return ExitCode::FAILURE;
+                }
+                let mut schedules =
+                    pledgeguard_core::ScanScheduleConfig::load(&config).unwrap_or_default();
+                schedules.add(pledgeguard_core::ScanSchedule {
+                    name: name.clone(),
+                    cron,
+                    paths: paths_str.split(',').map(|s| s.trim().to_string()).collect(),
+                    output_format: "json".to_string(),
+                    report_file: None,
+                    fail_on_findings: false,
+                    min_severity: "low".to_string(),
+                    scan_history: false,
+                    webhook_url: None,
+                    email_recipients: Vec::new(),
+                });
+                if let Err(e) = schedules.save(&config) {
+                    eprintln!("error saving schedule config: {e}");
+                    return ExitCode::FAILURE;
+                }
+                println!("Schedule '{name}' added.");
+                ExitCode::SUCCESS
+            }
+            "remove" => {
+                let name = match name {
+                    Some(n) => n,
+                    None => {
+                        eprintln!("--name is required for remove");
+                        return ExitCode::FAILURE;
+                    }
+                };
+                let mut schedules = match pledgeguard_core::ScanScheduleConfig::load(&config) {
+                    Ok(c) => c,
+                    Err(_) => {
+                        eprintln!("no schedule config found");
+                        return ExitCode::FAILURE;
+                    }
+                };
+                if schedules.remove(&name) {
+                    let _ = schedules.save(&config);
+                    println!("Schedule '{name}' removed.");
+                    ExitCode::SUCCESS
+                } else {
+                    eprintln!("Schedule '{name}' not found.");
+                    ExitCode::FAILURE
+                }
+            }
+            _ => {
+                eprintln!("unknown action: {action} (use: list, add, remove)");
+                ExitCode::FAILURE
+            }
+        },
+        Command::MultiScan {
+            registry,
+            team,
+            format,
+            min_severity,
+        } => {
+            let reg = match pledgeguard_core::ProjectRegistry::load(&registry) {
+                Ok(r) => r,
+                Err(e) => {
+                    eprintln!(
+                        "error loading project registry {}: {}",
+                        registry.display(),
+                        e
+                    );
+                    return ExitCode::FAILURE;
+                }
+            };
+
+            let projects: Vec<&pledgeguard_core::Project> = match &team {
+                Some(t) => reg.by_team(t),
+                None => reg.projects.iter().collect(),
+            };
+
+            if projects.is_empty() {
+                println!("No projects to scan.");
+                return ExitCode::SUCCESS;
+            }
+
+            let detectors = builtin_detectors();
+            let scanner = Scanner::new(detectors);
+            let mut all_results = Vec::new();
+
+            for project in projects {
+                eprintln!("Scanning {} ({})...", project.name, project.path);
+                let path = std::path::PathBuf::from(&project.path);
+                match scanner.scan_path(&path) {
+                    Ok(findings) => {
+                        let filtered: Vec<_> = findings
+                            .into_iter()
+                            .filter(|f| f.severity >= min_severity.into())
+                            .collect();
+                        eprintln!("  {} findings", filtered.len());
+                        all_results.push(serde_json::json!({
+                            "project": project.name,
+                            "path": project.path,
+                            "findings": filtered,
+                        }));
+                    }
+                    Err(e) => {
+                        eprintln!("  error: {e}");
+                        all_results.push(serde_json::json!({
+                            "project": project.name,
+                            "path": project.path,
+                            "error": e.to_string(),
+                        }));
+                    }
+                }
+            }
+
+            match format {
+                DiffFormat::Table => {
+                    for result in &all_results {
+                        let name = result["project"].as_str().unwrap_or("unknown");
+                        let count = result["findings"].as_array().map(|a| a.len()).unwrap_or(0);
+                        let error = result["error"].as_str();
+                        if let Some(err) = error {
+                            println!("{name}: ERROR — {err}");
+                        } else {
+                            println!("{name}: {count} findings");
+                        }
+                    }
+                }
+                DiffFormat::Json => {
+                    println!("{}", serde_json::to_string_pretty(&all_results).unwrap());
+                }
+            }
+
+            ExitCode::SUCCESS
+        }
+        Command::EmailNotify {
+            smtp_host,
+            smtp_port,
+            username,
+            password,
+            from,
+            to,
+            path,
+            no_tls,
+        } => {
+            let detectors = builtin_detectors();
+            let scanner = Scanner::new(detectors);
+            let findings = match scanner.scan_path(&path) {
+                Ok(f) => f,
+                Err(e) => {
+                    eprintln!("error scanning {}: {}", path.display(), e);
+                    return ExitCode::FAILURE;
+                }
+            };
+
+            let recipients: Vec<String> = to.split(',').map(|s| s.trim().to_string()).collect();
+            let config = pledgeguard_core::EmailConfig {
+                smtp_host,
+                smtp_port,
+                username,
+                password,
+                from_address: from,
+                use_tls: !no_tls,
+            };
+
+            match pledgeguard_core::send_email_notification(
+                &config,
+                &recipients,
+                &findings,
+                &path.display().to_string(),
+            ) {
+                Ok(_) => {
+                    let critical = findings
+                        .iter()
+                        .filter(|f| f.severity == Severity::Critical)
+                        .count();
+                    println!("Email notification sent ({critical} critical findings).");
+                    ExitCode::SUCCESS
+                }
+                Err(e) => {
+                    eprintln!("email error: {e}");
                     ExitCode::FAILURE
                 }
             }
@@ -1509,7 +2327,11 @@ fn load_all_detectors_and_allowlist(
                 global_allowlist = result.global_allowlist;
             }
             Err(e) => {
-                eprintln!("warning: failed to load config from {}: {}", cp.display(), e);
+                eprintln!(
+                    "warning: failed to load config from {}: {}",
+                    cp.display(),
+                    e
+                );
             }
         }
     }
@@ -1530,6 +2352,20 @@ struct ReportOptions {
     verify_detectors: Vec<String>,
     no_verify_detectors: Vec<String>,
     use_verify_cache: bool,
+    // ── New CI/CD options (goals 358-370) ──
+    exit_code_config: ExitCodeConfig,
+    report_append: bool,
+    #[allow(dead_code)]
+    baseline_auto: bool,
+    #[allow(dead_code)]
+    enforce_baseline: bool,
+    pr_comment_platform: Option<CiPlatform>,
+    pr_comment_repo: Option<String>,
+    pr_comment_token: Option<String>,
+    pr_number: Option<u64>,
+    sarif_upload: bool,
+    sarif_upload_token: Option<String>,
+    junit_upload: bool,
 }
 
 fn report(findings: Vec<Finding>, opts: ReportOptions) -> ExitCode {
@@ -1547,7 +2383,25 @@ fn report(findings: Vec<Finding>, opts: ReportOptions) -> ExitCode {
         verify_detectors,
         no_verify_detectors,
         use_verify_cache,
+        exit_code_config,
+        report_append,
+        baseline_auto: _,
+        enforce_baseline: _,
+        pr_comment_platform,
+        pr_comment_repo,
+        pr_comment_token,
+        pr_number,
+        sarif_upload,
+        sarif_upload_token,
+        junit_upload,
     } = opts;
+
+    // Determine the effective format (CI mode forces JSON).
+    let format = if exit_code_config.ci_mode {
+        OutputFormat::Json
+    } else {
+        format
+    };
     // Save baseline before any filtering, so it captures everything.
     if let Some(ref bp) = save_baseline {
         let bl = baseline::from_findings(&findings);
@@ -1620,9 +2474,7 @@ fn report(findings: Vec<Finding>, opts: ReportOptions) -> ExitCode {
     }
 
     if only_verified {
-        visible.retain(|f| {
-            matches!(f.verification, Some(VerificationStatus::Active))
-        });
+        visible.retain(|f| matches!(f.verification, Some(VerificationStatus::Active)));
     }
 
     let display: Vec<_> = if no_redact {
@@ -1657,16 +2509,141 @@ fn report(findings: Vec<Finding>, opts: ReportOptions) -> ExitCode {
     }
 
     if let Some(ref rf) = report_file {
-        if let Err(e) = std::fs::write(rf, &output) {
-            eprintln!("failed to write report file {}: {}", rf.display(), e);
-            return ExitCode::FAILURE;
+        if report_append {
+            if let Err(e) = append_report(rf, &output) {
+                eprintln!("failed to append report file {}: {}", rf.display(), e);
+                return ExitCode::FAILURE;
+            }
+            eprintln!(
+                "Report appended to {} ({} findings).",
+                rf.display(),
+                visible.len()
+            );
+        } else {
+            if let Err(e) = std::fs::write(rf, &output) {
+                eprintln!("failed to write report file {}: {}", rf.display(), e);
+                return ExitCode::FAILURE;
+            }
+            eprintln!(
+                "Report written to {} ({} findings).",
+                rf.display(),
+                visible.len()
+            );
         }
-        eprintln!("Report written to {} ({} findings).", rf.display(), visible.len());
     } else {
         print!("{output}");
     }
 
-    if fail_on_findings && !visible.is_empty() {
+    // ── Goal 366-368: Post PR/MR comment ──
+    if let Some(platform) = pr_comment_platform {
+        if let Some(pr) = pr_number {
+            let token = pr_comment_token
+                .or_else(|| std::env::var("PLEDGEGUARD_TOKEN").ok())
+                .or_else(|| std::env::var("GITHUB_TOKEN").ok())
+                .or_else(|| std::env::var("GITLAB_TOKEN").ok())
+                .or_else(|| std::env::var("AZURE_DEVOPS_TOKEN").ok())
+                .unwrap_or_default();
+            let repo_slug = pr_comment_repo
+                .or_else(|| std::env::var("PLEDGEGUARD_REPO_SLUG").ok())
+                .unwrap_or_default();
+            if token.is_empty() {
+                eprintln!(
+                    "warning: --pr-comment-platform set but no API token provided (use --pr-comment-token or env var)"
+                );
+            } else if repo_slug.is_empty() {
+                eprintln!(
+                    "warning: --pr-comment-platform set but no repo slug provided (use --pr-comment-repo or env var)"
+                );
+            } else {
+                let config = PrCommentConfig {
+                    platform: platform.clone(),
+                    token,
+                    repo_slug,
+                    pr_number: pr,
+                    base_url: None,
+                };
+                let result = match platform {
+                    CiPlatform::GitHub => post_github_pr_comment(&config, &visible),
+                    CiPlatform::GitLab => post_gitlab_mr_comment(&config, &visible),
+                    CiPlatform::AzureDevOps => post_azure_devops_pr_comment(&config, &visible),
+                };
+                match result {
+                    Ok(()) => eprintln!("PR/MR comment posted successfully."),
+                    Err(e) => eprintln!("warning: failed to post PR/MR comment: {e}"),
+                }
+            }
+        } else {
+            eprintln!("warning: --pr-comment-platform set but --pr-number not provided");
+        }
+    }
+
+    // ── Goal 369: SARIF auto-upload to GitHub Code Scanning ──
+    if sarif_upload {
+        let token = sarif_upload_token
+            .or_else(|| std::env::var("GITHUB_TOKEN").ok())
+            .unwrap_or_default();
+        if token.is_empty() {
+            eprintln!(
+                "warning: --sarif-upload set but no GitHub token provided (use --sarif-upload-token or GITHUB_TOKEN env var)"
+            );
+        } else {
+            let repo_slug = std::env::var("GITHUB_REPOSITORY").unwrap_or_default();
+            if repo_slug.is_empty() {
+                eprintln!("warning: --sarif-upload set but no repo slug provided");
+            } else {
+                let sarif_content = match format {
+                    OutputFormat::Sarif => output.clone(),
+                    _ => {
+                        let sarif = pledgeguard_core::to_sarif(&display);
+                        serde_json::to_string_pretty(&sarif).unwrap_or_default()
+                    }
+                };
+                let commit_sha = std::env::var("GITHUB_SHA").unwrap_or_default();
+                let ref_name = std::env::var("GITHUB_REF").unwrap_or_default();
+                match upload_sarif_to_github(
+                    &token,
+                    &repo_slug,
+                    &sarif_content,
+                    &commit_sha,
+                    &ref_name,
+                ) {
+                    Ok(()) => eprintln!("SARIF uploaded to GitHub Code Scanning."),
+                    Err(e) => eprintln!("warning: failed to upload SARIF: {e}"),
+                }
+            }
+        }
+    }
+
+    // ── Goal 370: JUnit auto-upload ──
+    if junit_upload {
+        let junit_content = match format {
+            OutputFormat::Junit => output.clone(),
+            _ => pledgeguard_core::to_junit(&display),
+        };
+        let junit_path = std::env::var("PLEDGEGUARD_JUNIT_PATH")
+            .unwrap_or_else(|_| "pledgeguard-junit.xml".to_string());
+        if let Err(e) = std::fs::write(&junit_path, &junit_content) {
+            eprintln!("warning: failed to write JUnit report to {junit_path}: {e}");
+        } else {
+            eprintln!(
+                "JUnit report written to {junit_path}. Configure your CI to publish it as test results."
+            );
+        }
+    }
+
+    // ── Goals 358-362: Compute exit code ──
+    if exit_code_config.ci_mode
+        || exit_code_config.ignore_exit_code
+        || exit_code_config.exit_code.is_some()
+        || exit_code_config.fail_on_severity.is_some()
+        || exit_code_config.max_findings.is_some()
+    {
+        let code = exit_code_config.compute_exit_code(&visible);
+        if code != 0 {
+            return ExitCode::from(code as u8);
+        }
+        ExitCode::SUCCESS
+    } else if fail_on_findings && !visible.is_empty() {
         ExitCode::FAILURE
     } else {
         ExitCode::SUCCESS
@@ -1892,8 +2869,14 @@ fn init_config(path: &std::path::Path, force: bool) -> ExitCode {
     println!("Created {}.", config_path.display());
     println!();
     println!("Next steps:");
-    println!("  1. Edit {} to add custom rules or allowlist entries.", config_path.display());
-    println!("  2. Run `pledgeguard scan . --config {}` to use it.", config_path.display());
+    println!(
+        "  1. Edit {} to add custom rules or allowlist entries.",
+        config_path.display()
+    );
+    println!(
+        "  2. Run `pledgeguard scan . --config {}` to use it.",
+        config_path.display()
+    );
     println!("  3. Add `pledgeguard scan --diff --fail-on-findings` to your CI pipeline.");
     ExitCode::SUCCESS
 }

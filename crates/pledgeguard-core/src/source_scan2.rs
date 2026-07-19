@@ -101,55 +101,69 @@ pub fn scan_gitea(
     let mut findings = Vec::new();
     let base = config.base_url.trim_end_matches('/');
 
-    let repos: Vec<(String, String)> = if let (Some(owner), Some(repo)) = (&config.owner, &config.repo) {
-        vec![(owner.clone(), repo.clone())]
-    } else if let Some(owner) = &config.owner {
-        let url = format!("{base}/api/v1/repos/search?q={owner}&limit={}", config.max_repos);
-        let resp = agent.get(&url).set("Authorization", &auth).call();
-        if let Ok(r) = resp
-            && let Ok(body) = r.into_string()
-        {
-            serde_json::from_str::<serde_json::Value>(&body)
-                .ok()
-                .and_then(|v| v.get("data").and_then(|d| d.as_array()).map(|arr| {
-                    arr.iter().filter_map(|r| {
-                        let full = r.get("full_name")?.as_str()?;
-                        let parts: Vec<&str> = full.split('/').collect();
-                        if parts.len() == 2 {
-                            Some((parts[0].to_string(), parts[1].to_string()))
-                        } else {
-                            None
-                        }
-                    }).take(config.max_repos).collect()
-                }))
-                .unwrap_or_default()
+    let repos: Vec<(String, String)> =
+        if let (Some(owner), Some(repo)) = (&config.owner, &config.repo) {
+            vec![(owner.clone(), repo.clone())]
+        } else if let Some(owner) = &config.owner {
+            let url = format!(
+                "{base}/api/v1/repos/search?q={owner}&limit={}",
+                config.max_repos
+            );
+            let resp = agent.get(&url).set("Authorization", &auth).call();
+            if let Ok(r) = resp
+                && let Ok(body) = r.into_string()
+            {
+                serde_json::from_str::<serde_json::Value>(&body)
+                    .ok()
+                    .and_then(|v| {
+                        v.get("data").and_then(|d| d.as_array()).map(|arr| {
+                            arr.iter()
+                                .filter_map(|r| {
+                                    let full = r.get("full_name")?.as_str()?;
+                                    let parts: Vec<&str> = full.split('/').collect();
+                                    if parts.len() == 2 {
+                                        Some((parts[0].to_string(), parts[1].to_string()))
+                                    } else {
+                                        None
+                                    }
+                                })
+                                .take(config.max_repos)
+                                .collect()
+                        })
+                    })
+                    .unwrap_or_default()
+            } else {
+                Vec::new()
+            }
         } else {
-            Vec::new()
-        }
-    } else {
-        let url = format!("{base}/api/v1/repos/search?limit={}", config.max_repos);
-        let resp = agent.get(&url).set("Authorization", &auth).call();
-        if let Ok(r) = resp
-            && let Ok(body) = r.into_string()
-        {
-            serde_json::from_str::<serde_json::Value>(&body)
-                .ok()
-                .and_then(|v| v.get("data").and_then(|d| d.as_array()).map(|arr| {
-                    arr.iter().filter_map(|r| {
-                        let full = r.get("full_name")?.as_str()?;
-                        let parts: Vec<&str> = full.split('/').collect();
-                        if parts.len() == 2 {
-                            Some((parts[0].to_string(), parts[1].to_string()))
-                        } else {
-                            None
-                        }
-                    }).take(config.max_repos).collect()
-                }))
-                .unwrap_or_default()
-        } else {
-            Vec::new()
-        }
-    };
+            let url = format!("{base}/api/v1/repos/search?limit={}", config.max_repos);
+            let resp = agent.get(&url).set("Authorization", &auth).call();
+            if let Ok(r) = resp
+                && let Ok(body) = r.into_string()
+            {
+                serde_json::from_str::<serde_json::Value>(&body)
+                    .ok()
+                    .and_then(|v| {
+                        v.get("data").and_then(|d| d.as_array()).map(|arr| {
+                            arr.iter()
+                                .filter_map(|r| {
+                                    let full = r.get("full_name")?.as_str()?;
+                                    let parts: Vec<&str> = full.split('/').collect();
+                                    if parts.len() == 2 {
+                                        Some((parts[0].to_string(), parts[1].to_string()))
+                                    } else {
+                                        None
+                                    }
+                                })
+                                .take(config.max_repos)
+                                .collect()
+                        })
+                    })
+                    .unwrap_or_default()
+            } else {
+                Vec::new()
+            }
+        };
 
     for (owner, repo) in &repos {
         // Scan repo file content
@@ -201,25 +215,34 @@ pub fn scan_bitbucket_cloud(
     detectors: &[Box<dyn Detector>],
 ) -> Result<Vec<Finding>, SourceScanError2> {
     let agent = agent();
-    let auth = format!("Basic {}", base64_encode(format!("{}:{}", config.username, config.app_password).as_bytes()));
+    let auth = format!(
+        "Basic {}",
+        base64_encode(format!("{}:{}", config.username, config.app_password).as_bytes())
+    );
     let mut findings = Vec::new();
     let ws = &config.workspace;
 
     let repos: Vec<String> = if let Some(repo) = &config.repo {
         vec![repo.clone()]
     } else {
-        let url = format!("https://api.bitbucket.org/2.0/repositories/{ws}?pagelen={}", config.max_repos);
+        let url = format!(
+            "https://api.bitbucket.org/2.0/repositories/{ws}?pagelen={}",
+            config.max_repos
+        );
         let resp = agent.get(&url).set("Authorization", &auth).call();
         if let Ok(r) = resp
             && let Ok(body) = r.into_string()
         {
             serde_json::from_str::<serde_json::Value>(&body)
                 .ok()
-                .and_then(|v| v.get("values").and_then(|d| d.as_array()).map(|arr| {
-                    arr.iter().filter_map(|r| {
-                        r.get("name")?.as_str().map(String::from)
-                    }).take(config.max_repos).collect()
-                }))
+                .and_then(|v| {
+                    v.get("values").and_then(|d| d.as_array()).map(|arr| {
+                        arr.iter()
+                            .filter_map(|r| r.get("name")?.as_str().map(String::from))
+                            .take(config.max_repos)
+                            .collect()
+                    })
+                })
                 .unwrap_or_default()
         } else {
             Vec::new()
@@ -237,7 +260,9 @@ pub fn scan_bitbucket_cloud(
         ));
 
         // Scan PRs
-        let url = format!("https://api.bitbucket.org/2.0/repositories/{ws}/{repo}/pullrequests?pagelen=50");
+        let url = format!(
+            "https://api.bitbucket.org/2.0/repositories/{ws}/{repo}/pullrequests?pagelen=50"
+        );
         findings.extend(fetch_and_scan(
             &url,
             Some(("Authorization", &auth)),
@@ -246,7 +271,8 @@ pub fn scan_bitbucket_cloud(
         ));
 
         // Scan pipelines
-        let url = format!("https://api.bitbucket.org/2.0/repositories/{ws}/{repo}/pipelines/?pagelen=50");
+        let url =
+            format!("https://api.bitbucket.org/2.0/repositories/{ws}/{repo}/pipelines/?pagelen=50");
         findings.extend(fetch_and_scan(
             &url,
             Some(("Authorization", &auth)),
@@ -284,18 +310,24 @@ pub fn scan_bitbucket_server(
     let repos: Vec<String> = if let Some(repo) = &config.repo_slug {
         vec![repo.clone()]
     } else {
-        let url = format!("{base}/rest/api/1.0/projects/{pk}/repos?limit={}", config.max_repos);
+        let url = format!(
+            "{base}/rest/api/1.0/projects/{pk}/repos?limit={}",
+            config.max_repos
+        );
         let resp = agent.get(&url).set("Authorization", &auth).call();
         if let Ok(r) = resp
             && let Ok(body) = r.into_string()
         {
             serde_json::from_str::<serde_json::Value>(&body)
                 .ok()
-                .and_then(|v| v.get("values").and_then(|d| d.as_array()).map(|arr| {
-                    arr.iter().filter_map(|r| {
-                        r.get("slug")?.as_str().map(String::from)
-                    }).take(config.max_repos).collect()
-                }))
+                .and_then(|v| {
+                    v.get("values").and_then(|d| d.as_array()).map(|arr| {
+                        arr.iter()
+                            .filter_map(|r| r.get("slug")?.as_str().map(String::from))
+                            .take(config.max_repos)
+                            .collect()
+                    })
+                })
                 .unwrap_or_default()
         } else {
             Vec::new()
@@ -332,25 +364,34 @@ pub fn scan_azure_devops(
     detectors: &[Box<dyn Detector>],
 ) -> Result<Vec<Finding>, SourceScanError2> {
     let agent = agent();
-    let auth = format!("Basic {}", base64_encode(format!(":{}", config.pat).as_bytes()));
+    let auth = format!(
+        "Basic {}",
+        base64_encode(format!(":{}", config.pat).as_bytes())
+    );
     let mut findings = Vec::new();
     let org = &config.organization;
 
     let projects: Vec<String> = if let Some(proj) = &config.project {
         vec![proj.clone()]
     } else {
-        let url = format!("https://dev.azure.com/{org}/_apis/projects?top={}", config.max_repos);
+        let url = format!(
+            "https://dev.azure.com/{org}/_apis/projects?top={}",
+            config.max_repos
+        );
         let resp = agent.get(&url).set("Authorization", &auth).call();
         if let Ok(r) = resp
             && let Ok(body) = r.into_string()
         {
             serde_json::from_str::<serde_json::Value>(&body)
                 .ok()
-                .and_then(|v| v.get("value").and_then(|d| d.as_array()).map(|arr| {
-                    arr.iter().filter_map(|r| {
-                        r.get("name")?.as_str().map(String::from)
-                    }).take(config.max_repos).collect()
-                }))
+                .and_then(|v| {
+                    v.get("value").and_then(|d| d.as_array()).map(|arr| {
+                        arr.iter()
+                            .filter_map(|r| r.get("name")?.as_str().map(String::from))
+                            .take(config.max_repos)
+                            .collect()
+                    })
+                })
                 .unwrap_or_default()
         } else {
             Vec::new()
@@ -366,16 +407,20 @@ pub fn scan_azure_devops(
         {
             let repos: Vec<String> = serde_json::from_str::<serde_json::Value>(&body)
                 .ok()
-                .and_then(|v| v.get("value").and_then(|d| d.as_array()).map(|arr| {
-                    arr.iter().filter_map(|r| {
-                        r.get("name")?.as_str().map(String::from)
-                    }).collect()
-                }))
+                .and_then(|v| {
+                    v.get("value").and_then(|d| d.as_array()).map(|arr| {
+                        arr.iter()
+                            .filter_map(|r| r.get("name")?.as_str().map(String::from))
+                            .collect()
+                    })
+                })
                 .unwrap_or_default();
 
             for repo in &repos {
                 // Scan PRs
-                let url = format!("https://dev.azure.com/{org}/{project}/_apis/git/repositories/{repo}/pullrequests?top=50");
+                let url = format!(
+                    "https://dev.azure.com/{org}/{project}/_apis/git/repositories/{repo}/pullrequests?top=50"
+                );
                 findings.extend(fetch_and_scan(
                     &url,
                     Some(("Authorization", &auth)),
@@ -409,12 +454,19 @@ pub fn scan_launchdarkly(
     let pk = &config.project_key;
 
     // List feature flags
-    let url = format!("https://app.launchdarkly.com/api/v2/flags/{pk}?limit={}", config.max_flags);
+    let url = format!(
+        "https://app.launchdarkly.com/api/v2/flags/{pk}?limit={}",
+        config.max_flags
+    );
     let resp = agent.get(&url).set("Authorization", &config.api_key).call();
     if let Ok(r) = resp
         && let Ok(body) = r.into_string()
     {
-        findings.extend(scan_text(&body, &std::path::PathBuf::from(format!("launchdarkly:{pk}/flags")), detectors));
+        findings.extend(scan_text(
+            &body,
+            &std::path::PathBuf::from(format!("launchdarkly:{pk}/flags")),
+            detectors,
+        ));
     }
 
     // List environments
@@ -423,7 +475,11 @@ pub fn scan_launchdarkly(
     if let Ok(r) = resp
         && let Ok(body) = r.into_string()
     {
-        findings.extend(scan_text(&body, &std::path::PathBuf::from(format!("launchdarkly:{pk}/environments")), detectors));
+        findings.extend(scan_text(
+            &body,
+            &std::path::PathBuf::from(format!("launchdarkly:{pk}/environments")),
+            detectors,
+        ));
     }
 
     Ok(findings)
@@ -463,18 +519,24 @@ pub fn scan_consul(
     {
         // Consul returns JSON array of {Key, Value(base64), ...}
         if let Ok(arr) = serde_json::from_str::<serde_json::Value>(&body)
-            && let Some(items) = arr.as_array() {
-                for item in items {
-                    if let Some(key) = item.get("Key").and_then(|k| k.as_str())
-                        && let Some(val_b64) = item.get("Value").and_then(|v| v.as_str())
-                            && let Ok(decoded) = base64_decode(val_b64) {
-                                let vpath = std::path::PathBuf::from(format!("consul:{key}"));
-                                findings.extend(scan_text(&decoded, &vpath, detectors));
-                            }
+            && let Some(items) = arr.as_array()
+        {
+            for item in items {
+                if let Some(key) = item.get("Key").and_then(|k| k.as_str())
+                    && let Some(val_b64) = item.get("Value").and_then(|v| v.as_str())
+                    && let Ok(decoded) = base64_decode(val_b64)
+                {
+                    let vpath = std::path::PathBuf::from(format!("consul:{key}"));
+                    findings.extend(scan_text(&decoded, &vpath, detectors));
                 }
             }
+        }
         // Also scan the raw JSON
-        findings.extend(scan_text(&body, &std::path::PathBuf::from("consul:raw"), detectors));
+        findings.extend(scan_text(
+            &body,
+            &std::path::PathBuf::from("consul:raw"),
+            detectors,
+        ));
     }
 
     Ok(findings)
@@ -505,7 +567,8 @@ pub fn scan_etcd(
         "range_end": base64_encode(&prefix_range_end(prefix)),
     });
 
-    let resp = agent.post(&url)
+    let resp = agent
+        .post(&url)
         .set("Content-Type", "application/json")
         .send_string(&body.to_string());
 
@@ -514,19 +577,24 @@ pub fn scan_etcd(
         && let Ok(body) = r.into_string()
     {
         if let Ok(json) = serde_json::from_str::<serde_json::Value>(&body)
-            && let Some(kvs) = json.get("kvs").and_then(|k| k.as_array()) {
-                for kv in kvs {
-                    if let Some(key_b64) = kv.get("key").and_then(|k| k.as_str()) {
-                        let key = base64_decode(key_b64).unwrap_or_default();
-                        if let Some(val_b64) = kv.get("value").and_then(|v| v.as_str()) {
-                            let val = base64_decode(val_b64).unwrap_or_default();
-                            let vpath = std::path::PathBuf::from(format!("etcd:{key}"));
-                            findings.extend(scan_text(&val, &vpath, detectors));
-                        }
+            && let Some(kvs) = json.get("kvs").and_then(|k| k.as_array())
+        {
+            for kv in kvs {
+                if let Some(key_b64) = kv.get("key").and_then(|k| k.as_str()) {
+                    let key = base64_decode(key_b64).unwrap_or_default();
+                    if let Some(val_b64) = kv.get("value").and_then(|v| v.as_str()) {
+                        let val = base64_decode(val_b64).unwrap_or_default();
+                        let vpath = std::path::PathBuf::from(format!("etcd:{key}"));
+                        findings.extend(scan_text(&val, &vpath, detectors));
                     }
                 }
             }
-        findings.extend(scan_text(&body, &std::path::PathBuf::from("etcd:raw"), detectors));
+        }
+        findings.extend(scan_text(
+            &body,
+            &std::path::PathBuf::from("etcd:raw"),
+            detectors,
+        ));
     }
 
     Ok(findings)
@@ -580,8 +648,14 @@ pub fn scan_elasticsearch(
 ) -> Result<Vec<Finding>, SourceScanError2> {
     let agent = agent();
     let base = config.base_url.trim_end_matches('/');
-    let auth_header = config.api_key.as_ref().map(|k| ("Authorization".to_string(), format!("ApiKey {k}")));
-    let url = format!("{base}/{}/_search?size={}", config.index_pattern, config.max_docs);
+    let auth_header = config
+        .api_key
+        .as_ref()
+        .map(|k| ("Authorization".to_string(), format!("ApiKey {k}")));
+    let url = format!(
+        "{base}/{}/_search?size={}",
+        config.index_pattern, config.max_docs
+    );
     let resp = if let Some((k, v)) = &auth_header {
         agent.get(&url).set(k, v).call()
     } else {
@@ -593,7 +667,11 @@ pub fn scan_elasticsearch(
         && let Ok(body) = r.into_string()
     {
         // Scan the entire response (hits contain document sources)
-        findings.extend(scan_text(&body, &std::path::PathBuf::from(format!("elasticsearch:{}", config.index_pattern)), detectors));
+        findings.extend(scan_text(
+            &body,
+            &std::path::PathBuf::from(format!("elasticsearch:{}", config.index_pattern)),
+            detectors,
+        ));
     }
 
     Ok(findings)
@@ -643,7 +721,10 @@ pub fn scan_gcp_secret_manager(
     let project = &config.project_id;
 
     // List secrets
-    let url = format!("https://secretmanager.googleapis.com/v1/projects/{project}/secrets?pageSize={}", config.max_secrets);
+    let url = format!(
+        "https://secretmanager.googleapis.com/v1/projects/{project}/secrets?pageSize={}",
+        config.max_secrets
+    );
     let resp = agent.get(&url).set("Authorization", &auth).call();
 
     let mut findings = Vec::new();
@@ -651,24 +732,31 @@ pub fn scan_gcp_secret_manager(
         && let Ok(body) = r.into_string()
     {
         // Scan the secret names/metadata (not values — accessing values requires separate calls)
-        findings.extend(scan_text(&body, &std::path::PathBuf::from(format!("gcp-sm:{project}/secrets")), detectors));
+        findings.extend(scan_text(
+            &body,
+            &std::path::PathBuf::from(format!("gcp-sm:{project}/secrets")),
+            detectors,
+        ));
 
         // Try to access each secret's latest version
         if let Ok(json) = serde_json::from_str::<serde_json::Value>(&body)
-            && let Some(secrets) = json.get("secrets").and_then(|s| s.as_array()) {
-                for secret in secrets {
-                    if let Some(name) = secret.get("name").and_then(|n| n.as_str()) {
-                        let access_url = format!("https://secretmanager.googleapis.com/v1/{name}/versions/latest:access");
-                        let resp2 = agent.get(&access_url).set("Authorization", &auth).call();
-                        if let Ok(r2) = resp2
-                            && let Ok(body2) = r2.into_string()
-                        {
-                            let vpath = std::path::PathBuf::from(format!("gcp-sm:{name}"));
-                            findings.extend(scan_text(&body2, &vpath, detectors));
-                        }
+            && let Some(secrets) = json.get("secrets").and_then(|s| s.as_array())
+        {
+            for secret in secrets {
+                if let Some(name) = secret.get("name").and_then(|n| n.as_str()) {
+                    let access_url = format!(
+                        "https://secretmanager.googleapis.com/v1/{name}/versions/latest:access"
+                    );
+                    let resp2 = agent.get(&access_url).set("Authorization", &auth).call();
+                    if let Ok(r2) = resp2
+                        && let Ok(body2) = r2.into_string()
+                    {
+                        let vpath = std::path::PathBuf::from(format!("gcp-sm:{name}"));
+                        findings.extend(scan_text(&body2, &vpath, detectors));
                     }
                 }
             }
+        }
     }
 
     Ok(findings)
@@ -694,31 +782,39 @@ pub fn scan_azure_key_vault(
     let vault = config.vault_url.trim_end_matches('/');
 
     // List secrets
-    let url = format!("{vault}/secrets?api-version=7.4&maxresults={}", config.max_secrets);
+    let url = format!(
+        "{vault}/secrets?api-version=7.4&maxresults={}",
+        config.max_secrets
+    );
     let resp = agent.get(&url).set("Authorization", &auth).call();
 
     let mut findings = Vec::new();
     if let Ok(r) = resp
         && let Ok(body) = r.into_string()
     {
-        findings.extend(scan_text(&body, &std::path::PathBuf::from(format!("azure-kv:{vault}/secrets")), detectors));
+        findings.extend(scan_text(
+            &body,
+            &std::path::PathBuf::from(format!("azure-kv:{vault}/secrets")),
+            detectors,
+        ));
 
         // Try to get each secret value
         if let Ok(json) = serde_json::from_str::<serde_json::Value>(&body)
-            && let Some(secrets) = json.get("value").and_then(|s| s.as_array()) {
-                for secret in secrets {
-                    if let Some(id) = secret.get("id").and_then(|i| i.as_str()) {
-                        let get_url = format!("{id}?api-version=7.4");
-                        let resp2 = agent.get(&get_url).set("Authorization", &auth).call();
-                        if let Ok(r2) = resp2
-                            && let Ok(body2) = r2.into_string()
-                        {
-                            let vpath = std::path::PathBuf::from(format!("azure-kv:{id}"));
-                            findings.extend(scan_text(&body2, &vpath, detectors));
-                        }
+            && let Some(secrets) = json.get("value").and_then(|s| s.as_array())
+        {
+            for secret in secrets {
+                if let Some(id) = secret.get("id").and_then(|i| i.as_str()) {
+                    let get_url = format!("{id}?api-version=7.4");
+                    let resp2 = agent.get(&get_url).set("Authorization", &auth).call();
+                    if let Ok(r2) = resp2
+                        && let Ok(body2) = r2.into_string()
+                    {
+                        let vpath = std::path::PathBuf::from(format!("azure-kv:{id}"));
+                        findings.extend(scan_text(&body2, &vpath, detectors));
                     }
                 }
             }
+        }
     }
 
     Ok(findings)
@@ -753,24 +849,35 @@ pub fn scan_vault(
     if let Ok(r) = resp
         && let Ok(body) = r.into_string()
     {
-        findings.extend(scan_text(&body, &std::path::PathBuf::from(format!("vault:{mount}/list")), detectors));
+        findings.extend(scan_text(
+            &body,
+            &std::path::PathBuf::from(format!("vault:{mount}/list")),
+            detectors,
+        ));
 
         // Get each secret
         if let Ok(json) = serde_json::from_str::<serde_json::Value>(&body)
-            && let Some(keys) = json.get("data").and_then(|d| d.get("keys")).and_then(|k| k.as_array()) {
-                for key in keys.iter().take(config.max_paths) {
-                    if let Some(key_str) = key.as_str() {
-                        let get_url = format!("{base}/v1/{mount}/data/{key_str}");
-                        let resp2 = agent.get(&get_url).set("X-Vault-Token", &config.token).call();
-                        if let Ok(r2) = resp2
-                            && let Ok(body2) = r2.into_string()
-                        {
-                            let vpath = std::path::PathBuf::from(format!("vault:{mount}/{key_str}"));
-                            findings.extend(scan_text(&body2, &vpath, detectors));
-                        }
+            && let Some(keys) = json
+                .get("data")
+                .and_then(|d| d.get("keys"))
+                .and_then(|k| k.as_array())
+        {
+            for key in keys.iter().take(config.max_paths) {
+                if let Some(key_str) = key.as_str() {
+                    let get_url = format!("{base}/v1/{mount}/data/{key_str}");
+                    let resp2 = agent
+                        .get(&get_url)
+                        .set("X-Vault-Token", &config.token)
+                        .call();
+                    if let Ok(r2) = resp2
+                        && let Ok(body2) = r2.into_string()
+                    {
+                        let vpath = std::path::PathBuf::from(format!("vault:{mount}/{key_str}"));
+                        findings.extend(scan_text(&body2, &vpath, detectors));
                     }
                 }
             }
+        }
     }
 
     Ok(findings)
@@ -802,7 +909,11 @@ pub fn scan_doppler(
     if let Ok(r) = resp
         && let Ok(body) = r.into_string()
     {
-        findings.extend(scan_text(&body, &std::path::PathBuf::from("doppler:projects"), detectors));
+        findings.extend(scan_text(
+            &body,
+            &std::path::PathBuf::from("doppler:projects"),
+            detectors,
+        ));
     }
 
     // If project specified, get configs
@@ -812,17 +923,27 @@ pub fn scan_doppler(
         if let Ok(r) = resp
             && let Ok(body) = r.into_string()
         {
-            findings.extend(scan_text(&body, &std::path::PathBuf::from(format!("doppler:{project}/configs")), detectors));
+            findings.extend(scan_text(
+                &body,
+                &std::path::PathBuf::from(format!("doppler:{project}/configs")),
+                detectors,
+            ));
         }
 
         // Download config secrets
         let config_name = config.config_name.as_deref().unwrap_or("prd");
-        let url = format!("https://api.doppler.com/v3/configs/{config_name}/download?project={project}&format=json");
+        let url = format!(
+            "https://api.doppler.com/v3/configs/{config_name}/download?project={project}&format=json"
+        );
         let resp = agent.get(&url).set("Authorization", &auth).call();
         if let Ok(r) = resp
             && let Ok(body) = r.into_string()
         {
-            findings.extend(scan_text(&body, &std::path::PathBuf::from(format!("doppler:{project}/{config_name}/secrets")), detectors));
+            findings.extend(scan_text(
+                &body,
+                &std::path::PathBuf::from(format!("doppler:{project}/{config_name}/secrets")),
+                detectors,
+            ));
         }
     }
 
@@ -857,11 +978,13 @@ pub fn scan_1password(
         {
             serde_json::from_str::<serde_json::Value>(&body)
                 .ok()
-                .and_then(|v| v.as_array().map(|arr| {
-                    arr.iter().filter_map(|v| {
-                        v.get("id")?.as_str().map(String::from)
-                    }).collect()
-                }))
+                .and_then(|v| {
+                    v.as_array().map(|arr| {
+                        arr.iter()
+                            .filter_map(|v| v.get("id")?.as_str().map(String::from))
+                            .collect()
+                    })
+                })
                 .unwrap_or_default()
         } else {
             Vec::new()
@@ -870,12 +993,19 @@ pub fn scan_1password(
 
     let mut findings = Vec::new();
     for vid in &vaults {
-        let url = format!("https://my.1password.com/api/v1/vaults/{vid}/items?limit={}", config.max_items);
+        let url = format!(
+            "https://my.1password.com/api/v1/vaults/{vid}/items?limit={}",
+            config.max_items
+        );
         let resp = agent.get(&url).set("Authorization", &auth).call();
         if let Ok(r) = resp
             && let Ok(body) = r.into_string()
         {
-            findings.extend(scan_text(&body, &std::path::PathBuf::from(format!("1password:{vid}/items")), detectors));
+            findings.extend(scan_text(
+                &body,
+                &std::path::PathBuf::from(format!("1password:{vid}/items")),
+                detectors,
+            ));
         }
     }
 
@@ -898,14 +1028,24 @@ pub fn scan_lastpass(
 ) -> Result<Vec<Finding>, SourceScanError2> {
     let agent = agent();
     // LastPass REST API (via LastPass Shared Folders API)
-    let url = format!("https://lastpass.com/lmiapi/sharedFolders/{}/items", config.account_id);
-    let resp = agent.get(&url).set("Authorization", &format!("Bearer {}", config.api_key)).call();
+    let url = format!(
+        "https://lastpass.com/lmiapi/sharedFolders/{}/items",
+        config.account_id
+    );
+    let resp = agent
+        .get(&url)
+        .set("Authorization", &format!("Bearer {}", config.api_key))
+        .call();
 
     let mut findings = Vec::new();
     if let Ok(r) = resp
         && let Ok(body) = r.into_string()
     {
-        findings.extend(scan_text(&body, &std::path::PathBuf::from("lastpass:items"), detectors));
+        findings.extend(scan_text(
+            &body,
+            &std::path::PathBuf::from("lastpass:items"),
+            detectors,
+        ));
     }
 
     Ok(findings)
@@ -938,7 +1078,11 @@ pub fn scan_bitwarden(
     if let Ok(r) = resp
         && let Ok(body) = r.into_string()
     {
-        findings.extend(scan_text(&body, &std::path::PathBuf::from("bitwarden:sync"), detectors));
+        findings.extend(scan_text(
+            &body,
+            &std::path::PathBuf::from("bitwarden:sync"),
+            detectors,
+        ));
     }
 
     Ok(findings)
@@ -974,7 +1118,11 @@ pub fn scan_k8s_configmaps(
         && out.status.success()
     {
         let body = String::from_utf8_lossy(&out.stdout);
-        findings.extend(scan_text(&body, &std::path::PathBuf::from(format!("k8s-configmap:{ns}")), detectors));
+        findings.extend(scan_text(
+            &body,
+            &std::path::PathBuf::from(format!("k8s-configmap:{ns}")),
+            detectors,
+        ));
     }
 
     Ok(findings)
@@ -999,7 +1147,13 @@ pub fn scan_k8s_etcd(
 ) -> Result<Vec<Finding>, SourceScanError2> {
     // etcdctl get --prefix / --keys-only
     let mut cmd = std::process::Command::new("etcdctl");
-    cmd.args(["get", "--prefix", "/", "--limit", &config.max_keys.to_string()]);
+    cmd.args([
+        "get",
+        "--prefix",
+        "/",
+        "--limit",
+        &config.max_keys.to_string(),
+    ]);
     cmd.env("ETCDCTL_API", "3");
     cmd.env("ETCDCTL_ENDPOINTS", &config.etcd_endpoint);
     if let Some(ca) = &config.ca_cert {
@@ -1018,7 +1172,11 @@ pub fn scan_k8s_etcd(
         && out.status.success()
     {
         let body = String::from_utf8_lossy(&out.stdout);
-        findings.extend(scan_text(&body, &std::path::PathBuf::from("k8s-etcd:keys"), detectors));
+        findings.extend(scan_text(
+            &body,
+            &std::path::PathBuf::from("k8s-etcd:keys"),
+            detectors,
+        ));
     }
 
     Ok(findings)
@@ -1051,24 +1209,31 @@ pub fn scan_cloudflare_workers(
     if let Ok(r) = resp
         && let Ok(body) = r.into_string()
     {
-        findings.extend(scan_text(&body, &std::path::PathBuf::from(format!("cf-workers:{account}/scripts")), detectors));
+        findings.extend(scan_text(
+            &body,
+            &std::path::PathBuf::from(format!("cf-workers:{account}/scripts")),
+            detectors,
+        ));
 
         // Download each worker script
         if let Ok(json) = serde_json::from_str::<serde_json::Value>(&body)
-            && let Some(scripts) = json.get("result").and_then(|r| r.as_array()) {
-                for script in scripts.iter().take(config.max_workers) {
-                    if let Some(id) = script.get("id").and_then(|i| i.as_str()) {
-                        let download_url = format!("https://api.cloudflare.com/client/v4/accounts/{account}/workers/scripts/{id}/content");
-                        let resp2 = agent.get(&download_url).set("Authorization", &auth).call();
-                        if let Ok(r2) = resp2
-                            && let Ok(body2) = r2.into_string()
-                        {
-                            let vpath = std::path::PathBuf::from(format!("cf-workers:{account}/{id}"));
-                            findings.extend(scan_text(&body2, &vpath, detectors));
-                        }
+            && let Some(scripts) = json.get("result").and_then(|r| r.as_array())
+        {
+            for script in scripts.iter().take(config.max_workers) {
+                if let Some(id) = script.get("id").and_then(|i| i.as_str()) {
+                    let download_url = format!(
+                        "https://api.cloudflare.com/client/v4/accounts/{account}/workers/scripts/{id}/content"
+                    );
+                    let resp2 = agent.get(&download_url).set("Authorization", &auth).call();
+                    if let Ok(r2) = resp2
+                        && let Ok(body2) = r2.into_string()
+                    {
+                        let vpath = std::path::PathBuf::from(format!("cf-workers:{account}/{id}"));
+                        findings.extend(scan_text(&body2, &vpath, detectors));
                     }
                 }
             }
+        }
     }
 
     Ok(findings)
@@ -1095,18 +1260,24 @@ pub fn scan_vercel(
     let projects: Vec<String> = if let Some(pid) = &config.project_id {
         vec![pid.clone()]
     } else {
-        let url = format!("https://api.vercel.com/v9/projects?limit={}", config.max_projects);
+        let url = format!(
+            "https://api.vercel.com/v9/projects?limit={}",
+            config.max_projects
+        );
         let resp = agent.get(&url).set("Authorization", &auth).call();
         if let Ok(r) = resp
             && let Ok(body) = r.into_string()
         {
             serde_json::from_str::<serde_json::Value>(&body)
                 .ok()
-                .and_then(|v| v.get("projects").and_then(|p| p.as_array()).map(|arr| {
-                    arr.iter().filter_map(|p| {
-                        p.get("id")?.as_str().map(String::from)
-                    }).take(config.max_projects).collect()
-                }))
+                .and_then(|v| {
+                    v.get("projects").and_then(|p| p.as_array()).map(|arr| {
+                        arr.iter()
+                            .filter_map(|p| p.get("id")?.as_str().map(String::from))
+                            .take(config.max_projects)
+                            .collect()
+                    })
+                })
                 .unwrap_or_default()
         } else {
             Vec::new()
@@ -1120,7 +1291,11 @@ pub fn scan_vercel(
         if let Ok(r) = resp
             && let Ok(body) = r.into_string()
         {
-            findings.extend(scan_text(&body, &std::path::PathBuf::from(format!("vercel:{pid}/env")), detectors));
+            findings.extend(scan_text(
+                &body,
+                &std::path::PathBuf::from(format!("vercel:{pid}/env")),
+                detectors,
+            ));
         }
     }
 
@@ -1148,18 +1323,24 @@ pub fn scan_netlify(
     let sites: Vec<String> = if let Some(sid) = &config.site_id {
         vec![sid.clone()]
     } else {
-        let url = format!("https://api.netlify.com/api/v1/sites?per_page={}", config.max_sites);
+        let url = format!(
+            "https://api.netlify.com/api/v1/sites?per_page={}",
+            config.max_sites
+        );
         let resp = agent.get(&url).set("Authorization", &auth).call();
         if let Ok(r) = resp
             && let Ok(body) = r.into_string()
         {
             serde_json::from_str::<serde_json::Value>(&body)
                 .ok()
-                .and_then(|v| v.as_array().map(|arr| {
-                    arr.iter().filter_map(|s| {
-                        s.get("id")?.as_str().map(String::from)
-                    }).take(config.max_sites).collect()
-                }))
+                .and_then(|v| {
+                    v.as_array().map(|arr| {
+                        arr.iter()
+                            .filter_map(|s| s.get("id")?.as_str().map(String::from))
+                            .take(config.max_sites)
+                            .collect()
+                    })
+                })
                 .unwrap_or_default()
         } else {
             Vec::new()
@@ -1173,7 +1354,11 @@ pub fn scan_netlify(
         if let Ok(r) = resp
             && let Ok(body) = r.into_string()
         {
-            findings.extend(scan_text(&body, &std::path::PathBuf::from(format!("netlify:{sid}/env")), detectors));
+            findings.extend(scan_text(
+                &body,
+                &std::path::PathBuf::from(format!("netlify:{sid}/env")),
+                detectors,
+            ));
         }
     }
 
@@ -1199,13 +1384,16 @@ pub fn scan_railway(
 
     // Railway uses GraphQL API
     let query = if let Some(pid) = &config.project_id {
-        format!(r#"{{"query":"query {{ project(id: \"{pid}\") {{ environments {{ edges {{ node {{ id name variables {{ edges {{ node {{ name value }} }} }} }} }} }} }}"}}"#)
+        format!(
+            r#"{{"query":"query {{ project(id: \"{pid}\") {{ environments {{ edges {{ node {{ id name variables {{ edges {{ node {{ name value }} }} }} }} }} }} }}"}}"#
+        )
     } else {
         r#"{"query":"query { me { projects { edges { node { id name environments { edges { node { id name variables { edges { node { name value } } } } } } } } } } }"}"#.to_string()
     };
 
     let url = "https://backboard.railway.app/graphql/v2";
-    let resp = agent.post(url)
+    let resp = agent
+        .post(url)
         .set("Authorization", &auth)
         .set("Content-Type", "application/json")
         .send_string(&query);
@@ -1214,7 +1402,11 @@ pub fn scan_railway(
     if let Ok(r) = resp
         && let Ok(body) = r.into_string()
     {
-        findings.extend(scan_text(&body, &std::path::PathBuf::from("railway:env"), detectors));
+        findings.extend(scan_text(
+            &body,
+            &std::path::PathBuf::from("railway:env"),
+            detectors,
+        ));
     }
 
     Ok(findings)
@@ -1241,18 +1433,28 @@ pub fn scan_render(
     let services: Vec<String> = if let Some(sid) = &config.service_id {
         vec![sid.clone()]
     } else {
-        let url = format!("https://api.render.com/v1/services?limit={}", config.max_services);
-        let resp = agent.get(&url).set("Authorization", &auth).set("Accept", "application/json").call();
+        let url = format!(
+            "https://api.render.com/v1/services?limit={}",
+            config.max_services
+        );
+        let resp = agent
+            .get(&url)
+            .set("Authorization", &auth)
+            .set("Accept", "application/json")
+            .call();
         if let Ok(r) = resp
             && let Ok(body) = r.into_string()
         {
             serde_json::from_str::<serde_json::Value>(&body)
                 .ok()
-                .and_then(|v| v.as_array().map(|arr| {
-                    arr.iter().filter_map(|s| {
-                        s.get("service")?.get("id")?.as_str().map(String::from)
-                    }).take(config.max_services).collect()
-                }))
+                .and_then(|v| {
+                    v.as_array().map(|arr| {
+                        arr.iter()
+                            .filter_map(|s| s.get("service")?.get("id")?.as_str().map(String::from))
+                            .take(config.max_services)
+                            .collect()
+                    })
+                })
                 .unwrap_or_default()
         } else {
             Vec::new()
@@ -1262,11 +1464,19 @@ pub fn scan_render(
     let mut findings = Vec::new();
     for sid in &services {
         let url = format!("https://api.render.com/v1/services/{sid}/envvars");
-        let resp = agent.get(&url).set("Authorization", &auth).set("Accept", "application/json").call();
+        let resp = agent
+            .get(&url)
+            .set("Authorization", &auth)
+            .set("Accept", "application/json")
+            .call();
         if let Ok(r) = resp
             && let Ok(body) = r.into_string()
         {
-            findings.extend(scan_text(&body, &std::path::PathBuf::from(format!("render:{sid}/envvars")), detectors));
+            findings.extend(scan_text(
+                &body,
+                &std::path::PathBuf::from(format!("render:{sid}/envvars")),
+                detectors,
+            ));
         }
     }
 
@@ -1301,11 +1511,14 @@ pub fn scan_fly_io(
         {
             serde_json::from_str::<serde_json::Value>(&body)
                 .ok()
-                .and_then(|v| v.as_array().map(|arr| {
-                    arr.iter().filter_map(|a| {
-                        a.get("Name")?.as_str().map(String::from)
-                    }).take(config.max_apps).collect()
-                }))
+                .and_then(|v| {
+                    v.as_array().map(|arr| {
+                        arr.iter()
+                            .filter_map(|a| a.get("Name")?.as_str().map(String::from))
+                            .take(config.max_apps)
+                            .collect()
+                    })
+                })
                 .unwrap_or_default()
         } else {
             Vec::new()
@@ -1320,7 +1533,11 @@ pub fn scan_fly_io(
         if let Ok(r) = resp
             && let Ok(body) = r.into_string()
         {
-            findings.extend(scan_text(&body, &std::path::PathBuf::from(format!("fly-io:{app}/secrets")), detectors));
+            findings.extend(scan_text(
+                &body,
+                &std::path::PathBuf::from(format!("fly-io:{app}/secrets")),
+                detectors,
+            ));
         }
     }
 
@@ -1355,11 +1572,14 @@ pub fn scan_supabase_env(
         {
             serde_json::from_str::<serde_json::Value>(&body)
                 .ok()
-                .and_then(|v| v.as_array().map(|arr| {
-                    arr.iter().filter_map(|p| {
-                        p.get("id")?.as_str().map(String::from)
-                    }).take(config.max_projects).collect()
-                }))
+                .and_then(|v| {
+                    v.as_array().map(|arr| {
+                        arr.iter()
+                            .filter_map(|p| p.get("id")?.as_str().map(String::from))
+                            .take(config.max_projects)
+                            .collect()
+                    })
+                })
                 .unwrap_or_default()
         } else {
             Vec::new()
@@ -1374,7 +1594,11 @@ pub fn scan_supabase_env(
         if let Ok(r) = resp
             && let Ok(body) = r.into_string()
         {
-            findings.extend(scan_text(&body, &std::path::PathBuf::from(format!("supabase:{pid}/api-keys")), detectors));
+            findings.extend(scan_text(
+                &body,
+                &std::path::PathBuf::from(format!("supabase:{pid}/api-keys")),
+                detectors,
+            ));
         }
     }
 
@@ -1400,35 +1624,52 @@ pub fn scan_github_gists(
     let auth = format!("token {}", config.api_token);
 
     let gists: Vec<String> = if let Some(user) = &config.username {
-        let url = format!("https://api.github.com/users/{user}/gists?per_page={}", config.max_gists);
-        let resp = agent.get(&url).set("Authorization", &auth).set("User-Agent", "pledgeguard").call();
+        let url = format!(
+            "https://api.github.com/users/{user}/gists?per_page={}",
+            config.max_gists
+        );
+        let resp = agent
+            .get(&url)
+            .set("Authorization", &auth)
+            .set("User-Agent", "pledgeguard")
+            .call();
         if let Ok(r) = resp
             && let Ok(body) = r.into_string()
         {
             serde_json::from_str::<serde_json::Value>(&body)
                 .ok()
-                .and_then(|v| v.as_array().map(|arr| {
-                    arr.iter().filter_map(|g| {
-                        g.get("id")?.as_str().map(String::from)
-                    }).take(config.max_gists).collect()
-                }))
+                .and_then(|v| {
+                    v.as_array().map(|arr| {
+                        arr.iter()
+                            .filter_map(|g| g.get("id")?.as_str().map(String::from))
+                            .take(config.max_gists)
+                            .collect()
+                    })
+                })
                 .unwrap_or_default()
         } else {
             Vec::new()
         }
     } else {
         let url = format!("https://api.github.com/gists?per_page={}", config.max_gists);
-        let resp = agent.get(&url).set("Authorization", &auth).set("User-Agent", "pledgeguard").call();
+        let resp = agent
+            .get(&url)
+            .set("Authorization", &auth)
+            .set("User-Agent", "pledgeguard")
+            .call();
         if let Ok(r) = resp
             && let Ok(body) = r.into_string()
         {
             serde_json::from_str::<serde_json::Value>(&body)
                 .ok()
-                .and_then(|v| v.as_array().map(|arr| {
-                    arr.iter().filter_map(|g| {
-                        g.get("id")?.as_str().map(String::from)
-                    }).take(config.max_gists).collect()
-                }))
+                .and_then(|v| {
+                    v.as_array().map(|arr| {
+                        arr.iter()
+                            .filter_map(|g| g.get("id")?.as_str().map(String::from))
+                            .take(config.max_gists)
+                            .collect()
+                    })
+                })
                 .unwrap_or_default()
         } else {
             Vec::new()
@@ -1438,11 +1679,19 @@ pub fn scan_github_gists(
     let mut findings = Vec::new();
     for gid in &gists {
         let url = format!("https://api.github.com/gists/{gid}");
-        let resp = agent.get(&url).set("Authorization", &auth).set("User-Agent", "pledgeguard").call();
+        let resp = agent
+            .get(&url)
+            .set("Authorization", &auth)
+            .set("User-Agent", "pledgeguard")
+            .call();
         if let Ok(r) = resp
             && let Ok(body) = r.into_string()
         {
-            findings.extend(scan_text(&body, &std::path::PathBuf::from(format!("github-gist:{gid}")), detectors));
+            findings.extend(scan_text(
+                &body,
+                &std::path::PathBuf::from(format!("github-gist:{gid}")),
+                detectors,
+            ));
         }
     }
 
@@ -1473,7 +1722,8 @@ pub fn scan_github_issues(
     let mut findings = Vec::new();
 
     // Issues
-    let url = format!("https://api.github.com/repos/{owner}/{repo}/issues?state=all&per_page={max}");
+    let url =
+        format!("https://api.github.com/repos/{owner}/{repo}/issues?state=all&per_page={max}");
     findings.extend(fetch_and_scan(
         &url,
         Some(("Authorization", &auth)),
@@ -1533,31 +1783,51 @@ pub fn scan_github_actions_logs(
     let repo = &config.repo;
 
     // List workflow runs
-    let url = format!("https://api.github.com/repos/{owner}/{repo}/actions/runs?per_page={}", config.max_runs);
-    let resp = agent.get(&url).set("Authorization", &auth).set("User-Agent", "pledgeguard").call();
+    let url = format!(
+        "https://api.github.com/repos/{owner}/{repo}/actions/runs?per_page={}",
+        config.max_runs
+    );
+    let resp = agent
+        .get(&url)
+        .set("Authorization", &auth)
+        .set("User-Agent", "pledgeguard")
+        .call();
 
     let mut findings = Vec::new();
     if let Ok(r) = resp
         && let Ok(body) = r.into_string()
     {
-        findings.extend(scan_text(&body, &std::path::PathBuf::from(format!("github-actions:{owner}/{repo}/runs")), detectors));
+        findings.extend(scan_text(
+            &body,
+            &std::path::PathBuf::from(format!("github-actions:{owner}/{repo}/runs")),
+            detectors,
+        ));
 
         // Get logs for each run
         if let Ok(json) = serde_json::from_str::<serde_json::Value>(&body)
-            && let Some(runs) = json.get("workflow_runs").and_then(|r| r.as_array()) {
-                for run in runs.iter().take(config.max_runs) {
-                    if let Some(run_id) = run.get("id").and_then(|i| i.as_u64()) {
-                        let logs_url = format!("https://api.github.com/repos/{owner}/{repo}/actions/runs/{run_id}/logs");
-                        let resp2 = agent.get(&logs_url).set("Authorization", &auth).set("User-Agent", "pledgeguard").call();
-                        if let Ok(r2) = resp2
-                            && let Ok(body2) = r2.into_string()
-                        {
-                            let vpath = std::path::PathBuf::from(format!("github-actions:{owner}/{repo}/runs/{run_id}/logs"));
-                            findings.extend(scan_text(&body2, &vpath, detectors));
-                        }
+            && let Some(runs) = json.get("workflow_runs").and_then(|r| r.as_array())
+        {
+            for run in runs.iter().take(config.max_runs) {
+                if let Some(run_id) = run.get("id").and_then(|i| i.as_u64()) {
+                    let logs_url = format!(
+                        "https://api.github.com/repos/{owner}/{repo}/actions/runs/{run_id}/logs"
+                    );
+                    let resp2 = agent
+                        .get(&logs_url)
+                        .set("Authorization", &auth)
+                        .set("User-Agent", "pledgeguard")
+                        .call();
+                    if let Ok(r2) = resp2
+                        && let Ok(body2) = r2.into_string()
+                    {
+                        let vpath = std::path::PathBuf::from(format!(
+                            "github-actions:{owner}/{repo}/runs/{run_id}/logs"
+                        ));
+                        findings.extend(scan_text(&body2, &vpath, detectors));
                     }
                 }
             }
+        }
     }
 
     Ok(findings)
@@ -1589,11 +1859,21 @@ pub fn scan_gitlab_issues(
     if let Some(pid) = &config.project_id {
         // Issues
         let url = format!("{base}/api/v4/projects/{pid}/issues?per_page={max}");
-        findings.extend(fetch_and_scan(&url, Some(("Authorization", &auth)), &std::path::PathBuf::from(format!("gitlab-issues:{pid}")), detectors));
+        findings.extend(fetch_and_scan(
+            &url,
+            Some(("Authorization", &auth)),
+            &std::path::PathBuf::from(format!("gitlab-issues:{pid}")),
+            detectors,
+        ));
 
         // MRs
         let url = format!("{base}/api/v4/projects/{pid}/merge_requests?per_page={max}");
-        findings.extend(fetch_and_scan(&url, Some(("Authorization", &auth)), &std::path::PathBuf::from(format!("gitlab-mrs:{pid}")), detectors));
+        findings.extend(fetch_and_scan(
+            &url,
+            Some(("Authorization", &auth)),
+            &std::path::PathBuf::from(format!("gitlab-mrs:{pid}")),
+            detectors,
+        ));
     } else {
         // List all projects
         let url = format!("{base}/api/v4/projects?per_page=20&membership=true");
@@ -1601,17 +1881,28 @@ pub fn scan_gitlab_issues(
         if let Ok(r) = resp
             && let Ok(body) = r.into_string()
             && let Ok(json) = serde_json::from_str::<serde_json::Value>(&body)
-                && let Some(projects) = json.as_array() {
-                    for proj in projects.iter().take(20) {
-                        if let Some(pid) = proj.get("id").and_then(|i| i.as_u64()) {
-                            let url = format!("{base}/api/v4/projects/{pid}/issues?per_page={max}");
-                            findings.extend(fetch_and_scan(&url, Some(("Authorization", &auth)), &std::path::PathBuf::from(format!("gitlab-issues:{pid}")), detectors));
+            && let Some(projects) = json.as_array()
+        {
+            for proj in projects.iter().take(20) {
+                if let Some(pid) = proj.get("id").and_then(|i| i.as_u64()) {
+                    let url = format!("{base}/api/v4/projects/{pid}/issues?per_page={max}");
+                    findings.extend(fetch_and_scan(
+                        &url,
+                        Some(("Authorization", &auth)),
+                        &std::path::PathBuf::from(format!("gitlab-issues:{pid}")),
+                        detectors,
+                    ));
 
-                            let url = format!("{base}/api/v4/projects/{pid}/merge_requests?per_page={max}");
-                            findings.extend(fetch_and_scan(&url, Some(("Authorization", &auth)), &std::path::PathBuf::from(format!("gitlab-mrs:{pid}")), detectors));
-                        }
-                    }
+                    let url = format!("{base}/api/v4/projects/{pid}/merge_requests?per_page={max}");
+                    findings.extend(fetch_and_scan(
+                        &url,
+                        Some(("Authorization", &auth)),
+                        &std::path::PathBuf::from(format!("gitlab-mrs:{pid}")),
+                        detectors,
+                    ));
                 }
+            }
+        }
     }
 
     Ok(findings)
@@ -1639,31 +1930,41 @@ pub fn scan_gitlab_ci_logs(
     let pid = &config.project_id;
 
     // List jobs
-    let url = format!("{base}/api/v4/projects/{pid}/jobs?per_page={}", config.max_jobs);
+    let url = format!(
+        "{base}/api/v4/projects/{pid}/jobs?per_page={}",
+        config.max_jobs
+    );
     let resp = agent.get(&url).set("Authorization", &auth).call();
 
     let mut findings = Vec::new();
     if let Ok(r) = resp
         && let Ok(body) = r.into_string()
     {
-        findings.extend(scan_text(&body, &std::path::PathBuf::from(format!("gitlab-ci:{pid}/jobs")), detectors));
+        findings.extend(scan_text(
+            &body,
+            &std::path::PathBuf::from(format!("gitlab-ci:{pid}/jobs")),
+            detectors,
+        ));
 
         // Get trace/log for each job
         if let Ok(json) = serde_json::from_str::<serde_json::Value>(&body)
-            && let Some(jobs) = json.as_array() {
-                for job in jobs.iter().take(config.max_jobs) {
-                    if let Some(job_id) = job.get("id").and_then(|i| i.as_u64()) {
-                        let trace_url = format!("{base}/api/v4/projects/{pid}/jobs/{job_id}/trace");
-                        let resp2 = agent.get(&trace_url).set("Authorization", &auth).call();
-                        if let Ok(r2) = resp2
-                            && let Ok(body2) = r2.into_string()
-                        {
-                            let vpath = std::path::PathBuf::from(format!("gitlab-ci:{pid}/jobs/{job_id}/trace"));
-                            findings.extend(scan_text(&body2, &vpath, detectors));
-                        }
+            && let Some(jobs) = json.as_array()
+        {
+            for job in jobs.iter().take(config.max_jobs) {
+                if let Some(job_id) = job.get("id").and_then(|i| i.as_u64()) {
+                    let trace_url = format!("{base}/api/v4/projects/{pid}/jobs/{job_id}/trace");
+                    let resp2 = agent.get(&trace_url).set("Authorization", &auth).call();
+                    if let Ok(r2) = resp2
+                        && let Ok(body2) = r2.into_string()
+                    {
+                        let vpath = std::path::PathBuf::from(format!(
+                            "gitlab-ci:{pid}/jobs/{job_id}/trace"
+                        ));
+                        findings.extend(scan_text(&body2, &vpath, detectors));
                     }
                 }
             }
+        }
     }
 
     Ok(findings)
@@ -1689,12 +1990,19 @@ pub fn scan_discord(
     let mut findings = Vec::new();
 
     for cid in &config.channel_ids {
-        let url = format!("https://discord.com/api/v10/channels/{cid}/messages?limit={}", config.max_messages);
+        let url = format!(
+            "https://discord.com/api/v10/channels/{cid}/messages?limit={}",
+            config.max_messages
+        );
         let resp = agent.get(&url).set("Authorization", &auth).call();
         if let Ok(r) = resp
             && let Ok(body) = r.into_string()
         {
-            findings.extend(scan_text(&body, &std::path::PathBuf::from(format!("discord:{cid}/messages")), detectors));
+            findings.extend(scan_text(
+                &body,
+                &std::path::PathBuf::from(format!("discord:{cid}/messages")),
+                detectors,
+            ));
         }
     }
 
@@ -1723,12 +2031,19 @@ pub fn scan_mattermost(
     let mut findings = Vec::new();
 
     if let Some(cid) = &config.channel_id {
-        let url = format!("{base}/api/v4/channels/{cid}/posts?per_page={}", config.max_posts);
+        let url = format!(
+            "{base}/api/v4/channels/{cid}/posts?per_page={}",
+            config.max_posts
+        );
         let resp = agent.get(&url).set("Authorization", &auth).call();
         if let Ok(r) = resp
             && let Ok(body) = r.into_string()
         {
-            findings.extend(scan_text(&body, &std::path::PathBuf::from(format!("mattermost:{cid}/posts")), detectors));
+            findings.extend(scan_text(
+                &body,
+                &std::path::PathBuf::from(format!("mattermost:{cid}/posts")),
+                detectors,
+            ));
         }
     } else {
         // List channels for the team
@@ -1737,7 +2052,11 @@ pub fn scan_mattermost(
         if let Ok(r) = resp
             && let Ok(body) = r.into_string()
         {
-            findings.extend(scan_text(&body, &std::path::PathBuf::from("mattermost:channels"), detectors));
+            findings.extend(scan_text(
+                &body,
+                &std::path::PathBuf::from("mattermost:channels"),
+                detectors,
+            ));
         }
     }
 
@@ -1784,7 +2103,8 @@ fn base64_encode(input: &[u8]) -> String {
 /// Simple base64 decoding.
 fn base64_decode(input: &str) -> Result<String, String> {
     use base64::{Engine, engine::general_purpose::STANDARD};
-    STANDARD.decode(input)
+    STANDARD
+        .decode(input)
         .map_err(|e| e.to_string())
         .and_then(|bytes| String::from_utf8(bytes).map_err(|e| e.to_string()))
 }
@@ -1843,7 +2163,11 @@ mod tests {
     fn test_scan_text_finds_secrets() {
         let detectors = crate::detectors::builtin_detectors();
         let path = std::path::PathBuf::from("test://source");
-        let findings = scan_text("aws_access_key_id = AKIAIOSFODNN7EXAMPLE", &path, &detectors);
+        let findings = scan_text(
+            "aws_access_key_id = AKIAIOSFODNN7EXAMPLE",
+            &path,
+            &detectors,
+        );
         assert!(!findings.is_empty());
     }
 

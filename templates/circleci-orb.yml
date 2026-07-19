@@ -1,0 +1,47 @@
+version: 2.1
+
+# PledgeGuard CircleCI Orb
+# Usage in your config.yml:
+#   orbs:
+#     pledgeguard: pledgeandgrow/pledgeguard@1.0.0
+#   jobs:
+#     scan:
+#       executor: pledgeguard/default
+#       steps:
+#         - checkout
+#         - pledgeguard/scan:
+#             path: .
+#             fail-on-findings: true
+
+commands:
+  scan:
+    description: "Scan for secrets with PledgeGuard"
+    parameters:
+      path:
+        type: string
+        default: "."
+      fail-on-findings:
+        type: boolean
+        default: true
+      format:
+        type: string
+        default: "sarif"
+    steps:
+      - run:
+          name: Install PledgeGuard
+          command: cargo install pledgeguard
+      - run:
+          name: Run PledgeGuard scan
+          command: |
+            pledgeguard scan <<parameters.path>> \
+              --format <<parameters.format>> \
+              --report-file pledgeguard-report.<<parameters.format>> \
+              $([[ <<parameters.fail-on-findings>> == true ]] && echo "--fail-on-findings")
+      - store_artifacts:
+          path: pledgeguard-report.<<parameters.format>>
+
+executors:
+  default:
+    description: "Rust executor for PledgeGuard"
+    docker:
+      - image: rust:latest

@@ -1,0 +1,45 @@
+# cargo-deny configuration (goal 462)
+# Run: cargo deny check licenses
+
+[licenses]
+# Allow common permissive licenses
+allow = [
+    "MIT",
+    "Apache-2.0",
+    "Apache-2.0 WITH LLVM-exception",
+    "BSD-2-Clause",
+    "BSD-3-Clause",
+    "ISC",
+    "Unicode-DFS-2016",
+    "Unicode-3.0",
+    "Zlib",
+    "CC0-1.0",
+    "0BSD",
+    "Unlicense",
+]
+
+# Deny copyleft licenses by default
+deny = [
+    "GPL-2.0",
+    "GPL-3.0",
+    "AGPL-3.0",
+    "LGPL-2.0",
+    "LGPL-2.1",
+    "LGPL-3.0",
+]
+
+# Confidence threshold for license detection
+confidence-threshold = 0.8
+
+[advisories]
+# Check for known vulnerabilities
+vulnerability = "deny"
+unmaintained = "warn"
+yanked = "deny"
+notice = "warn"
+
+[bans]
+# Warn on duplicate versions
+multiple-versions = "warn"
+# Deny wildcard dependencies
+wildcards = "deny"

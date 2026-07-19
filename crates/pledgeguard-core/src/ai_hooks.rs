@@ -48,7 +48,8 @@ pub fn cursor_config() -> String {
     ]
   }
 }
-"#.to_string()
+"#
+    .to_string()
 }
 
 /// Returns the Claude Code pre-tool hook script.
@@ -57,7 +58,9 @@ pub fn cursor_config() -> String {
 /// bash command, etc.). The hook receives the tool input on stdin.
 pub fn claude_code_hook() -> String {
     let mut s = String::from(HOOK_HEADER);
-    s.push_str("# Claude Code pre-tool hook: scan tool inputs (commands, file contents) for secrets.\n");
+    s.push_str(
+        "# Claude Code pre-tool hook: scan tool inputs (commands, file contents) for secrets.\n",
+    );
     s.push_str("# If secrets are found, the tool execution is blocked.\n");
     s.push_str("pledgeguard scan - --fail-on-findings --format json 2>/dev/null\n");
     s.push_str("exit $?\n");
@@ -76,7 +79,8 @@ pub fn claude_code_config() -> String {
     ]
   }
 }
-"#.to_string()
+"#
+    .to_string()
 }
 
 /// Returns the GitHub Copilot pre-suggestion hook script.
@@ -104,7 +108,8 @@ pub fn copilot_config() -> String {
     ]
   }
 }
-"#.to_string()
+"#
+    .to_string()
 }
 
 /// Returns the OpenAI Codex pre-execution hook script.
@@ -132,7 +137,8 @@ pub fn codex_config() -> String {
     ]
   }
 }
-"#.to_string()
+"#
+    .to_string()
 }
 
 /// All supported AI tools.
@@ -208,7 +214,12 @@ impl AiTool {
 
     /// Returns all supported tools.
     pub fn all() -> &'static [AiTool] {
-        &[AiTool::Cursor, AiTool::ClaudeCode, AiTool::Copilot, AiTool::Codex]
+        &[
+            AiTool::Cursor,
+            AiTool::ClaudeCode,
+            AiTool::Copilot,
+            AiTool::Codex,
+        ]
     }
 }
 

@@ -331,7 +331,9 @@ impl PluginMarketplace {
             .filter(|p| {
                 p.name.to_lowercase().contains(&query_lower)
                     || p.description.to_lowercase().contains(&query_lower)
-                    || p.tags.iter().any(|t| t.to_lowercase().contains(&query_lower))
+                    || p.tags
+                        .iter()
+                        .any(|t| t.to_lowercase().contains(&query_lower))
             })
             .collect()
     }
@@ -442,7 +444,10 @@ impl RuleConditions {
                 .extension()
                 .and_then(|e| e.to_str())
                 .map(|s| s.to_lowercase());
-            if !ext.map(|e| self.file_extensions.iter().any(|f| f.to_lowercase() == e)).unwrap_or(false) {
+            if !ext
+                .map(|e| self.file_extensions.iter().any(|f| f.to_lowercase() == e))
+                .unwrap_or(false)
+            {
                 return false;
             }
         }
@@ -684,10 +689,7 @@ pub struct LookaheadRule {
 
 impl LookaheadRule {
     /// Create a new lookahead rule.
-    pub fn new(
-        pattern: &str,
-        lookaheads: &[&str],
-    ) -> Result<Self, regex::Error> {
+    pub fn new(pattern: &str, lookaheads: &[&str]) -> Result<Self, regex::Error> {
         let pattern = regex::Regex::new(pattern)?;
         let neg: Vec<regex::Regex> = lookaheads
             .iter()
@@ -752,24 +754,23 @@ impl CaptureTransform {
     pub fn apply(&self, text: &str) -> String {
         match &self.transform {
             Transform::None => text.to_string(),
-            Transform::Base64Decode => {
-                text.to_string()
-            }
-            Transform::UrlDecode => {
-                text.replace("%20", " ")
-                    .replace("%3A", ":")
-                    .replace("%2F", "/")
-                    .replace("%3D", "=")
-                    .replace("%26", "&")
-                    .replace("%3F", "?")
-            }
+            Transform::Base64Decode => text.to_string(),
+            Transform::UrlDecode => text
+                .replace("%20", " ")
+                .replace("%3A", ":")
+                .replace("%2F", "/")
+                .replace("%3D", "=")
+                .replace("%26", "&")
+                .replace("%3F", "?"),
             Transform::TrimWhitespace => text.trim().to_string(),
-            Transform::RemovePrefix(prefix) => {
-                text.strip_prefix(prefix.as_str()).unwrap_or(text).to_string()
-            }
-            Transform::RemoveSuffix(suffix) => {
-                text.strip_suffix(suffix.as_str()).unwrap_or(text).to_string()
-            }
+            Transform::RemovePrefix(prefix) => text
+                .strip_prefix(prefix.as_str())
+                .unwrap_or(text)
+                .to_string(),
+            Transform::RemoveSuffix(suffix) => text
+                .strip_suffix(suffix.as_str())
+                .unwrap_or(text)
+                .to_string(),
             Transform::Uppercase => text.to_uppercase(),
             Transform::Lowercase => text.to_lowercase(),
         }
@@ -856,7 +857,10 @@ pub fn test_rule(pattern: &regex::Regex, test_cases: &[RuleTestCase]) -> Vec<Rul
             let message = if passed {
                 "PASS".to_string()
             } else {
-                format!("FAIL: expected match={}, got match={}", tc.should_match, actual)
+                format!(
+                    "FAIL: expected match={}, got match={}",
+                    tc.should_match, actual
+                )
             };
             RuleTestResult {
                 test_case: tc.clone(),
@@ -900,7 +904,9 @@ pub fn generate_rule_docs(rules: &[DocRule]) -> String {
             rule.description,
             rule.severity,
             rule.pattern.replace('|', "\\|"),
-            rule.entropy.map(|e| format!("{e}")).unwrap_or("-".to_string()),
+            rule.entropy
+                .map(|e| format!("{e}"))
+                .unwrap_or("-".to_string()),
             rule.path_filter.as_deref().unwrap_or("-"),
         ));
     }
@@ -1064,7 +1070,10 @@ mod tests {
         let minimal = RuleProfile::Minimal;
         assert!(minimal.rule_ids().len() < cloud.rule_ids().len());
 
-        assert_eq!(RuleProfile::from_profile_str("cloud"), Some(RuleProfile::Cloud));
+        assert_eq!(
+            RuleProfile::from_profile_str("cloud"),
+            Some(RuleProfile::Cloud)
+        );
         assert_eq!(RuleProfile::from_profile_str("invalid"), None);
     }
 
@@ -1086,7 +1095,10 @@ mod tests {
     fn test_severity_override() {
         let mut overrides = HashMap::new();
         overrides.insert("aws-access-key-id".to_string(), Severity::Critical);
-        assert_eq!(overrides.get("aws-access-key-id"), Some(&Severity::Critical));
+        assert_eq!(
+            overrides.get("aws-access-key-id"),
+            Some(&Severity::Critical)
+        );
     }
 
     #[test]
@@ -1137,11 +1149,7 @@ mod tests {
 
     #[test]
     fn test_lookahead_rule() {
-        let rule = LookaheadRule::new(
-            "AKIA[0-9A-Z]{16}",
-            &["EXAMPLE"],
-        )
-        .unwrap();
+        let rule = LookaheadRule::new("AKIA[0-9A-Z]{16}", &["EXAMPLE"]).unwrap();
         let results = rule.find_matches("key = AKIAIOSFODNN7TGCABCD1");
         assert!(!results.is_empty());
         // EXAMPLE appears after the match, so it should be blocked.

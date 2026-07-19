@@ -87,7 +87,9 @@ pub enum ConfigError {
     Parse(#[from] toml::de::Error),
     #[error("invalid regex in rule '{rule_id}': {error}")]
     InvalidRegex { rule_id: String, error: String },
-    #[error("invalid severity '{severity}' in rule '{rule_id}'; expected low, medium, high, or critical")]
+    #[error(
+        "invalid severity '{severity}' in rule '{rule_id}'; expected low, medium, high, or critical"
+    )]
     InvalidSeverity { rule_id: String, severity: String },
     #[error("invalid path regex in rule '{rule_id}': {error}")]
     InvalidPathRegex { rule_id: String, error: String },
@@ -152,10 +154,11 @@ fn config_to_detectors_inner(
     let mut detectors: Vec<Box<dyn Detector>> = Vec::new();
 
     for rule in rules {
-        let severity = parse_severity(&rule.severity).ok_or_else(|| ConfigError::InvalidSeverity {
-            rule_id: rule.id.clone(),
-            severity: rule.severity.clone(),
-        })?;
+        let severity =
+            parse_severity(&rule.severity).ok_or_else(|| ConfigError::InvalidSeverity {
+                rule_id: rule.id.clone(),
+                severity: rule.severity.clone(),
+            })?;
 
         let regex = regex::Regex::new(&rule.pattern).map_err(|e| ConfigError::InvalidRegex {
             rule_id: rule.id.clone(),
@@ -179,10 +182,11 @@ fn config_to_detectors_inner(
         }
 
         if let Some(ref path_pattern) = rule.path {
-            let path_re = regex::Regex::new(path_pattern).map_err(|e| ConfigError::InvalidPathRegex {
-                rule_id: rule.id.clone(),
-                error: e.to_string(),
-            })?;
+            let path_re =
+                regex::Regex::new(path_pattern).map_err(|e| ConfigError::InvalidPathRegex {
+                    rule_id: rule.id.clone(),
+                    error: e.to_string(),
+                })?;
             detector = detector.with_path_filter(path_re);
         }
 

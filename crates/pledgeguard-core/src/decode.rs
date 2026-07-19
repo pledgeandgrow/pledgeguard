@@ -51,28 +51,28 @@ pub fn decode_and_scan(
             if findings.is_empty()
                 && let Some(decoded2) = try_base64_decode(decoded_str)
             {
-                    let decoded2_str = String::from_utf8_lossy(&decoded2);
-                    let decoded2_str: &str = &decoded2_str;
-                    if is_printable_text(decoded2_str) && decoded2_str.len() >= 8 {
-                        for detector in detectors {
-                            let matches: SmallVec<_> = detector.scan_line(decoded2_str);
-                            for m in matches {
-                                findings.push(Finding {
-                                    rule_id: detector.id().to_string(),
-                                    description: detector.description().to_string(),
-                                    severity: detector.severity(),
-                                    path: path.to_path_buf(),
-                                    line,
-                                    column: column + m.start,
-                                    matched: m.text,
-                                    context: format!("[base64-decoded x2] {decoded2_str}"),
-                                    commit: None,
-                                    likely_false_positive: false,
-                                    verification: None,
-                                });
-                            }
+                let decoded2_str = String::from_utf8_lossy(&decoded2);
+                let decoded2_str: &str = &decoded2_str;
+                if is_printable_text(decoded2_str) && decoded2_str.len() >= 8 {
+                    for detector in detectors {
+                        let matches: SmallVec<_> = detector.scan_line(decoded2_str);
+                        for m in matches {
+                            findings.push(Finding {
+                                rule_id: detector.id().to_string(),
+                                description: detector.description().to_string(),
+                                severity: detector.severity(),
+                                path: path.to_path_buf(),
+                                line,
+                                column: column + m.start,
+                                matched: m.text,
+                                context: format!("[base64-decoded x2] {decoded2_str}"),
+                                commit: None,
+                                likely_false_positive: false,
+                                verification: None,
+                            });
                         }
                     }
+                }
             }
         }
     }

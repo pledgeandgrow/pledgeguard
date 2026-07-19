@@ -30,23 +30,46 @@ pub fn to_html(findings: &[Finding]) -> String {
     out.push_str(".sev-high { background: #fd7e14; color: white; padding: 2px 8px; border-radius: 4px; font-size: 0.85rem; }\n");
     out.push_str(".sev-medium { background: #ffc107; color: #333; padding: 2px 8px; border-radius: 4px; font-size: 0.85rem; }\n");
     out.push_str(".sev-low { background: #28a745; color: white; padding: 2px 8px; border-radius: 4px; font-size: 0.85rem; }\n");
-    out.push_str("code { background: #f0f0f0; padding: 2px 6px; border-radius: 3px; font-size: 0.9rem; }\n");
+    out.push_str(
+        "code { background: #f0f0f0; padding: 2px 6px; border-radius: 3px; font-size: 0.9rem; }\n",
+    );
     out.push_str("</style>\n</head>\n<body>\n");
 
     // Summary
-    let critical = findings.iter().filter(|f| f.severity == crate::finding::Severity::Critical).count();
-    let high = findings.iter().filter(|f| f.severity == crate::finding::Severity::High).count();
-    let medium = findings.iter().filter(|f| f.severity == crate::finding::Severity::Medium).count();
-    let low = findings.iter().filter(|f| f.severity == crate::finding::Severity::Low).count();
+    let critical = findings
+        .iter()
+        .filter(|f| f.severity == crate::finding::Severity::Critical)
+        .count();
+    let high = findings
+        .iter()
+        .filter(|f| f.severity == crate::finding::Severity::High)
+        .count();
+    let medium = findings
+        .iter()
+        .filter(|f| f.severity == crate::finding::Severity::Medium)
+        .count();
+    let low = findings
+        .iter()
+        .filter(|f| f.severity == crate::finding::Severity::Low)
+        .count();
 
     out.push_str("<h1>PledgeGuard Scan Report</h1>\n");
     out.push_str(&format!("<p>Generated: {}</p>\n", current_timestamp()));
     out.push_str("<div class=\"summary\">\n");
     out.push_str(&format!("<div class=\"card\"><div class=\"count critical\">{critical}</div><div>Critical</div></div>\n"));
-    out.push_str(&format!("<div class=\"card\"><div class=\"count high\">{high}</div><div>High</div></div>\n"));
-    out.push_str(&format!("<div class=\"card\"><div class=\"count medium\">{medium}</div><div>Medium</div></div>\n"));
-    out.push_str(&format!("<div class=\"card\"><div class=\"count low\">{low}</div><div>Low</div></div>\n"));
-    out.push_str(&format!("<div class=\"card\"><div class=\"count\">{}</div><div>Total</div></div>\n", findings.len()));
+    out.push_str(&format!(
+        "<div class=\"card\"><div class=\"count high\">{high}</div><div>High</div></div>\n"
+    ));
+    out.push_str(&format!(
+        "<div class=\"card\"><div class=\"count medium\">{medium}</div><div>Medium</div></div>\n"
+    ));
+    out.push_str(&format!(
+        "<div class=\"card\"><div class=\"count low\">{low}</div><div>Low</div></div>\n"
+    ));
+    out.push_str(&format!(
+        "<div class=\"card\"><div class=\"count\">{}</div><div>Total</div></div>\n",
+        findings.len()
+    ));
     out.push_str("</div>\n");
 
     // Findings table
@@ -83,10 +106,22 @@ pub fn to_markdown(findings: &[Finding]) -> String {
     let mut out = String::new();
     out.push_str("# PledgeGuard Scan Report\n\n");
 
-    let critical = findings.iter().filter(|f| f.severity == crate::finding::Severity::Critical).count();
-    let high = findings.iter().filter(|f| f.severity == crate::finding::Severity::High).count();
-    let medium = findings.iter().filter(|f| f.severity == crate::finding::Severity::Medium).count();
-    let low = findings.iter().filter(|f| f.severity == crate::finding::Severity::Low).count();
+    let critical = findings
+        .iter()
+        .filter(|f| f.severity == crate::finding::Severity::Critical)
+        .count();
+    let high = findings
+        .iter()
+        .filter(|f| f.severity == crate::finding::Severity::High)
+        .count();
+    let medium = findings
+        .iter()
+        .filter(|f| f.severity == crate::finding::Severity::Medium)
+        .count();
+    let low = findings
+        .iter()
+        .filter(|f| f.severity == crate::finding::Severity::Low)
+        .count();
 
     out.push_str("## Summary\n\n");
     out.push_str("| Severity | Count |\n|---|---|\n");
@@ -133,12 +168,27 @@ pub fn to_spdx(findings: &[Finding]) -> String {
     out.push_str("  \"findings\": [\n");
     for (i, f) in findings.iter().enumerate() {
         out.push_str("    {\n");
-        out.push_str(&format!("      \"SPDXID\": \"SPDXRef-finding-{}\",\n", i + 1));
-        out.push_str(&format!("      \"ruleId\": \"{}\",\n", json_escape(&f.rule_id)));
-        out.push_str(&format!("      \"severity\": \"{}\",\n", format!("{:?}", f.severity).to_lowercase()));
-        out.push_str(&format!("      \"filePath\": \"{}\",\n", json_escape(&f.path.display().to_string())));
+        out.push_str(&format!(
+            "      \"SPDXID\": \"SPDXRef-finding-{}\",\n",
+            i + 1
+        ));
+        out.push_str(&format!(
+            "      \"ruleId\": \"{}\",\n",
+            json_escape(&f.rule_id)
+        ));
+        out.push_str(&format!(
+            "      \"severity\": \"{}\",\n",
+            format!("{:?}", f.severity).to_lowercase()
+        ));
+        out.push_str(&format!(
+            "      \"filePath\": \"{}\",\n",
+            json_escape(&f.path.display().to_string())
+        ));
         out.push_str(&format!("      \"line\": {},\n", f.line));
-        out.push_str(&format!("      \"matched\": \"{}\"\n", json_escape(&f.matched)));
+        out.push_str(&format!(
+            "      \"matched\": \"{}\"\n",
+            json_escape(&f.matched)
+        ));
         out.push_str("    }");
         if i + 1 < findings.len() {
             out.push(',');
@@ -156,7 +206,10 @@ pub fn to_cyclonedx(findings: &[Finding]) -> String {
     out.push_str("{\n");
     out.push_str("  \"bomFormat\": \"CycloneDX\",\n");
     out.push_str("  \"specVersion\": \"1.5\",\n");
-    out.push_str(&format!("  \"serialNumber\": \"urn:uuid:{}\",\n", uuid_v4()));
+    out.push_str(&format!(
+        "  \"serialNumber\": \"urn:uuid:{}\",\n",
+        uuid_v4()
+    ));
     out.push_str("  \"version\": 1,\n");
     out.push_str("  \"metadata\": {\n");
     out.push_str("    \"tools\": [{\"vendor\": \"PledgeGuard\", \"name\": \"pledgeguard\", \"version\": \"1.0\"}]\n");
@@ -165,9 +218,18 @@ pub fn to_cyclonedx(findings: &[Finding]) -> String {
     for (i, f) in findings.iter().enumerate() {
         out.push_str("    {\n");
         out.push_str(&format!("      \"id\": \"PG-{}\",\n", i + 1));
-        out.push_str(&format!("      \"description\": \"{}\",\n", json_escape(&f.description)));
-        out.push_str(&format!("      \"ratings\": [{{\"severity\": \"{}\"}}],\n", format!("{:?}", f.severity).to_lowercase()));
-        out.push_str(&format!("      \"affects\": [{{\"ref\": \"{}\"}}]\n", json_escape(&f.path.display().to_string())));
+        out.push_str(&format!(
+            "      \"description\": \"{}\",\n",
+            json_escape(&f.description)
+        ));
+        out.push_str(&format!(
+            "      \"ratings\": [{{\"severity\": \"{}\"}}],\n",
+            format!("{:?}", f.severity).to_lowercase()
+        ));
+        out.push_str(&format!(
+            "      \"affects\": [{{\"ref\": \"{}\"}}]\n",
+            json_escape(&f.path.display().to_string())
+        ));
         out.push_str("    }");
         if i + 1 < findings.len() {
             out.push(',');
@@ -185,26 +247,52 @@ pub fn to_prometheus(findings: &[Finding]) -> String {
     out.push_str("# HELP pledgeguard_findings_total Total number of findings by severity\n");
     out.push_str("# TYPE pledgeguard_findings_total gauge\n");
 
-    let critical = findings.iter().filter(|f| f.severity == crate::finding::Severity::Critical).count();
-    let high = findings.iter().filter(|f| f.severity == crate::finding::Severity::High).count();
-    let medium = findings.iter().filter(|f| f.severity == crate::finding::Severity::Medium).count();
-    let low = findings.iter().filter(|f| f.severity == crate::finding::Severity::Low).count();
+    let critical = findings
+        .iter()
+        .filter(|f| f.severity == crate::finding::Severity::Critical)
+        .count();
+    let high = findings
+        .iter()
+        .filter(|f| f.severity == crate::finding::Severity::High)
+        .count();
+    let medium = findings
+        .iter()
+        .filter(|f| f.severity == crate::finding::Severity::Medium)
+        .count();
+    let low = findings
+        .iter()
+        .filter(|f| f.severity == crate::finding::Severity::Low)
+        .count();
 
-    out.push_str(&format!("pledgeguard_findings_total{{severity=\"critical\"}} {critical}\n"));
-    out.push_str(&format!("pledgeguard_findings_total{{severity=\"high\"}} {high}\n"));
-    out.push_str(&format!("pledgeguard_findings_total{{severity=\"medium\"}} {medium}\n"));
-    out.push_str(&format!("pledgeguard_findings_total{{severity=\"low\"}} {low}\n"));
-    out.push_str(&format!("pledgeguard_findings_total{{severity=\"all\"}} {}\n", findings.len()));
+    out.push_str(&format!(
+        "pledgeguard_findings_total{{severity=\"critical\"}} {critical}\n"
+    ));
+    out.push_str(&format!(
+        "pledgeguard_findings_total{{severity=\"high\"}} {high}\n"
+    ));
+    out.push_str(&format!(
+        "pledgeguard_findings_total{{severity=\"medium\"}} {medium}\n"
+    ));
+    out.push_str(&format!(
+        "pledgeguard_findings_total{{severity=\"low\"}} {low}\n"
+    ));
+    out.push_str(&format!(
+        "pledgeguard_findings_total{{severity=\"all\"}} {}\n",
+        findings.len()
+    ));
 
     // Per-rule counts
     out.push_str("\n# HELP pledgeguard_findings_by_rule Findings count by rule ID\n");
     out.push_str("# TYPE pledgeguard_findings_by_rule gauge\n");
-    let mut rule_counts: std::collections::BTreeMap<&str, usize> = std::collections::BTreeMap::new();
+    let mut rule_counts: std::collections::BTreeMap<&str, usize> =
+        std::collections::BTreeMap::new();
     for f in findings {
         *rule_counts.entry(f.rule_id.as_str()).or_insert(0) += 1;
     }
     for (rule, count) in &rule_counts {
-        out.push_str(&format!("pledgeguard_findings_by_rule{{rule=\"{rule}\"}} {count}\n"));
+        out.push_str(&format!(
+            "pledgeguard_findings_by_rule{{rule=\"{rule}\"}} {count}\n"
+        ));
     }
 
     out
@@ -242,14 +330,32 @@ pub fn to_xml(findings: &[Finding]) -> String {
     out.push_str("  <findings>\n");
     for f in findings {
         out.push_str("    <finding>\n");
-        out.push_str(&format!("      <ruleId>{}</ruleId>\n", xml_escape(&f.rule_id)));
-        out.push_str(&format!("      <description>{}</description>\n", xml_escape(&f.description)));
-        out.push_str(&format!("      <severity>{}</severity>\n", format!("{:?}", f.severity).to_lowercase()));
-        out.push_str(&format!("      <path>{}</path>\n", xml_escape(&f.path.display().to_string())));
+        out.push_str(&format!(
+            "      <ruleId>{}</ruleId>\n",
+            xml_escape(&f.rule_id)
+        ));
+        out.push_str(&format!(
+            "      <description>{}</description>\n",
+            xml_escape(&f.description)
+        ));
+        out.push_str(&format!(
+            "      <severity>{}</severity>\n",
+            format!("{:?}", f.severity).to_lowercase()
+        ));
+        out.push_str(&format!(
+            "      <path>{}</path>\n",
+            xml_escape(&f.path.display().to_string())
+        ));
         out.push_str(&format!("      <line>{}</line>\n", f.line));
         out.push_str(&format!("      <column>{}</column>\n", f.column));
-        out.push_str(&format!("      <matched>{}</matched>\n", xml_escape(&f.matched)));
-        out.push_str(&format!("      <context>{}</context>\n", xml_escape(&f.context)));
+        out.push_str(&format!(
+            "      <matched>{}</matched>\n",
+            xml_escape(&f.matched)
+        ));
+        out.push_str(&format!(
+            "      <context>{}</context>\n",
+            xml_escape(&f.context)
+        ));
         out.push_str("    </finding>\n");
     }
     out.push_str("  </findings>\n");
@@ -268,9 +374,7 @@ fn html_escape(s: &str) -> String {
 }
 
 fn md_escape(s: &str) -> String {
-    s.replace('|', "\\|")
-        .replace('`', "\\`")
-        .replace('\n', " ")
+    s.replace('|', "\\|").replace('`', "\\`").replace('\n', " ")
 }
 
 fn xml_escape(s: &str) -> String {
@@ -295,7 +399,8 @@ fn uuid_v4() -> String {
         .duration_since(std::time::UNIX_EPOCH)
         .unwrap_or_default()
         .as_nanos();
-    format!("{:08x}-{:04x}-4{:03x}-{:04x}-{:012x}",
+    format!(
+        "{:08x}-{:04x}-4{:03x}-{:04x}-{:012x}",
         (now & 0xFFFFFFFF) as u32,
         ((now >> 32) & 0xFFFF) as u16,
         ((now >> 48) & 0xFFF) as u16,

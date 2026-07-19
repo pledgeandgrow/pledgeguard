@@ -1,0 +1,30 @@
+# PledgeGuard DroneCI Plugin
+# Usage in your .drone.yml:
+#   steps:
+#     - name: pledgeguard-scan
+#       image: pledgeandgrow/pledgeguard:latest
+#       commands:
+#         - pledgeguard scan . --format sarif --report-file report.sarif --fail-on-findings
+#       when:
+#         event: [push, pull_request]
+
+kind: pipeline
+type: docker
+name: pledgeguard-scan
+
+steps:
+  - name: scan
+    image: pledgeandgrow/pledgeguard:latest
+    commands:
+      - pledgeguard scan . --format sarif --report-file pledgeguard-report.sarif --fail-on-findings
+    when:
+      event: [push, pull_request]
+
+  - name: upload
+    image: plugins/s3
+    settings:
+      bucket: pledgeguard-reports
+      source: pledgeguard-report.sarif
+      target: /${DRONE_REPO}/${DRONE_BUILD_NUMBER}/
+    when:
+      status: [success, failure]

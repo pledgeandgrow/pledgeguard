@@ -110,10 +110,7 @@ pub fn scan_tar(
 /// Detect if a path is an archive we can scan.
 pub fn is_archive(path: &Path) -> bool {
     let ext = path.extension().and_then(|e| e.to_str()).unwrap_or("");
-    matches!(
-        ext.to_lowercase().as_str(),
-        "zip" | "tar" | "gz" | "tgz"
-    )
+    matches!(ext.to_lowercase().as_str(), "zip" | "tar" | "gz" | "tgz")
 }
 
 /// Scan an archive file, auto-detecting format.

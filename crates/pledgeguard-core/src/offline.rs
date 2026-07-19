@@ -77,10 +77,10 @@ pub fn check_for_updates(_config: &OfflineConfig) -> Option<DetectorUpdate> {
 
 /// Apply a detector update by loading new rules from a local file.
 pub fn apply_detector_update(rules_path: &Path) -> Result<usize, OfflineError> {
-    let contents = std::fs::read_to_string(rules_path)
-        .map_err(|e| OfflineError::Io(e.to_string()))?;
-    let config: crate::config::Config = toml::from_str(&contents)
-        .map_err(|e| OfflineError::Parse(e.to_string()))?;
+    let contents =
+        std::fs::read_to_string(rules_path).map_err(|e| OfflineError::Io(e.to_string()))?;
+    let config: crate::config::Config =
+        toml::from_str(&contents).map_err(|e| OfflineError::Parse(e.to_string()))?;
     Ok(config.rules.len())
 }
 
@@ -127,7 +127,8 @@ impl VerificationCache {
     /// Look up a cached verification result.
     pub fn get(&self, rule_id: &str, secret: &str) -> Option<&VerificationStatus> {
         let hash = Self::hash_secret(secret);
-        self.entries.get(&Self::key(rule_id, &hash))
+        self.entries
+            .get(&Self::key(rule_id, &hash))
             .map(|e| &e.status)
     }
 
@@ -135,30 +136,32 @@ impl VerificationCache {
     pub fn insert(&mut self, rule_id: &str, secret: &str, status: VerificationStatus) {
         let hash = Self::hash_secret(secret);
         let key = Self::key(rule_id, &hash);
-        self.entries.insert(key, VerificationCacheEntry {
-            rule_id: rule_id.to_string(),
-            secret_hash: hash,
-            status,
-            timestamp: std::time::SystemTime::now()
-                .duration_since(std::time::UNIX_EPOCH)
-                .unwrap_or_default()
-                .as_secs(),
-        });
+        self.entries.insert(
+            key,
+            VerificationCacheEntry {
+                rule_id: rule_id.to_string(),
+                secret_hash: hash,
+                status,
+                timestamp: std::time::SystemTime::now()
+                    .duration_since(std::time::UNIX_EPOCH)
+                    .unwrap_or_default()
+                    .as_secs(),
+            },
+        );
     }
 
     /// Save the cache to a file.
     pub fn save(&self, path: &Path) -> Result<(), OfflineError> {
         let json = serde_json::to_string_pretty(self)
             .map_err(|e| OfflineError::Serialize(e.to_string()))?;
-        std::fs::write(path, json)
-            .map_err(|e| OfflineError::Io(e.to_string()))?;
+        std::fs::write(path, json).map_err(|e| OfflineError::Io(e.to_string()))?;
         Ok(())
     }
 
     /// Load the cache from a file.
     pub fn load(path: &Path) -> Result<Self, OfflineError> {
-        let contents = std::fs::read_to_string(path)
-            .map_err(|e| OfflineError::Io(e.to_string()))?;
+        let contents =
+            std::fs::read_to_string(path).map_err(|e| OfflineError::Io(e.to_string()))?;
         let cache: VerificationCache = serde_json::from_str(&contents)
             .map_err(|e| OfflineError::Deserialize(e.to_string()))?;
         Ok(cache)
@@ -168,9 +171,10 @@ impl VerificationCache {
     pub fn apply_to_findings(&self, findings: &mut [Finding]) {
         for f in findings.iter_mut() {
             if f.verification.is_none()
-                && let Some(status) = self.get(&f.rule_id, &f.matched) {
-                    f.verification = Some(status.clone());
-                }
+                && let Some(status) = self.get(&f.rule_id, &f.matched)
+            {
+                f.verification = Some(status.clone());
+            }
         }
     }
 
@@ -196,18 +200,54 @@ impl VerificationCache {
 pub fn get_help_topic(topic: &str) -> Option<String> {
     let topic_lower = topic.to_lowercase();
     let docs: &[(&str, &str)] = &[
-        ("scan", "pledgeguard scan [PATH] — Scan a file or directory for secrets.\n\nOptions:\n  --format <FORMAT>   Output format (table, json, sarif, csv, html, etc.)\n  --min-severity <S>  Minimum severity to report (low, medium, high, critical)\n  --verify            Verify findings via provider APIs\n  --baseline <FILE>   Load baseline to suppress known findings\n  --save-baseline <FILE>  Save current findings as baseline\n  --config <FILE>     Load custom detector rules from TOML\n  --show-all          Include likely false positives\n  --diff              Only scan git-changed files\n  --offline           Disable all network calls\n  --no-telemetry      Disable anonymous usage stats"),
-        ("history", "pledgeguard history [PATH] — Scan git commit history for secrets.\n\nScans all refs (branches, tags) for secrets introduced in past commits.\n\nOptions:\n  --format <FORMAT>   Output format\n  --min-severity <S>  Minimum severity\n  --verify            Verify findings\n  --show-all          Include likely false positives"),
-        ("scan-source", "pledgeguard scan-source --source <TYPE> --token <TOKEN> — Scan a remote source.\n\nSupported sources: Confluence, Slack, Jira, S3, GCS, Azure Blob, CircleCI, etc.\n\nOptions:\n  --source <TYPE>     Source type (confluence, slack, jira, s3, etc.)\n  --token <TOKEN>     API token/credential\n  --target <TARGET>   Additional config (bucket name, project slug, etc.)\n  --verify            Verify findings"),
-        ("mcp", "pledgeguard mcp — Run MCP server for AI agent integration.\n\nExposes scan tools via JSON-RPC 2.0 over stdio or TCP.\n\nOptions:\n  --plugin-dir <DIR>  Load WASM plugins\n  --auth-token <T>    Authentication token for remote connections\n  --tcp <ADDR>        Listen on TCP address instead of stdio"),
-        ("init", "pledgeguard init [PATH] — Initialize PledgeGuard configuration.\n\nCreates a .pledgeguard.toml file with recommended defaults.\n\nOptions:\n  --force   Overwrite existing config"),
-        ("compliance", "pledgeguard compliance [PATH] — Generate compliance report.\n\nFrameworks: SOC2, PCI-DSS, ISO27001, HIPAA, GDPR, NIST CSF.\n\nOptions:\n  --framework <F>     Compliance framework\n  --min-severity <S>  Minimum severity\n  --verify            Verify findings before report"),
-        ("verify", "Verification checks whether a detected secret is still active by calling\nthe provider's API. This is opt-in (--verify flag) and makes outbound network\nrequests.\n\nSupported verifiers: AWS STS, GitHub, Slack, Stripe, Google, Twilio,\nSendGrid, Mailgun, Pulumi, Square, Twitch, Bitbucket, Buildkite, and more.\n\nUse --verify-cache to cache results and avoid repeated API calls.\nUse --offline to disable all verification (air-gapped mode)."),
-        ("baseline", "Baselines suppress known/accepted findings across scan runs.\n\nSave: pledgeguard scan --save-baseline baseline.json\nLoad: pledgeguard scan --baseline baseline.json\n\nBaseline files contain raw secret values — treat as sensitive.\nUse --encrypt-baseline to encrypt at rest (goal 377)."),
-        ("config", "Custom detector rules are loaded from TOML config files.\n\nExample pledgeguard.toml:\n  [[rules]]\n  id = \"custom-api-key\"\n  description = \"Custom API key pattern\"\n  regex = 'custom_key_[a-zA-Z0-9]{32}'\n  severity = \"high\"\n  [rules.allowlist]\n  regexes = [\"EXAMPLE\"]\n\nLoad with: pledgeguard scan --config pledgeguard.toml"),
-        ("plugins", "WASM plugins allow custom detectors and verifiers.\n\nLoad: pledgeguard scan --plugin-dir ./plugins\n\nPlugins are .wasm files implementing the PledgeGuard detector ABI.\nABI v2 supports context passing (file path, git metadata)."),
-        ("offline", "Offline/air-gapped mode disables all network calls.\n\nUse --offline flag or set PLEDGEGUARD_OFFLINE=1 environment variable.\n\nIn offline mode:\n  - No verification API calls\n  - No detector update checks\n  - No telemetry\n  - Verification cache is used for offline reference\n  - All scanning works normally (local files only)"),
-        ("rotate", "pledgeguard rotate --rule-id <ID> --secret <VALUE> — Generate a replacement secret.\n\nGenerates a new random secret matching the format of the detected secret type.\nSupports: AWS access key format, GitHub token format, generic API keys,\nrandom hex, random base64, UUID-based tokens."),
+        (
+            "scan",
+            "pledgeguard scan [PATH] — Scan a file or directory for secrets.\n\nOptions:\n  --format <FORMAT>   Output format (table, json, sarif, csv, html, etc.)\n  --min-severity <S>  Minimum severity to report (low, medium, high, critical)\n  --verify            Verify findings via provider APIs\n  --baseline <FILE>   Load baseline to suppress known findings\n  --save-baseline <FILE>  Save current findings as baseline\n  --config <FILE>     Load custom detector rules from TOML\n  --show-all          Include likely false positives\n  --diff              Only scan git-changed files\n  --offline           Disable all network calls\n  --no-telemetry      Disable anonymous usage stats",
+        ),
+        (
+            "history",
+            "pledgeguard history [PATH] — Scan git commit history for secrets.\n\nScans all refs (branches, tags) for secrets introduced in past commits.\n\nOptions:\n  --format <FORMAT>   Output format\n  --min-severity <S>  Minimum severity\n  --verify            Verify findings\n  --show-all          Include likely false positives",
+        ),
+        (
+            "scan-source",
+            "pledgeguard scan-source --source <TYPE> --token <TOKEN> — Scan a remote source.\n\nSupported sources: Confluence, Slack, Jira, S3, GCS, Azure Blob, CircleCI, etc.\n\nOptions:\n  --source <TYPE>     Source type (confluence, slack, jira, s3, etc.)\n  --token <TOKEN>     API token/credential\n  --target <TARGET>   Additional config (bucket name, project slug, etc.)\n  --verify            Verify findings",
+        ),
+        (
+            "mcp",
+            "pledgeguard mcp — Run MCP server for AI agent integration.\n\nExposes scan tools via JSON-RPC 2.0 over stdio or TCP.\n\nOptions:\n  --plugin-dir <DIR>  Load WASM plugins\n  --auth-token <T>    Authentication token for remote connections\n  --tcp <ADDR>        Listen on TCP address instead of stdio",
+        ),
+        (
+            "init",
+            "pledgeguard init [PATH] — Initialize PledgeGuard configuration.\n\nCreates a .pledgeguard.toml file with recommended defaults.\n\nOptions:\n  --force   Overwrite existing config",
+        ),
+        (
+            "compliance",
+            "pledgeguard compliance [PATH] — Generate compliance report.\n\nFrameworks: SOC2, PCI-DSS, ISO27001, HIPAA, GDPR, NIST CSF.\n\nOptions:\n  --framework <F>     Compliance framework\n  --min-severity <S>  Minimum severity\n  --verify            Verify findings before report",
+        ),
+        (
+            "verify",
+            "Verification checks whether a detected secret is still active by calling\nthe provider's API. This is opt-in (--verify flag) and makes outbound network\nrequests.\n\nSupported verifiers: AWS STS, GitHub, Slack, Stripe, Google, Twilio,\nSendGrid, Mailgun, Pulumi, Square, Twitch, Bitbucket, Buildkite, and more.\n\nUse --verify-cache to cache results and avoid repeated API calls.\nUse --offline to disable all verification (air-gapped mode).",
+        ),
+        (
+            "baseline",
+            "Baselines suppress known/accepted findings across scan runs.\n\nSave: pledgeguard scan --save-baseline baseline.json\nLoad: pledgeguard scan --baseline baseline.json\n\nBaseline files contain raw secret values — treat as sensitive.\nUse --encrypt-baseline to encrypt at rest (goal 377).",
+        ),
+        (
+            "config",
+            "Custom detector rules are loaded from TOML config files.\n\nExample pledgeguard.toml:\n  [[rules]]\n  id = \"custom-api-key\"\n  description = \"Custom API key pattern\"\n  regex = 'custom_key_[a-zA-Z0-9]{32}'\n  severity = \"high\"\n  [rules.allowlist]\n  regexes = [\"EXAMPLE\"]\n\nLoad with: pledgeguard scan --config pledgeguard.toml",
+        ),
+        (
+            "plugins",
+            "WASM plugins allow custom detectors and verifiers.\n\nLoad: pledgeguard scan --plugin-dir ./plugins\n\nPlugins are .wasm files implementing the PledgeGuard detector ABI.\nABI v2 supports context passing (file path, git metadata).",
+        ),
+        (
+            "offline",
+            "Offline/air-gapped mode disables all network calls.\n\nUse --offline flag or set PLEDGEGUARD_OFFLINE=1 environment variable.\n\nIn offline mode:\n  - No verification API calls\n  - No detector update checks\n  - No telemetry\n  - Verification cache is used for offline reference\n  - All scanning works normally (local files only)",
+        ),
+        (
+            "rotate",
+            "pledgeguard rotate --rule-id <ID> --secret <VALUE> — Generate a replacement secret.\n\nGenerates a new random secret matching the format of the detected secret type.\nSupports: AWS access key format, GitHub token format, generic API keys,\nrandom hex, random base64, UUID-based tokens.",
+        ),
     ];
 
     docs.iter()
@@ -218,8 +258,18 @@ pub fn get_help_topic(topic: &str) -> Option<String> {
 /// List all available help topics.
 pub fn list_help_topics() -> Vec<&'static str> {
     vec![
-        "scan", "history", "scan-source", "mcp", "init", "compliance",
-        "verify", "baseline", "config", "plugins", "offline", "rotate",
+        "scan",
+        "history",
+        "scan-source",
+        "mcp",
+        "init",
+        "compliance",
+        "verify",
+        "baseline",
+        "config",
+        "plugins",
+        "offline",
+        "rotate",
     ]
 }
 
@@ -291,18 +341,25 @@ pub fn redact_for_logging(text: &str, findings: &[Finding]) -> String {
 pub fn sanitize_log_line(line: &str) -> String {
     let mut result = line.to_string();
 
-    let key_pattern = regex::Regex::new(r"(?i)(key|token|secret|password|passwd|pwd)\s*[=:]\s*\S+").unwrap();
+    let key_pattern =
+        regex::Regex::new(r"(?i)(key|token|secret|password|passwd|pwd)\s*[=:]\s*\S+").unwrap();
     result = key_pattern.replace_all(&result, "$1=REDACTED").to_string();
 
     let bearer_pattern = regex::Regex::new(r"(?i)Bearer\s+\S+").unwrap();
-    result = bearer_pattern.replace_all(&result, "Bearer REDACTED").to_string();
+    result = bearer_pattern
+        .replace_all(&result, "Bearer REDACTED")
+        .to_string();
 
     let aws_pattern = regex::Regex::new(r"AKIA[0-9A-Z]{16}").unwrap();
-    result = aws_pattern.replace_all(&result, "AKIA****************").to_string();
+    result = aws_pattern
+        .replace_all(&result, "AKIA****************")
+        .to_string();
 
     let github_pattern = regex::Regex::new(r"gh[pousr]_[A-Za-z0-9]{36}").unwrap();
     let github_replacement = format!("gh*_{}", "*".repeat(36));
-    result = github_pattern.replace_all(&result, &github_replacement).to_string();
+    result = github_pattern
+        .replace_all(&result, &github_replacement)
+        .to_string();
 
     result
 }
@@ -339,8 +396,7 @@ pub fn save_encrypted_baseline(
     let key = derive_key(passphrase);
     let encrypted = xor_encrypt(json.as_bytes(), &key);
     let encoded = base64::engine::general_purpose::STANDARD.encode(&encrypted);
-    std::fs::write(path, encoded)
-        .map_err(|e| OfflineError::Io(e.to_string()))?;
+    std::fs::write(path, encoded).map_err(|e| OfflineError::Io(e.to_string()))?;
     Ok(())
 }
 
@@ -349,17 +405,16 @@ pub fn load_encrypted_baseline(
     path: &Path,
     passphrase: &str,
 ) -> Result<crate::baseline::Baseline, OfflineError> {
-    let contents = std::fs::read_to_string(path)
-        .map_err(|e| OfflineError::Io(e.to_string()))?;
+    let contents = std::fs::read_to_string(path).map_err(|e| OfflineError::Io(e.to_string()))?;
     let encrypted = base64::engine::general_purpose::STANDARD
         .decode(contents.trim())
         .map_err(|e| OfflineError::Deserialize(e.to_string()))?;
     let key = derive_key(passphrase);
     let decrypted = xor_encrypt(&encrypted, &key);
-    let json = String::from_utf8(decrypted)
-        .map_err(|e| OfflineError::Deserialize(e.to_string()))?;
-    let baseline: crate::baseline::Baseline = serde_json::from_str(&json)
-        .map_err(|e| OfflineError::Deserialize(e.to_string()))?;
+    let json =
+        String::from_utf8(decrypted).map_err(|e| OfflineError::Deserialize(e.to_string()))?;
+    let baseline: crate::baseline::Baseline =
+        serde_json::from_str(&json).map_err(|e| OfflineError::Deserialize(e.to_string()))?;
     Ok(baseline)
 }
 
@@ -374,25 +429,20 @@ pub fn save_encrypted_report(
     let key = derive_key(passphrase);
     let encrypted = xor_encrypt(content.as_bytes(), &key);
     let encoded = base64::engine::general_purpose::STANDARD.encode(&encrypted);
-    std::fs::write(path, encoded)
-        .map_err(|e| OfflineError::Io(e.to_string()))?;
+    std::fs::write(path, encoded).map_err(|e| OfflineError::Io(e.to_string()))?;
     Ok(())
 }
 
 /// Load and decrypt a report file.
-pub fn load_encrypted_report(
-    path: &Path,
-    passphrase: &str,
-) -> Result<String, OfflineError> {
-    let contents = std::fs::read_to_string(path)
-        .map_err(|e| OfflineError::Io(e.to_string()))?;
+pub fn load_encrypted_report(path: &Path, passphrase: &str) -> Result<String, OfflineError> {
+    let contents = std::fs::read_to_string(path).map_err(|e| OfflineError::Io(e.to_string()))?;
     let encrypted = base64::engine::general_purpose::STANDARD
         .decode(contents.trim())
         .map_err(|e| OfflineError::Deserialize(e.to_string()))?;
     let key = derive_key(passphrase);
     let decrypted = xor_encrypt(&encrypted, &key);
-    let content = String::from_utf8(decrypted)
-        .map_err(|e| OfflineError::Deserialize(e.to_string()))?;
+    let content =
+        String::from_utf8(decrypted).map_err(|e| OfflineError::Deserialize(e.to_string()))?;
     Ok(content)
 }
 
@@ -425,11 +475,13 @@ impl ZeroKnowledgeProof {
         let nonce = hex_encode(&{
             let mut h = Sha256::new();
             h.update(secret.as_bytes());
-            h.update(std::time::SystemTime::now()
-                .duration_since(std::time::UNIX_EPOCH)
-                .unwrap_or_default()
-                .as_nanos()
-                .to_le_bytes());
+            h.update(
+                std::time::SystemTime::now()
+                    .duration_since(std::time::UNIX_EPOCH)
+                    .unwrap_or_default()
+                    .as_nanos()
+                    .to_le_bytes(),
+            );
             h.finalize()
         });
 
@@ -493,18 +545,29 @@ pub fn generate_replacement_secret(rule_id: &str) -> String {
             format!("ghr_{}", random_alphanumeric_mixed(36, seed))
         }
         "slack-bot-token" => {
-            format!("xoxb-{}-{}-{}", random_digits(11, seed), random_digits(11, seed),
-                random_alphanumeric_mixed(24, seed))
+            format!(
+                "xoxb-{}-{}-{}",
+                random_digits(11, seed),
+                random_digits(11, seed),
+                random_alphanumeric_mixed(24, seed)
+            )
         }
         "slack-user-token" => {
-            format!("xoxp-{}-{}-{}-{}", random_digits(11, seed), random_digits(11, seed),
-                random_digits(11, seed), random_alphanumeric_mixed(24, seed))
+            format!(
+                "xoxp-{}-{}-{}-{}",
+                random_digits(11, seed),
+                random_digits(11, seed),
+                random_digits(11, seed),
+                random_alphanumeric_mixed(24, seed)
+            )
         }
         "slack-webhook" => {
-            format!("https://hooks.slack.com/services/T{}/B{}/{}",
+            format!(
+                "https://hooks.slack.com/services/T{}/B{}/{}",
                 random_alphanumeric_upper(8, seed),
                 random_alphanumeric_upper(8, seed),
-                random_alphanumeric_mixed(24, seed))
+                random_alphanumeric_mixed(24, seed)
+            )
         }
         "stripe-secret-key" => {
             format!("sk_live_{}", random_alphanumeric_mixed(24, seed))
@@ -574,7 +637,9 @@ fn random_alphanumeric_upper(len: usize, seed: u128) -> String {
     let mut state = seed;
     (0..len)
         .map(|_| {
-            state = state.wrapping_mul(6364136223846793005).wrapping_add(1442695040888963407);
+            state = state
+                .wrapping_mul(6364136223846793005)
+                .wrapping_add(1442695040888963407);
             let idx = ((state >> 33) as usize) % CHARSET.len();
             CHARSET[idx] as char
         })
@@ -586,7 +651,9 @@ fn random_alphanumeric_mixed(len: usize, seed: u128) -> String {
     let mut state = seed;
     (0..len)
         .map(|_| {
-            state = state.wrapping_mul(6364136223846793005).wrapping_add(1442695040888963407);
+            state = state
+                .wrapping_mul(6364136223846793005)
+                .wrapping_add(1442695040888963407);
             let idx = ((state >> 33) as usize) % CHARSET.len();
             CHARSET[idx] as char
         })
@@ -598,7 +665,9 @@ fn random_digits(len: usize, seed: u128) -> String {
     let mut state = seed;
     (0..len)
         .map(|_| {
-            state = state.wrapping_mul(6364136223846793005).wrapping_add(1442695040888963407);
+            state = state
+                .wrapping_mul(6364136223846793005)
+                .wrapping_add(1442695040888963407);
             let idx = ((state >> 33) as usize) % CHARSET.len();
             CHARSET[idx] as char
         })
@@ -657,7 +726,11 @@ mod tests {
         let mut cache = VerificationCache::new();
         assert!(cache.is_empty());
 
-        cache.insert("aws-access-key-id", "AKIAIOSFODNN7EXAMPLE", VerificationStatus::Active);
+        cache.insert(
+            "aws-access-key-id",
+            "AKIAIOSFODNN7EXAMPLE",
+            VerificationStatus::Active,
+        );
         assert_eq!(cache.len(), 1);
 
         let status = cache.get("aws-access-key-id", "AKIAIOSFODNN7EXAMPLE");
@@ -672,7 +745,11 @@ mod tests {
     fn test_verification_cache_persist() {
         let tmp = tempfile::NamedTempFile::new().unwrap();
         let mut cache = VerificationCache::new();
-        cache.insert("github-token", "ghp_1234567890abcdefghijklmnopqrstuvwxyz", VerificationStatus::Active);
+        cache.insert(
+            "github-token",
+            "ghp_1234567890abcdefghijklmnopqrstuvwxyz",
+            VerificationStatus::Active,
+        );
         cache.save(tmp.path()).unwrap();
 
         let loaded = VerificationCache::load(tmp.path()).unwrap();
@@ -684,7 +761,11 @@ mod tests {
     #[test]
     fn test_verification_cache_apply_to_findings() {
         let mut cache = VerificationCache::new();
-        cache.insert("aws-access-key-id", "AKIAIOSFODNN7EXAMPLE", VerificationStatus::Active);
+        cache.insert(
+            "aws-access-key-id",
+            "AKIAIOSFODNN7EXAMPLE",
+            VerificationStatus::Active,
+        );
 
         let mut findings = vec![Finding {
             rule_id: "aws-access-key-id".to_string(),
@@ -701,7 +782,10 @@ mod tests {
         }];
 
         cache.apply_to_findings(&mut findings);
-        assert!(matches!(findings[0].verification, Some(VerificationStatus::Active)));
+        assert!(matches!(
+            findings[0].verification,
+            Some(VerificationStatus::Active)
+        ));
     }
 
     #[test]

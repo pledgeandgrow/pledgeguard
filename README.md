@@ -131,7 +131,45 @@ pledgeguard scan . --verify
 ```bash
 pledgeguard history .
 # Scans all commits for secrets introduced in past commits
+
+pledgeguard history . --since-commit abc123
+# Incremental: scan only commits after abc123
+
+pledgeguard history . --branch feature/x --since-date 2024-01-01
+# Scoped: scan only feature/x branch since Jan 1, 2024
 ```
+
+### CI/CD integration
+```bash
+# CI-optimized scan with configurable exit code
+pledgeguard scan . --ci-mode --format json --report-file results.json
+
+# Fail only on critical findings, max 50 findings
+pledgeguard scan . --fail-on-severity critical --max-findings 50
+
+# Post findings as GitHub PR comment
+pledgeguard scan . --pr-comment-platform github --pr-number 42 --pr-comment-repo owner/repo
+
+# Auto-upload SARIF to GitHub Code Scanning
+pledgeguard scan . --sarif-upload --format sarif
+
+# Auto-create baseline on first run, enforce on subsequent
+pledgeguard scan . --baseline-auto --enforce-baseline
+
+# Append to existing report (multi-scan aggregation)
+pledgeguard scan src/ --report-append --report-file combined.json
+pledgeguard scan infra/ --report-append --report-file combined.json
+```
+
+Available CI/CD templates in `templates/`:
+- **CircleCI** — `templates/circleci-orb.yml`
+- **Jenkins** — `templates/Jenkinsfile`
+- **DroneCI** — `templates/drone.yml`
+- **Azure DevOps** — `templates/azure-pipelines.yml`
+- **Bitbucket** — `templates/bitbucket-pipelines.yml`
+- **TeamCity** — `templates/teamcity.config`
+- **Husky** — `templates/husky-pre-commit`
+- **lint-staged** — `templates/lint-staged.json`
 
 ### Compliance report
 ```bash
@@ -383,6 +421,17 @@ via `wasmtime` and are called from at most one thread at a time.
 ```
 pledgeguard/
 ├── Cargo.toml                     # workspace manifest
+├── action.yml                     # GitHub Action definition
+├── gitlab-ci.yml                  # GitLab CI template
+├── templates/                     # publishable CI/CD templates
+│   ├── circleci-orb.yml
+│   ├── Jenkinsfile
+│   ├── drone.yml
+│   ├── azure-pipelines.yml
+│   ├── bitbucket-pipelines.yml
+│   ├── teamcity.config
+│   ├── husky-pre-commit
+│   └── lint-staged.json
 ├── examples/plugins/example-plugin/  # sample WASM detector plugin
 └── crates/
     ├── pledgeguard-core/          # detection engine library
@@ -391,16 +440,18 @@ pledgeguard/
     │   ├── entropy.rs             # Shannon-entropy helper
     │   ├── finding.rs             # Finding, Severity, VerificationStatus types
     │   ├── redact.rs              # secret redaction for display
-    │   ├── scanner.rs             # Scanner: file walking + parallel scan
+    │   ├── scanner.rs             # Scanner: file walking + parallel scan + IaC detection
     │   ├── context.rs             # lexical comment/fixture-path false-positive heuristic
     │   ├── ast.rs                 # oxc-based AST false-positive refinement for JS/TS
-    │   ├── git_history.rs         # git history scan (shells out to `git log -p`)
+    │   ├── git_history.rs         # git history scan + scoped history scan
     │   ├── plugin.rs              # WASM plugin loader + ABI (wasmtime)
-    │   ├── verify.rs              # live provider verification (GitHub, Slack, Stripe, npm)
+    │   ├── verify.rs              # live provider verification
     │   ├── sarif.rs               # SARIF 2.1.0 output for GitHub Code Scanning
-    │   └── baseline.rs            # baseline/allowlist persistence and filtering
+    │   ├── baseline.rs            # baseline/allowlist persistence and filtering
+    │   ├── ci_cd.rs               # CI/CD templates, scan scope, exit code config, PR comments
+    │   └── iac_detection.rs       # IaC secret detection (30+ file types)
     └── pledgeguard-cli/           # `pledgeguard` binary
-        ├── main.rs                # clap CLI: scan + history + mcp + install-pre-commit
+        ├── main.rs                # clap CLI: scan + history + scan-source + mcp + compliance + diff
         └── mcp.rs                 # MCP server over stdio (JSON-RPC 2.0)
 ```
 
@@ -450,7 +501,7 @@ pledgeguard install-ai-hooks --tool <tool>
 pledgeguard ai-analyze --analysis <type> [OPTIONS] <path>
 
 Common scan options:
-  --format <table|json|sarif|csv|junit|github-actions>  Output format
+  --format <table|json|sarif|csv|junit|github-actions|html|markdown|...>  Output format
   --min-severity <low|medium|high|critical>  Minimum severity to report
   --no-redact                    Show full secret values (default: redacted)
   --fail-on-findings             Exit non-zero if findings are present
@@ -462,6 +513,27 @@ Common scan options:
   --save-baseline <path>         Save current findings as a baseline file
   --config <path>                Load custom TOML rules
   --report-file <path>           Write output to file instead of stdout
+
+CI/CD scan options:
+  --since-commit <SHA>           Scan only commits after this SHA
+  --since-date <date>            Scan only commits after this date
+  --branch <name>                Scan only this branch
+  --pr-number <N>                PR number (for PR comment integration)
+  --commit-range <A..B>          Scan specific commit range
+  --exit-code <N>                Custom exit code on findings (default: 1)
+  --ignore-exit-code             Always exit 0 (reporting-only mode)
+  --fail-on-severity <level>     Fail only on findings >= severity
+  --max-findings <N>             Stop after N findings
+  --ci-mode                      CI-optimized: no color, JSON, fail-on-findings
+  --report-append                Append to report file (multi-scan aggregation)
+  --baseline-auto                Auto-create baseline on first run
+  --enforce-baseline             Fail if baseline is missing/outdated
+  --pr-comment-platform <platform>  Post findings as PR/MR comment
+  --pr-comment-repo <slug>       Repository slug for PR comments
+  --pr-comment-token <token>     API token for PR comments
+  --sarif-upload                 Auto-upload SARIF to GitHub Code Scanning
+  --sarif-upload-token <token>   GitHub token for SARIF upload
+  --junit-upload                 Write JUnit XML for CI test runner
 ```
 
 ## Security

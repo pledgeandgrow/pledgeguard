@@ -73,10 +73,7 @@ pub fn scan_confluence(
 ) -> Result<Vec<Finding>, SourceScanError> {
     let agent = agent();
     let base = config.base_url.trim_end_matches('/');
-    let auth = format!(
-        "{}:{}",
-        config.email, config.api_token
-    );
+    let auth = format!("{}:{}", config.email, config.api_token);
     use base64::Engine;
     let auth_b64 = base64::engine::general_purpose::STANDARD.encode(&auth);
 
@@ -91,9 +88,18 @@ pub fn scan_confluence(
 
     let _ = space_filter;
     let search_url = if cql.is_empty() {
-        format!("{}/wiki/api/v2/pages?limit={}", base, config.max_pages.min(250))
+        format!(
+            "{}/wiki/api/v2/pages?limit={}",
+            base,
+            config.max_pages.min(250)
+        )
     } else {
-        format!("{}/wiki/api/v2/pages?limit={}&spaceKey={}", base, config.max_pages.min(250), config.space_key.as_deref().unwrap_or(""))
+        format!(
+            "{}/wiki/api/v2/pages?limit={}&spaceKey={}",
+            base,
+            config.max_pages.min(250),
+            config.space_key.as_deref().unwrap_or("")
+        )
     };
 
     let resp = agent
@@ -133,12 +139,14 @@ pub fn scan_confluence(
 
         if let Ok(resp) = body_resp
             && let Ok(json) = resp.into_json::<serde_json::Value>()
-            && let Some(body) = json.get("body")
+            && let Some(body) = json
+                .get("body")
                 .and_then(|b| b.get("storage"))
                 .and_then(|s| s.get("value"))
                 .and_then(|v| v.as_str())
         {
-            let virtual_path = std::path::PathBuf::from(format!("confluence:{}#{}", page_id, title));
+            let virtual_path =
+                std::path::PathBuf::from(format!("confluence:{}#{}", page_id, title));
             findings.extend(scan_text(body, &virtual_path, detectors));
         }
     }
@@ -224,7 +232,10 @@ pub fn scan_slack(
                         }
                         let text = msg.get("text").and_then(|t| t.as_str()).unwrap_or("");
                         let ts = msg.get("ts").and_then(|t| t.as_str()).unwrap_or("");
-                        let user = msg.get("user").and_then(|u| u.as_str()).unwrap_or("unknown");
+                        let user = msg
+                            .get("user")
+                            .and_then(|u| u.as_str())
+                            .unwrap_or("unknown");
                         let virtual_path = std::path::PathBuf::from(format!(
                             "slack:{}#ts={}_user={}",
                             channel_id, ts, user
@@ -235,7 +246,10 @@ pub fn scan_slack(
                 }
 
                 // Check for pagination.
-                let has_more = json.get("has_more").and_then(|h| h.as_bool()).unwrap_or(false);
+                let has_more = json
+                    .get("has_more")
+                    .and_then(|h| h.as_bool())
+                    .unwrap_or(false);
                 if !has_more {
                     break;
                 }
@@ -315,7 +329,8 @@ pub fn scan_jira(
             let fields = issue.get("fields");
             if let Some(fields) = fields {
                 let summary = fields.get("summary").and_then(|s| s.as_str()).unwrap_or("");
-                let desc = fields.get("description")
+                let desc = fields
+                    .get("description")
                     .and_then(|d| d.as_str())
                     .unwrap_or("");
                 let combined = format!("{summary}\n{desc}");
@@ -323,7 +338,8 @@ pub fn scan_jira(
                 findings.extend(scan_text(&combined, &virtual_path, detectors));
 
                 // Scan comments.
-                if let Some(comments) = fields.get("comment")
+                if let Some(comments) = fields
+                    .get("comment")
                     .and_then(|c| c.get("comments"))
                     .and_then(|c| c.as_array())
                 {
@@ -392,10 +408,7 @@ pub fn scan_postman(
 
     for uid in &collection_ids {
         let url = format!("https://api.getpostman.com/collections/{}", uid);
-        let resp = agent
-            .get(&url)
-            .set("X-Api-Key", &config.api_key)
-            .call();
+        let resp = agent.get(&url).set("X-Api-Key", &config.api_key).call();
 
         if let Ok(resp) = resp
             && let Ok(json) = resp.into_json::<serde_json::Value>()
@@ -458,12 +471,14 @@ pub fn scan_gerrit(
     }
 
     let resp = req.call().map_err(|e| SourceScanError::Http(Box::new(e)))?;
-    let body = resp.into_string().map_err(|e| SourceScanError::Parse(e.to_string()))?;
+    let body = resp
+        .into_string()
+        .map_err(|e| SourceScanError::Parse(e.to_string()))?;
 
     // Strip Gerrit's XSS prefix.
     let json_str = body.strip_prefix(")]}'").unwrap_or(&body).trim();
-    let changes: Vec<serde_json::Value> = serde_json::from_str(json_str)
-        .map_err(|e| SourceScanError::Parse(e.to_string()))?;
+    let changes: Vec<serde_json::Value> =
+        serde_json::from_str(json_str).map_err(|e| SourceScanError::Parse(e.to_string()))?;
 
     for change in changes.iter().take(config.max_changes) {
         let change_id = change.get("_number").and_then(|n| n.as_u64()).unwrap_or(0);
@@ -477,7 +492,8 @@ pub fn scan_gerrit(
         if let Some(revisions) = change.get("revisions").and_then(|r| r.as_object()) {
             for (rev_id, rev) in revisions {
                 // Commit message.
-                if let Some(commit) = rev.get("commit")
+                if let Some(commit) = rev
+                    .get("commit")
                     .and_then(|c| c.get("message"))
                     .and_then(|m| m.as_str())
                 {
@@ -494,7 +510,10 @@ pub fn scan_gerrit(
                         // Fetch file content.
                         let file_url = format!(
                             "{}/changes/{}/revisions/{}/files/{}/content",
-                            base, change_id, rev_id, urlencoding::encode(file_path)
+                            base,
+                            change_id,
+                            rev_id,
+                            urlencoding::encode(file_path)
                         );
                         let mut file_req = agent.get(&file_url);
                         if let Some(ref creds) = config.credentials {
@@ -507,7 +526,9 @@ pub fn scan_gerrit(
                         {
                             // Gerrit returns base64-encoded content.
                             use base64::Engine;
-                            if let Ok(decoded) = base64::engine::general_purpose::STANDARD.decode(content.trim()) {
+                            if let Ok(decoded) =
+                                base64::engine::general_purpose::STANDARD.decode(content.trim())
+                            {
                                 let text = String::from_utf8_lossy(&decoded);
                                 let virtual_path = std::path::PathBuf::from(format!(
                                     "gerrit:{}#rev={}_file={}",
@@ -558,7 +579,10 @@ pub fn scan_buildkite(
     let pipelines: Vec<String> = if let Some(ref p) = config.pipeline {
         vec![p.clone()]
     } else {
-        let url = format!("https://api.buildkite.com/v2/organizations/{}/pipelines", config.org);
+        let url = format!(
+            "https://api.buildkite.com/v2/organizations/{}/pipelines",
+            config.org
+        );
         let resp = agent
             .get(&url)
             .set("Authorization", &format!("Bearer {}", config.api_token))
@@ -578,7 +602,9 @@ pub fn scan_buildkite(
     for pipeline_slug in &pipelines {
         let builds_url = format!(
             "https://api.buildkite.com/v2/organizations/{}/pipelines/{}/builds?per_page={}",
-            config.org, pipeline_slug, config.max_builds.min(100)
+            config.org,
+            pipeline_slug,
+            config.max_builds.min(100)
         );
 
         let resp = agent
@@ -666,7 +692,10 @@ pub fn scan_artifactory(
 
     for repo_key in &repos {
         // List files in the repository.
-        let list_url = format!("{}/api/storage/{}?list&deep=1&listFolders=0", base, repo_key);
+        let list_url = format!(
+            "{}/api/storage/{}?list&deep=1&listFolders=0",
+            base, repo_key
+        );
         let resp = agent
             .get(&list_url)
             .set("X-JFrog-Art-Api", &config.api_key)
@@ -692,10 +721,8 @@ pub fn scan_artifactory(
                 if let Ok(resp) = file_resp
                     && let Ok(text) = resp.into_string()
                 {
-                    let virtual_path = std::path::PathBuf::from(format!(
-                        "artifactory:{}{}",
-                        repo_key, uri
-                    ));
+                    let virtual_path =
+                        std::path::PathBuf::from(format!("artifactory:{}{}", repo_key, uri));
                     findings.extend(scan_text(&text, &virtual_path, detectors));
                 }
             }
@@ -752,7 +779,11 @@ pub fn scan_aws_secrets_manager(
     let canonical_uri = "/";
     let canonical_query = "";
     let payload = if let Some(ref prefix) = config.name_prefix {
-        format!(r#"{{"MaxResults":{},"Filters":[{{"Key":"name","Values":["{}"]}}]}}"#, config.max_secrets.min(100), prefix)
+        format!(
+            r#"{{"MaxResults":{},"Filters":[{{"Key":"name","Values":["{}"]}}]}}"#,
+            config.max_secrets.min(100),
+            prefix
+        )
     } else {
         format!(r#"{{"MaxResults":{}}}"#, config.max_secrets.min(100))
     };
@@ -788,7 +819,10 @@ pub fn scan_aws_secrets_manager(
     {
         for secret in secret_list.iter() {
             let name = secret.get("Name").and_then(|n| n.as_str()).unwrap_or("");
-            let description = secret.get("Description").and_then(|d| d.as_str()).unwrap_or("");
+            let description = secret
+                .get("Description")
+                .and_then(|d| d.as_str())
+                .unwrap_or("");
             let arn = secret.get("ARN").and_then(|a| a.as_str()).unwrap_or("");
 
             let combined = format!("Name: {}\nDescription: {}\nARN: {}", name, description, arn);
@@ -815,7 +849,10 @@ fn aws_sigv4_date() -> String {
 fn aws_format_sigv4_date(epoch: u64) -> String {
     // Simple UTC formatting without chrono.
     let (year, month, day, hour, minute, second) = epoch_to_utc(epoch);
-    format!("{:04}{:02}{:02}T{:02}{:02}{:02}Z", year, month, day, hour, minute, second)
+    format!(
+        "{:04}{:02}{:02}T{:02}{:02}{:02}Z",
+        year, month, day, hour, minute, second
+    )
 }
 
 fn aws_sigv4_date_stamp() -> String {
@@ -839,7 +876,8 @@ fn epoch_to_utc(epoch: u64) -> (u32, u32, u32, u32, u32, u32) {
 
     let mut year = 1970u32;
     loop {
-        let leap = (year.is_multiple_of(4) && !year.is_multiple_of(100)) || year.is_multiple_of(400);
+        let leap =
+            (year.is_multiple_of(4) && !year.is_multiple_of(100)) || year.is_multiple_of(400);
         let yd = if leap { 366 } else { 365 };
         if days < yd {
             break;
@@ -896,12 +934,7 @@ fn aws_sigv4_authorization(
     // Canonical request.
     let canonical_request = format!(
         "{}\n{}\n{}\n{}\n{}\n{}",
-        method,
-        canonical_uri,
-        canonical_query,
-        canonical_headers,
-        signed_headers,
-        payload_hash
+        method, canonical_uri, canonical_query, canonical_headers, signed_headers, payload_hash
     );
 
     let canonical_request_hash = {
@@ -918,7 +951,10 @@ fn aws_sigv4_authorization(
     );
 
     // Signing key.
-    let k_date = hmac_sha256(format!("AWS4{}", secret_key).as_bytes(), date_stamp.as_bytes());
+    let k_date = hmac_sha256(
+        format!("AWS4{}", secret_key).as_bytes(),
+        date_stamp.as_bytes(),
+    );
     let k_region = hmac_sha256(&k_date, region.as_bytes());
     let k_service = hmac_sha256(&k_region, service.as_bytes());
     let k_signing = hmac_sha256(&k_service, b"aws4_request");
@@ -1029,10 +1065,7 @@ pub fn scan_circleci_artifacts(
                 let workflow_id = workflow.get("id").and_then(|i| i.as_str()).unwrap_or("");
 
                 // Get jobs for this workflow.
-                let jobs_url = format!(
-                    "https://circleci.com/api/v2/workflow/{}/job",
-                    workflow_id
-                );
+                let jobs_url = format!("https://circleci.com/api/v2/workflow/{}/job", workflow_id);
                 let jobs_resp = agent
                     .get(&jobs_url)
                     .set("Circle-Token", &config.api_token)
@@ -1057,10 +1090,12 @@ pub fn scan_circleci_artifacts(
 
                             if let Ok(resp) = art_resp
                                 && let Ok(art_json) = resp.into_json::<serde_json::Value>()
-                                && let Some(artifacts) = art_json.get("items").and_then(|i| i.as_array())
+                                && let Some(artifacts) =
+                                    art_json.get("items").and_then(|i| i.as_array())
                             {
                                 for artifact in artifacts {
-                                    let url = artifact.get("url").and_then(|u| u.as_str()).unwrap_or("");
+                                    let url =
+                                        artifact.get("url").and_then(|u| u.as_str()).unwrap_or("");
                                     if url.is_empty() {
                                         continue;
                                     }
@@ -1074,7 +1109,10 @@ pub fn scan_circleci_artifacts(
                                     if let Ok(resp) = content_resp
                                         && let Ok(text) = resp.into_string()
                                     {
-                                        let path = artifact.get("path").and_then(|p| p.as_str()).unwrap_or("unknown");
+                                        let path = artifact
+                                            .get("path")
+                                            .and_then(|p| p.as_str())
+                                            .unwrap_or("unknown");
                                         let virtual_path = std::path::PathBuf::from(format!(
                                             "circleci:{}/job-{}/artifact:{}",
                                             config.project_slug, job_num, path
@@ -1114,7 +1152,11 @@ pub fn scan_travis_ci_logs(
     detectors: &[Box<dyn Detector>],
 ) -> Result<Vec<Finding>, SourceScanError> {
     let agent = agent();
-    let base = config.base_url.as_deref().unwrap_or("https://api.travis-ci.com").trim_end_matches('/');
+    let base = config
+        .base_url
+        .as_deref()
+        .unwrap_or("https://api.travis-ci.com")
+        .trim_end_matches('/');
     let mut findings = Vec::new();
 
     // List recent builds.
@@ -1383,7 +1425,8 @@ pub fn scan_droneci_builds(
                         {
                             // DroneCI logs are an array of log lines.
                             if let Some(logs) = log_json.as_array() {
-                                let combined: String = logs.iter()
+                                let combined: String = logs
+                                    .iter()
                                     .filter_map(|l| l.get("line").and_then(|line| line.as_str()))
                                     .collect::<Vec<_>>()
                                     .join("\n");
@@ -1392,7 +1435,9 @@ pub fn scan_droneci_builds(
                                     repo_slug, build_num, stage_num
                                 ));
                                 findings.extend(scan_text(&combined, &virtual_path, detectors));
-                            } else if let Some(output) = log_json.get("output").and_then(|o| o.as_str()) {
+                            } else if let Some(output) =
+                                log_json.get("output").and_then(|o| o.as_str())
+                            {
                                 let virtual_path = std::path::PathBuf::from(format!(
                                     "droneci:{}/build-{}/stage-{}#log",
                                     repo_slug, build_num, stage_num
@@ -1441,11 +1486,15 @@ pub fn scan_huggingface(
         .call();
     match result {
         Ok(resp) => {
-            let body = resp.into_string().map_err(|e| SourceScanError::Parse(e.to_string()))?;
+            let body = resp
+                .into_string()
+                .map_err(|e| SourceScanError::Parse(e.to_string()))?;
             let virtual_path = std::path::PathBuf::from("huggingface:whoami");
             findings.extend(scan_text(&body, &virtual_path, detectors));
         }
-        Err(ureq::Error::Status(401, _)) => return Err(SourceScanError::Parse("Invalid Hugging Face token".into())),
+        Err(ureq::Error::Status(401, _)) => {
+            return Err(SourceScanError::Parse("Invalid Hugging Face token".into()));
+        }
         Err(e) => return Err(SourceScanError::Http(Box::new(e))),
     }
 
@@ -1453,7 +1502,10 @@ pub fn scan_huggingface(
     let models_url = if namespace.is_empty() {
         "https://huggingface.co/api/models?limit=50".to_string()
     } else {
-        format!("https://huggingface.co/api/models?author={namespace}&limit={}", config.max_items.min(100))
+        format!(
+            "https://huggingface.co/api/models?author={namespace}&limit={}",
+            config.max_items.min(100)
+        )
     };
     let result = agent
         .get(&models_url)
@@ -1470,7 +1522,10 @@ pub fn scan_huggingface(
     let datasets_url = if namespace.is_empty() {
         "https://huggingface.co/api/datasets?limit=50".to_string()
     } else {
-        format!("https://huggingface.co/api/datasets?author={namespace}&limit={}", config.max_items.min(100))
+        format!(
+            "https://huggingface.co/api/datasets?author={namespace}&limit={}",
+            config.max_items.min(100)
+        )
     };
     let result = agent
         .get(&datasets_url)
@@ -1526,7 +1581,8 @@ pub fn scan_sharepoint(
         ));
     let access_token = match token_result {
         Ok(resp) => {
-            let body: serde_json::Value = resp.into_json()
+            let body: serde_json::Value = resp
+                .into_json()
                 .map_err(|e| SourceScanError::Parse(e.to_string()))?;
             body.get("access_token")
                 .and_then(|t| t.as_str())
@@ -1539,7 +1595,8 @@ pub fn scan_sharepoint(
     let mut findings = Vec::new();
 
     // Step 2: List files from the default document library via Graph API.
-    let site_id = config.site_url
+    let site_id = config
+        .site_url
         .trim_start_matches("https://")
         .trim_start_matches("http://");
     let list_url = format!(
@@ -1554,13 +1611,16 @@ pub fn scan_sharepoint(
         .call();
 
     if let Ok(resp) = result {
-        let body: serde_json::Value = resp.into_json()
+        let body: serde_json::Value = resp
+            .into_json()
             .map_err(|e| SourceScanError::Parse(e.to_string()))?;
 
         if let Some(files) = body.get("value").and_then(|v| v.as_array()) {
             for file in files {
                 if let Some(name) = file.get("name").and_then(|n| n.as_str())
-                    && let Some(download_url) = file.get("@microsoft.graph.downloadUrl").and_then(|u| u.as_str())
+                    && let Some(download_url) = file
+                        .get("@microsoft.graph.downloadUrl")
+                        .and_then(|u| u.as_str())
                 {
                     let dl_result = agent
                         .get(download_url)
@@ -1618,7 +1678,8 @@ pub fn scan_teams(
         ));
     let access_token = match token_result {
         Ok(resp) => {
-            let body: serde_json::Value = resp.into_json()
+            let body: serde_json::Value = resp
+                .into_json()
                 .map_err(|e| SourceScanError::Parse(e.to_string()))?;
             body.get("access_token")
                 .and_then(|t| t.as_str())
@@ -1641,7 +1702,8 @@ pub fn scan_teams(
             .call();
         match result {
             Ok(resp) => {
-                let body: serde_json::Value = resp.into_json()
+                let body: serde_json::Value = resp
+                    .into_json()
                     .map_err(|e| SourceScanError::Parse(e.to_string()))?;
                 body.get("value")
                     .and_then(|v| v.as_array())
@@ -1665,7 +1727,8 @@ pub fn scan_teams(
             .call();
 
         if let Ok(resp) = result {
-            let body: serde_json::Value = resp.into_json()
+            let body: serde_json::Value = resp
+                .into_json()
                 .map_err(|e| SourceScanError::Parse(e.to_string()))?;
 
             if let Some(channels) = body.get("value").and_then(|v| v.as_array()) {
@@ -1683,7 +1746,8 @@ pub fn scan_teams(
                         if let Ok(msg_resp) = msg_result
                             && let Ok(msg_body) = msg_resp.into_string()
                         {
-                            let virtual_path = std::path::PathBuf::from(format!("teams:{tid}/{ch_id}"));
+                            let virtual_path =
+                                std::path::PathBuf::from(format!("teams:{tid}/{ch_id}"));
                             findings.extend(scan_text(&msg_body, &virtual_path, detectors));
                         }
                     }
@@ -1727,13 +1791,16 @@ pub fn scan_pypi(
             .call();
         match result {
             Ok(resp) => {
-                let body: serde_json::Value = resp.into_json()
+                let body: serde_json::Value = resp
+                    .into_json()
                     .map_err(|e| SourceScanError::Parse(e.to_string()))?;
                 body.get("projects")
                     .and_then(|p| p.as_array())
                     .map(|arr| {
                         arr.iter()
-                            .filter_map(|p| p.get("name").and_then(|n| n.as_str()).map(String::from))
+                            .filter_map(|p| {
+                                p.get("name").and_then(|n| n.as_str()).map(String::from)
+                            })
                             .collect()
                     })
                     .unwrap_or_default()
@@ -1759,9 +1826,7 @@ pub fn scan_pypi(
 
         // Fetch releases info for recent versions.
         let releases_url = format!("https://pypi.org/pypi/{pkg}/json");
-        let result = agent
-            .get(&releases_url)
-            .call();
+        let result = agent.get(&releases_url).call();
         if let Ok(resp) = result
             && let Ok(body) = resp.into_string()
         {
@@ -1802,7 +1867,11 @@ mod tests {
     fn test_scan_text_finds_secrets() {
         let detectors = crate::detectors::builtin_detectors();
         let path = std::path::PathBuf::from("test://file");
-        let findings = scan_text("aws_access_key_id = AKIAIOSFODNN7EXAMPLE", &path, &detectors);
+        let findings = scan_text(
+            "aws_access_key_id = AKIAIOSFODNN7EXAMPLE",
+            &path,
+            &detectors,
+        );
         assert!(!findings.is_empty());
     }
 

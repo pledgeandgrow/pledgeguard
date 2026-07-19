@@ -31,9 +31,7 @@ pub fn to_junit(findings: &[Finding]) -> String {
         ));
         out.push_str(&format!(
             "      <failure message=\"{}\" type=\"{}\">{}</failure>\n",
-            message,
-            f.severity,
-            message,
+            message, f.severity, message,
         ));
         out.push_str("    </testcase>\n");
     }

@@ -84,7 +84,10 @@ fn decode_single_entity(entity: &str) -> Option<String> {
         "rsquo" => Some("\u{2019}".to_string()),
         _ => {
             // Numeric entity: #x27 (hex) or #39 (decimal)
-            if let Some(hex) = entity.strip_prefix("#x").or_else(|| entity.strip_prefix("#X")) {
+            if let Some(hex) = entity
+                .strip_prefix("#x")
+                .or_else(|| entity.strip_prefix("#X"))
+            {
                 let code = u32::from_str_radix(hex, 16).ok()?;
                 char::from_u32(code).map(|c| c.to_string())
             } else if let Some(decimal) = entity.strip_prefix('#') {
@@ -284,9 +287,10 @@ pub fn unescape_json_string(input: &str) -> String {
                 Some('u') => {
                     let hex: String = (0..4).filter_map(|_| chars.next()).collect();
                     if let Ok(code) = u32::from_str_radix(&hex, 16)
-                        && let Some(ch) = char::from_u32(code) {
-                            result.push(ch);
-                        }
+                        && let Some(ch) = char::from_u32(code)
+                    {
+                        result.push(ch);
+                    }
                 }
                 Some(other) => {
                     result.push('\\');
@@ -440,7 +444,8 @@ pub fn parse_csv_line(line: &str) -> Vec<String> {
 
 /// Parse CSV content into rows of cells.
 pub fn parse_csv(content: &str) -> Vec<Vec<String>> {
-    content.lines()
+    content
+        .lines()
         .filter(|line| !line.is_empty())
         .map(parse_csv_line)
         .collect()
@@ -686,9 +691,10 @@ pub fn extract_jupyter_cells(content: &str) -> Vec<(String, String)> {
                     if let Some(text) = output.get("text").and_then(|t| t.as_str()) {
                         cells.push(("output".to_string(), text.to_string()));
                     } else if let Some(data) = output.get("data").and_then(|d| d.as_object())
-                        && let Some(text) = data.get("text/plain").and_then(|t| t.as_str()) {
-                            cells.push(("output".to_string(), text.to_string()));
-                        }
+                        && let Some(text) = data.get("text/plain").and_then(|t| t.as_str())
+                    {
+                        cells.push(("output".to_string(), text.to_string()));
+                    }
                 }
             }
         }
@@ -846,18 +852,20 @@ pub fn extract_xlsx_cells(content: &[u8]) -> Vec<String> {
     // Also try to read sheet files.
     for i in 0..archive.len() {
         if let Ok(file) = archive.by_index(i)
-            && file.name().contains("sheet") && file.name().ends_with(".xml") {
-                let mut buf = String::new();
-                let mut file = file;
-                if std::io::Read::read_to_string(&mut file, &mut buf).is_ok() {
-                    let stripped = strip_xml_tags_simple(&buf);
-                    for word in stripped.split_whitespace() {
-                        if !word.is_empty() && !values.iter().any(|v| v == word) {
-                            values.push(word.to_string());
-                        }
+            && file.name().contains("sheet")
+            && file.name().ends_with(".xml")
+        {
+            let mut buf = String::new();
+            let mut file = file;
+            if std::io::Read::read_to_string(&mut file, &mut buf).is_ok() {
+                let stripped = strip_xml_tags_simple(&buf);
+                for word in stripped.split_whitespace() {
+                    if !word.is_empty() && !values.iter().any(|v| v == word) {
+                        values.push(word.to_string());
                     }
                 }
             }
+        }
     }
 
     values
@@ -1104,22 +1112,16 @@ pub fn decode_content(content: &[u8], content_type: &ContentType) -> Vec<String>
             let text = extract_docx_text(content);
             text.lines().map(String::from).collect()
         }
-        ContentType::Xlsx => {
-            extract_xlsx_cells(content)
-        }
+        ContentType::Xlsx => extract_xlsx_cells(content),
         ContentType::Pptx => {
             let text = extract_pptx_text(content);
             text.lines().map(String::from).collect()
         }
-        ContentType::Binary => {
-            extract_binary_strings(content)
-        }
-        ContentType::Text => {
-            String::from_utf8_lossy(content)
-                .lines()
-                .map(String::from)
-                .collect()
-        }
+        ContentType::Binary => extract_binary_strings(content),
+        ContentType::Text => String::from_utf8_lossy(content)
+            .lines()
+            .map(String::from)
+            .collect(),
     }
 }
 
@@ -1202,7 +1204,10 @@ mod tests {
         assert_eq!(decode_html_entities("&#x27;"), "'");
         assert_eq!(decode_html_entities("&#39;"), "'");
         assert_eq!(decode_html_entities("&quot;"), "\"");
-        assert_eq!(decode_html_entities("hello &amp; goodbye"), "hello & goodbye");
+        assert_eq!(
+            decode_html_entities("hello &amp; goodbye"),
+            "hello & goodbye"
+        );
         assert_eq!(decode_html_entities("&nbsp;"), "\u{00A0}");
         assert_eq!(decode_html_entities("no entities here"), "no entities here");
     }
@@ -1309,7 +1314,8 @@ mod tests {
 
     #[test]
     fn test_parse_env_file() {
-        let content = "# comment\nAWS_KEY=AKIAIOSFODNN7EXAMPLE\nexport DB_PASSWORD=\"secret\"\nEMPTY=";
+        let content =
+            "# comment\nAWS_KEY=AKIAIOSFODNN7EXAMPLE\nexport DB_PASSWORD=\"secret\"\nEMPTY=";
         let values = parse_env_file(content);
         assert_eq!(values.len(), 3);
         assert_eq!(values[0].0, "AWS_KEY");
@@ -1342,8 +1348,16 @@ locals {
 }
 "#;
         let values = parse_hcl(content);
-        assert!(values.iter().any(|(k, v)| k.contains("db_password") && v.contains("supersecret")));
-        assert!(values.iter().any(|(_, v)| v.contains("AKIAIOSFODNN7EXAMPLE")));
+        assert!(
+            values
+                .iter()
+                .any(|(k, v)| k.contains("db_password") && v.contains("supersecret"))
+        );
+        assert!(
+            values
+                .iter()
+                .any(|(_, v)| v.contains("AKIAIOSFODNN7EXAMPLE"))
+        );
     }
 
     #[test]
@@ -1394,15 +1408,33 @@ locals {
 
     #[test]
     fn test_detect_content_type() {
-        assert_eq!(detect_content_type(Path::new("test.html")), ContentType::Html);
-        assert_eq!(detect_content_type(Path::new("test.yml")), ContentType::Yaml);
-        assert_eq!(detect_content_type(Path::new("Dockerfile")), ContentType::Dockerfile);
+        assert_eq!(
+            detect_content_type(Path::new("test.html")),
+            ContentType::Html
+        );
+        assert_eq!(
+            detect_content_type(Path::new("test.yml")),
+            ContentType::Yaml
+        );
+        assert_eq!(
+            detect_content_type(Path::new("Dockerfile")),
+            ContentType::Dockerfile
+        );
         assert_eq!(detect_content_type(Path::new("test.env")), ContentType::Env);
         assert_eq!(detect_content_type(Path::new("main.tf")), ContentType::Hcl);
-        assert_eq!(detect_content_type(Path::new("notebook.ipynb")), ContentType::Jupyter);
-        assert_eq!(detect_content_type(Path::new("README.md")), ContentType::Markdown);
+        assert_eq!(
+            detect_content_type(Path::new("notebook.ipynb")),
+            ContentType::Jupyter
+        );
+        assert_eq!(
+            detect_content_type(Path::new("README.md")),
+            ContentType::Markdown
+        );
         assert_eq!(detect_content_type(Path::new("data.csv")), ContentType::Csv);
-        assert_eq!(detect_content_type(Path::new("config.ini")), ContentType::Ini);
+        assert_eq!(
+            detect_content_type(Path::new("config.ini")),
+            ContentType::Ini
+        );
     }
 
     #[test]

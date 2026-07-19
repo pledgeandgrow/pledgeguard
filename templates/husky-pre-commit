@@ -1,0 +1,7 @@
+#!/usr/bin/env sh
+# Husky pre-commit hook for PledgeGuard
+# Install: npx husky add .husky/pre-commit "pledgeguard scan --diff --fail-on-findings"
+
+. "$(dirname -- "$0")/_/husky.sh"
+
+pledgeguard scan --diff --fail-on-findings --format github-actions

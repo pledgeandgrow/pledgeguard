@@ -118,7 +118,9 @@ fn eval(node: &Node, f: &Finding) -> Result<bool, ExprError> {
     match node {
         Node::Bool(b) => Ok(*b),
         Node::Field(field) => eval_field_bool(*field, f),
-        Node::Str(_) | Node::Num(_) => Err(ExprError::Eval("expected a boolean expression, got a value".into())),
+        Node::Str(_) | Node::Num(_) => Err(ExprError::Eval(
+            "expected a boolean expression, got a value".into(),
+        )),
         Node::Not(inner) => Ok(!eval(inner, f)?),
         Node::And(a, b) => Ok(eval(a, f)? && eval(b, f)?),
         Node::Or(a, b) => Ok(eval(a, f)? || eval(b, f)?),
@@ -137,7 +139,9 @@ fn eval(node: &Node, f: &Finding) -> Result<bool, ExprError> {
             let vb = eval_value(b, f)?;
             match (&va, &vb) {
                 (Value::Str(s), Value::Str(sub)) => Ok(s.contains(sub.as_str())),
-                _ => Err(ExprError::Eval("`contains` requires string operands".into())),
+                _ => Err(ExprError::Eval(
+                    "`contains` requires string operands".into(),
+                )),
             }
         }
         Node::Matches(a, b) => {
@@ -169,7 +173,9 @@ fn eval_value(node: &Node, f: &Finding) -> Result<Value, ExprError> {
         Node::Bool(b) => Ok(Value::Bool(*b)),
         Node::Num(n) => Ok(Value::Num(*n)),
         Node::Field(field) => eval_field_value(*field, f),
-        _ => Err(ExprError::Eval("expected a value, got an expression".into())),
+        _ => Err(ExprError::Eval(
+            "expected a value, got an expression".into(),
+        )),
     }
 }
 
@@ -485,7 +491,6 @@ fn tokenize(source: &str) -> Vec<Token> {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::finding::VerificationStatus;
     use std::path::PathBuf;
 
     fn mock_finding(rule_id: &str, severity: Severity, path: &str, lfp: bool) -> Finding {
@@ -506,7 +511,12 @@ mod tests {
 
     #[test]
     fn test_severity_eq() {
-        let f = mock_finding("aws-access-key-id", Severity::Critical, "src/main.rs", false);
+        let f = mock_finding(
+            "aws-access-key-id",
+            Severity::Critical,
+            "src/main.rs",
+            false,
+        );
         let filter = ExprFilter::parse(r#"severity == "critical""#).unwrap();
         assert!(filter.matches(&f).unwrap());
     }
@@ -527,14 +537,24 @@ mod tests {
 
     #[test]
     fn test_not_likely_false_positive() {
-        let f = mock_finding("aws-access-key-id", Severity::Critical, "src/main.rs", false);
+        let f = mock_finding(
+            "aws-access-key-id",
+            Severity::Critical,
+            "src/main.rs",
+            false,
+        );
         let filter = ExprFilter::parse("!likely_false_positive").unwrap();
         assert!(filter.matches(&f).unwrap());
     }
 
     #[test]
     fn test_and() {
-        let f = mock_finding("aws-access-key-id", Severity::Critical, "src/main.rs", false);
+        let f = mock_finding(
+            "aws-access-key-id",
+            Severity::Critical,
+            "src/main.rs",
+            false,
+        );
         let filter =
             ExprFilter::parse(r#"severity == "critical" && !likely_false_positive"#).unwrap();
         assert!(filter.matches(&f).unwrap());
@@ -550,31 +570,52 @@ mod tests {
 
     #[test]
     fn test_contains() {
-        let f = mock_finding("aws-access-key-id", Severity::Critical, "src/main.rs", false);
+        let f = mock_finding(
+            "aws-access-key-id",
+            Severity::Critical,
+            "src/main.rs",
+            false,
+        );
         let filter = ExprFilter::parse(r#"path contains "src/""#).unwrap();
         assert!(filter.matches(&f).unwrap());
     }
 
     #[test]
     fn test_matches() {
-        let f = mock_finding("aws-access-key-id", Severity::Critical, "src/main.rs", false);
+        let f = mock_finding(
+            "aws-access-key-id",
+            Severity::Critical,
+            "src/main.rs",
+            false,
+        );
         let filter = ExprFilter::parse(r#"rule_id matches "aws.*""#).unwrap();
         assert!(filter.matches(&f).unwrap());
     }
 
     #[test]
     fn test_parens() {
-        let f = mock_finding("aws-access-key-id", Severity::Critical, "src/main.rs", false);
-        let filter =
-            ExprFilter::parse(r#"(severity == "critical" || severity == "high") && !likely_false_positive"#)
-                .unwrap();
+        let f = mock_finding(
+            "aws-access-key-id",
+            Severity::Critical,
+            "src/main.rs",
+            false,
+        );
+        let filter = ExprFilter::parse(
+            r#"(severity == "critical" || severity == "high") && !likely_false_positive"#,
+        )
+        .unwrap();
         assert!(filter.matches(&f).unwrap());
     }
 
     #[test]
     fn test_filter_vec() {
         let findings = vec![
-            mock_finding("aws-access-key-id", Severity::Critical, "src/main.rs", false),
+            mock_finding(
+                "aws-access-key-id",
+                Severity::Critical,
+                "src/main.rs",
+                false,
+            ),
             mock_finding("generic-api-key", Severity::Low, "tests/data.rs", true),
             mock_finding("github-pat", Severity::High, "src/config.rs", false),
         ];
@@ -591,7 +632,12 @@ mod tests {
 
     #[test]
     fn test_complex_expression() {
-        let f = mock_finding("aws-access-key-id", Severity::Critical, "src/main.rs", false);
+        let f = mock_finding(
+            "aws-access-key-id",
+            Severity::Critical,
+            "src/main.rs",
+            false,
+        );
         let filter = ExprFilter::parse(
             r#"(severity == "critical" || severity == "high") && !likely_false_positive && path contains "src/""#,
         )

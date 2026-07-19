@@ -508,7 +508,9 @@ fn verify_anthropic(key: &str) -> VerificationStatus {
 /// Google API Key: list storage buckets (requires the key as a query param).
 fn verify_google_api(key: &str) -> VerificationStatus {
     let result = agent()
-        .get(&format!("https://storage.googleapis.com/storage/v1/b?project=test&key={key}"))
+        .get(&format!(
+            "https://storage.googleapis.com/storage/v1/b?project=test&key={key}"
+        ))
         .call();
     match result {
         Ok(resp) => {
@@ -616,7 +618,11 @@ fn verify_cloudflare(token: &str) -> VerificationStatus {
     match result {
         Ok(resp) => match resp.into_json::<serde_json::Value>() {
             Ok(json) => {
-                if json.get("success").and_then(|v| v.as_bool()).unwrap_or(false) {
+                if json
+                    .get("success")
+                    .and_then(|v| v.as_bool())
+                    .unwrap_or(false)
+                {
                     VerificationStatus::Active
                 } else {
                     VerificationStatus::Inactive
@@ -760,7 +766,11 @@ fn verify_aws_sts(secret: &str) -> VerificationStatus {
     // Without the paired access key ID, we can't sign STS requests.
     // We check if the secret looks like a valid AWS secret key format
     // (40 base64 characters) and return Unknown (can't verify without key ID).
-    if secret.len() == 40 && secret.chars().all(|c| c.is_ascii_alphanumeric() || c == '+' || c == '/' || c == '=') {
+    if secret.len() == 40
+        && secret
+            .chars()
+            .all(|c| c.is_ascii_alphanumeric() || c == '+' || c == '/' || c == '=')
+    {
         VerificationStatus::Unknown
     } else {
         VerificationStatus::Inactive
@@ -797,7 +807,8 @@ fn verify_gcp_iam(key_json: &str) -> VerificationStatus {
     match parsed {
         Ok(json) => {
             // Check for required fields.
-            let has_type = json.get("type").and_then(|t| t.as_str()).unwrap_or("") == "service_account";
+            let has_type =
+                json.get("type").and_then(|t| t.as_str()).unwrap_or("") == "service_account";
             let has_private_key = json.get("private_key").is_some();
             let has_client_email = json.get("client_email").is_some();
 
@@ -834,7 +845,10 @@ fn verify_private_key(pem: &str) -> VerificationStatus {
             if let Some(end_marker) = pem[content_start..].find("-----END") {
                 let b64_content = pem[content_start..content_start + end_marker].trim();
                 use base64::Engine;
-                if base64::engine::general_purpose::STANDARD.decode(b64_content).is_ok() {
+                if base64::engine::general_purpose::STANDARD
+                    .decode(b64_content)
+                    .is_ok()
+                {
                     return VerificationStatus::Active;
                 }
             }
@@ -899,16 +913,14 @@ fn verify_slack_webhook(url: &str) -> VerificationStatus {
         .send_string(payload);
 
     match result {
-        Ok(resp) => {
-            match resp.into_string() {
-                Ok(body) if body.trim() == "ok" => VerificationStatus::Active,
-                Ok(body) if body.contains("invalid") || body.contains("no_service") => {
-                    VerificationStatus::Inactive
-                }
-                Ok(_) => VerificationStatus::Unknown,
-                Err(_) => VerificationStatus::Unknown,
+        Ok(resp) => match resp.into_string() {
+            Ok(body) if body.trim() == "ok" => VerificationStatus::Active,
+            Ok(body) if body.contains("invalid") || body.contains("no_service") => {
+                VerificationStatus::Inactive
             }
-        }
+            Ok(_) => VerificationStatus::Unknown,
+            Err(_) => VerificationStatus::Unknown,
+        },
         Err(ureq::Error::Status(404, _)) | Err(ureq::Error::Status(403, _)) => {
             VerificationStatus::Inactive
         }
@@ -925,13 +937,14 @@ fn verify_slack_webhook(url: &str) -> VerificationStatus {
 /// The Vault address is read from the VAULT_ADDR env var (defaults to
 /// http://127.0.0.1:8200).
 fn verify_vault_token(token: &str) -> VerificationStatus {
-    let vault_addr = std::env::var("VAULT_ADDR").unwrap_or_else(|_| "http://127.0.0.1:8200".to_string());
-    let url = format!("{}/v1/auth/token/lookup-self", vault_addr.trim_end_matches('/'));
+    let vault_addr =
+        std::env::var("VAULT_ADDR").unwrap_or_else(|_| "http://127.0.0.1:8200".to_string());
+    let url = format!(
+        "{}/v1/auth/token/lookup-self",
+        vault_addr.trim_end_matches('/')
+    );
 
-    let result = agent()
-        .get(&url)
-        .set("X-Vault-Token", token)
-        .call();
+    let result = agent().get(&url).set("X-Vault-Token", token).call();
 
     status_from_result_rate_limited(result, &[403])
 }
@@ -1090,7 +1103,9 @@ fn verify_terraform_cloud(token: &str) -> VerificationStatus {
 // ── Phase 1: Additional verifier functions ────────────────────────────
 
 fn verify_azure_batch(key: &str) -> VerificationStatus {
-    if key.len() < 20 { return VerificationStatus::Inactive; }
+    if key.len() < 20 {
+        return VerificationStatus::Inactive;
+    }
     let result = agent()
         .get("https://batch.core.windows.net/")
         .set("Authorization", &format!("SharedKey {key}"))
@@ -1103,17 +1118,23 @@ fn verify_gcp_oauth(_id: &str) -> VerificationStatus {
 }
 
 fn verify_alibaba(key: &str) -> VerificationStatus {
-    if !key.starts_with("LTAI") && !key.starts_with("AK") { return VerificationStatus::Inactive; }
+    if !key.starts_with("LTAI") && !key.starts_with("AK") {
+        return VerificationStatus::Inactive;
+    }
     VerificationStatus::Unknown
 }
 
 fn verify_tencent(key: &str) -> VerificationStatus {
-    if key.len() < 20 { return VerificationStatus::Inactive; }
+    if key.len() < 20 {
+        return VerificationStatus::Inactive;
+    }
     VerificationStatus::Unknown
 }
 
 fn verify_oracle_cloud(token: &str) -> VerificationStatus {
-    if token.len() < 20 { return VerificationStatus::Inactive; }
+    if token.len() < 20 {
+        return VerificationStatus::Inactive;
+    }
     let result = agent()
         .get("https://identity.us-ashburn-1.oraclecloud.com/20180908/users/me")
         .set("Authorization", &format!("Bearer {token}"))
@@ -1122,7 +1143,9 @@ fn verify_oracle_cloud(token: &str) -> VerificationStatus {
 }
 
 fn verify_scaleway(key: &str) -> VerificationStatus {
-    if key.len() < 20 { return VerificationStatus::Inactive; }
+    if key.len() < 20 {
+        return VerificationStatus::Inactive;
+    }
     let result = agent()
         .get("https://api.scaleway.com/account/v2/tokens")
         .set("X-Auth-Token", key)
@@ -1131,7 +1154,9 @@ fn verify_scaleway(key: &str) -> VerificationStatus {
 }
 
 fn verify_vultr(key: &str) -> VerificationStatus {
-    if key.len() < 20 { return VerificationStatus::Inactive; }
+    if key.len() < 20 {
+        return VerificationStatus::Inactive;
+    }
     let result = agent()
         .get("https://api.vultr.com/v2/account")
         .set("Authorization", &format!("Bearer {key}"))
@@ -1140,7 +1165,9 @@ fn verify_vultr(key: &str) -> VerificationStatus {
 }
 
 fn verify_linode(token: &str) -> VerificationStatus {
-    if token.len() < 20 { return VerificationStatus::Inactive; }
+    if token.len() < 20 {
+        return VerificationStatus::Inactive;
+    }
     let result = agent()
         .get("https://api.linode.com/v4/account")
         .set("Authorization", &format!("Bearer {token}"))
@@ -1149,17 +1176,23 @@ fn verify_linode(token: &str) -> VerificationStatus {
 }
 
 fn verify_backblaze(key: &str) -> VerificationStatus {
-    if key.len() < 10 { return VerificationStatus::Inactive; }
+    if key.len() < 10 {
+        return VerificationStatus::Inactive;
+    }
     VerificationStatus::Unknown
 }
 
 fn verify_wasabi(key: &str) -> VerificationStatus {
-    if key.len() < 10 { return VerificationStatus::Inactive; }
+    if key.len() < 10 {
+        return VerificationStatus::Inactive;
+    }
     VerificationStatus::Unknown
 }
 
 fn verify_fastly(key: &str) -> VerificationStatus {
-    if key.len() < 20 { return VerificationStatus::Inactive; }
+    if key.len() < 20 {
+        return VerificationStatus::Inactive;
+    }
     let result = agent()
         .get("https://api.fastly.com/current_customer")
         .set("Fastly-Key", key)
@@ -1168,7 +1201,9 @@ fn verify_fastly(key: &str) -> VerificationStatus {
 }
 
 fn verify_databricks(token: &str) -> VerificationStatus {
-    if !token.starts_with("dapi") { return VerificationStatus::Inactive; }
+    if !token.starts_with("dapi") {
+        return VerificationStatus::Inactive;
+    }
     let result = agent()
         .get("https://databricks.com/api/2.0/scim/v2/Me")
         .set("Authorization", &format!("Bearer {token}"))
@@ -1177,7 +1212,9 @@ fn verify_databricks(token: &str) -> VerificationStatus {
 }
 
 fn verify_dynatrace(token: &str) -> VerificationStatus {
-    if !token.starts_with("dt0c01_") { return VerificationStatus::Inactive; }
+    if !token.starts_with("dt0c01_") {
+        return VerificationStatus::Inactive;
+    }
     let result = agent()
         .get("https://my.dynatrace.com/api/v1/user")
         .set("Authorization", &format!("Api-Token {token}"))
@@ -1186,7 +1223,9 @@ fn verify_dynatrace(token: &str) -> VerificationStatus {
 }
 
 fn verify_airtable(key: &str) -> VerificationStatus {
-    if !key.starts_with("pat") { return VerificationStatus::Inactive; }
+    if !key.starts_with("pat") {
+        return VerificationStatus::Inactive;
+    }
     let result = agent()
         .get("https://api.airtable.com/v0/meta/whoami")
         .set("Authorization", &format!("Bearer {key}"))
@@ -1195,7 +1234,9 @@ fn verify_airtable(key: &str) -> VerificationStatus {
 }
 
 fn verify_contentful(token: &str) -> VerificationStatus {
-    if !token.starts_with("CFPAT-") { return VerificationStatus::Inactive; }
+    if !token.starts_with("CFPAT-") {
+        return VerificationStatus::Inactive;
+    }
     let result = agent()
         .get("https://api.contentful.com/users/me")
         .set("Authorization", &format!("Bearer {token}"))
@@ -1204,7 +1245,9 @@ fn verify_contentful(token: &str) -> VerificationStatus {
 }
 
 fn verify_hubspot(key: &str) -> VerificationStatus {
-    if key.len() < 20 { return VerificationStatus::Inactive; }
+    if key.len() < 20 {
+        return VerificationStatus::Inactive;
+    }
     let result = agent()
         .get("https://api.hubapi.com/account-info/v3/details")
         .set("Authorization", &format!("Bearer {key}"))
@@ -1213,7 +1256,9 @@ fn verify_hubspot(key: &str) -> VerificationStatus {
 }
 
 fn verify_algolia(key: &str) -> VerificationStatus {
-    if key.len() < 20 { return VerificationStatus::Inactive; }
+    if key.len() < 20 {
+        return VerificationStatus::Inactive;
+    }
     let result = agent()
         .get("https://api.algolia.com/1/keys")
         .set("X-Algolia-API-Key", key)
@@ -1222,7 +1267,9 @@ fn verify_algolia(key: &str) -> VerificationStatus {
 }
 
 fn verify_posthog(key: &str) -> VerificationStatus {
-    if key.len() < 20 { return VerificationStatus::Inactive; }
+    if key.len() < 20 {
+        return VerificationStatus::Inactive;
+    }
     let result = agent()
         .get("https://app.posthog.com/api/users/@me/")
         .set("Authorization", &format!("Bearer {key}"))
@@ -1231,7 +1278,9 @@ fn verify_posthog(key: &str) -> VerificationStatus {
 }
 
 fn verify_launchdarkly(key: &str) -> VerificationStatus {
-    if !key.starts_with("sdk-") && !key.starts_with("api-") { return VerificationStatus::Inactive; }
+    if !key.starts_with("sdk-") && !key.starts_with("api-") {
+        return VerificationStatus::Inactive;
+    }
     let result = agent()
         .get("https://app.launchdarkly.com/api/v2/users/me")
         .set("Authorization", key)
@@ -1240,7 +1289,9 @@ fn verify_launchdarkly(key: &str) -> VerificationStatus {
 }
 
 fn verify_docker_registry(token: &str) -> VerificationStatus {
-    if token.len() < 20 { return VerificationStatus::Inactive; }
+    if token.len() < 20 {
+        return VerificationStatus::Inactive;
+    }
     let result = agent()
         .get("https://registry.hub.docker.com/v2/userinfo/")
         .set("Authorization", &format!("Bearer {token}"))
@@ -1249,17 +1300,23 @@ fn verify_docker_registry(token: &str) -> VerificationStatus {
 }
 
 fn verify_harbor(token: &str) -> VerificationStatus {
-    if token.len() < 10 { return VerificationStatus::Inactive; }
+    if token.len() < 10 {
+        return VerificationStatus::Inactive;
+    }
     VerificationStatus::Unknown
 }
 
 fn verify_nexus(token: &str) -> VerificationStatus {
-    if token.len() < 10 { return VerificationStatus::Inactive; }
+    if token.len() < 10 {
+        return VerificationStatus::Inactive;
+    }
     VerificationStatus::Unknown
 }
 
 fn verify_confluent(token: &str) -> VerificationStatus {
-    if token.len() < 20 { return VerificationStatus::Inactive; }
+    if token.len() < 20 {
+        return VerificationStatus::Inactive;
+    }
     let result = agent()
         .get("https://api.confluent.cloud/iam/v2/users/me")
         .set("Authorization", &format!("Bearer {token}"))
@@ -1268,7 +1325,9 @@ fn verify_confluent(token: &str) -> VerificationStatus {
 }
 
 fn verify_doppler(token: &str) -> VerificationStatus {
-    if !token.starts_with("dp.pt.") { return VerificationStatus::Inactive; }
+    if !token.starts_with("dp.pt.") {
+        return VerificationStatus::Inactive;
+    }
     let result = agent()
         .get("https://api.doppler.com/v3/me")
         .set("Authorization", &format!("Bearer {token}"))
@@ -1277,7 +1336,9 @@ fn verify_doppler(token: &str) -> VerificationStatus {
 }
 
 fn verify_onelogin(token: &str) -> VerificationStatus {
-    if token.len() < 20 { return VerificationStatus::Inactive; }
+    if token.len() < 20 {
+        return VerificationStatus::Inactive;
+    }
     let result = agent()
         .get("https://api.onelogin.com/api/1/users/me")
         .set("Authorization", &format!("bearer:{token}"))
@@ -1286,7 +1347,9 @@ fn verify_onelogin(token: &str) -> VerificationStatus {
 }
 
 fn verify_jumpcloud(token: &str) -> VerificationStatus {
-    if token.len() < 20 { return VerificationStatus::Inactive; }
+    if token.len() < 20 {
+        return VerificationStatus::Inactive;
+    }
     let result = agent()
         .get("https://console.jumpcloud.com/api/systemusers")
         .set("x-api-key", token)
@@ -1295,7 +1358,9 @@ fn verify_jumpcloud(token: &str) -> VerificationStatus {
 }
 
 fn verify_clerk(token: &str) -> VerificationStatus {
-    if !token.starts_with("sk_") { return VerificationStatus::Inactive; }
+    if !token.starts_with("sk_") {
+        return VerificationStatus::Inactive;
+    }
     let result = agent()
         .get("https://api.clerk.com/v1/me")
         .set("Authorization", &format!("Bearer {token}"))
@@ -1304,7 +1369,9 @@ fn verify_clerk(token: &str) -> VerificationStatus {
 }
 
 fn verify_figma(token: &str) -> VerificationStatus {
-    if !token.starts_with("figd_") { return VerificationStatus::Inactive; }
+    if !token.starts_with("figd_") {
+        return VerificationStatus::Inactive;
+    }
     let result = agent()
         .get("https://api.figma.com/v1/me")
         .set("X-Figma-Token", token)
@@ -1313,7 +1380,9 @@ fn verify_figma(token: &str) -> VerificationStatus {
 }
 
 fn verify_dropbox(token: &str) -> VerificationStatus {
-    if !token.starts_with("sl.") { return VerificationStatus::Inactive; }
+    if !token.starts_with("sl.") {
+        return VerificationStatus::Inactive;
+    }
     let result = agent()
         .get("https://api.dropboxapi.com/2/users/get_current_account")
         .set("Authorization", &format!("Bearer {token}"))
@@ -1322,7 +1391,9 @@ fn verify_dropbox(token: &str) -> VerificationStatus {
 }
 
 fn verify_reddit(token: &str) -> VerificationStatus {
-    if token.len() < 20 { return VerificationStatus::Inactive; }
+    if token.len() < 20 {
+        return VerificationStatus::Inactive;
+    }
     let result = agent()
         .get("https://oauth.reddit.com/api/v1/me")
         .set("Authorization", &format!("Bearer {token}"))
@@ -1331,15 +1402,21 @@ fn verify_reddit(token: &str) -> VerificationStatus {
 }
 
 fn verify_instagram(token: &str) -> VerificationStatus {
-    if !token.starts_with("IGQV") { return VerificationStatus::Inactive; }
+    if !token.starts_with("IGQV") {
+        return VerificationStatus::Inactive;
+    }
     let result = agent()
-        .get(&format!("https://graph.instagram.com/me?access_token={token}"))
+        .get(&format!(
+            "https://graph.instagram.com/me?access_token={token}"
+        ))
         .call();
     status_from_result(result, &[401, 403])
 }
 
 fn verify_pinterest(token: &str) -> VerificationStatus {
-    if token.len() < 20 { return VerificationStatus::Inactive; }
+    if token.len() < 20 {
+        return VerificationStatus::Inactive;
+    }
     let result = agent()
         .get("https://api.pinterest.com/v5/user_account")
         .set("Authorization", &format!("Bearer {token}"))
@@ -1348,7 +1425,9 @@ fn verify_pinterest(token: &str) -> VerificationStatus {
 }
 
 fn verify_tiktok(token: &str) -> VerificationStatus {
-    if token.len() < 20 { return VerificationStatus::Inactive; }
+    if token.len() < 20 {
+        return VerificationStatus::Inactive;
+    }
     VerificationStatus::Unknown
 }
 
@@ -1357,20 +1436,28 @@ fn verify_zoom(_secret: &str) -> VerificationStatus {
 }
 
 fn verify_linkedin(secret: &str) -> VerificationStatus {
-    if secret.len() < 16 { return VerificationStatus::Inactive; }
+    if secret.len() < 16 {
+        return VerificationStatus::Inactive;
+    }
     VerificationStatus::Unknown
 }
 
 fn verify_facebook(token: &str) -> VerificationStatus {
-    if token.len() < 20 { return VerificationStatus::Inactive; }
+    if token.len() < 20 {
+        return VerificationStatus::Inactive;
+    }
     let result = agent()
-        .get(&format!("https://graph.facebook.com/me?access_token={token}"))
+        .get(&format!(
+            "https://graph.facebook.com/me?access_token={token}"
+        ))
         .call();
     status_from_result(result, &[401, 403])
 }
 
 fn verify_twitter(token: &str) -> VerificationStatus {
-    if token.len() < 20 { return VerificationStatus::Inactive; }
+    if token.len() < 20 {
+        return VerificationStatus::Inactive;
+    }
     let result = agent()
         .get("https://api.twitter.com/2/users/me")
         .set("Authorization", &format!("Bearer {token}"))
@@ -1379,7 +1466,9 @@ fn verify_twitter(token: &str) -> VerificationStatus {
 }
 
 fn verify_spotify(token: &str) -> VerificationStatus {
-    if token.len() < 20 { return VerificationStatus::Inactive; }
+    if token.len() < 20 {
+        return VerificationStatus::Inactive;
+    }
     let result = agent()
         .get("https://api.spotify.com/v1/me")
         .set("Authorization", &format!("Bearer {token}"))
@@ -1388,17 +1477,23 @@ fn verify_spotify(token: &str) -> VerificationStatus {
 }
 
 fn verify_plaid(token: &str) -> VerificationStatus {
-    if !token.starts_with("access-") && token.len() < 20 { return VerificationStatus::Inactive; }
+    if !token.starts_with("access-") && token.len() < 20 {
+        return VerificationStatus::Inactive;
+    }
     VerificationStatus::Unknown
 }
 
 fn verify_flutterwave(key: &str) -> VerificationStatus {
-    if !key.starts_with("FLWSECK") { return VerificationStatus::Inactive; }
+    if !key.starts_with("FLWSECK") {
+        return VerificationStatus::Inactive;
+    }
     VerificationStatus::Unknown
 }
 
 fn verify_paystack(key: &str) -> VerificationStatus {
-    if !key.starts_with("sk_") { return VerificationStatus::Inactive; }
+    if !key.starts_with("sk_") {
+        return VerificationStatus::Inactive;
+    }
     let result = agent()
         .get("https://api.paystack.com/transaction")
         .set("Authorization", &format!("Bearer {key}"))
@@ -1407,12 +1502,16 @@ fn verify_paystack(key: &str) -> VerificationStatus {
 }
 
 fn verify_razorpay(key: &str) -> VerificationStatus {
-    if !key.starts_with("rzp_") { return VerificationStatus::Inactive; }
+    if !key.starts_with("rzp_") {
+        return VerificationStatus::Inactive;
+    }
     VerificationStatus::Unknown
 }
 
 fn verify_coinbase(token: &str) -> VerificationStatus {
-    if token.len() < 20 { return VerificationStatus::Inactive; }
+    if token.len() < 20 {
+        return VerificationStatus::Inactive;
+    }
     let result = agent()
         .get("https://api.coinbase.com/v2/user")
         .set("Authorization", &format!("Bearer {token}"))
@@ -1421,22 +1520,30 @@ fn verify_coinbase(token: &str) -> VerificationStatus {
 }
 
 fn verify_paypal(secret: &str) -> VerificationStatus {
-    if secret.len() < 20 { return VerificationStatus::Inactive; }
+    if secret.len() < 20 {
+        return VerificationStatus::Inactive;
+    }
     VerificationStatus::Unknown
 }
 
 fn verify_paddle(token: &str) -> VerificationStatus {
-    if token.len() < 20 { return VerificationStatus::Inactive; }
+    if token.len() < 20 {
+        return VerificationStatus::Inactive;
+    }
     VerificationStatus::Unknown
 }
 
 fn verify_wepay(token: &str) -> VerificationStatus {
-    if token.len() < 20 { return VerificationStatus::Inactive; }
+    if token.len() < 20 {
+        return VerificationStatus::Inactive;
+    }
     VerificationStatus::Unknown
 }
 
 fn verify_crates_io(token: &str) -> VerificationStatus {
-    if token.len() < 20 { return VerificationStatus::Inactive; }
+    if token.len() < 20 {
+        return VerificationStatus::Inactive;
+    }
     let result = agent()
         .get("https://crates.io/api/v1/me")
         .set("Authorization", token)
@@ -1445,17 +1552,23 @@ fn verify_crates_io(token: &str) -> VerificationStatus {
 }
 
 fn verify_nuget(key: &str) -> VerificationStatus {
-    if !key.starts_with("oy2") { return VerificationStatus::Inactive; }
+    if !key.starts_with("oy2") {
+        return VerificationStatus::Inactive;
+    }
     VerificationStatus::Unknown
 }
 
 fn verify_maven_central(token: &str) -> VerificationStatus {
-    if token.len() < 20 { return VerificationStatus::Inactive; }
+    if token.len() < 20 {
+        return VerificationStatus::Inactive;
+    }
     VerificationStatus::Unknown
 }
 
 fn verify_packagist(token: &str) -> VerificationStatus {
-    if token.len() < 20 { return VerificationStatus::Inactive; }
+    if token.len() < 20 {
+        return VerificationStatus::Inactive;
+    }
     let result = agent()
         .get("https://packagist.org/api/me")
         .set("Authorization", &format!("Bearer {token}"))
@@ -1464,7 +1577,9 @@ fn verify_packagist(token: &str) -> VerificationStatus {
 }
 
 fn verify_netlify(token: &str) -> VerificationStatus {
-    if !token.starts_with("nfp_") { return VerificationStatus::Inactive; }
+    if !token.starts_with("nfp_") {
+        return VerificationStatus::Inactive;
+    }
     let result = agent()
         .get("https://api.netlify.com/api/v1/user")
         .set("Authorization", &format!("Bearer {token}"))
@@ -1473,7 +1588,9 @@ fn verify_netlify(token: &str) -> VerificationStatus {
 }
 
 fn verify_render(token: &str) -> VerificationStatus {
-    if !token.starts_with("rnd_") { return VerificationStatus::Inactive; }
+    if !token.starts_with("rnd_") {
+        return VerificationStatus::Inactive;
+    }
     let result = agent()
         .get("https://api.render.com/v1/users/me")
         .set("Authorization", &format!("Bearer {token}"))
@@ -1482,12 +1599,16 @@ fn verify_render(token: &str) -> VerificationStatus {
 }
 
 fn verify_fly_io(token: &str) -> VerificationStatus {
-    if !token.starts_with("FlyV1_") { return VerificationStatus::Inactive; }
+    if !token.starts_with("FlyV1_") {
+        return VerificationStatus::Inactive;
+    }
     VerificationStatus::Unknown
 }
 
 fn verify_railway(token: &str) -> VerificationStatus {
-    if token.len() < 20 { return VerificationStatus::Inactive; }
+    if token.len() < 20 {
+        return VerificationStatus::Inactive;
+    }
     let result = agent()
         .post("https://backboard.railway.app/graphql/v1")
         .set("Authorization", &format!("Bearer {token}"))
@@ -1496,12 +1617,16 @@ fn verify_railway(token: &str) -> VerificationStatus {
 }
 
 fn verify_deno_deploy(token: &str) -> VerificationStatus {
-    if !token.starts_with("ddp_") { return VerificationStatus::Inactive; }
+    if !token.starts_with("ddp_") {
+        return VerificationStatus::Inactive;
+    }
     VerificationStatus::Unknown
 }
 
 fn verify_deepsource(token: &str) -> VerificationStatus {
-    if token.len() < 20 { return VerificationStatus::Inactive; }
+    if token.len() < 20 {
+        return VerificationStatus::Inactive;
+    }
     let result = agent()
         .get("https://api.deepsource.io/v1/me")
         .set("Authorization", &format!("Bearer {token}"))
@@ -1510,27 +1635,37 @@ fn verify_deepsource(token: &str) -> VerificationStatus {
 }
 
 fn verify_semgrep(token: &str) -> VerificationStatus {
-    if token.len() < 20 { return VerificationStatus::Inactive; }
+    if token.len() < 20 {
+        return VerificationStatus::Inactive;
+    }
     VerificationStatus::Unknown
 }
 
 fn verify_codeium(key: &str) -> VerificationStatus {
-    if key.len() < 20 { return VerificationStatus::Inactive; }
+    if key.len() < 20 {
+        return VerificationStatus::Inactive;
+    }
     VerificationStatus::Unknown
 }
 
 fn verify_tabnine(key: &str) -> VerificationStatus {
-    if key.len() < 20 { return VerificationStatus::Inactive; }
+    if key.len() < 20 {
+        return VerificationStatus::Inactive;
+    }
     VerificationStatus::Unknown
 }
 
 fn verify_greptile(key: &str) -> VerificationStatus {
-    if !key.starts_with("grpt_") { return VerificationStatus::Inactive; }
+    if !key.starts_with("grpt_") {
+        return VerificationStatus::Inactive;
+    }
     VerificationStatus::Unknown
 }
 
 fn verify_pinecone(key: &str) -> VerificationStatus {
-    if !key.starts_with("pcsk_") { return VerificationStatus::Inactive; }
+    if !key.starts_with("pcsk_") {
+        return VerificationStatus::Inactive;
+    }
     let result = agent()
         .get("https://api.pinecone.io/indexes")
         .set("Api-Key", key)
@@ -1539,17 +1674,23 @@ fn verify_pinecone(key: &str) -> VerificationStatus {
 }
 
 fn verify_weaviate(key: &str) -> VerificationStatus {
-    if key.len() < 20 { return VerificationStatus::Inactive; }
+    if key.len() < 20 {
+        return VerificationStatus::Inactive;
+    }
     VerificationStatus::Unknown
 }
 
 fn verify_qdrant(key: &str) -> VerificationStatus {
-    if key.len() < 20 { return VerificationStatus::Inactive; }
+    if key.len() < 20 {
+        return VerificationStatus::Inactive;
+    }
     VerificationStatus::Unknown
 }
 
 fn verify_weights_biases(key: &str) -> VerificationStatus {
-    if key.len() < 20 { return VerificationStatus::Inactive; }
+    if key.len() < 20 {
+        return VerificationStatus::Inactive;
+    }
     let result = agent()
         .get("https://api.wandb.ai/api/v1/users/me")
         .set("Authorization", &format!("Basic {key}:"))
@@ -1558,12 +1699,16 @@ fn verify_weights_biases(key: &str) -> VerificationStatus {
 }
 
 fn verify_comet_ml(key: &str) -> VerificationStatus {
-    if key.len() < 20 { return VerificationStatus::Inactive; }
+    if key.len() < 20 {
+        return VerificationStatus::Inactive;
+    }
     VerificationStatus::Unknown
 }
 
 fn verify_fireworks_ai(key: &str) -> VerificationStatus {
-    if key.len() < 20 { return VerificationStatus::Inactive; }
+    if key.len() < 20 {
+        return VerificationStatus::Inactive;
+    }
     let result = agent()
         .get("https://api.fireworks.ai/v1/account")
         .set("Authorization", &format!("Bearer {key}"))
@@ -1572,42 +1717,58 @@ fn verify_fireworks_ai(key: &str) -> VerificationStatus {
 }
 
 fn verify_modal(key: &str) -> VerificationStatus {
-    if key.len() < 20 { return VerificationStatus::Inactive; }
+    if key.len() < 20 {
+        return VerificationStatus::Inactive;
+    }
     VerificationStatus::Unknown
 }
 
 fn verify_runwayml(key: &str) -> VerificationStatus {
-    if key.len() < 20 { return VerificationStatus::Inactive; }
+    if key.len() < 20 {
+        return VerificationStatus::Inactive;
+    }
     VerificationStatus::Unknown
 }
 
 fn verify_langsmith(key: &str) -> VerificationStatus {
-    if !key.starts_with("lsk_") { return VerificationStatus::Inactive; }
+    if !key.starts_with("lsk_") {
+        return VerificationStatus::Inactive;
+    }
     VerificationStatus::Unknown
 }
 
 fn verify_langfuse(key: &str) -> VerificationStatus {
-    if !key.starts_with("sk-lf-") { return VerificationStatus::Inactive; }
+    if !key.starts_with("sk-lf-") {
+        return VerificationStatus::Inactive;
+    }
     VerificationStatus::Unknown
 }
 
 fn verify_helicone(key: &str) -> VerificationStatus {
-    if !key.starts_with("sk-helicone-") { return VerificationStatus::Inactive; }
+    if !key.starts_with("sk-helicone-") {
+        return VerificationStatus::Inactive;
+    }
     VerificationStatus::Unknown
 }
 
 fn verify_portkey(key: &str) -> VerificationStatus {
-    if key.len() < 20 { return VerificationStatus::Inactive; }
+    if key.len() < 20 {
+        return VerificationStatus::Inactive;
+    }
     VerificationStatus::Unknown
 }
 
 fn verify_braintrust(key: &str) -> VerificationStatus {
-    if key.len() < 20 { return VerificationStatus::Inactive; }
+    if key.len() < 20 {
+        return VerificationStatus::Inactive;
+    }
     VerificationStatus::Unknown
 }
 
 fn verify_cohere(key: &str) -> VerificationStatus {
-    if key.len() < 20 { return VerificationStatus::Inactive; }
+    if key.len() < 20 {
+        return VerificationStatus::Inactive;
+    }
     let result = agent()
         .get("https://api.cohere.ai/v1/me")
         .set("Authorization", &format!("Bearer {key}"))
@@ -1616,7 +1777,9 @@ fn verify_cohere(key: &str) -> VerificationStatus {
 }
 
 fn verify_groq(key: &str) -> VerificationStatus {
-    if !key.starts_with("gsk_") { return VerificationStatus::Inactive; }
+    if !key.starts_with("gsk_") {
+        return VerificationStatus::Inactive;
+    }
     let result = agent()
         .get("https://api.groq.com/openai/v1/models")
         .set("Authorization", &format!("Bearer {key}"))
@@ -1625,7 +1788,9 @@ fn verify_groq(key: &str) -> VerificationStatus {
 }
 
 fn verify_deepseek(key: &str) -> VerificationStatus {
-    if !key.starts_with("sk-") { return VerificationStatus::Inactive; }
+    if !key.starts_with("sk-") {
+        return VerificationStatus::Inactive;
+    }
     let result = agent()
         .get("https://api.deepseek.com/v1/models")
         .set("Authorization", &format!("Bearer {key}"))
@@ -1634,7 +1799,9 @@ fn verify_deepseek(key: &str) -> VerificationStatus {
 }
 
 fn verify_mistral(key: &str) -> VerificationStatus {
-    if key.len() < 20 { return VerificationStatus::Inactive; }
+    if key.len() < 20 {
+        return VerificationStatus::Inactive;
+    }
     let result = agent()
         .get("https://api.mistral.ai/v1/models")
         .set("Authorization", &format!("Bearer {key}"))
@@ -1643,7 +1810,9 @@ fn verify_mistral(key: &str) -> VerificationStatus {
 }
 
 fn verify_perplexity(key: &str) -> VerificationStatus {
-    if !key.starts_with("pplx-") { return VerificationStatus::Inactive; }
+    if !key.starts_with("pplx-") {
+        return VerificationStatus::Inactive;
+    }
     let result = agent()
         .get("https://api.perplexity.ai/v1/models")
         .set("Authorization", &format!("Bearer {key}"))
@@ -1652,7 +1821,9 @@ fn verify_perplexity(key: &str) -> VerificationStatus {
 }
 
 fn verify_elevenlabs(key: &str) -> VerificationStatus {
-    if key.len() < 20 { return VerificationStatus::Inactive; }
+    if key.len() < 20 {
+        return VerificationStatus::Inactive;
+    }
     let result = agent()
         .get("https://api.elevenlabs.io/v1/user")
         .set("xi-api-key", key)
@@ -1661,7 +1832,9 @@ fn verify_elevenlabs(key: &str) -> VerificationStatus {
 }
 
 fn verify_openrouter(key: &str) -> VerificationStatus {
-    if !key.starts_with("sk-or-") { return VerificationStatus::Inactive; }
+    if !key.starts_with("sk-or-") {
+        return VerificationStatus::Inactive;
+    }
     let result = agent()
         .get("https://openrouter.ai/api/v1/key")
         .set("Authorization", &format!("Bearer {key}"))
@@ -1670,7 +1843,9 @@ fn verify_openrouter(key: &str) -> VerificationStatus {
 }
 
 fn verify_together_ai(key: &str) -> VerificationStatus {
-    if key.len() < 20 { return VerificationStatus::Inactive; }
+    if key.len() < 20 {
+        return VerificationStatus::Inactive;
+    }
     let result = agent()
         .get("https://api.together.xyz/v1/models")
         .set("Authorization", &format!("Bearer {key}"))
@@ -1679,7 +1854,9 @@ fn verify_together_ai(key: &str) -> VerificationStatus {
 }
 
 fn verify_stability_ai(key: &str) -> VerificationStatus {
-    if !key.starts_with("sk-") { return VerificationStatus::Inactive; }
+    if !key.starts_with("sk-") {
+        return VerificationStatus::Inactive;
+    }
     let result = agent()
         .get("https://api.stability.ai/v1/user/account")
         .set("Authorization", &format!("Bearer {key}"))
@@ -1688,7 +1865,9 @@ fn verify_stability_ai(key: &str) -> VerificationStatus {
 }
 
 fn verify_assemblyai(key: &str) -> VerificationStatus {
-    if key.len() < 20 { return VerificationStatus::Inactive; }
+    if key.len() < 20 {
+        return VerificationStatus::Inactive;
+    }
     let result = agent()
         .get("https://api.assemblyai.com/v2/transcript")
         .set("Authorization", key)
@@ -1697,7 +1876,9 @@ fn verify_assemblyai(key: &str) -> VerificationStatus {
 }
 
 fn verify_clarifai(key: &str) -> VerificationStatus {
-    if key.len() < 20 { return VerificationStatus::Inactive; }
+    if key.len() < 20 {
+        return VerificationStatus::Inactive;
+    }
     let result = agent()
         .get("https://api.clarifai.com/v2/me")
         .set("Authorization", &format!("Key {key}"))
@@ -1706,7 +1887,9 @@ fn verify_clarifai(key: &str) -> VerificationStatus {
 }
 
 fn verify_resend(key: &str) -> VerificationStatus {
-    if !key.starts_with("re_") { return VerificationStatus::Inactive; }
+    if !key.starts_with("re_") {
+        return VerificationStatus::Inactive;
+    }
     let result = agent()
         .get("https://api.resend.com/domains")
         .set("Authorization", &format!("Bearer {key}"))
@@ -1715,12 +1898,16 @@ fn verify_resend(key: &str) -> VerificationStatus {
 }
 
 fn verify_cal_com(key: &str) -> VerificationStatus {
-    if key.len() < 20 { return VerificationStatus::Inactive; }
+    if key.len() < 20 {
+        return VerificationStatus::Inactive;
+    }
     VerificationStatus::Unknown
 }
 
 fn verify_retool(token: &str) -> VerificationStatus {
-    if token.len() < 20 { return VerificationStatus::Inactive; }
+    if token.len() < 20 {
+        return VerificationStatus::Inactive;
+    }
     let result = agent()
         .get("https://api.retool.com/api/v1/users/me")
         .set("Authorization", &format!("Bearer {token}"))
@@ -1729,12 +1916,16 @@ fn verify_retool(token: &str) -> VerificationStatus {
 }
 
 fn verify_metabase(token: &str) -> VerificationStatus {
-    if token.len() < 20 { return VerificationStatus::Inactive; }
+    if token.len() < 20 {
+        return VerificationStatus::Inactive;
+    }
     VerificationStatus::Unknown
 }
 
 fn verify_kong_konnect(token: &str) -> VerificationStatus {
-    if token.len() < 20 { return VerificationStatus::Inactive; }
+    if token.len() < 20 {
+        return VerificationStatus::Inactive;
+    }
     let result = agent()
         .get("https://us.api.konghq.com/v3/users/me")
         .set("Authorization", &format!("Bearer {token}"))
@@ -1743,7 +1934,9 @@ fn verify_kong_konnect(token: &str) -> VerificationStatus {
 }
 
 fn verify_gitea(token: &str) -> VerificationStatus {
-    if token.len() < 20 { return VerificationStatus::Inactive; }
+    if token.len() < 20 {
+        return VerificationStatus::Inactive;
+    }
     let result = agent()
         .get("https://gitea.com/api/v1/user")
         .set("Authorization", &format!("token {token}"))
@@ -1752,7 +1945,9 @@ fn verify_gitea(token: &str) -> VerificationStatus {
 }
 
 fn verify_gogs(token: &str) -> VerificationStatus {
-    if token.len() < 20 { return VerificationStatus::Inactive; }
+    if token.len() < 20 {
+        return VerificationStatus::Inactive;
+    }
     let result = agent()
         .get("https://gogs.io/api/v1/user")
         .set("Authorization", &format!("token {token}"))
@@ -1761,7 +1956,9 @@ fn verify_gogs(token: &str) -> VerificationStatus {
 }
 
 fn verify_drone_ci(token: &str) -> VerificationStatus {
-    if token.len() < 20 { return VerificationStatus::Inactive; }
+    if token.len() < 20 {
+        return VerificationStatus::Inactive;
+    }
     VerificationStatus::Unknown
 }
 
@@ -1845,10 +2042,7 @@ mod tests {
     fn test_verifier_for_none_for_unverifiable_rules() {
         // jwt and generic-high-entropy don't have a specific provider
         // API to call, so they can never be verified from the match alone.
-        for rule in [
-            "jwt",
-            "generic-high-entropy",
-        ] {
+        for rule in ["jwt", "generic-high-entropy"] {
             assert!(
                 verifier_for(rule).is_none(),
                 "expected no verifier to be registered for {rule}"
@@ -1897,7 +2091,8 @@ mod tests {
 
     #[test]
     fn test_verify_private_key_valid_pem() {
-        let pem = "-----BEGIN RSA PRIVATE KEY-----\nMIIEpAIBAAKCAQEA\n-----END RSA PRIVATE KEY-----\n";
+        let pem =
+            "-----BEGIN RSA PRIVATE KEY-----\nMIIEpAIBAAKCAQEA\n-----END RSA PRIVATE KEY-----\n";
         let status = verify_private_key(pem);
         // The base64 content "MIIEpAIBAAKCAQEA" is valid base64.
         assert_eq!(status, VerificationStatus::Active);

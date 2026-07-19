@@ -1,0 +1,39 @@
+# PledgeGuard Azure DevOps Pipeline
+# Add this as a YAML pipeline in Azure DevOps:
+
+trigger:
+  branches:
+    include:
+      - main
+      - master
+
+pr:
+  branches:
+    include:
+      - '*'
+
+pool:
+  vmImage: 'ubuntu-latest'
+
+steps:
+  - task: CmdLine@2
+    displayName: 'Install PledgeGuard'
+    inputs:
+      script: 'cargo install pledgeguard'
+
+  - task: CmdLine@2
+    displayName: 'Run PledgeGuard scan'
+    inputs:
+      script: |
+        pledgeguard scan . \
+          --format sarif \
+          --report-file $(Build.ArtifactStagingDirectory)/pledgeguard-report.sarif \
+          --fail-on-findings
+    continueOnError: true
+
+  - task: PublishBuildArtifacts@1
+    displayName: 'Publish PledgeGuard report'
+    inputs:
+      PathtoPublish: '$(Build.ArtifactStagingDirectory)/pledgeguard-report.sarif'
+      ArtifactName: 'PledgeGuardReport'
+      publishLocation: 'Container'

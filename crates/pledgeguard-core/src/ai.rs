@@ -313,7 +313,11 @@ pub fn remediation_suggestion(config: &AiConfig, finding: &Finding) -> Remediati
     RemediationSuggestion {
         finding_rule_id: finding.rule_id.clone(),
         suggestion,
-        source: if config.is_enabled() { "llm".to_string() } else { FALLBACK.to_string() },
+        source: if config.is_enabled() {
+            "llm".to_string()
+        } else {
+            FALLBACK.to_string()
+        },
     }
 }
 
@@ -334,9 +338,20 @@ pub fn assess_false_positive(config: &AiConfig, finding: &Finding) -> FpAssessme
         && let Ok(v) = serde_json::from_str::<serde_json::Value>(&text)
     {
         return FpAssessment {
-            is_false_positive: v.get("is_false_positive").and_then(|b| b.as_bool()).unwrap_or(false),
-            confidence: v.get("confidence").and_then(|c| c.as_f64()).map(|f| f as f32).unwrap_or(0.5),
-            reasoning: v.get("reasoning").and_then(|r| r.as_str()).unwrap_or("").to_string(),
+            is_false_positive: v
+                .get("is_false_positive")
+                .and_then(|b| b.as_bool())
+                .unwrap_or(false),
+            confidence: v
+                .get("confidence")
+                .and_then(|c| c.as_f64())
+                .map(|f| f as f32)
+                .unwrap_or(0.5),
+            reasoning: v
+                .get("reasoning")
+                .and_then(|r| r.as_str())
+                .unwrap_or("")
+                .to_string(),
             source: "llm".to_string(),
         };
     }
@@ -378,7 +393,11 @@ pub fn rotation_guidance(config: &AiConfig, rule_id: &str) -> RotationGuidance {
     RotationGuidance {
         provider: rule_id.to_string(),
         steps,
-        source: if config.is_enabled() { "llm".to_string() } else { FALLBACK.to_string() },
+        source: if config.is_enabled() {
+            "llm".to_string()
+        } else {
+            FALLBACK.to_string()
+        },
     }
 }
 
@@ -407,8 +426,16 @@ pub fn risk_score(config: &AiConfig, finding: &Finding) -> RiskScore {
         let score = v.get("score").and_then(|s| s.as_u64()).unwrap_or(50) as u32;
         return RiskScore {
             score,
-            level: v.get("level").and_then(|l| l.as_str()).unwrap_or("medium").to_string(),
-            reasoning: v.get("reasoning").and_then(|r| r.as_str()).unwrap_or("").to_string(),
+            level: v
+                .get("level")
+                .and_then(|l| l.as_str())
+                .unwrap_or("medium")
+                .to_string(),
+            reasoning: v
+                .get("reasoning")
+                .and_then(|r| r.as_str())
+                .unwrap_or("")
+                .to_string(),
             source: "llm".to_string(),
         };
     }
@@ -434,7 +461,11 @@ pub fn risk_score(config: &AiConfig, finding: &Finding) -> RiskScore {
 }
 
 /// Generate a description for a custom rule (goal 334).
-pub fn generate_description(config: &AiConfig, rule_id: &str, pattern: &str) -> GeneratedDescription {
+pub fn generate_description(
+    config: &AiConfig,
+    rule_id: &str,
+    pattern: &str,
+) -> GeneratedDescription {
     let system = "You are a security expert. Generate a concise human-readable description for a secret detector rule. Respond in JSON: {\"description\": \"...\"}";
 
     let user = format!("Rule ID: {rule_id}\nRegex pattern: {pattern}\nGenerate a description.");
@@ -449,7 +480,11 @@ pub fn generate_description(config: &AiConfig, rule_id: &str, pattern: &str) -> 
 
     GeneratedDescription {
         description,
-        source: if config.is_enabled() { "llm".to_string() } else { FALLBACK.to_string() },
+        source: if config.is_enabled() {
+            "llm".to_string()
+        } else {
+            FALLBACK.to_string()
+        },
     }
 }
 
@@ -457,22 +492,37 @@ pub fn generate_description(config: &AiConfig, rule_id: &str, pattern: &str) -> 
 pub fn generate_regex(config: &AiConfig, rule_name: &str, examples: &[&str]) -> GeneratedRegex {
     let system = "You are a security expert and regex specialist. Generate a regex pattern that matches the given example secrets. The regex should be specific enough to avoid false positives. Respond in JSON: {\"regex\": \"...\", \"explanation\": \"...\"}";
 
-    let examples_str = examples.iter().map(|e| format!("- {e}")).collect::<Vec<_>>().join("\n");
-    let user = format!("Rule name: {rule_name}\nExamples:\n{examples_str}\nGenerate a regex pattern.");
+    let examples_str = examples
+        .iter()
+        .map(|e| format!("- {e}"))
+        .collect::<Vec<_>>()
+        .join("\n");
+    let user =
+        format!("Rule name: {rule_name}\nExamples:\n{examples_str}\nGenerate a regex pattern.");
 
     if let Some(text) = llm_complete(config, system, &user)
         && let Ok(v) = serde_json::from_str::<serde_json::Value>(&text)
     {
         return GeneratedRegex {
-            regex: v.get("regex").and_then(|r| r.as_str()).unwrap_or("").to_string(),
-            explanation: v.get("explanation").and_then(|e| e.as_str()).unwrap_or("").to_string(),
+            regex: v
+                .get("regex")
+                .and_then(|r| r.as_str())
+                .unwrap_or("")
+                .to_string(),
+            explanation: v
+                .get("explanation")
+                .and_then(|e| e.as_str())
+                .unwrap_or("")
+                .to_string(),
             source: "llm".to_string(),
         };
     }
 
     GeneratedRegex {
         regex: r"[A-Za-z0-9]{20,}".to_string(),
-        explanation: "Fallback generic high-entropy pattern. Provide an API key for LLM-generated regex.".to_string(),
+        explanation:
+            "Fallback generic high-entropy pattern. Provide an API key for LLM-generated regex."
+                .to_string(),
         source: FALLBACK.to_string(),
     }
 }
@@ -509,19 +559,34 @@ pub fn generate_tests(config: &AiConfig, rule_id: &str, pattern: &str) -> Genera
 }
 
 /// Migrate a Gitleaks or TruffleHog config to PledgeGuard format (goal 337).
-pub fn migrate_config(config: &AiConfig, source_format: &str, source_config: &str) -> ConfigMigration {
+pub fn migrate_config(
+    config: &AiConfig,
+    source_format: &str,
+    source_config: &str,
+) -> ConfigMigration {
     let system = "You are a security expert. Convert a secret scanner configuration from one format to PledgeGuard's TOML format. PledgeGuard uses [[rules]] sections with id, description, severity, and pattern fields. Respond in JSON: {\"pledgeguard_config\": \"...\", \"notes\": [\"...\"]}";
 
-    let user = format!("Source format: {source_format}\nSource config:\n{source_config}\nConvert to PledgeGuard TOML format.");
+    let user = format!(
+        "Source format: {source_format}\nSource config:\n{source_config}\nConvert to PledgeGuard TOML format."
+    );
 
     if let Some(text) = llm_complete(config, system, &user)
         && let Ok(v) = serde_json::from_str::<serde_json::Value>(&text)
     {
         return ConfigMigration {
-            pledgeguard_config: v.get("pledgeguard_config").and_then(|c| c.as_str()).unwrap_or("").to_string(),
-            notes: v.get("notes")
+            pledgeguard_config: v
+                .get("pledgeguard_config")
+                .and_then(|c| c.as_str())
+                .unwrap_or("")
+                .to_string(),
+            notes: v
+                .get("notes")
                 .and_then(|n| n.as_array())
-                .map(|arr| arr.iter().filter_map(|s| s.as_str().map(String::from)).collect())
+                .map(|arr| {
+                    arr.iter()
+                        .filter_map(|s| s.as_str().map(String::from))
+                        .collect()
+                })
                 .unwrap_or_default(),
             source: "llm".to_string(),
         };
@@ -532,7 +597,9 @@ pub fn migrate_config(config: &AiConfig, source_format: &str, source_config: &st
         notes: vec![
             "Automatic migration requires an AI API key.".to_string(),
             "Please manually review and convert the config to PledgeGuard TOML format.".to_string(),
-            format!("See PledgeGuard docs for [[rules]] syntax. Source format was: {source_format}"),
+            format!(
+                "See PledgeGuard docs for [[rules]] syntax. Source format was: {source_format}"
+            ),
         ],
         source: FALLBACK.to_string(),
     }
@@ -542,10 +609,22 @@ pub fn migrate_config(config: &AiConfig, source_format: &str, source_config: &st
 pub fn scan_summary(config: &AiConfig, findings: &[Finding]) -> ScanSummary {
     let system = "You are a security expert. Summarize secret scan results in clear, actionable language for a developer. Highlight the most critical findings and recommended actions. Respond in JSON: {\"summary\": \"...\"}";
 
-    let critical = findings.iter().filter(|f| f.severity == Severity::Critical).count();
-    let high = findings.iter().filter(|f| f.severity == Severity::High).count();
-    let medium = findings.iter().filter(|f| f.severity == Severity::Medium).count();
-    let low = findings.iter().filter(|f| f.severity == Severity::Low).count();
+    let critical = findings
+        .iter()
+        .filter(|f| f.severity == Severity::Critical)
+        .count();
+    let high = findings
+        .iter()
+        .filter(|f| f.severity == Severity::High)
+        .count();
+    let medium = findings
+        .iter()
+        .filter(|f| f.severity == Severity::Medium)
+        .count();
+    let low = findings
+        .iter()
+        .filter(|f| f.severity == Severity::Low)
+        .count();
     let verified_active = findings
         .iter()
         .filter(|f| f.verification == Some(VerificationStatus::Active))
@@ -567,7 +646,12 @@ pub fn scan_summary(config: &AiConfig, findings: &[Finding]) -> ScanSummary {
         low,
         verified_active,
         rules.len(),
-        rules.iter().take(10).cloned().collect::<Vec<_>>().join(", "),
+        rules
+            .iter()
+            .take(10)
+            .cloned()
+            .collect::<Vec<_>>()
+            .join(", "),
     );
 
     let summary = llm_complete(config, system, &user)
@@ -579,10 +663,16 @@ pub fn scan_summary(config: &AiConfig, findings: &[Finding]) -> ScanSummary {
         .unwrap_or_else(|| {
             let mut s = format!(
                 "Scan complete: {} finding(s) — {} critical, {} high, {} medium, {} low.",
-                findings.len(), critical, high, medium, low
+                findings.len(),
+                critical,
+                high,
+                medium,
+                low
             );
             if verified_active > 0 {
-                s.push_str(&format!(" {verified_active} finding(s) verified as active — rotate these immediately."));
+                s.push_str(&format!(
+                    " {verified_active} finding(s) verified as active — rotate these immediately."
+                ));
             }
             if critical > 0 {
                 s.push_str(" Critical findings require immediate attention.");
@@ -596,7 +686,11 @@ pub fn scan_summary(config: &AiConfig, findings: &[Finding]) -> ScanSummary {
 
     ScanSummary {
         summary,
-        source: if config.is_enabled() { "llm".to_string() } else { FALLBACK.to_string() },
+        source: if config.is_enabled() {
+            "llm".to_string()
+        } else {
+            FALLBACK.to_string()
+        },
     }
 }
 
@@ -624,20 +718,41 @@ pub fn impact_analysis(config: &AiConfig, finding: &Finding) -> ImpactAnalysis {
     {
         return ImpactAnalysis {
             finding_rule_id: finding.rule_id.clone(),
-            blast_radius: v.get("blast_radius").and_then(|b| b.as_str()).unwrap_or("").to_string(),
-            affected_services: v.get("affected_services")
+            blast_radius: v
+                .get("blast_radius")
+                .and_then(|b| b.as_str())
+                .unwrap_or("")
+                .to_string(),
+            affected_services: v
+                .get("affected_services")
                 .and_then(|s| s.as_array())
-                .map(|arr| arr.iter().filter_map(|s| s.as_str().map(String::from)).collect())
+                .map(|arr| {
+                    arr.iter()
+                        .filter_map(|s| s.as_str().map(String::from))
+                        .collect()
+                })
                 .unwrap_or_default(),
-            recommendations: v.get("recommendations")
+            recommendations: v
+                .get("recommendations")
                 .and_then(|r| r.as_array())
-                .map(|arr| arr.iter().filter_map(|s| s.as_str().map(String::from)).collect())
+                .map(|arr| {
+                    arr.iter()
+                        .filter_map(|s| s.as_str().map(String::from))
+                        .collect()
+                })
                 .unwrap_or_default(),
             source: "llm".to_string(),
         };
     }
 
-    let affected = vec![finding.rule_id.split('-').next().unwrap_or("unknown").to_string()];
+    let affected = vec![
+        finding
+            .rule_id
+            .split('-')
+            .next()
+            .unwrap_or("unknown")
+            .to_string(),
+    ];
     let recommendations = vec![
         "Rotate the secret immediately if it was committed to version control.".to_string(),
         "Review access logs for unauthorized usage.".to_string(),
@@ -646,7 +761,10 @@ pub fn impact_analysis(config: &AiConfig, finding: &Finding) -> ImpactAnalysis {
 
     ImpactAnalysis {
         finding_rule_id: finding.rule_id.clone(),
-        blast_radius: format!("Potential unauthorized access to {} services.", finding.description),
+        blast_radius: format!(
+            "Potential unauthorized access to {} services.",
+            finding.description
+        ),
         affected_services: affected,
         recommendations,
         source: FALLBACK.to_string(),
@@ -702,9 +820,7 @@ pub fn prioritize_findings(config: &AiConfig, findings: &[Finding]) -> Vec<Prior
     sorted.sort_by(|(_, a), (_, b)| {
         let a_active = a.verification == Some(VerificationStatus::Active);
         let b_active = b.verification == Some(VerificationStatus::Active);
-        b_active
-            .cmp(&a_active)
-            .then(b.severity.cmp(&a.severity))
+        b_active.cmp(&a_active).then(b.severity.cmp(&a.severity))
     });
 
     sorted
@@ -753,7 +869,10 @@ mod tests {
 
     #[test]
     fn test_classify_finding_fallback() {
-        let config = AiConfig { api_key: String::new(), ..Default::default() };
+        let config = AiConfig {
+            api_key: String::new(),
+            ..Default::default()
+        };
         let finding = mock_finding();
         let result = classify_finding(&config, &finding);
         assert_eq!(result.source, "fallback");
@@ -762,7 +881,10 @@ mod tests {
 
     #[test]
     fn test_remediation_fallback() {
-        let config = AiConfig { api_key: String::new(), ..Default::default() };
+        let config = AiConfig {
+            api_key: String::new(),
+            ..Default::default()
+        };
         let finding = mock_finding();
         let result = remediation_suggestion(&config, &finding);
         assert_eq!(result.source, "fallback");
@@ -771,7 +893,10 @@ mod tests {
 
     #[test]
     fn test_rotation_guidance_fallback() {
-        let config = AiConfig { api_key: String::new(), ..Default::default() };
+        let config = AiConfig {
+            api_key: String::new(),
+            ..Default::default()
+        };
         let result = rotation_guidance(&config, "github-pat");
         assert_eq!(result.source, "fallback");
         assert!(!result.steps.is_empty());
@@ -779,7 +904,10 @@ mod tests {
 
     #[test]
     fn test_risk_score_fallback() {
-        let config = AiConfig { api_key: String::new(), ..Default::default() };
+        let config = AiConfig {
+            api_key: String::new(),
+            ..Default::default()
+        };
         let finding = mock_finding();
         let result = risk_score(&config, &finding);
         assert_eq!(result.source, "fallback");
@@ -789,7 +917,10 @@ mod tests {
 
     #[test]
     fn test_scan_summary_fallback() {
-        let config = AiConfig { api_key: String::new(), ..Default::default() };
+        let config = AiConfig {
+            api_key: String::new(),
+            ..Default::default()
+        };
         let findings = vec![mock_finding()];
         let result = scan_summary(&config, &findings);
         assert_eq!(result.source, "fallback");
@@ -798,7 +929,10 @@ mod tests {
 
     #[test]
     fn test_prioritize_fallback() {
-        let config = AiConfig { api_key: String::new(), ..Default::default() };
+        let config = AiConfig {
+            api_key: String::new(),
+            ..Default::default()
+        };
         let findings = vec![mock_finding()];
         let result = prioritize_findings(&config, &findings);
         assert_eq!(result.len(), 1);
@@ -808,7 +942,10 @@ mod tests {
 
     #[test]
     fn test_generate_regex_fallback() {
-        let config = AiConfig { api_key: String::new(), ..Default::default() };
+        let config = AiConfig {
+            api_key: String::new(),
+            ..Default::default()
+        };
         let result = generate_regex(&config, "test-rule", &["AKIA1234567890ABCD"]);
         assert_eq!(result.source, "fallback");
         assert!(!result.regex.is_empty());
@@ -816,7 +953,10 @@ mod tests {
 
     #[test]
     fn test_impact_analysis_fallback() {
-        let config = AiConfig { api_key: String::new(), ..Default::default() };
+        let config = AiConfig {
+            api_key: String::new(),
+            ..Default::default()
+        };
         let finding = mock_finding();
         let result = impact_analysis(&config, &finding);
         assert_eq!(result.source, "fallback");

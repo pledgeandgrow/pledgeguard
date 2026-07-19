@@ -1,7 +1,7 @@
 {
   "name": "pledgeguard",
-  "version": "0.1.1",
-  "description": "Rust-native secret scanner — a TruffleHog/Gitleaks alternative",
+  "version": "0.1.2",
+  "description": "Rust-native secret scanner with 200+ detectors, verification, SARIF, MCP server, enterprise features — a TruffleHog/Gitleaks alternative",
   "license": "MIT",
   "repository": {
     "type": "git",

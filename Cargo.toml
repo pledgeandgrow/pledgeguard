@@ -6,8 +6,9 @@ members = [
 ]
 
 [workspace.package]
-version = "0.1.0"
+version = "0.1.2"
 edition = "2024"
+rust-version = "1.85"
 license = "MIT"
 authors = ["PledgeLabs"]
 repository = "https://github.com/pledgeandgrow/pledgeguard"
@@ -17,8 +18,8 @@ categories = ["command-line-utilities", "development-tools"]
 homepage = "https://github.com/pledgeandgrow/pledgeguard"
 
 [workspace.dependencies]
-# Regex + text scanning
-regex = "1"
+# Regex + text scanning (SIMD-accelerated via perf features)
+regex = { version = "1", features = ["perf", "perf-cache", "perf-dfa", "perf-inline", "perf-literal"] }
 
 # Serialization
 serde = { version = "1", features = ["derive"] }
@@ -62,6 +63,15 @@ dashmap = "6"
 # Performance: byte-oriented strings (no UTF-8 validation overhead)
 bstr = "1"
 
+# Performance: memory-mapped file scanning
+memmap2 = "0.9"
+
+# Performance: fast hashing for incremental scan cache
+blake3 = "1"
+
+# Performance: progress reporting
+indicatif = "0.17"
+
 # Performance: stack-allocated small vectors
 smallvec = { version = "1", features = ["write"] }
 
@@ -102,6 +112,37 @@ opt-level = 3
 lto = "fat"
 codegen-units = 1
 strip = true
+
+# Goal 316: Profile-guided optimization (PGO) profile.
+# Usage: cargo build --profile pgo --features profile
+# 1. Run the binary with PGO instrumentation to collect profile data.
+# 2. Rebuild with the collected profile data.
+[profile.pgo]
+inherits = "release"
+opt-level = 3
+lto = "fat"
+codegen-units = 1
+strip = false  # Keep debug info for PGO instrumentation
+
+# Goal 318: Static linking with musl for Linux.
+# Usage: cargo build --profile static --target x86_64-unknown-linux-musl
+[profile.static]
+inherits = "release"
+opt-level = 3
+lto = "fat"
+codegen-units = 1
+strip = true
+panic = "abort"  # Required for fully static linking
+
+# Goal 320: UPX-compressed profile for minimal binary size.
+# After building, run: upx --best --lzma target/release/pledgeguard
+[profile.upx]
+inherits = "release"
+opt-level = "z"  # Optimize for size
+lto = "fat"
+codegen-units = 1
+strip = true
+panic = "abort"
 
 [profile.dev]
 opt-level = 1

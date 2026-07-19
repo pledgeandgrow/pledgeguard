@@ -1,0 +1,35 @@
+// PledgeGuard Jenkins Pipeline
+// Add this as a Jenkinsfile in your repository:
+
+pipeline {
+    agent any
+
+    stages {
+        stage('Install PledgeGuard') {
+            steps {
+                sh 'cargo install pledgeguard || true'
+            }
+        }
+
+        stage('Scan for Secrets') {
+            steps {
+                sh '''
+                    pledgeguard scan . \
+                        --format sarif \
+                        --report-file pledgeguard-report.sarif \
+                        --fail-on-findings
+                '''
+            }
+            post {
+                always {
+                    archiveArtifacts artifacts: 'pledgeguard-report.sarif', allowEmptyArchive: true
+                    publishHTML(target: [
+                        reportDir: '.',
+                        reportFiles: 'pledgeguard-report.sarif',
+                        reportName: 'PledgeGuard Report'
+                    ])
+                }
+            }
+        }
+    }
+}

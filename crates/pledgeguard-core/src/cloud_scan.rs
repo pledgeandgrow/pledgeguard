@@ -91,28 +91,29 @@ pub fn scan_s3_bucket(
 
         let content_resp = agent.get(&object_url).call();
         if let Ok(resp) = content_resp
-            && let Ok(text) = resp.into_string() {
-                let virtual_path = std::path::PathBuf::from(format!("s3://{}/{}", config.bucket, key));
-                for (line_idx, line) in text.lines().enumerate() {
-                    for detector in detectors {
-                        for m in detector.scan_line(line) {
-                            findings.push(Finding {
-                                rule_id: detector.id().to_string(),
-                                description: detector.description().to_string(),
-                                severity: detector.severity(),
-                                path: virtual_path.clone(),
-                                line: line_idx + 1,
-                                column: m.start + 1,
-                                matched: m.text,
-                                context: line.to_string(),
-                                commit: None,
-                                likely_false_positive: false,
-                                verification: None,
-                            });
-                        }
+            && let Ok(text) = resp.into_string()
+        {
+            let virtual_path = std::path::PathBuf::from(format!("s3://{}/{}", config.bucket, key));
+            for (line_idx, line) in text.lines().enumerate() {
+                for detector in detectors {
+                    for m in detector.scan_line(line) {
+                        findings.push(Finding {
+                            rule_id: detector.id().to_string(),
+                            description: detector.description().to_string(),
+                            severity: detector.severity(),
+                            path: virtual_path.clone(),
+                            line: line_idx + 1,
+                            column: m.start + 1,
+                            matched: m.text,
+                            context: line.to_string(),
+                            commit: None,
+                            likely_false_positive: false,
+                            verification: None,
+                        });
                     }
                 }
             }
+        }
     }
 
     Ok(findings)
@@ -169,28 +170,29 @@ pub fn scan_gcs_bucket(
             .call();
 
         if let Ok(resp) = content_resp
-            && let Ok(text) = resp.into_string() {
-                let virtual_path = std::path::PathBuf::from(format!("gs://{}/{}", config.bucket, name));
-                for (line_idx, line) in text.lines().enumerate() {
-                    for detector in detectors {
-                        for m in detector.scan_line(line) {
-                            findings.push(Finding {
-                                rule_id: detector.id().to_string(),
-                                description: detector.description().to_string(),
-                                severity: detector.severity(),
-                                path: virtual_path.clone(),
-                                line: line_idx + 1,
-                                column: m.start + 1,
-                                matched: m.text,
-                                context: line.to_string(),
-                                commit: None,
-                                likely_false_positive: false,
-                                verification: None,
-                            });
-                        }
+            && let Ok(text) = resp.into_string()
+        {
+            let virtual_path = std::path::PathBuf::from(format!("gs://{}/{}", config.bucket, name));
+            for (line_idx, line) in text.lines().enumerate() {
+                for detector in detectors {
+                    for m in detector.scan_line(line) {
+                        findings.push(Finding {
+                            rule_id: detector.id().to_string(),
+                            description: detector.description().to_string(),
+                            severity: detector.severity(),
+                            path: virtual_path.clone(),
+                            line: line_idx + 1,
+                            column: m.start + 1,
+                            matched: m.text,
+                            context: line.to_string(),
+                            commit: None,
+                            likely_false_positive: false,
+                            verification: None,
+                        });
                     }
                 }
             }
+        }
     }
 
     Ok(findings)
@@ -339,7 +341,10 @@ pub fn scan_alibaba_oss(
     // credentials are configured via environment.
     let list_url = format!(
         "https://{}.{}?prefix={}&max-keys={}",
-        config.bucket, config.endpoint, prefix, config.max_objects.min(1000)
+        config.bucket,
+        config.endpoint,
+        prefix,
+        config.max_objects.min(1000)
     );
 
     let resp = agent
@@ -362,10 +367,7 @@ pub fn scan_alibaba_oss(
         if let Ok(resp) = content_resp
             && let Ok(text) = resp.into_string()
         {
-            let virtual_path = std::path::PathBuf::from(format!(
-                "oss://{}/{}",
-                config.bucket, key
-            ));
+            let virtual_path = std::path::PathBuf::from(format!("oss://{}/{}", config.bucket, key));
             for (line_idx, line) in text.lines().enumerate() {
                 for detector in detectors {
                     for m in detector.scan_line(line) {
@@ -475,7 +477,10 @@ mod tests {
 
     #[test]
     fn test_simple_url_encode() {
-        assert_eq!(simple_url_encode("path/to/file.txt"), "path%2Fto%2Ffile.txt");
+        assert_eq!(
+            simple_url_encode("path/to/file.txt"),
+            "path%2Fto%2Ffile.txt"
+        );
         assert_eq!(simple_url_encode("simple"), "simple");
     }
 

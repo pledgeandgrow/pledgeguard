@@ -65,8 +65,13 @@ pub fn scan_github_repo(
     // Get the repository tree.
     let tree_url = format!(
         "https://api.github.com/repos/{}/{}/git/trees/HEAD{}",
-        config.owner, config.repo,
-        if ref_param.is_empty() { "?recursive=1".to_string() } else { format!("?ref={ref_param}&recursive=1") }
+        config.owner,
+        config.repo,
+        if ref_param.is_empty() {
+            "?recursive=1".to_string()
+        } else {
+            format!("?ref={ref_param}&recursive=1")
+        }
     );
 
     let resp = agent
@@ -121,31 +126,37 @@ pub fn scan_github_repo(
 
         if let Ok(resp) = content_resp
             && let Ok(json) = resp.into_json::<serde_json::Value>()
-            && let Some(content_b64) = json.get("content").and_then(|c| c.as_str()) {
-                use base64::Engine;
-                if let Ok(decoded) = base64::engine::general_purpose::STANDARD.decode(content_b64.trim()) {
-                    let text = String::from_utf8_lossy(&decoded);
-                    let virtual_path = std::path::PathBuf::from(format!("github:{}/{}#{}", config.owner, config.repo, file_path));
-                    for (line_idx, line) in text.lines().enumerate() {
-                        for detector in detectors {
-                            for m in detector.scan_line(line) {
-                                findings.push(Finding {
-                                    rule_id: detector.id().to_string(),
-                                    description: detector.description().to_string(),
-                                    severity: detector.severity(),
-                                    path: virtual_path.clone(),
-                                    line: line_idx + 1,
-                                    column: m.start + 1,
-                                    matched: m.text,
-                                    context: line.to_string(),
-                                    commit: None,
-                                    likely_false_positive: false,
-                                    verification: None,
-                                });
-                            }
+            && let Some(content_b64) = json.get("content").and_then(|c| c.as_str())
+        {
+            use base64::Engine;
+            if let Ok(decoded) =
+                base64::engine::general_purpose::STANDARD.decode(content_b64.trim())
+            {
+                let text = String::from_utf8_lossy(&decoded);
+                let virtual_path = std::path::PathBuf::from(format!(
+                    "github:{}/{}#{}",
+                    config.owner, config.repo, file_path
+                ));
+                for (line_idx, line) in text.lines().enumerate() {
+                    for detector in detectors {
+                        for m in detector.scan_line(line) {
+                            findings.push(Finding {
+                                rule_id: detector.id().to_string(),
+                                description: detector.description().to_string(),
+                                severity: detector.severity(),
+                                path: virtual_path.clone(),
+                                line: line_idx + 1,
+                                column: m.start + 1,
+                                matched: m.text,
+                                context: line.to_string(),
+                                commit: None,
+                                likely_false_positive: false,
+                                verification: None,
+                            });
                         }
                     }
                 }
+            }
         }
     }
 
@@ -199,32 +210,36 @@ pub fn scan_gitlab_repo(
 
         if let Ok(resp) = content_resp
             && let Ok(json) = resp.into_json::<serde_json::Value>()
-            && let Some(content_b64) = json.get("content").and_then(|c| c.as_str()) {
-                    use base64::Engine;
-                    if let Ok(decoded) = base64::engine::general_purpose::STANDARD.decode(content_b64.trim()) {
-                        let text = String::from_utf8_lossy(&decoded);
-                        let virtual_path = std::path::PathBuf::from(format!("gitlab:{}#{}", config.project, file_path));
-                        for (line_idx, line) in text.lines().enumerate() {
-                            for detector in detectors {
-                                for m in detector.scan_line(line) {
-                                    findings.push(Finding {
-                                        rule_id: detector.id().to_string(),
-                                        description: detector.description().to_string(),
-                                        severity: detector.severity(),
-                                        path: virtual_path.clone(),
-                                        line: line_idx + 1,
-                                        column: m.start + 1,
-                                        matched: m.text,
-                                        context: line.to_string(),
-                                        commit: None,
-                                        likely_false_positive: false,
-                                        verification: None,
-                                    });
-                                }
-                            }
+            && let Some(content_b64) = json.get("content").and_then(|c| c.as_str())
+        {
+            use base64::Engine;
+            if let Ok(decoded) =
+                base64::engine::general_purpose::STANDARD.decode(content_b64.trim())
+            {
+                let text = String::from_utf8_lossy(&decoded);
+                let virtual_path =
+                    std::path::PathBuf::from(format!("gitlab:{}#{}", config.project, file_path));
+                for (line_idx, line) in text.lines().enumerate() {
+                    for detector in detectors {
+                        for m in detector.scan_line(line) {
+                            findings.push(Finding {
+                                rule_id: detector.id().to_string(),
+                                description: detector.description().to_string(),
+                                severity: detector.severity(),
+                                path: virtual_path.clone(),
+                                line: line_idx + 1,
+                                column: m.start + 1,
+                                matched: m.text,
+                                context: line.to_string(),
+                                commit: None,
+                                likely_false_positive: false,
+                                verification: None,
+                            });
                         }
                     }
+                }
             }
+        }
     }
 
     Ok(findings)

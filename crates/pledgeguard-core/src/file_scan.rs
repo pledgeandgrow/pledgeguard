@@ -9,11 +9,7 @@ use crate::finding::Finding;
 use std::path::Path;
 
 /// Helper: scan a text string with all detectors.
-fn scan_text(
-    text: &str,
-    virtual_path: &Path,
-    detectors: &[Box<dyn Detector>],
-) -> Vec<Finding> {
+fn scan_text(text: &str, virtual_path: &Path, detectors: &[Box<dyn Detector>]) -> Vec<Finding> {
     let mut findings = Vec::new();
     for (line_idx, line) in text.lines().enumerate() {
         for detector in detectors {
@@ -53,9 +49,10 @@ pub fn scan_helm_chart(
     // Scan values.yaml, values-*.yaml, and templates/*.yaml
     let values_path = chart_dir.join("values.yaml");
     if values_path.is_file() {
-        let content = std::fs::read_to_string(&values_path)
-            .map_err(FileScanError::Io)?;
-        let virtual_path = Path::new("helm").join(chart_dir.file_name().unwrap_or_default()).join("values.yaml");
+        let content = std::fs::read_to_string(&values_path).map_err(FileScanError::Io)?;
+        let virtual_path = Path::new("helm")
+            .join(chart_dir.file_name().unwrap_or_default())
+            .join("values.yaml");
         findings.extend(scan_text(&content, &virtual_path, detectors));
     }
 
@@ -64,10 +61,13 @@ pub fn scan_helm_chart(
         for entry in entries.flatten() {
             let name = entry.file_name();
             let name_str = name.to_string_lossy();
-            if name_str.starts_with("values-") && (name_str.ends_with(".yaml") || name_str.ends_with(".yml"))
+            if name_str.starts_with("values-")
+                && (name_str.ends_with(".yaml") || name_str.ends_with(".yml"))
                 && let Ok(content) = std::fs::read_to_string(entry.path())
             {
-                let virtual_path = Path::new("helm").join(chart_dir.file_name().unwrap_or_default()).join(name_str.as_ref());
+                let virtual_path = Path::new("helm")
+                    .join(chart_dir.file_name().unwrap_or_default())
+                    .join(name_str.as_ref());
                 findings.extend(scan_text(&content, &virtual_path, detectors));
             }
         }
@@ -100,7 +100,9 @@ pub fn scan_helm_chart(
     if chart_path.is_file()
         && let Ok(content) = std::fs::read_to_string(&chart_path)
     {
-        let virtual_path = Path::new("helm").join(chart_dir.file_name().unwrap_or_default()).join("Chart.yaml");
+        let virtual_path = Path::new("helm")
+            .join(chart_dir.file_name().unwrap_or_default())
+            .join("Chart.yaml");
         findings.extend(scan_text(&content, &virtual_path, detectors));
     }
 
@@ -119,15 +121,15 @@ pub fn scan_terraform_state(
     state_path: &Path,
     detectors: &[Box<dyn Detector>],
 ) -> Result<Vec<Finding>, FileScanError> {
-    let content = std::fs::read_to_string(state_path)
-        .map_err(FileScanError::Io)?;
+    let content = std::fs::read_to_string(state_path).map_err(FileScanError::Io)?;
 
     // State files are JSON — parse and extract all string values, then scan them.
     // Also scan the raw file line-by-line for detector patterns.
     let mut findings = Vec::new();
 
     // Line-by-line scan of the raw file.
-    let virtual_path = Path::new("terraform-state").join(state_path.file_name().unwrap_or_default());
+    let virtual_path =
+        Path::new("terraform-state").join(state_path.file_name().unwrap_or_default());
     findings.extend(scan_text(&content, &virtual_path, detectors));
 
     // Additionally, parse JSON and extract string values from known sensitive paths.
@@ -213,8 +215,7 @@ pub fn scan_k8s_secret(
     manifest_path: &Path,
     detectors: &[Box<dyn Detector>],
 ) -> Result<Vec<Finding>, FileScanError> {
-    let content = std::fs::read_to_string(manifest_path)
-        .map_err(FileScanError::Io)?;
+    let content = std::fs::read_to_string(manifest_path).map_err(FileScanError::Io)?;
 
     let mut findings = Vec::new();
     let virtual_path = Path::new("k8s-secret").join(manifest_path.file_name().unwrap_or_default());
@@ -234,7 +235,8 @@ pub fn scan_k8s_secret(
                 use base64::Engine;
                 for (key, value) in data {
                     if let Some(encoded) = value.as_str()
-                        && let Ok(decoded) = base64::engine::general_purpose::STANDARD.decode(encoded)
+                        && let Ok(decoded) =
+                            base64::engine::general_purpose::STANDARD.decode(encoded)
                     {
                         let decoded_str = String::from_utf8_lossy(&decoded);
                         let virtual_path = virtual_path.join(format!("data/{}", key));
@@ -259,7 +261,11 @@ pub fn scan_k8s_secret(
     for (line_idx, line) in content.lines().enumerate() {
         if let Some(colon_pos) = line.find(':') {
             let value_part = line[colon_pos + 1..].trim().trim_matches('"');
-            if value_part.len() > 10 && value_part.chars().all(|c| c.is_alphanumeric() || c == '+' || c == '/' || c == '=') {
+            if value_part.len() > 10
+                && value_part
+                    .chars()
+                    .all(|c| c.is_alphanumeric() || c == '+' || c == '/' || c == '=')
+            {
                 use base64::Engine;
                 if let Ok(decoded) = base64::engine::general_purpose::STANDARD.decode(value_part) {
                     let decoded_str = String::from_utf8_lossy(&decoded);
@@ -302,7 +308,11 @@ mod tests {
     fn test_scan_text_finds_secrets() {
         let detectors = crate::detectors::builtin_detectors();
         let path = std::path::PathBuf::from("test://file");
-        let findings = scan_text("aws_access_key_id = AKIAIOSFODNN7EXAMPLE", &path, &detectors);
+        let findings = scan_text(
+            "aws_access_key_id = AKIAIOSFODNN7EXAMPLE",
+            &path,
+            &detectors,
+        );
         assert!(!findings.is_empty());
     }
 
@@ -321,7 +331,11 @@ mod tests {
         // Only strings > 10 chars are extracted
         assert!(strings.iter().any(|(_, s)| s == "supersecretpassword123"));
         assert!(strings.iter().any(|(_, s)| s == "AKIAIOSFODNN7EXAMPLE"));
-        assert!(strings.iter().any(|(_, s)| s == "a-very-long-string-value-here"));
+        assert!(
+            strings
+                .iter()
+                .any(|(_, s)| s == "a-very-long-string-value-here")
+        );
         // "test" and "short" are too short
         assert!(!strings.iter().any(|(_, s)| s == "test"));
         assert!(!strings.iter().any(|(_, s)| s == "short"));
@@ -358,14 +372,17 @@ mod tests {
         let detectors = crate::detectors::builtin_detectors();
         let secret_value = "AKIAIOSFODNN7EXAMPLE";
         let encoded = base64::engine::general_purpose::STANDARD.encode(secret_value);
-        let manifest = format!(r#"{{
+        let manifest = format!(
+            r#"{{
             "apiVersion": "v1",
             "kind": "Secret",
             "metadata": {{"name": "test-secret"}},
             "data": {{
                 "aws_key": "{}"
             }}
-        }}"#, encoded);
+        }}"#,
+            encoded
+        );
         let temp = tempfile::NamedTempFile::new().unwrap();
         std::fs::write(temp.path(), &manifest).unwrap();
         let findings = scan_k8s_secret(temp.path(), &detectors).unwrap();

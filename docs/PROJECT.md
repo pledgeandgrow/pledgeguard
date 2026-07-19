@@ -17,6 +17,17 @@ The project is a Cargo workspace with two crates, plus a standalone example plug
 ```
 pledgeguard/
 ├── Cargo.toml                     # workspace manifest
+├── action.yml                     # GitHub Action definition
+├── gitlab-ci.yml                  # GitLab CI template
+├── templates/                     # publishable CI/CD templates
+│   ├── circleci-orb.yml
+│   ├── Jenkinsfile
+│   ├── drone.yml
+│   ├── azure-pipelines.yml
+│   ├── bitbucket-pipelines.yml
+│   ├── teamcity.config
+│   ├── husky-pre-commit
+│   └── lint-staged.json
 ├── examples/plugins/example-plugin/  # sample WASM detector plugin (own [workspace], not a member)
 └── crates/
     ├── pledgeguard-core/          # detection engine (library)
@@ -25,16 +36,18 @@ pledgeguard/
     │   ├── entropy.rs             # Shannon-entropy helper
     │   ├── finding.rs             # Finding, Severity, VerificationStatus types
     │   ├── redact.rs              # secret redaction for display
-    │   ├── scanner.rs             # Scanner: file walking + parallel scan
+    │   ├── scanner.rs             # Scanner: file walking + parallel scan + IaC detection
     │   ├── context.rs             # lightweight comment/fixture-path false-positive heuristic
-    │   ├── git_history.rs         # git history scan (shells out to `git log -p`)
+    │   ├── git_history.rs         # git history scan + scoped history scan
     │   ├── plugin.rs              # WASM plugin loader + ABI (wasmtime)
     │   ├── verify.rs              # live provider verification (GitHub, Slack, Stripe, npm)
     │   ├── sarif.rs               # SARIF 2.1.0 output for GitHub Code Scanning
     │   ├── baseline.rs            # baseline/allowlist persistence and filtering
-    │   └── ast.rs                 # oxc-based AST false-positive refinement for JS/TS
+    │   ├── ast.rs                 # oxc-based AST false-positive refinement for JS/TS
+    │   ├── ci_cd.rs               # CI/CD templates, scan scope, exit code config, PR comments
+    │   └── iac_detection.rs       # IaC secret detection (30+ file types)
     └── pledgeguard-cli/           # `pledgeguard` binary
-        ├── main.rs                # clap CLI: `scan` + `history` + `mcp` + `install-pre-commit`
+        ├── main.rs                # clap CLI: scan + history + scan-source + mcp + compliance + diff
         └── mcp.rs                 # MCP server over stdio (JSON-RPC 2.0)
 ```
 
@@ -71,11 +84,11 @@ pledgeguard/
   false negatives. Applied automatically by both `Scanner::scan_str` and
   `scan_git_history`.
 - **`git_history.rs`** — `scan_git_history(repo_root, detectors)` shells out
-  to `git log --all -p --unified=0`, parses the unified diff (tracking
-  `commit <sha>`, `+++ b/<path>`, and `@@ ... +N @@` hunk headers) and runs
-  every detector against each *added* line only, producing `Finding`s with
-  `commit: Some(sha)`. Avoids embedding `libgit2` to keep the dependency
-  graph and build light — requires `git` on `PATH`.
+  to `git log --all -p --unified=0`, parses the unified diff and runs
+  every detector against each *added* line only. `scan_git_history_with_scope()`
+  extends this with `ScanScope` support for incremental/PR-scoped scanning
+  (since-commit, since-date, branch, commit-range). Avoids embedding `libgit2`
+  to keep the dependency graph and build light — requires `git` on `PATH`.
 - **`plugin.rs`** — `WasmDetector` implements `Detector` by calling into a
   loaded `.wasm` module via `wasmtime`. Plugins export `pg_alloc`,
   `pg_metadata`, and `pg_scan_line` using a packed `(ptr << 32) | len`
@@ -102,6 +115,21 @@ pledgeguard/
   findings whose fingerprint appears in the baseline; `from_findings()` builds
   a baseline from a scan's results; `load()`/`save()` handle file I/O. The
   fingerprint is line-number-agnostic so suppressions survive reformatting.
+- **`ci_cd.rs`** — CI/CD integration features: pipeline templates (GitLab CI,
+  CircleCI orb, Jenkins, DroneCI, Azure DevOps, Bitbucket Pipelines, TeamCity,
+  Husky, lint-staged), `ScanScope` for incremental/PR-scoped scanning,
+  `ExitCodeConfig` for configurable CI exit codes, `BaselineCiConfig` for
+  baseline auto-creation/enforcement, `PrCommentConfig` for posting findings
+  as PR/MR comments (GitHub, GitLab, Azure DevOps), SARIF auto-upload to
+  GitHub Code Scanning, and JUnit XML generation for CI test runners.
+- **`iac_detection.rs`** — Infrastructure-as-Code secret detection covering
+  30+ file types: `.env` files, AWS credentials, Docker Compose, Kubernetes,
+  Terraform, Ansible, Chef, Puppet, CloudFormation, Pulumi, Serverless, AWS CDK,
+  Terraform Cloud, GitHub Actions, GitLab CI, CircleCI, Jenkins, DroneCI,
+  ArgoCD, Helm, Kustomize, Skaffold, Tilt, Garden, DevSpace, Okteto, Acorn,
+  Cosign. Also detects secret pairs (AWS Access Key ID + Secret Key) and
+  secret chains (client_id + client_secret + tenant_id). Integrated into
+  `Scanner::scan_str` and `Scanner::scan_bytes` via `scan_iac_file()`.
 - **`ast.rs`** — AST-based false-positive refinement for JS/TS files using the
   `oxc` parser. `refine_annotation()` overrides the lexical comment heuristic
   from `context.rs` with accurate comment span detection (handles multi-line
@@ -112,32 +140,47 @@ pledgeguard/
 
 ### CLI (`pledgeguard-cli`)
 
-Four subcommands (via `clap`):
+Subcommands (via `clap`):
 - **`scan <path>`** — working-tree scan. Accepts a path (file or directory,
-  defaults to `.`).
+  defaults to `.`), or `-` for stdin.
 - **`history <path>`** — git history scan via `scan_git_history`, defaults to `.`.
-- **`mcp`** — runs a Model Context Protocol server over stdio, exposing
+  Supports scoped scanning (`--since-commit`, `--since-date`, `--branch`,
+  `--commit-range`, `--pr-number`).
+- **`scan-source <source>`** — scan remote sources (Confluence, Slack, Jira, S3,
+  GCS, Azure Blob, CircleCI, Travis CI, Jenkins, DroneCI, etc.) via API.
+- **`mcp`** — runs a Model Context Protocol server over stdio or TCP, exposing
   `scan_path` and `scan_git_history` as JSON-RPC tools for AI agents.
-- **`install-pre-commit`** — installs a git pre-commit hook that runs
-  `pledgeguard scan --fail-on-findings` before each commit. Use `--force` to
-  overwrite an existing hook.
+- **`install-pre-commit`** — installs a git pre-commit hook.
+- **`init`** — initializes `.pledgeguard.toml` config.
+- **`compliance <path>`** — generates compliance reports (SOC2, PCI-DSS, ISO27001,
+  HIPAA, GDPR, NIST CSF).
+- **`diff <previous.json> <current.json>`** — compares two scan reports.
+- **`notify`** — sends webhook notifications (Slack, Teams, Discord).
+- **`install-ai-hooks`** — installs hooks for AI coding tools (Cursor, Claude
+  Code, Copilot).
+- **`ai-analyze`** — AI-powered analysis of scan results.
 
 `scan` and `history` share:
-- `--format table|json|sarif`, `--min-severity`, `--no-redact`, `--fail-on-findings`.
-- `--plugin-dir <dir>` (repeatable) — loads additional `.wasm` detectors from
-  each directory alongside the built-ins.
-- `--show-all` — includes findings flagged `likely_false_positive` (hidden by
-  default; a summary line reports how many were hidden).
-- `--verify` — calls provider APIs (GitHub, Slack, Stripe, npm) to check
-  whether matched secrets are still active; results appear in a `VERIFIED`
-  column (table), `verification` JSON field, or the SARIF result message.
-  Off by default (makes outbound network requests).
-- `--baseline <path>` — loads a baseline JSON file and suppresses findings
-  whose fingerprint (rule_id + path + matched) appears in it. Useful for
-  suppressing known false positives across runs.
-- `--save-baseline <path>` — saves all current findings as a baseline file
-  for future use with `--baseline`. The file contains raw matched secret
-  values, so it should be treated as sensitive.
+- `--format table|json|sarif|csv|junit|github-actions|html|markdown|spdx|cyclonedx|prometheus|jsonl|xml`, `--min-severity`, `--no-redact`, `--fail-on-findings`.
+- `--plugin-dir <dir>` (repeatable) — loads additional `.wasm` detectors.
+- `--show-all` — includes findings flagged `likely_false_positive`.
+- `--verify` — calls provider APIs to check whether matched secrets are active.
+- `--baseline <path>` / `--save-baseline <path>` — baseline management.
+- `--config <path>` — load custom TOML rules.
+- `--report-file <path>` — write output to file.
+- `--diff` — scan only git-changed files (PR mode).
+
+`scan` also supports CI/CD flags:
+- `--since-commit <SHA>`, `--since-date <date>`, `--branch <name>`,
+  `--pr-number <N>`, `--commit-range <A..B>` — incremental/PR-scoped scanning.
+- `--exit-code <N>`, `--ignore-exit-code`, `--fail-on-severity <level>`,
+  `--max-findings <N>`, `--ci-mode` — configurable exit code behavior.
+- `--report-append` — append to report file for multi-scan aggregation.
+- `--baseline-auto`, `--enforce-baseline` — baseline auto-creation and enforcement.
+- `--pr-comment-platform <github|gitlab|azure-devops>`, `--pr-comment-repo`,
+  `--pr-comment-token` — post findings as PR/MR comments.
+- `--sarif-upload`, `--sarif-upload-token` — upload SARIF to GitHub Code Scanning.
+- `--junit-upload` — write JUnit XML for CI test runner integration.
 
 ### Data flow
 

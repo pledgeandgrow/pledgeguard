@@ -15,8 +15,8 @@
 //! | 328 | TCP transport (remote mode) in addition to stdio |
 
 use pledgeguard_core::{
-    Detector, Finding, Scanner, Severity, detectors::builtin_detectors, scan_git_history,
-    verify_findings, verify_one, VerificationStatus,
+    Detector, Finding, Scanner, Severity, VerificationStatus, detectors::builtin_detectors,
+    scan_git_history, verify_findings, verify_one,
 };
 use serde::Deserialize;
 use serde_json::{Value, json};
@@ -136,7 +136,11 @@ fn handle_request(request: &RpcRequest, is_notification: bool, config: &McpConfi
         }
         other => {
             if !is_notification {
-                respond_error(request.id.clone(), -32601, &format!("method not found: {other}"));
+                respond_error(
+                    request.id.clone(),
+                    -32601,
+                    &format!("method not found: {other}"),
+                );
             }
         }
     }
@@ -239,7 +243,14 @@ fn handle_tools_call(params: &Value, config: &McpConfig) -> Value {
         other => Err(format!("unknown tool: {other}")),
     };
 
-    send_progress(name, if outcome.is_ok() { "completed" } else { "failed" });
+    send_progress(
+        name,
+        if outcome.is_ok() {
+            "completed"
+        } else {
+            "failed"
+        },
+    );
 
     match outcome {
         Ok(text) => json!({ "content": [{ "type": "text", "text": text }], "isError": false }),
@@ -378,8 +389,7 @@ fn run_verify_secret(args: &Value) -> Result<String, String> {
                 "verification": status.to_string(),
                 "verified": matches!(status, VerificationStatus::Active),
             });
-            serde_json::to_string_pretty(&result)
-                .map_err(|e| format!("serialization error: {e}"))
+            serde_json::to_string_pretty(&result).map_err(|e| format!("serialization error: {e}"))
         }
         None => {
             let result = json!({
@@ -388,8 +398,7 @@ fn run_verify_secret(args: &Value) -> Result<String, String> {
                 "verified": false,
                 "message": "No verifier available for this rule ID."
             });
-            serde_json::to_string_pretty(&result)
-                .map_err(|e| format!("serialization error: {e}"))
+            serde_json::to_string_pretty(&result).map_err(|e| format!("serialization error: {e}"))
         }
     }
 }
@@ -407,8 +416,7 @@ fn run_list_detectors() -> Result<String, String> {
         })
         .collect();
     let result = json!({ "detectors": list, "count": list.len() });
-    serde_json::to_string_pretty(&result)
-        .map_err(|e| format!("serialization error: {e}"))
+    serde_json::to_string_pretty(&result).map_err(|e| format!("serialization error: {e}"))
 }
 
 fn load_detectors(args: &Value, plugin_dirs: &[PathBuf]) -> Vec<Box<dyn Detector>> {
@@ -554,23 +562,39 @@ fn handle_tcp_client(stream: std::net::TcpStream, config: &McpConfig) {
             }
             "notifications/initialized" | "ping" => {
                 if !is_notification {
-                    let _ = writeln!(writer, "{}", json!({ "jsonrpc": "2.0", "id": id, "result": {} }));
+                    let _ = writeln!(
+                        writer,
+                        "{}",
+                        json!({ "jsonrpc": "2.0", "id": id, "result": {} })
+                    );
                 }
             }
             "tools/list" => {
                 if !is_notification {
-                    let _ = writeln!(writer, "{}", json!({ "jsonrpc": "2.0", "id": id, "result": { "tools": tool_defs() } }));
+                    let _ = writeln!(
+                        writer,
+                        "{}",
+                        json!({ "jsonrpc": "2.0", "id": id, "result": { "tools": tool_defs() } })
+                    );
                 }
             }
             "tools/call" => {
                 if !is_notification {
                     let result = handle_tools_call(&params, config);
-                    let _ = writeln!(writer, "{}", json!({ "jsonrpc": "2.0", "id": id, "result": result }));
+                    let _ = writeln!(
+                        writer,
+                        "{}",
+                        json!({ "jsonrpc": "2.0", "id": id, "result": result })
+                    );
                 }
             }
             other => {
                 if !is_notification {
-                    let _ = writeln!(writer, "{}", json!({ "jsonrpc": "2.0", "id": id, "error": { "code": -32601, "message": format!("method not found: {other}") } }));
+                    let _ = writeln!(
+                        writer,
+                        "{}",
+                        json!({ "jsonrpc": "2.0", "id": id, "error": { "code": -32601, "message": format!("method not found: {other}") } })
+                    );
                 }
             }
         }

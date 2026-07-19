@@ -36,11 +36,41 @@ jobs:
           path: target
           key: ${{ runner.os }}-cargo-target-${{ hashFiles('**/Cargo.lock') }}
 
-      - name: Check formatting
+      - name: Check formatting (goal 464)
         run: cargo fmt --all -- --check
 
-      - name: Run clippy
+      - name: Run clippy (goal 463)
         run: cargo clippy --workspace --all-targets -- -D warnings
 
       - name: Run tests
         run: cargo test --workspace --all-targets
+
+  msrv:
+    name: MSRV Check (goal 460)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Rust 1.85
+        uses: dtolnay/rust-toolchain@1.85
+      - name: Check compilation with MSRV
+        run: cargo check --workspace
+
+  license-audit:
+    name: License Audit (goal 462)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install cargo-deny
+        run: cargo install cargo-deny
+      - name: Check licenses
+        run: cargo deny check licenses
+
+  security-audit:
+    name: Security Audit (goal 461)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install cargo-audit
+        run: cargo install cargo-audit
+      - name: Run audit
+        run: cargo audit

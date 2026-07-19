@@ -81,7 +81,9 @@ impl Detector for EntropyDetector {
     }
 
     fn prefilter_patterns(&self) -> &[&str] {
-        &["key", "token", "secret", "passwd", "password", "api_key", "api-key"]
+        &[
+            "key", "token", "secret", "passwd", "password", "api_key", "api-key",
+        ]
     }
 }
 
