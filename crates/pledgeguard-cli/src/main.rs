@@ -9,8 +9,8 @@ static GLOBAL: tikv_jemallocator::Jemalloc = tikv_jemallocator::Jemalloc;
 
 use clap::{Parser, ValueEnum};
 use pledgeguard_core::{
-    Allowlist, Detector, Finding, Scanner, Severity, baseline, detectors::builtin_detectors,
-    load_config, scan_git_history, verify_findings,
+    Allowlist, Detector, Finding, Scanner, Severity, VerificationStatus, baseline,
+    detectors::builtin_detectors, load_config, scan_git_history, verify_findings,
 };
 use std::io::Read;
 use std::path::PathBuf;
@@ -98,6 +98,12 @@ enum Command {
         #[arg(long = "enable-rule")]
         enable_rules: Vec<String>,
 
+        /// Only show findings that have been verified as Active by a provider.
+        /// Implies --verify. Unverified findings (no verifier or verification
+        /// returned Inactive/Unknown/Error) are excluded from output.
+        #[arg(long)]
+        only_verified: bool,
+
         /// Timeout in seconds for the scan. Currently informational (no hard enforcement).
         #[arg(long, default_value_t = 300)]
         timeout: u64,
@@ -165,6 +171,11 @@ enum Command {
         /// If not set, all rules are enabled.
         #[arg(long = "enable-rule")]
         enable_rules: Vec<String>,
+
+        /// Only show findings that have been verified as Active by a provider.
+        /// Implies --verify. Unverified findings are excluded from output.
+        #[arg(long)]
+        only_verified: bool,
 
         /// Timeout in seconds for the scan.
         #[arg(long, default_value_t = 300)]
@@ -242,6 +253,7 @@ fn main() -> ExitCode {
             verbose,
             ignore_paths,
             enable_rules,
+            only_verified,
             timeout: _,
         } => {
             if verbose {
@@ -294,6 +306,7 @@ fn main() -> ExitCode {
                     fail_on_findings,
                     show_all,
                     verify,
+                    only_verified,
                     baseline: baseline_path,
                     save_baseline,
                     report_file,
@@ -315,6 +328,7 @@ fn main() -> ExitCode {
             report_file,
             verbose,
             enable_rules,
+            only_verified,
             timeout: _,
         } => {
             if verbose {
@@ -350,6 +364,7 @@ fn main() -> ExitCode {
                     fail_on_findings,
                     show_all,
                     verify,
+                    only_verified,
                     baseline: baseline_path,
                     save_baseline,
                     report_file,
@@ -394,6 +409,7 @@ struct ReportOptions {
     fail_on_findings: bool,
     show_all: bool,
     verify: bool,
+    only_verified: bool,
     baseline: Option<PathBuf>,
     save_baseline: Option<PathBuf>,
     report_file: Option<PathBuf>,
@@ -407,6 +423,7 @@ fn report(findings: Vec<Finding>, opts: ReportOptions) -> ExitCode {
         fail_on_findings,
         show_all,
         verify,
+        only_verified,
         baseline: baseline_path,
         save_baseline,
         report_file,
@@ -467,8 +484,15 @@ fn report(findings: Vec<Finding>, opts: ReportOptions) -> ExitCode {
             .collect()
     };
 
+    let verify = verify || only_verified;
     if verify {
         verify_findings(&mut visible);
+    }
+
+    if only_verified {
+        visible.retain(|f| {
+            matches!(f.verification, Some(VerificationStatus::Active))
+        });
     }
 
     let display: Vec<_> = if no_redact {

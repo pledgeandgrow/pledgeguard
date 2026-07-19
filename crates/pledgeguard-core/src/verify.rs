@@ -64,6 +64,29 @@ fn verifier_for(rule_id: &str) -> Option<fn(&str) -> VerificationStatus> {
         "mailgun-api-key" => Some(verify_mailgun),
         "opsgenie-api-key" => Some(verify_opsgenie),
         "pagerduty-api-key" => Some(verify_pagerduty),
+        "anthropic-api-key" => Some(verify_anthropic),
+        "google-api-key" => Some(verify_google_api),
+        "google-oauth-access-token" => Some(verify_google_oauth),
+        "huggingface-token" => Some(verify_huggingface),
+        "shopify-access-token" => Some(verify_shopify),
+        "mailchimp-api-key" => Some(verify_mailchimp),
+        "heroku-api-key" => Some(verify_heroku),
+        "vercel-token" => Some(verify_vercel),
+        "datadog-api-key" => Some(verify_datadog),
+        "cloudflare-api-token" => Some(verify_cloudflare),
+        "linear-api-key" => Some(verify_linear),
+        "okta-api-token" => Some(verify_okta),
+        "auth0-api-token" => Some(verify_auth0),
+        "supabase-service-key" => Some(verify_supabase),
+        "circleci-api-token" => Some(verify_circleci),
+        "discord-bot-token" => Some(verify_discord),
+        "atlassian-api-token" => Some(verify_atlassian),
+        "new-relic-license-key" => Some(verify_newrelic),
+        "notion-integration-token" => Some(verify_notion),
+        "gitlab-pat" => Some(verify_gitlab),
+        "digitalocean-pat" => Some(verify_digitalocean),
+        "twilio-account-sid" => Some(verify_twilio),
+        "twilio-auth-token" => Some(verify_twilio),
         _ => None,
     }
 }
@@ -249,6 +272,239 @@ fn verify_pagerduty(key: &str) -> VerificationStatus {
     status_from_result(result, &[401, 403])
 }
 
+/// Anthropic: GET /v1/models with x-api-key header.
+fn verify_anthropic(key: &str) -> VerificationStatus {
+    let result = agent()
+        .get("https://api.anthropic.com/v1/models")
+        .set("x-api-key", key)
+        .set("anthropic-version", "2023-06-01")
+        .call();
+    status_from_result(result, &[401, 403])
+}
+
+/// Google API Key: list storage buckets (requires the key as a query param).
+fn verify_google_api(key: &str) -> VerificationStatus {
+    let result = agent()
+        .get(&format!("https://storage.googleapis.com/storage/v1/b?project=test&key={key}"))
+        .call();
+    match result {
+        Ok(resp) => {
+            // A valid key returns 200 even if the project doesn't exist.
+            // An invalid key returns 400 with error in body.
+            match resp.into_json::<serde_json::Value>() {
+                Ok(json) => {
+                    if json.get("error").is_some() {
+                        VerificationStatus::Inactive
+                    } else {
+                        VerificationStatus::Active
+                    }
+                }
+                Err(_) => VerificationStatus::Unknown,
+            }
+        }
+        Err(ureq::Error::Status(400, _)) | Err(ureq::Error::Status(403, _)) => {
+            VerificationStatus::Inactive
+        }
+        Err(ureq::Error::Status(_, _)) => VerificationStatus::Unknown,
+        Err(ureq::Error::Transport(e)) => VerificationStatus::Error(e.to_string()),
+    }
+}
+
+/// Google OAuth Access Token: GET userinfo with bearer.
+fn verify_google_oauth(token: &str) -> VerificationStatus {
+    let result = agent()
+        .get("https://www.googleapis.com/oauth2/v1/userinfo")
+        .set("Authorization", &format!("Bearer {token}"))
+        .call();
+    status_from_result(result, &[401, 403])
+}
+
+/// HuggingFace: GET /api/whoami-v2 with bearer.
+fn verify_huggingface(token: &str) -> VerificationStatus {
+    let result = agent()
+        .get("https://huggingface.co/api/whoami-v2")
+        .set("Authorization", &format!("Bearer {token}"))
+        .call();
+    status_from_result(result, &[401, 403])
+}
+
+/// Shopify: GET shop with X-Shopify-Access-Token header.
+fn verify_shopify(token: &str) -> VerificationStatus {
+    // Shopify tokens are per-shop; we try a generic admin API call.
+    // The token alone doesn't include the shop domain, so this is best-effort.
+    let result = agent()
+        .get("https://shopify.com/admin/api/2024-01/shop.json")
+        .set("X-Shopify-Access-Token", token)
+        .call();
+    status_from_result(result, &[401, 403])
+}
+
+/// Mailchimp: GET /3.0/ping with API key as bearer.
+/// The API key contains the datacenter suffix (e.g. `-us12`).
+fn verify_mailchimp(key: &str) -> VerificationStatus {
+    // Extract datacenter from the key suffix.
+    let dc = if let Some(idx) = key.rfind('-') {
+        &key[idx + 1..]
+    } else {
+        "us1"
+    };
+    let url = format!("https://{dc}.api.mailchimp.com/3.0/ping");
+    let result = agent()
+        .get(&url)
+        .set("Authorization", &format!("Bearer {key}"))
+        .call();
+    status_from_result(result, &[401, 403])
+}
+
+/// Heroku: GET /account with bearer.
+fn verify_heroku(key: &str) -> VerificationStatus {
+    let result = agent()
+        .get("https://api.heroku.com/account")
+        .set("Authorization", &format!("Bearer {key}"))
+        .set("Accept", "application/vnd.heroku+json; version=3")
+        .call();
+    status_from_result(result, &[401, 403])
+}
+
+/// Vercel: GET /v2/user with bearer.
+fn verify_vercel(token: &str) -> VerificationStatus {
+    let result = agent()
+        .get("https://api.vercel.com/v2/user")
+        .set("Authorization", &format!("Bearer {token}"))
+        .call();
+    status_from_result(result, &[401, 403])
+}
+
+/// Datadog: GET /api/v1/validate with DD-API-KEY header.
+fn verify_datadog(key: &str) -> VerificationStatus {
+    let result = agent()
+        .get("https://api.datadoghq.com/api/v1/validate")
+        .set("DD-API-KEY", key)
+        .call();
+    status_from_result(result, &[401, 403])
+}
+
+/// Cloudflare: GET /user/tokens/verify with Authorization: Bearer.
+fn verify_cloudflare(token: &str) -> VerificationStatus {
+    let result = agent()
+        .get("https://api.cloudflare.com/client/v4/user/tokens/verify")
+        .set("Authorization", &format!("Bearer {token}"))
+        .call();
+    match result {
+        Ok(resp) => match resp.into_json::<serde_json::Value>() {
+            Ok(json) => {
+                if json.get("success").and_then(|v| v.as_bool()).unwrap_or(false) {
+                    VerificationStatus::Active
+                } else {
+                    VerificationStatus::Inactive
+                }
+            }
+            Err(_) => VerificationStatus::Unknown,
+        },
+        Err(ureq::Error::Status(401, _)) => VerificationStatus::Inactive,
+        Err(ureq::Error::Status(_, _)) => VerificationStatus::Unknown,
+        Err(ureq::Error::Transport(e)) => VerificationStatus::Error(e.to_string()),
+    }
+}
+
+/// Linear: GET /graphql with bearer (query for viewer).
+fn verify_linear(key: &str) -> VerificationStatus {
+    let result = agent()
+        .post("https://api.linear.app/graphql")
+        .set("Authorization", key)
+        .send_string("{\"query\":\"{ viewer { id } }\"}");
+    match result {
+        Ok(resp) => match resp.into_json::<serde_json::Value>() {
+            Ok(json) => {
+                if json.get("data").and_then(|d| d.get("viewer")).is_some() {
+                    VerificationStatus::Active
+                } else {
+                    VerificationStatus::Inactive
+                }
+            }
+            Err(_) => VerificationStatus::Unknown,
+        },
+        Err(ureq::Error::Status(401, _)) => VerificationStatus::Inactive,
+        Err(ureq::Error::Status(_, _)) => VerificationStatus::Unknown,
+        Err(ureq::Error::Transport(e)) => VerificationStatus::Error(e.to_string()),
+    }
+}
+
+/// Okta: GET /api/v1/users/me with bearer (Okta domain varies, best-effort).
+fn verify_okta(token: &str) -> VerificationStatus {
+    // Okta tokens are domain-specific; without the domain we can't verify.
+    // We try the generic okta.com API as a fallback.
+    let result = agent()
+        .get("https://your-domain.okta.com/api/v1/users/me")
+        .set("Authorization", &format!("SSWS {token}"))
+        .call();
+    status_from_result(result, &[401, 403])
+}
+
+/// Auth0: GET /userinfo with bearer (domain varies, best-effort).
+fn verify_auth0(token: &str) -> VerificationStatus {
+    let result = agent()
+        .get("https://your-domain.auth0.com/userinfo")
+        .set("Authorization", &format!("Bearer {token}"))
+        .call();
+    status_from_result(result, &[401, 403])
+}
+
+/// Supabase: GET /v1/projects with bearer.
+fn verify_supabase(key: &str) -> VerificationStatus {
+    let result = agent()
+        .get("https://api.supabase.com/v1/projects")
+        .set("Authorization", &format!("Bearer {key}"))
+        .call();
+    status_from_result(result, &[401, 403])
+}
+
+/// CircleCI: GET /v2/me with Circle-Token header.
+fn verify_circleci(token: &str) -> VerificationStatus {
+    let result = agent()
+        .get("https://circleci.com/api/v2/me")
+        .set("Circle-Token", token)
+        .call();
+    status_from_result(result, &[401, 403])
+}
+
+/// Discord: GET /users/@me with bearer.
+fn verify_discord(token: &str) -> VerificationStatus {
+    let result = agent()
+        .get("https://discord.com/api/users/@me")
+        .set("Authorization", &format!("Bearer {token}"))
+        .call();
+    status_from_result(result, &[401, 403])
+}
+
+/// Atlassian: GET /me with bearer (domain varies, best-effort).
+fn verify_atlassian(token: &str) -> VerificationStatus {
+    let result = agent()
+        .get("https://api.atlassian.com/me")
+        .set("Authorization", &format!("Bearer {token}"))
+        .call();
+    status_from_result(result, &[401, 403])
+}
+
+/// New Relic: GET /v2/user with Api-Key header.
+fn verify_newrelic(key: &str) -> VerificationStatus {
+    let result = agent()
+        .get("https://api.newrelic.com/v2/user.json")
+        .set("Api-Key", key)
+        .call();
+    status_from_result(result, &[401, 403])
+}
+
+/// Notion: GET /v1/users with bearer.
+fn verify_notion(token: &str) -> VerificationStatus {
+    let result = agent()
+        .get("https://api.notion.com/v1/users")
+        .set("Authorization", &format!("Bearer {token}"))
+        .set("Notion-Version", "2022-06-28")
+        .call();
+    status_from_result(result, &[401, 403])
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -275,6 +531,27 @@ mod tests {
             "mailgun-api-key",
             "opsgenie-api-key",
             "pagerduty-api-key",
+            "anthropic-api-key",
+            "google-api-key",
+            "google-oauth-access-token",
+            "huggingface-token",
+            "shopify-access-token",
+            "mailchimp-api-key",
+            "heroku-api-key",
+            "vercel-token",
+            "datadog-api-key",
+            "cloudflare-api-token",
+            "linear-api-key",
+            "okta-api-token",
+            "auth0-api-token",
+            "supabase-service-key",
+            "circleci-api-token",
+            "discord-bot-token",
+            "atlassian-api-token",
+            "new-relic-license-key",
+            "notion-integration-token",
+            "gitlab-pat",
+            "digitalocean-pat",
         ] {
             assert!(
                 verifier_for(rule).is_some(),

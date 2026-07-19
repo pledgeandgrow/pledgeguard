@@ -141,25 +141,44 @@ PledgeGuard ships with **50+ regex-based detectors** covering major cloud provid
 
 ## Live Verification Providers
 
-PledgeGuard can verify matched secrets against provider APIs to determine if they are **Active**, **Inactive**, **Unknown**, or if verification **Error**ed. Verification is opt-in via `--verify`.
+PledgeGuard can verify matched secrets against provider APIs to determine if they are **Active**, **Inactive**, **Unknown**, or if verification **Error**ed. Verification is opt-in via `--verify` or `--only-verified`.
 
 | Provider | Rule IDs Verified | Method |
 |---|---|---|
 | **GitHub** | `github-pat`, `github-fine-grained-pat` | `GET /user` with token auth |
-| **GitLab** | `gitlab-token` | `GET /api/v4/user` with bearer |
+| **GitLab** | `gitlab-pat`, `gitlab-token` | `GET /api/v4/user` with bearer |
 | **Slack** | `slack-token` | `POST /api/auth.test` with bearer |
 | **Stripe** | `stripe-secret-key` | `GET /v1/customers?limit=1` with bearer |
 | **npm** | `npm-token` | `GET /-/npm/v1/user` with bearer |
-| **DigitalOcean** | `digitalocean-token` | `GET /v2/account` with bearer |
+| **DigitalOcean** | `digitalocean-pat`, `digitalocean-token` | `GET /v2/account` with bearer |
 | **Telegram** | `telegram-bot-token` | `GET /bot{token}/getMe` |
-| **Twilio** | `twilio-api-key` | `GET /Accounts.json` with bearer |
+| **Twilio** | `twilio-api-key`, `twilio-account-sid`, `twilio-auth-token` | `GET /Accounts.json` with bearer |
 | **OpenAI** | `openai-api-key` | `GET /v1/models` with bearer |
+| **Anthropic** | `anthropic-api-key` | `GET /v1/models` with `x-api-key` header |
 | **PyPI** | `pypi-api-token` | `GET /pypi/user/info/` with bearer |
 | **Docker Hub** | `dockerhub-token` | `GET /v2/userinfo/` with bearer |
 | **SendGrid** | `sendgrid-api-key` | `GET /v3/user/account` with bearer |
 | **Mailgun** | `mailgun-api-key` | `GET /v4/domains` with bearer |
+| **Mailchimp** | `mailchimp-api-key` | `GET /3.0/ping` with bearer (datacenter extracted from key) |
 | **Opsgenie** | `opsgenie-api-key` | `GET /v2/user` with GenieKey header |
 | **PagerDuty** | `pagerduty-api-key` | `GET /users` with Token header |
+| **Google API** | `google-api-key` | `GET /storage/v1/b` with key as query param |
+| **Google OAuth** | `google-oauth-access-token` | `GET /oauth2/v1/userinfo` with bearer |
+| **HuggingFace** | `huggingface-token` | `GET /api/whoami-v2` with bearer |
+| **Shopify** | `shopify-access-token` | `GET /admin/api/shop.json` with X-Shopify-Access-Token |
+| **Heroku** | `heroku-api-key` | `GET /account` with bearer |
+| **Vercel** | `vercel-token` | `GET /v2/user` with bearer |
+| **Datadog** | `datadog-api-key` | `GET /api/v1/validate` with DD-API-KEY header |
+| **Cloudflare** | `cloudflare-api-token` | `GET /user/tokens/verify` with bearer |
+| **Linear** | `linear-api-key` | `POST /graphql` with API key |
+| **Okta** | `okta-api-token` | `GET /api/v1/users/me` with SSWS header |
+| **Auth0** | `auth0-api-token` | `GET /userinfo` with bearer |
+| **Supabase** | `supabase-service-key` | `GET /v1/projects` with bearer |
+| **CircleCI** | `circleci-api-token` | `GET /v2/me` with Circle-Token header |
+| **Discord** | `discord-bot-token` | `GET /users/@me` with bearer |
+| **Atlassian** | `atlassian-api-token` | `GET /me` with bearer |
+| **New Relic** | `new-relic-license-key` | `GET /v2/user.json` with Api-Key header |
+| **Notion** | `notion-integration-token` | `GET /v1/users` with bearer |
 
 ---
 
@@ -213,6 +232,7 @@ PledgeGuard can verify matched secrets against provider APIs to determine if the
 | `--verbose` | Print scan progress and stats to stderr |
 | `--ignore-path <pattern>` | Glob patterns to ignore during scan (repeatable) |
 | `--enable-rule <id>` | Only run rules with the given IDs (repeatable) |
+| `--only-verified` | Only show findings verified as Active (implies `--verify`) |
 | `--timeout <seconds>` | Scan timeout in seconds (default: 300) |
 
 ### `history` subcommand

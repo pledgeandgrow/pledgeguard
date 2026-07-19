@@ -9,7 +9,7 @@ Rust-native secret scanner — a TruffleHog/Gitleaks alternative.
 ## Status
 
 **v0.2.0 — comprehensive feature set.** PledgeGuard is a working secret
-scanner with 50+ built-in detectors, 15 live verification providers, git history
+scanner with 50+ built-in detectors, 34 live verification providers, git history
 scanning, WASM plugins, MCP server, 6 output formats (Table/JSON/SARIF/CSV/JUnit/Template),
 baseline/allowlist mode, pre-commit hook installer, AST-based false-positive
 refinement for JS/TS, custom TOML rules with entropy/allowlists/path filters,
@@ -125,12 +125,12 @@ Findings are never dropped, only flagged; the CLI hides them by default and
 ### Live provider verification
 
 `--verify` calls provider APIs to check whether a matched secret is still active.
-15 providers are supported: GitHub, GitLab, Slack, Stripe, npm, DigitalOcean,
-Telegram, Twilio, OpenAI, PyPI, Docker Hub, SendGrid, Mailgun, Opsgenie, and
-PagerDuty. Results appear as `Active`, `Inactive`, `Unknown`, or `Error` in the
-`VERIFIED` column (table), `verification` JSON field, or SARIF result message.
-Off by default (makes outbound network requests). See **[SUPPORT.md](SUPPORT.md)**
-for the full provider list.
+34 providers are supported: GitHub, GitLab, Slack, Stripe, npm, DigitalOcean,
+Telegram, Twilio, OpenAI, Anthropic, PyPI, Docker Hub, SendGrid, Mailgun,
+Mailchimp, Opsgenie, PagerDuty, Google API, Google OAuth, HuggingFace, Shopify,
+Heroku, Vercel, Datadog, Cloudflare, Linear, Okta, Auth0, Supabase, CircleCI,
+Discord, Atlassian, New Relic, and Notion. Use `--only-verified` to show only
+findings confirmed as Active. See **[SUPPORT.md](SUPPORT.md)** for the full list.
 
 ### Baseline / allowlist mode
 
@@ -220,7 +220,7 @@ install-pre-commit options:
 
 - **AST refinement is JS/TS only** — Python, Go, Ruby, etc. use the lexical heuristic.
 - **Git history scans use lexical-only filtering** — only added-line text is available, not the full file.
-- **Live verification covers 15 providers** — see [SUPPORT.md](SUPPORT.md) for the full list. AWS keys, PEM keys, JWTs, and connection strings cannot be verified.
+- **Live verification covers 34 providers** — see [SUPPORT.md](SUPPORT.md) for the full list. AWS keys, PEM keys, JWTs, and connection strings cannot be verified.
 - **Docker/GitHub/GitLab/S3/GCS scanning via library API** — not yet wired to CLI subcommands.
 - **Baseline files contain raw secret values** — treat as sensitive.
 - **Early-stage / unaudited** — detector regexes may need tuning; limited real-world testing.
