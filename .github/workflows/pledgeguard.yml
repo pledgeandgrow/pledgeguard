@@ -5,6 +5,8 @@ on:
     branches: [main]
   pull_request:
     branches: [main]
+  schedule:
+    - cron: "0 9 * * 1"
 
 jobs:
   scan:
@@ -13,19 +15,23 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          fetch-depth: 0  # Full history for git history scanning
+          fetch-depth: 0
 
       - name: Install PledgeGuard
         run: |
           curl -sSL https://github.com/pledgeandgrow/pledgeguard/releases/latest/download/pledgeguard-linux-amd64 -o /usr/local/bin/pledgeguard
           chmod +x /usr/local/bin/pledgeguard
 
-      - name: Scan working tree
-        run: pledgeguard scan . --fail-on-findings --format sarif --report-file pledgeguard-results.sarif
+      - name: Scan working tree (annotations)
+        run: pledgeguard scan . --fail-on-findings --format github-actions --severity medium
+        continue-on-error: true
+
+      - name: Scan working tree (SARIF)
+        run: pledgeguard scan . --format sarif --report-file pledgeguard-results.sarif
         continue-on-error: true
 
       - name: Scan git history
-        run: pledgeguard history . --fail-on-findings
+        run: pledgeguard history . --fail-on-findings --format github-actions
         continue-on-error: true
 
       - name: Upload SARIF results
@@ -33,3 +39,26 @@ jobs:
         if: always()
         with:
           sarif_file: pledgeguard-results.sarif
+
+  verify:
+    name: Live verification
+    runs-on: ubuntu-latest
+    if: github.event_name == 'schedule'
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install PledgeGuard
+        run: |
+          curl -sSL https://github.com/pledgeandgrow/pledgeguard/releases/latest/download/pledgeguard-linux-amd64 -o /usr/local/bin/pledgeguard
+          chmod +x /usr/local/bin/pledgeguard
+
+      - name: Verify secrets
+        run: pledgeguard scan . --verify --format json --report-file pledgeguard-verify.json
+        continue-on-error: true
+
+      - name: Upload verification report
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: pledgeguard-verification
+          path: pledgeguard-verify.json

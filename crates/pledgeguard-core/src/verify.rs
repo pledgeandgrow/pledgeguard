@@ -174,6 +174,142 @@ fn verifier_for(rule_id: &str) -> Option<fn(&str) -> VerificationStatus> {
         "postman-api-key" => Some(verify_postman),
         "buildkite-token" => Some(verify_buildkite),
         "terraform-cloud-token" => Some(verify_terraform_cloud),
+        // Phase 1: Additional verification providers (52+ new).
+        "aws-access-key-id" => Some(verify_aws_sts),
+        "azure-client-secret" => Some(verify_azure_ad),
+        "azure-batch-key" => Some(verify_azure_batch),
+        "gcp-oauth-client-id" => Some(verify_gcp_oauth),
+        "alibaba-access-key-id" => Some(verify_alibaba),
+        "tencent-secret-id" => Some(verify_tencent),
+        "oracle-cloud-token" => Some(verify_oracle_cloud),
+        "scaleway-key" => Some(verify_scaleway),
+        "vultr-api-key" => Some(verify_vultr),
+        "linode-token" => Some(verify_linode),
+        "backblaze-b2-key-id" => Some(verify_backblaze),
+        "wasabi-api-key" => Some(verify_wasabi),
+        "cloudflare-r2-token" => Some(verify_cloudflare),
+        "cloudflare-d1-token" => Some(verify_cloudflare),
+        "fastly-api-key" => Some(verify_fastly),
+        "databricks-token" => Some(verify_databricks),
+        "dynatrace-api-token" => Some(verify_dynatrace),
+        "airtable-api-key" => Some(verify_airtable),
+        "contentful-token" => Some(verify_contentful),
+        "hubspot-api-key" => Some(verify_hubspot),
+        "algolia-api-key" => Some(verify_algolia),
+        "posthog-api-key" => Some(verify_posthog),
+        "posthog-api-key-v2" => Some(verify_posthog),
+        "launchdarkly-sdk-key" => Some(verify_launchdarkly),
+        "launchdarkly-api-key" => Some(verify_launchdarkly),
+        "docker-registry-token" => Some(verify_docker_registry),
+        "harbor-token" => Some(verify_harbor),
+        "nexus-token" => Some(verify_nexus),
+        "confluent-api-token" => Some(verify_confluent),
+        "confluent-secret-key" => Some(verify_confluent),
+        "doppler-api-token" => Some(verify_doppler),
+        "onelogin-token" => Some(verify_onelogin),
+        "jumpcloud-token" => Some(verify_jumpcloud),
+        "clerk-token" => Some(verify_clerk),
+        "figma-personal-access-token" => Some(verify_figma),
+        "dropbox-long-lived-token" => Some(verify_dropbox),
+        "reddit-access-token" => Some(verify_reddit),
+        "reddit-client-secret" => Some(verify_reddit),
+        "instagram-access-token" => Some(verify_instagram),
+        "pinterest-token" => Some(verify_pinterest),
+        "tiktok-access-token" => Some(verify_tiktok),
+        "zoom-api-secret" => Some(verify_zoom),
+        "linkedin-client-secret" => Some(verify_linkedin),
+        "facebook-app-secret" => Some(verify_facebook),
+        "facebook-access-token" => Some(verify_facebook),
+        "twitter-bearer-token" => Some(verify_twitter),
+        "spotify-key" => Some(verify_spotify),
+        "spotify-key-v2" => Some(verify_spotify),
+        "youtube-api-key" => Some(verify_google_api),
+        "youtube-api-key-v2" => Some(verify_google_api),
+        "plaid-token" => Some(verify_plaid),
+        "plaid-key" => Some(verify_plaid),
+        "flutterwave-secret-key" => Some(verify_flutterwave),
+        "paystack-token" => Some(verify_paystack),
+        "razorpay-key" => Some(verify_razorpay),
+        "razorpay-key-v2" => Some(verify_razorpay),
+        "coinbase-access-token" => Some(verify_coinbase),
+        "paypal-client-secret" => Some(verify_paypal),
+        "paddle-token" => Some(verify_paddle),
+        "wepay-token" => Some(verify_wepay),
+        "shopify-custom-app-token" => Some(verify_shopify),
+        "shopify-private-app-token" => Some(verify_shopify),
+        "shopify-custom-app-token-v2" => Some(verify_shopify),
+        "shopify-private-app-token-v2" => Some(verify_shopify),
+        "openai-project-key" => Some(verify_openai),
+        "openai-organization-key" => Some(verify_openai),
+        "openai-admin-key" => Some(verify_openai),
+        "anthropic-cli-key" => Some(verify_anthropic),
+        "huggingface-write-token" => Some(verify_huggingface),
+        "huggingface-org-token" => Some(verify_huggingface),
+        "github-codespaces-token" => Some(verify_github),
+        "github-copilot-token" => Some(verify_github),
+        "gitlab-ci-job-token" => Some(verify_gitlab),
+        "gitlab-deploy-token" => Some(verify_gitlab),
+        "npm-publish-token" => Some(verify_npm),
+        "npmrc-auth-token" => Some(verify_npm),
+        "pypi-upload-token" => Some(verify_pypi),
+        "pypirc-token" => Some(verify_pypi),
+        "crates-io-token" => Some(verify_crates_io),
+        "cargo-registry-token" => Some(verify_crates_io),
+        "nuget-api-key" => Some(verify_nuget),
+        "maven-central-token" => Some(verify_maven_central),
+        "packagist-token" => Some(verify_packagist),
+        "composer-token" => Some(verify_packagist),
+        "netlify-api-token" => Some(verify_netlify),
+        "render-token" => Some(verify_render),
+        "render-deploy-token" => Some(verify_render),
+        "fly-io-token" => Some(verify_fly_io),
+        "railway-token" => Some(verify_railway),
+        "railway-token-v2" => Some(verify_railway),
+        "deno-deploy-token" => Some(verify_deno_deploy),
+        "sonarcloud-token" => Some(verify_sonarqube),
+        "deepsource-token" => Some(verify_deepsource),
+        "semgrep-api-token" => Some(verify_semgrep),
+        "codeium-api-key" => Some(verify_codeium),
+        "tabnine-api-key" => Some(verify_tabnine),
+        "greptile-api-key" => Some(verify_greptile),
+        "pinecone-api-key" => Some(verify_pinecone),
+        "weaviate-api-key" => Some(verify_weaviate),
+        "qdrant-api-key" => Some(verify_qdrant),
+        "weights-biases-api-key" => Some(verify_weights_biases),
+        "comet-ml-api-key" => Some(verify_comet_ml),
+        "fireworks-ai-key" => Some(verify_fireworks_ai),
+        "modal-api-key" => Some(verify_modal),
+        "runwayml-api-key" => Some(verify_runwayml),
+        "langsmith-api-key" => Some(verify_langsmith),
+        "langfuse-secret-key" => Some(verify_langfuse),
+        "helicone-api-key" => Some(verify_helicone),
+        "portkey-api-key" => Some(verify_portkey),
+        "braintrust-api-key" => Some(verify_braintrust),
+        "cohere-api-key" => Some(verify_cohere),
+        "groq-api-key" => Some(verify_groq),
+        "deepseek-api-key" => Some(verify_deepseek),
+        "mistral-api-key" => Some(verify_mistral),
+        "perplexity-api-key" => Some(verify_perplexity),
+        "elevenlabs-api-key" => Some(verify_elevenlabs),
+        "openrouter-key" => Some(verify_openrouter),
+        "together-ai-key" => Some(verify_together_ai),
+        "stability-ai-key" => Some(verify_stability_ai),
+        "assemblyai-key" => Some(verify_assemblyai),
+        "clarifai-key" => Some(verify_clarifai),
+        "resend-api-key" => Some(verify_resend),
+        "cal-com-api-key" => Some(verify_cal_com),
+        "retool-token" => Some(verify_retool),
+        "metabase-session-token" => Some(verify_metabase),
+        "kong-konnect-token" => Some(verify_kong_konnect),
+        "gitea-token" => Some(verify_gitea),
+        "gogs-token" => Some(verify_gogs),
+        "codeberg-token" => Some(verify_gitea),
+        "jira-api-token" => Some(verify_atlassian),
+        "confluence-api-token" => Some(verify_atlassian),
+        "buildkite-api-token" => Some(verify_buildkite),
+        "buildkite-agent-token" => Some(verify_buildkite),
+        "drone-ci-token" => Some(verify_drone_ci),
+        "woodpecker-ci-token" => Some(verify_drone_ci),
         _ => None,
     }
 }
@@ -951,6 +1087,684 @@ fn verify_terraform_cloud(token: &str) -> VerificationStatus {
     status_from_result_rate_limited(result, &[401, 403])
 }
 
+// ── Phase 1: Additional verifier functions ────────────────────────────
+
+fn verify_azure_batch(key: &str) -> VerificationStatus {
+    if key.len() < 20 { return VerificationStatus::Inactive; }
+    let result = agent()
+        .get("https://batch.core.windows.net/")
+        .set("Authorization", &format!("SharedKey {key}"))
+        .call();
+    status_from_result(result, &[401, 403])
+}
+
+fn verify_gcp_oauth(_id: &str) -> VerificationStatus {
+    VerificationStatus::Unknown
+}
+
+fn verify_alibaba(key: &str) -> VerificationStatus {
+    if !key.starts_with("LTAI") && !key.starts_with("AK") { return VerificationStatus::Inactive; }
+    VerificationStatus::Unknown
+}
+
+fn verify_tencent(key: &str) -> VerificationStatus {
+    if key.len() < 20 { return VerificationStatus::Inactive; }
+    VerificationStatus::Unknown
+}
+
+fn verify_oracle_cloud(token: &str) -> VerificationStatus {
+    if token.len() < 20 { return VerificationStatus::Inactive; }
+    let result = agent()
+        .get("https://identity.us-ashburn-1.oraclecloud.com/20180908/users/me")
+        .set("Authorization", &format!("Bearer {token}"))
+        .call();
+    status_from_result(result, &[401, 403])
+}
+
+fn verify_scaleway(key: &str) -> VerificationStatus {
+    if key.len() < 20 { return VerificationStatus::Inactive; }
+    let result = agent()
+        .get("https://api.scaleway.com/account/v2/tokens")
+        .set("X-Auth-Token", key)
+        .call();
+    status_from_result(result, &[401, 403])
+}
+
+fn verify_vultr(key: &str) -> VerificationStatus {
+    if key.len() < 20 { return VerificationStatus::Inactive; }
+    let result = agent()
+        .get("https://api.vultr.com/v2/account")
+        .set("Authorization", &format!("Bearer {key}"))
+        .call();
+    status_from_result(result, &[401, 403])
+}
+
+fn verify_linode(token: &str) -> VerificationStatus {
+    if token.len() < 20 { return VerificationStatus::Inactive; }
+    let result = agent()
+        .get("https://api.linode.com/v4/account")
+        .set("Authorization", &format!("Bearer {token}"))
+        .call();
+    status_from_result(result, &[401, 403])
+}
+
+fn verify_backblaze(key: &str) -> VerificationStatus {
+    if key.len() < 10 { return VerificationStatus::Inactive; }
+    VerificationStatus::Unknown
+}
+
+fn verify_wasabi(key: &str) -> VerificationStatus {
+    if key.len() < 10 { return VerificationStatus::Inactive; }
+    VerificationStatus::Unknown
+}
+
+fn verify_fastly(key: &str) -> VerificationStatus {
+    if key.len() < 20 { return VerificationStatus::Inactive; }
+    let result = agent()
+        .get("https://api.fastly.com/current_customer")
+        .set("Fastly-Key", key)
+        .call();
+    status_from_result(result, &[401, 403])
+}
+
+fn verify_databricks(token: &str) -> VerificationStatus {
+    if !token.starts_with("dapi") { return VerificationStatus::Inactive; }
+    let result = agent()
+        .get("https://databricks.com/api/2.0/scim/v2/Me")
+        .set("Authorization", &format!("Bearer {token}"))
+        .call();
+    status_from_result(result, &[401, 403])
+}
+
+fn verify_dynatrace(token: &str) -> VerificationStatus {
+    if !token.starts_with("dt0c01_") { return VerificationStatus::Inactive; }
+    let result = agent()
+        .get("https://my.dynatrace.com/api/v1/user")
+        .set("Authorization", &format!("Api-Token {token}"))
+        .call();
+    status_from_result(result, &[401, 403])
+}
+
+fn verify_airtable(key: &str) -> VerificationStatus {
+    if !key.starts_with("pat") { return VerificationStatus::Inactive; }
+    let result = agent()
+        .get("https://api.airtable.com/v0/meta/whoami")
+        .set("Authorization", &format!("Bearer {key}"))
+        .call();
+    status_from_result(result, &[401, 403])
+}
+
+fn verify_contentful(token: &str) -> VerificationStatus {
+    if !token.starts_with("CFPAT-") { return VerificationStatus::Inactive; }
+    let result = agent()
+        .get("https://api.contentful.com/users/me")
+        .set("Authorization", &format!("Bearer {token}"))
+        .call();
+    status_from_result(result, &[401, 403])
+}
+
+fn verify_hubspot(key: &str) -> VerificationStatus {
+    if key.len() < 20 { return VerificationStatus::Inactive; }
+    let result = agent()
+        .get("https://api.hubapi.com/account-info/v3/details")
+        .set("Authorization", &format!("Bearer {key}"))
+        .call();
+    status_from_result(result, &[401, 403])
+}
+
+fn verify_algolia(key: &str) -> VerificationStatus {
+    if key.len() < 20 { return VerificationStatus::Inactive; }
+    let result = agent()
+        .get("https://api.algolia.com/1/keys")
+        .set("X-Algolia-API-Key", key)
+        .call();
+    status_from_result(result, &[401, 403])
+}
+
+fn verify_posthog(key: &str) -> VerificationStatus {
+    if key.len() < 20 { return VerificationStatus::Inactive; }
+    let result = agent()
+        .get("https://app.posthog.com/api/users/@me/")
+        .set("Authorization", &format!("Bearer {key}"))
+        .call();
+    status_from_result(result, &[401, 403])
+}
+
+fn verify_launchdarkly(key: &str) -> VerificationStatus {
+    if !key.starts_with("sdk-") && !key.starts_with("api-") { return VerificationStatus::Inactive; }
+    let result = agent()
+        .get("https://app.launchdarkly.com/api/v2/users/me")
+        .set("Authorization", key)
+        .call();
+    status_from_result(result, &[401, 403])
+}
+
+fn verify_docker_registry(token: &str) -> VerificationStatus {
+    if token.len() < 20 { return VerificationStatus::Inactive; }
+    let result = agent()
+        .get("https://registry.hub.docker.com/v2/userinfo/")
+        .set("Authorization", &format!("Bearer {token}"))
+        .call();
+    status_from_result(result, &[401, 403])
+}
+
+fn verify_harbor(token: &str) -> VerificationStatus {
+    if token.len() < 10 { return VerificationStatus::Inactive; }
+    VerificationStatus::Unknown
+}
+
+fn verify_nexus(token: &str) -> VerificationStatus {
+    if token.len() < 10 { return VerificationStatus::Inactive; }
+    VerificationStatus::Unknown
+}
+
+fn verify_confluent(token: &str) -> VerificationStatus {
+    if token.len() < 20 { return VerificationStatus::Inactive; }
+    let result = agent()
+        .get("https://api.confluent.cloud/iam/v2/users/me")
+        .set("Authorization", &format!("Bearer {token}"))
+        .call();
+    status_from_result(result, &[401, 403])
+}
+
+fn verify_doppler(token: &str) -> VerificationStatus {
+    if !token.starts_with("dp.pt.") { return VerificationStatus::Inactive; }
+    let result = agent()
+        .get("https://api.doppler.com/v3/me")
+        .set("Authorization", &format!("Bearer {token}"))
+        .call();
+    status_from_result(result, &[401, 403])
+}
+
+fn verify_onelogin(token: &str) -> VerificationStatus {
+    if token.len() < 20 { return VerificationStatus::Inactive; }
+    let result = agent()
+        .get("https://api.onelogin.com/api/1/users/me")
+        .set("Authorization", &format!("bearer:{token}"))
+        .call();
+    status_from_result(result, &[401, 403])
+}
+
+fn verify_jumpcloud(token: &str) -> VerificationStatus {
+    if token.len() < 20 { return VerificationStatus::Inactive; }
+    let result = agent()
+        .get("https://console.jumpcloud.com/api/systemusers")
+        .set("x-api-key", token)
+        .call();
+    status_from_result(result, &[401, 403])
+}
+
+fn verify_clerk(token: &str) -> VerificationStatus {
+    if !token.starts_with("sk_") { return VerificationStatus::Inactive; }
+    let result = agent()
+        .get("https://api.clerk.com/v1/me")
+        .set("Authorization", &format!("Bearer {token}"))
+        .call();
+    status_from_result(result, &[401, 403])
+}
+
+fn verify_figma(token: &str) -> VerificationStatus {
+    if !token.starts_with("figd_") { return VerificationStatus::Inactive; }
+    let result = agent()
+        .get("https://api.figma.com/v1/me")
+        .set("X-Figma-Token", token)
+        .call();
+    status_from_result(result, &[401, 403])
+}
+
+fn verify_dropbox(token: &str) -> VerificationStatus {
+    if !token.starts_with("sl.") { return VerificationStatus::Inactive; }
+    let result = agent()
+        .get("https://api.dropboxapi.com/2/users/get_current_account")
+        .set("Authorization", &format!("Bearer {token}"))
+        .call();
+    status_from_result(result, &[401, 403])
+}
+
+fn verify_reddit(token: &str) -> VerificationStatus {
+    if token.len() < 20 { return VerificationStatus::Inactive; }
+    let result = agent()
+        .get("https://oauth.reddit.com/api/v1/me")
+        .set("Authorization", &format!("Bearer {token}"))
+        .call();
+    status_from_result(result, &[401, 403])
+}
+
+fn verify_instagram(token: &str) -> VerificationStatus {
+    if !token.starts_with("IGQV") { return VerificationStatus::Inactive; }
+    let result = agent()
+        .get(&format!("https://graph.instagram.com/me?access_token={token}"))
+        .call();
+    status_from_result(result, &[401, 403])
+}
+
+fn verify_pinterest(token: &str) -> VerificationStatus {
+    if token.len() < 20 { return VerificationStatus::Inactive; }
+    let result = agent()
+        .get("https://api.pinterest.com/v5/user_account")
+        .set("Authorization", &format!("Bearer {token}"))
+        .call();
+    status_from_result(result, &[401, 403])
+}
+
+fn verify_tiktok(token: &str) -> VerificationStatus {
+    if token.len() < 20 { return VerificationStatus::Inactive; }
+    VerificationStatus::Unknown
+}
+
+fn verify_zoom(_secret: &str) -> VerificationStatus {
+    VerificationStatus::Unknown
+}
+
+fn verify_linkedin(secret: &str) -> VerificationStatus {
+    if secret.len() < 16 { return VerificationStatus::Inactive; }
+    VerificationStatus::Unknown
+}
+
+fn verify_facebook(token: &str) -> VerificationStatus {
+    if token.len() < 20 { return VerificationStatus::Inactive; }
+    let result = agent()
+        .get(&format!("https://graph.facebook.com/me?access_token={token}"))
+        .call();
+    status_from_result(result, &[401, 403])
+}
+
+fn verify_twitter(token: &str) -> VerificationStatus {
+    if token.len() < 20 { return VerificationStatus::Inactive; }
+    let result = agent()
+        .get("https://api.twitter.com/2/users/me")
+        .set("Authorization", &format!("Bearer {token}"))
+        .call();
+    status_from_result(result, &[401, 403])
+}
+
+fn verify_spotify(token: &str) -> VerificationStatus {
+    if token.len() < 20 { return VerificationStatus::Inactive; }
+    let result = agent()
+        .get("https://api.spotify.com/v1/me")
+        .set("Authorization", &format!("Bearer {token}"))
+        .call();
+    status_from_result(result, &[401, 403])
+}
+
+fn verify_plaid(token: &str) -> VerificationStatus {
+    if !token.starts_with("access-") && token.len() < 20 { return VerificationStatus::Inactive; }
+    VerificationStatus::Unknown
+}
+
+fn verify_flutterwave(key: &str) -> VerificationStatus {
+    if !key.starts_with("FLWSECK") { return VerificationStatus::Inactive; }
+    VerificationStatus::Unknown
+}
+
+fn verify_paystack(key: &str) -> VerificationStatus {
+    if !key.starts_with("sk_") { return VerificationStatus::Inactive; }
+    let result = agent()
+        .get("https://api.paystack.com/transaction")
+        .set("Authorization", &format!("Bearer {key}"))
+        .call();
+    status_from_result(result, &[401, 403])
+}
+
+fn verify_razorpay(key: &str) -> VerificationStatus {
+    if !key.starts_with("rzp_") { return VerificationStatus::Inactive; }
+    VerificationStatus::Unknown
+}
+
+fn verify_coinbase(token: &str) -> VerificationStatus {
+    if token.len() < 20 { return VerificationStatus::Inactive; }
+    let result = agent()
+        .get("https://api.coinbase.com/v2/user")
+        .set("Authorization", &format!("Bearer {token}"))
+        .call();
+    status_from_result(result, &[401, 403])
+}
+
+fn verify_paypal(secret: &str) -> VerificationStatus {
+    if secret.len() < 20 { return VerificationStatus::Inactive; }
+    VerificationStatus::Unknown
+}
+
+fn verify_paddle(token: &str) -> VerificationStatus {
+    if token.len() < 20 { return VerificationStatus::Inactive; }
+    VerificationStatus::Unknown
+}
+
+fn verify_wepay(token: &str) -> VerificationStatus {
+    if token.len() < 20 { return VerificationStatus::Inactive; }
+    VerificationStatus::Unknown
+}
+
+fn verify_crates_io(token: &str) -> VerificationStatus {
+    if token.len() < 20 { return VerificationStatus::Inactive; }
+    let result = agent()
+        .get("https://crates.io/api/v1/me")
+        .set("Authorization", token)
+        .call();
+    status_from_result(result, &[401, 403])
+}
+
+fn verify_nuget(key: &str) -> VerificationStatus {
+    if !key.starts_with("oy2") { return VerificationStatus::Inactive; }
+    VerificationStatus::Unknown
+}
+
+fn verify_maven_central(token: &str) -> VerificationStatus {
+    if token.len() < 20 { return VerificationStatus::Inactive; }
+    VerificationStatus::Unknown
+}
+
+fn verify_packagist(token: &str) -> VerificationStatus {
+    if token.len() < 20 { return VerificationStatus::Inactive; }
+    let result = agent()
+        .get("https://packagist.org/api/me")
+        .set("Authorization", &format!("Bearer {token}"))
+        .call();
+    status_from_result(result, &[401, 403])
+}
+
+fn verify_netlify(token: &str) -> VerificationStatus {
+    if !token.starts_with("nfp_") { return VerificationStatus::Inactive; }
+    let result = agent()
+        .get("https://api.netlify.com/api/v1/user")
+        .set("Authorization", &format!("Bearer {token}"))
+        .call();
+    status_from_result(result, &[401, 403])
+}
+
+fn verify_render(token: &str) -> VerificationStatus {
+    if !token.starts_with("rnd_") { return VerificationStatus::Inactive; }
+    let result = agent()
+        .get("https://api.render.com/v1/users/me")
+        .set("Authorization", &format!("Bearer {token}"))
+        .call();
+    status_from_result(result, &[401, 403])
+}
+
+fn verify_fly_io(token: &str) -> VerificationStatus {
+    if !token.starts_with("FlyV1_") { return VerificationStatus::Inactive; }
+    VerificationStatus::Unknown
+}
+
+fn verify_railway(token: &str) -> VerificationStatus {
+    if token.len() < 20 { return VerificationStatus::Inactive; }
+    let result = agent()
+        .post("https://backboard.railway.app/graphql/v1")
+        .set("Authorization", &format!("Bearer {token}"))
+        .call();
+    status_from_result(result, &[401, 403])
+}
+
+fn verify_deno_deploy(token: &str) -> VerificationStatus {
+    if !token.starts_with("ddp_") { return VerificationStatus::Inactive; }
+    VerificationStatus::Unknown
+}
+
+fn verify_deepsource(token: &str) -> VerificationStatus {
+    if token.len() < 20 { return VerificationStatus::Inactive; }
+    let result = agent()
+        .get("https://api.deepsource.io/v1/me")
+        .set("Authorization", &format!("Bearer {token}"))
+        .call();
+    status_from_result(result, &[401, 403])
+}
+
+fn verify_semgrep(token: &str) -> VerificationStatus {
+    if token.len() < 20 { return VerificationStatus::Inactive; }
+    VerificationStatus::Unknown
+}
+
+fn verify_codeium(key: &str) -> VerificationStatus {
+    if key.len() < 20 { return VerificationStatus::Inactive; }
+    VerificationStatus::Unknown
+}
+
+fn verify_tabnine(key: &str) -> VerificationStatus {
+    if key.len() < 20 { return VerificationStatus::Inactive; }
+    VerificationStatus::Unknown
+}
+
+fn verify_greptile(key: &str) -> VerificationStatus {
+    if !key.starts_with("grpt_") { return VerificationStatus::Inactive; }
+    VerificationStatus::Unknown
+}
+
+fn verify_pinecone(key: &str) -> VerificationStatus {
+    if !key.starts_with("pcsk_") { return VerificationStatus::Inactive; }
+    let result = agent()
+        .get("https://api.pinecone.io/indexes")
+        .set("Api-Key", key)
+        .call();
+    status_from_result(result, &[401, 403])
+}
+
+fn verify_weaviate(key: &str) -> VerificationStatus {
+    if key.len() < 20 { return VerificationStatus::Inactive; }
+    VerificationStatus::Unknown
+}
+
+fn verify_qdrant(key: &str) -> VerificationStatus {
+    if key.len() < 20 { return VerificationStatus::Inactive; }
+    VerificationStatus::Unknown
+}
+
+fn verify_weights_biases(key: &str) -> VerificationStatus {
+    if key.len() < 20 { return VerificationStatus::Inactive; }
+    let result = agent()
+        .get("https://api.wandb.ai/api/v1/users/me")
+        .set("Authorization", &format!("Basic {key}:"))
+        .call();
+    status_from_result(result, &[401, 403])
+}
+
+fn verify_comet_ml(key: &str) -> VerificationStatus {
+    if key.len() < 20 { return VerificationStatus::Inactive; }
+    VerificationStatus::Unknown
+}
+
+fn verify_fireworks_ai(key: &str) -> VerificationStatus {
+    if key.len() < 20 { return VerificationStatus::Inactive; }
+    let result = agent()
+        .get("https://api.fireworks.ai/v1/account")
+        .set("Authorization", &format!("Bearer {key}"))
+        .call();
+    status_from_result(result, &[401, 403])
+}
+
+fn verify_modal(key: &str) -> VerificationStatus {
+    if key.len() < 20 { return VerificationStatus::Inactive; }
+    VerificationStatus::Unknown
+}
+
+fn verify_runwayml(key: &str) -> VerificationStatus {
+    if key.len() < 20 { return VerificationStatus::Inactive; }
+    VerificationStatus::Unknown
+}
+
+fn verify_langsmith(key: &str) -> VerificationStatus {
+    if !key.starts_with("lsk_") { return VerificationStatus::Inactive; }
+    VerificationStatus::Unknown
+}
+
+fn verify_langfuse(key: &str) -> VerificationStatus {
+    if !key.starts_with("sk-lf-") { return VerificationStatus::Inactive; }
+    VerificationStatus::Unknown
+}
+
+fn verify_helicone(key: &str) -> VerificationStatus {
+    if !key.starts_with("sk-helicone-") { return VerificationStatus::Inactive; }
+    VerificationStatus::Unknown
+}
+
+fn verify_portkey(key: &str) -> VerificationStatus {
+    if key.len() < 20 { return VerificationStatus::Inactive; }
+    VerificationStatus::Unknown
+}
+
+fn verify_braintrust(key: &str) -> VerificationStatus {
+    if key.len() < 20 { return VerificationStatus::Inactive; }
+    VerificationStatus::Unknown
+}
+
+fn verify_cohere(key: &str) -> VerificationStatus {
+    if key.len() < 20 { return VerificationStatus::Inactive; }
+    let result = agent()
+        .get("https://api.cohere.ai/v1/me")
+        .set("Authorization", &format!("Bearer {key}"))
+        .call();
+    status_from_result(result, &[401, 403])
+}
+
+fn verify_groq(key: &str) -> VerificationStatus {
+    if !key.starts_with("gsk_") { return VerificationStatus::Inactive; }
+    let result = agent()
+        .get("https://api.groq.com/openai/v1/models")
+        .set("Authorization", &format!("Bearer {key}"))
+        .call();
+    status_from_result(result, &[401, 403])
+}
+
+fn verify_deepseek(key: &str) -> VerificationStatus {
+    if !key.starts_with("sk-") { return VerificationStatus::Inactive; }
+    let result = agent()
+        .get("https://api.deepseek.com/v1/models")
+        .set("Authorization", &format!("Bearer {key}"))
+        .call();
+    status_from_result(result, &[401, 403])
+}
+
+fn verify_mistral(key: &str) -> VerificationStatus {
+    if key.len() < 20 { return VerificationStatus::Inactive; }
+    let result = agent()
+        .get("https://api.mistral.ai/v1/models")
+        .set("Authorization", &format!("Bearer {key}"))
+        .call();
+    status_from_result(result, &[401, 403])
+}
+
+fn verify_perplexity(key: &str) -> VerificationStatus {
+    if !key.starts_with("pplx-") { return VerificationStatus::Inactive; }
+    let result = agent()
+        .get("https://api.perplexity.ai/v1/models")
+        .set("Authorization", &format!("Bearer {key}"))
+        .call();
+    status_from_result(result, &[401, 403])
+}
+
+fn verify_elevenlabs(key: &str) -> VerificationStatus {
+    if key.len() < 20 { return VerificationStatus::Inactive; }
+    let result = agent()
+        .get("https://api.elevenlabs.io/v1/user")
+        .set("xi-api-key", key)
+        .call();
+    status_from_result(result, &[401, 403])
+}
+
+fn verify_openrouter(key: &str) -> VerificationStatus {
+    if !key.starts_with("sk-or-") { return VerificationStatus::Inactive; }
+    let result = agent()
+        .get("https://openrouter.ai/api/v1/key")
+        .set("Authorization", &format!("Bearer {key}"))
+        .call();
+    status_from_result(result, &[401, 403])
+}
+
+fn verify_together_ai(key: &str) -> VerificationStatus {
+    if key.len() < 20 { return VerificationStatus::Inactive; }
+    let result = agent()
+        .get("https://api.together.xyz/v1/models")
+        .set("Authorization", &format!("Bearer {key}"))
+        .call();
+    status_from_result(result, &[401, 403])
+}
+
+fn verify_stability_ai(key: &str) -> VerificationStatus {
+    if !key.starts_with("sk-") { return VerificationStatus::Inactive; }
+    let result = agent()
+        .get("https://api.stability.ai/v1/user/account")
+        .set("Authorization", &format!("Bearer {key}"))
+        .call();
+    status_from_result(result, &[401, 403])
+}
+
+fn verify_assemblyai(key: &str) -> VerificationStatus {
+    if key.len() < 20 { return VerificationStatus::Inactive; }
+    let result = agent()
+        .get("https://api.assemblyai.com/v2/transcript")
+        .set("Authorization", key)
+        .call();
+    status_from_result(result, &[401, 403])
+}
+
+fn verify_clarifai(key: &str) -> VerificationStatus {
+    if key.len() < 20 { return VerificationStatus::Inactive; }
+    let result = agent()
+        .get("https://api.clarifai.com/v2/me")
+        .set("Authorization", &format!("Key {key}"))
+        .call();
+    status_from_result(result, &[401, 403])
+}
+
+fn verify_resend(key: &str) -> VerificationStatus {
+    if !key.starts_with("re_") { return VerificationStatus::Inactive; }
+    let result = agent()
+        .get("https://api.resend.com/domains")
+        .set("Authorization", &format!("Bearer {key}"))
+        .call();
+    status_from_result(result, &[401, 403])
+}
+
+fn verify_cal_com(key: &str) -> VerificationStatus {
+    if key.len() < 20 { return VerificationStatus::Inactive; }
+    VerificationStatus::Unknown
+}
+
+fn verify_retool(token: &str) -> VerificationStatus {
+    if token.len() < 20 { return VerificationStatus::Inactive; }
+    let result = agent()
+        .get("https://api.retool.com/api/v1/users/me")
+        .set("Authorization", &format!("Bearer {token}"))
+        .call();
+    status_from_result(result, &[401, 403])
+}
+
+fn verify_metabase(token: &str) -> VerificationStatus {
+    if token.len() < 20 { return VerificationStatus::Inactive; }
+    VerificationStatus::Unknown
+}
+
+fn verify_kong_konnect(token: &str) -> VerificationStatus {
+    if token.len() < 20 { return VerificationStatus::Inactive; }
+    let result = agent()
+        .get("https://us.api.konghq.com/v3/users/me")
+        .set("Authorization", &format!("Bearer {token}"))
+        .call();
+    status_from_result(result, &[401, 403])
+}
+
+fn verify_gitea(token: &str) -> VerificationStatus {
+    if token.len() < 20 { return VerificationStatus::Inactive; }
+    let result = agent()
+        .get("https://gitea.com/api/v1/user")
+        .set("Authorization", &format!("token {token}"))
+        .call();
+    status_from_result(result, &[401, 403])
+}
+
+fn verify_gogs(token: &str) -> VerificationStatus {
+    if token.len() < 20 { return VerificationStatus::Inactive; }
+    let result = agent()
+        .get("https://gogs.io/api/v1/user")
+        .set("Authorization", &format!("token {token}"))
+        .call();
+    status_from_result(result, &[401, 403])
+}
+
+fn verify_drone_ci(token: &str) -> VerificationStatus {
+    if token.len() < 20 { return VerificationStatus::Inactive; }
+    VerificationStatus::Unknown
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -1029,10 +1843,9 @@ mod tests {
 
     #[test]
     fn test_verifier_for_none_for_unverifiable_rules() {
-        // aws-access-key-id only captures the key ID (not the paired
-        // secret), so it can never be verified from the match alone.
+        // jwt and generic-high-entropy don't have a specific provider
+        // API to call, so they can never be verified from the match alone.
         for rule in [
-            "aws-access-key-id",
             "jwt",
             "generic-high-entropy",
         ] {

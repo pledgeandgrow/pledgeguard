@@ -292,6 +292,7 @@ enum OutputFormat {
     Sarif,
     Csv,
     Junit,
+    GithubActions,
     Template,
 }
 
@@ -832,6 +833,7 @@ fn report(findings: Vec<Finding>, opts: ReportOptions) -> ExitCode {
         OutputFormat::Sarif => format_sarif(&display),
         OutputFormat::Csv => pledgeguard_core::to_csv(&display),
         OutputFormat::Junit => pledgeguard_core::to_junit(&display),
+        OutputFormat::GithubActions => pledgeguard_core::to_github_actions(&display),
         OutputFormat::Template => pledgeguard_core::to_template(&display, None),
     };
 

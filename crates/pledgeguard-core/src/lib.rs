@@ -35,6 +35,7 @@ pub mod docker;
 pub mod entropy;
 pub mod finding;
 pub mod git_history;
+pub mod github_actions;
 pub mod junit;
 pub mod plugin;
 pub mod redact;
@@ -56,6 +57,7 @@ pub use finding::{Finding, Severity, VerificationStatus};
 pub use git_history::scan_git_history;
 pub use plugin::{PluginError, WasmDetector, load_plugins};
 pub use sarif::to_sarif;
+pub use github_actions::to_github_actions;
 pub use scanner::{ScanError, ScanOptions, Scanner};
 pub use csv::to_csv;
 pub use junit::to_junit;
@@ -69,10 +71,13 @@ pub use source_scan::{
     scan_confluence, scan_slack, scan_jira, scan_postman, scan_gerrit,
     scan_buildkite, scan_artifactory, scan_aws_secrets_manager,
     scan_circleci_artifacts, scan_travis_ci_logs, scan_jenkins_logs, scan_droneci_builds,
+    scan_huggingface, scan_sharepoint, scan_teams, scan_pypi,
     ConfluenceScanConfig, SlackScanConfig, JiraScanConfig, PostmanScanConfig,
     GerritScanConfig, BuildkiteScanConfig, ArtifactoryScanConfig,
     AwsSecretsManagerScanConfig, CircleCiArtifactsScanConfig, TravisCiScanConfig,
-    JenkinsScanConfig, DroneCiScanConfig, SourceScanError,
+    JenkinsScanConfig, DroneCiScanConfig,
+    HuggingFaceScanConfig, SharePointScanConfig, TeamsScanConfig, PyPIScanConfig,
+    SourceScanError,
 };
 pub use file_scan::{
     scan_helm_chart, scan_terraform_state, scan_k8s_secret,

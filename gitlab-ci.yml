@@ -1,5 +1,9 @@
 # PledgeGuard — GitLab CI template
 # Add this to your .gitlab-ci.yml to scan for secrets in every push/merge request.
+#
+# Requirements:
+#   - The pledgeguard Docker image must be available in your registry.
+#   - Set PLEDGEGUARD_TOKEN as a CI/CD variable if you want live verification.
 
 pledgeguard:scan:
   stage: test
@@ -7,11 +11,17 @@ pledgeguard:scan:
     name: pledgeguard/pledgeguard:latest
     entrypoint: [""]
   script:
-    - pledgeguard scan . --fail-on-findings --format json --report-file pledgeguard-report.json
+    - pledgeguard scan .
+        --fail-on-findings
+        --format github-actions
+        --report-file pledgeguard-report.sarif
+        --severity medium
   artifacts:
     when: always
+    paths:
+      - pledgeguard-report.sarif
     reports:
-      dotenv: pledgeguard-report.json
+      dotenv: pledgeguard-report.sarif
   rules:
     - if: $CI_PIPELINE_SOURCE == "push" || $CI_PIPELINE_SOURCE == "merge_request_event"
 
@@ -21,6 +31,22 @@ pledgeguard:history:
     name: pledgeguard/pledgeguard:latest
     entrypoint: [""]
   script:
-    - pledgeguard history . --fail-on-findings
+    - pledgeguard history . --fail-on-findings --format github-actions
   rules:
     - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+
+pledgeguard:verify:
+  stage: test
+  image:
+    name: pledgeguard/pledgeguard:latest
+    entrypoint: [""]
+  script:
+    - pledgeguard scan . --verify --format json --report-file pledgeguard-verify.json
+  artifacts:
+    when: always
+    paths:
+      - pledgeguard-verify.json
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "schedule"
+  allow_failure: true
+

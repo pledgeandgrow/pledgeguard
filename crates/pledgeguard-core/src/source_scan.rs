@@ -1409,6 +1409,370 @@ pub fn scan_droneci_builds(
     Ok(findings)
 }
 
+// ── Hugging Face ──────────────────────────────────────────────────────
+
+/// Configuration for a Hugging Face scan.
+#[derive(Debug, Clone)]
+pub struct HuggingFaceScanConfig {
+    /// Hugging Face API token (hf_...).
+    pub api_token: String,
+    /// Organization or username to scan. If empty, scans the authenticated user.
+    pub namespace: Option<String>,
+    /// Maximum number of models/datasets/spaces to scan.
+    pub max_items: usize,
+}
+
+/// Scan Hugging Face models, datasets, and spaces metadata for secrets.
+pub fn scan_huggingface(
+    config: &HuggingFaceScanConfig,
+    detectors: &[Box<dyn Detector>],
+) -> Result<Vec<Finding>, SourceScanError> {
+    let agent = agent();
+    let token = &config.api_token;
+    let namespace = config.namespace.as_deref().unwrap_or("");
+
+    let mut findings = Vec::new();
+
+    // Scan user/org info
+    let whoami_url = "https://huggingface.co/api/whoami-v2";
+    let result = agent
+        .get(whoami_url)
+        .set("Authorization", &format!("Bearer {token}"))
+        .call();
+    match result {
+        Ok(resp) => {
+            let body = resp.into_string().map_err(|e| SourceScanError::Parse(e.to_string()))?;
+            let virtual_path = std::path::PathBuf::from("huggingface:whoami");
+            findings.extend(scan_text(&body, &virtual_path, detectors));
+        }
+        Err(ureq::Error::Status(401, _)) => return Err(SourceScanError::Parse("Invalid Hugging Face token".into())),
+        Err(e) => return Err(SourceScanError::Http(Box::new(e))),
+    }
+
+    // Scan models metadata
+    let models_url = if namespace.is_empty() {
+        "https://huggingface.co/api/models?limit=50".to_string()
+    } else {
+        format!("https://huggingface.co/api/models?author={namespace}&limit={}", config.max_items.min(100))
+    };
+    let result = agent
+        .get(&models_url)
+        .set("Authorization", &format!("Bearer {token}"))
+        .call();
+    if let Ok(resp) = result
+        && let Ok(body) = resp.into_string()
+    {
+        let virtual_path = std::path::PathBuf::from("huggingface:models");
+        findings.extend(scan_text(&body, &virtual_path, detectors));
+    }
+
+    // Scan datasets metadata
+    let datasets_url = if namespace.is_empty() {
+        "https://huggingface.co/api/datasets?limit=50".to_string()
+    } else {
+        format!("https://huggingface.co/api/datasets?author={namespace}&limit={}", config.max_items.min(100))
+    };
+    let result = agent
+        .get(&datasets_url)
+        .set("Authorization", &format!("Bearer {token}"))
+        .call();
+    if let Ok(resp) = result
+        && let Ok(body) = resp.into_string()
+    {
+        let virtual_path = std::path::PathBuf::from("huggingface:datasets");
+        findings.extend(scan_text(&body, &virtual_path, detectors));
+    }
+
+    Ok(findings)
+}
+
+// ── SharePoint ────────────────────────────────────────────────────────
+
+/// Configuration for a SharePoint scan.
+#[derive(Debug, Clone)]
+pub struct SharePointScanConfig {
+    /// SharePoint site URL (e.g. "https://contoso.sharepoint.com/sites/eng").
+    pub site_url: String,
+    /// Azure AD client ID for authentication.
+    pub client_id: String,
+    /// Azure AD client secret.
+    pub client_secret: String,
+    /// Azure AD tenant ID.
+    pub tenant_id: String,
+    /// Document library name to scan. If empty, scans all libraries.
+    pub library_name: Option<String>,
+    /// Maximum number of files to scan.
+    pub max_files: usize,
+}
+
+/// Scan SharePoint documents for secrets via the Microsoft Graph API.
+pub fn scan_sharepoint(
+    config: &SharePointScanConfig,
+    detectors: &[Box<dyn Detector>],
+) -> Result<Vec<Finding>, SourceScanError> {
+    let agent = agent();
+
+    // Step 1: Get an access token from Azure AD.
+    let token_url = format!(
+        "https://login.microsoftonline.com/{}/oauth2/v2.0/token",
+        config.tenant_id
+    );
+    let token_result = agent
+        .post(&token_url)
+        .set("Content-Type", "application/x-www-form-urlencoded")
+        .send_string(&format!(
+            "client_id={}&client_secret={}&grant_type=client_credentials&scope=https://graph.microsoft.com/.default",
+            config.client_id, config.client_secret
+        ));
+    let access_token = match token_result {
+        Ok(resp) => {
+            let body: serde_json::Value = resp.into_json()
+                .map_err(|e| SourceScanError::Parse(e.to_string()))?;
+            body.get("access_token")
+                .and_then(|t| t.as_str())
+                .ok_or_else(|| SourceScanError::Parse("No access_token in response".into()))?
+                .to_string()
+        }
+        Err(e) => return Err(SourceScanError::Http(Box::new(e))),
+    };
+
+    let mut findings = Vec::new();
+
+    // Step 2: List files from the default document library via Graph API.
+    let site_id = config.site_url
+        .trim_start_matches("https://")
+        .trim_start_matches("http://");
+    let list_url = format!(
+        "https://graph.microsoft.com/v1.0/sites/{}/drive/root/children?$top={}",
+        site_id,
+        config.max_files.min(100)
+    );
+
+    let result = agent
+        .get(&list_url)
+        .set("Authorization", &format!("Bearer {access_token}"))
+        .call();
+
+    if let Ok(resp) = result {
+        let body: serde_json::Value = resp.into_json()
+            .map_err(|e| SourceScanError::Parse(e.to_string()))?;
+
+        if let Some(files) = body.get("value").and_then(|v| v.as_array()) {
+            for file in files {
+                if let Some(name) = file.get("name").and_then(|n| n.as_str())
+                    && let Some(download_url) = file.get("@microsoft.graph.downloadUrl").and_then(|u| u.as_str())
+                {
+                    let dl_result = agent
+                        .get(download_url)
+                        .set("Authorization", &format!("Bearer {access_token}"))
+                        .call();
+                    if let Ok(dl_resp) = dl_result
+                        && let Ok(content) = dl_resp.into_string()
+                    {
+                        let virtual_path = std::path::PathBuf::from(format!("sharepoint:{name}"));
+                        findings.extend(scan_text(&content, &virtual_path, detectors));
+                    }
+                }
+            }
+        }
+    }
+
+    Ok(findings)
+}
+
+// ── Microsoft Teams ───────────────────────────────────────────────────
+
+/// Configuration for a Microsoft Teams scan.
+#[derive(Debug, Clone)]
+pub struct TeamsScanConfig {
+    /// Azure AD client ID for authentication.
+    pub client_id: String,
+    /// Azure AD client secret.
+    pub client_secret: String,
+    /// Azure AD tenant ID.
+    pub tenant_id: String,
+    /// Team ID to scan. If empty, scans all teams.
+    pub team_id: Option<String>,
+    /// Maximum number of messages to scan per channel.
+    pub max_messages: usize,
+}
+
+/// Scan Microsoft Teams messages for secrets via the Microsoft Graph API.
+pub fn scan_teams(
+    config: &TeamsScanConfig,
+    detectors: &[Box<dyn Detector>],
+) -> Result<Vec<Finding>, SourceScanError> {
+    let agent = agent();
+
+    // Step 1: Get an access token.
+    let token_url = format!(
+        "https://login.microsoftonline.com/{}/oauth2/v2.0/token",
+        config.tenant_id
+    );
+    let token_result = agent
+        .post(&token_url)
+        .set("Content-Type", "application/x-www-form-urlencoded")
+        .send_string(&format!(
+            "client_id={}&client_secret={}&grant_type=client_credentials&scope=https://graph.microsoft.com/.default",
+            config.client_id, config.client_secret
+        ));
+    let access_token = match token_result {
+        Ok(resp) => {
+            let body: serde_json::Value = resp.into_json()
+                .map_err(|e| SourceScanError::Parse(e.to_string()))?;
+            body.get("access_token")
+                .and_then(|t| t.as_str())
+                .ok_or_else(|| SourceScanError::Parse("No access_token in response".into()))?
+                .to_string()
+        }
+        Err(e) => return Err(SourceScanError::Http(Box::new(e))),
+    };
+
+    let mut findings = Vec::new();
+
+    // Step 2: List teams (if no team_id specified) or use the provided one.
+    let team_ids: Vec<String> = if let Some(tid) = &config.team_id {
+        vec![tid.clone()]
+    } else {
+        let teams_url = "https://graph.microsoft.com/v1.0/me/joinedTeams";
+        let result = agent
+            .get(teams_url)
+            .set("Authorization", &format!("Bearer {access_token}"))
+            .call();
+        match result {
+            Ok(resp) => {
+                let body: serde_json::Value = resp.into_json()
+                    .map_err(|e| SourceScanError::Parse(e.to_string()))?;
+                body.get("value")
+                    .and_then(|v| v.as_array())
+                    .map(|arr| {
+                        arr.iter()
+                            .filter_map(|t| t.get("id").and_then(|i| i.as_str()).map(String::from))
+                            .collect()
+                    })
+                    .unwrap_or_default()
+            }
+            Err(_) => Vec::new(),
+        }
+    };
+
+    // Step 3: For each team, list channels and scan messages.
+    for tid in &team_ids {
+        let channels_url = format!("https://graph.microsoft.com/v1.0/teams/{tid}/channels");
+        let result = agent
+            .get(&channels_url)
+            .set("Authorization", &format!("Bearer {access_token}"))
+            .call();
+
+        if let Ok(resp) = result {
+            let body: serde_json::Value = resp.into_json()
+                .map_err(|e| SourceScanError::Parse(e.to_string()))?;
+
+            if let Some(channels) = body.get("value").and_then(|v| v.as_array()) {
+                for channel in channels {
+                    if let Some(ch_id) = channel.get("id").and_then(|i| i.as_str()) {
+                        let msgs_url = format!(
+                            "https://graph.microsoft.com/v1.0/teams/{tid}/channels/{ch_id}/messages?$top={}",
+                            config.max_messages.min(50)
+                        );
+                        let msg_result = agent
+                            .get(&msgs_url)
+                            .set("Authorization", &format!("Bearer {access_token}"))
+                            .call();
+
+                        if let Ok(msg_resp) = msg_result
+                            && let Ok(msg_body) = msg_resp.into_string()
+                        {
+                            let virtual_path = std::path::PathBuf::from(format!("teams:{tid}/{ch_id}"));
+                            findings.extend(scan_text(&msg_body, &virtual_path, detectors));
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    Ok(findings)
+}
+
+// ── PyPI ──────────────────────────────────────────────────────────────
+
+/// Configuration for a PyPI scan.
+#[derive(Debug, Clone)]
+pub struct PyPIScanConfig {
+    /// PyPI API token.
+    pub api_token: String,
+    /// Package name to scan. If empty, scans the authenticated user's packages.
+    pub package_name: Option<String>,
+    /// Maximum number of package versions to scan.
+    pub max_versions: usize,
+}
+
+/// Scan PyPI package metadata for secrets.
+pub fn scan_pypi(
+    config: &PyPIScanConfig,
+    detectors: &[Box<dyn Detector>],
+) -> Result<Vec<Finding>, SourceScanError> {
+    let agent = agent();
+    let token = &config.api_token;
+    let mut findings = Vec::new();
+
+    let packages: Vec<String> = if let Some(pkg) = &config.package_name {
+        vec![pkg.clone()]
+    } else {
+        // List packages owned by the authenticated user.
+        let result = agent
+            .get("https://pypi.org/pypi/user/info/")
+            .set("Authorization", &format!("Bearer {token}"))
+            .call();
+        match result {
+            Ok(resp) => {
+                let body: serde_json::Value = resp.into_json()
+                    .map_err(|e| SourceScanError::Parse(e.to_string()))?;
+                body.get("projects")
+                    .and_then(|p| p.as_array())
+                    .map(|arr| {
+                        arr.iter()
+                            .filter_map(|p| p.get("name").and_then(|n| n.as_str()).map(String::from))
+                            .collect()
+                    })
+                    .unwrap_or_default()
+            }
+            Err(_) => Vec::new(),
+        }
+    };
+
+    for pkg in &packages {
+        // Fetch package metadata (JSON API).
+        let pkg_url = format!("https://pypi.org/pypi/{pkg}/json");
+        let result = agent
+            .get(&pkg_url)
+            .set("Authorization", &format!("Bearer {token}"))
+            .call();
+
+        if let Ok(resp) = result
+            && let Ok(body) = resp.into_string()
+        {
+            let virtual_path = std::path::PathBuf::from(format!("pypi:{pkg}/metadata"));
+            findings.extend(scan_text(&body, &virtual_path, detectors));
+        }
+
+        // Fetch releases info for recent versions.
+        let releases_url = format!("https://pypi.org/pypi/{pkg}/json");
+        let result = agent
+            .get(&releases_url)
+            .call();
+        if let Ok(resp) = result
+            && let Ok(body) = resp.into_string()
+        {
+            let virtual_path = std::path::PathBuf::from(format!("pypi:{pkg}/releases"));
+            findings.extend(scan_text(&body, &virtual_path, detectors));
+        }
+    }
+
+    Ok(findings)
+}
+
 // ── Error type ─────────────────────────────────────────────────────────
 
 #[derive(Debug)]

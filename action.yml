@@ -1,0 +1,45 @@
+name: "PledgeGuard Secret Scan"
+description: "Scan your repository for secrets and leaked credentials with 850+ detectors and live verification."
+branding:
+  icon: "shield"
+  color: "red"
+inputs:
+  path:
+    description: "Path to scan (file or directory)."
+    required: false
+    default: "."
+  format:
+    description: "Output format: table, json, sarif, csv, junit, github-actions, template."
+    required: false
+    default: "github-actions"
+  severity:
+    description: "Minimum severity to report: low, medium, high, critical."
+    required: false
+    default: "low"
+  fail-on-findings:
+    description: "Exit with non-zero code if any findings are detected."
+    required: false
+    default: "true"
+  verify:
+    description: "Enable live verification of detected secrets (makes network calls)."
+    required: false
+    default: "false"
+  scan-history:
+    description: "Also scan git history for secrets in past commits."
+    required: false
+    default: "false"
+  report-file:
+    description: "Write the report to this file (useful for SARIF upload)."
+    required: false
+    default: ""
+runs:
+  using: "docker"
+  image: "docker://pledgeguard/pledgeguard:latest"
+  args:
+    - "scan"
+    - "${{ inputs.path }}"
+    - "--format"
+    - "${{ inputs.format }}"
+    - "--severity"
+    - "${{ inputs.severity }}"
+    - "--fail-on-findings=${{ inputs.fail-on-findings }}"
