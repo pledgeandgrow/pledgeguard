@@ -8,6 +8,8 @@ This document lists all detectors, verification providers, output formats, scann
 
 PledgeGuard ships with **708 built-in detectors** (707 regex-based + 1 entropy) covering major cloud providers, SaaS platforms, CI/CD systems, and generic secret patterns. Each regex detector has a prefilter (Aho-Corasick) for fast scanning and a regex for precise matching.
 
+> **Competitive benchmark:** See [BENCHMARK.md](BENCHMARK.md) for a detailed comparison against TruffleHog, Gitleaks, Betterleaks, GitGuardian, and Trivy.
+
 ### Cloud Providers
 
 | Rule ID | Description | Severity |
@@ -938,6 +940,22 @@ PledgeGuard can verify matched secrets against provider APIs to determine if the
 | **Atlassian** | `atlassian-api-token` | `GET /me` with bearer |
 | **New Relic** | `new-relic-license-key` | `GET /v2/user.json` with Api-Key header |
 | **Notion** | `notion-integration-token` | `GET /v1/users` with bearer |
+| **AWS STS** | `aws-secret-access-key` | `POST /` with SigV4 signed GetCallerIdentity |
+| **Azure AD** | `azure-ad-client-secret` | `POST /oauth2/v2.0/token` with client credentials |
+| **GCP IAM** | `gcp-service-account-key` | JWT-signed `POST /oauth2/v4/token` for access token |
+| **Private Key (PEM)** | `private-key-pem` | PEM structure validation (no network call) |
+| **DB Connection** | `database-connection-string` | Connection attempt (PostgreSQL/MySQL/MongoDB/Redis) |
+| **Slack Webhook** | `slack-webhook-url` | `POST` with malformed JSON to webhook URL |
+| **Vault Token** | `vault-token` | `GET /v1/auth/token/lookup-self` |
+| **Bitbucket** | `bitbucket-app-password`, `bitbucket-client-secret` | `GET /2.0/user` with Basic auth |
+| **SonarQube** | `sonarqube-token` | `GET /api/user_tokens/search` with bearer |
+| **Snyk** | `snyk-api-key` | `GET /v1/user/me` with bearer (UUID format validation) |
+| **Twitch** | `twitch-access-token`, `twitch-client-secret` | `GET /helix/users` with bearer |
+| **Pulumi** | `pulumi-api-token` | `GET /api/user` with bearer |
+| **Square** | `square-token`, `square-app-token` | `GET /v2/locations` with Authorization |
+| **Postman** | `postman-api-key` | `GET /me` with `X-Api-Key` header |
+| **Buildkite** | `buildkite-token` | `GET /v2/user` with `Authorization: Bearer` |
+| **Terraform Cloud** | `terraform-cloud-token` | `GET /api/v2/account/details` with bearer |
 
 ---
 
@@ -964,8 +982,26 @@ PledgeGuard can verify matched secrets against provider APIs to determine if the
 | **Docker images** | `scan_docker_image()` API | Scan Docker image tarballs (from `docker save`) for secrets in layers |
 | **GitHub repos** | `scan_github_repo()` API | Scan remote GitHub repos via REST API (no local clone needed) |
 | **GitLab repos** | `scan_gitlab_repo()` API | Scan remote GitLab repos via REST API |
-| **S3 buckets** | `scan_s3_bucket()` API | Scan AWS S3 bucket objects for secrets |
-| **GCS buckets** | `scan_gcs_bucket()` API | Scan Google Cloud Storage bucket objects for secrets |
+| **S3 buckets** | `pledgeguard scan-source s3 --bucket <name> --region <r>` | Scan AWS S3 bucket objects for secrets |
+| **GCS buckets** | `pledgeguard scan-source gcs --bucket <name>` | Scan Google Cloud Storage bucket objects for secrets |
+| **Azure Blob Storage** | `pledgeguard scan-source azure-blob --account <name> --container <name>` | Scan Azure Blob Storage containers for secrets |
+| **Alibaba OSS** | `pledgeguard scan-source alibaba-oss --bucket <name> --region <r>` | Scan Alibaba Cloud OSS buckets for secrets |
+| **AWS Secrets Manager** | `pledgeguard scan-source aws-secrets-manager --region <r>` | Scan secrets stored in AWS Secrets Manager |
+| **Confluence** | `pledgeguard scan-source confluence --url <url> --token <token> --space <key>` | Scan Confluence pages for secrets |
+| **Slack** | `pledgeguard scan-source slack --token <token>` | Scan Slack messages for secrets |
+| **Jira** | `pledgeguard scan-source jira --url <url> --token <token> --email <email>` | Scan Jira issues for secrets |
+| **Postman** | `pledgeguard scan-source postman --token <token>` | Scan Postman collections and environments for secrets |
+| **Gerrit** | `pledgeguard scan-source gerrit --url <url> --username <user> --password <pass>` | Scan Gerrit changes for secrets |
+| **Buildkite** | `pledgeguard scan-source buildkite --token <token>` | Scan Buildkite build logs for secrets |
+| **Artifactory** | `pledgeguard scan-source artifactory --url <url> --token <token>` | Scan Artifactory repositories for secrets |
+| **CircleCI** | `pledgeguard scan-source circleci --token <token>` | Scan CircleCI build artifacts for secrets |
+| **Travis CI** | `pledgeguard scan-source travis-ci --token <token>` | Scan Travis CI build logs for secrets |
+| **Jenkins** | `pledgeguard scan-source jenkins --url <url> --username <user> --token <token>` | Scan Jenkins build logs for secrets |
+| **DroneCI** | `pledgeguard scan-source droneci --url <url> --token <token>` | Scan DroneCI build logs for secrets |
+| **Syslog TCP** | `scan_syslog_tcp()` API | Real-time secret detection in syslog TCP streams |
+| **Helm charts** | `scan_helm_chart()` API | Scan Helm chart directories (values.yaml, templates, Chart.yaml) |
+| **Terraform state** | `scan_terraform_state()` API | Scan `.tfstate` files for plaintext secrets |
+| **Kubernetes secrets** | `scan_kubernetes_secret()` API | Decode and scan K8s Secret manifests (base64 data fields) |
 | **Archives** | `scan_archive()` API | Scan `.zip`, `.tar`, `.tar.gz` archives for secrets in contained files |
 | **Base64-encoded** | Automatic during scan | Recursive base64 decoding (up to 2 levels) to find encoded secrets |
 
@@ -984,6 +1020,9 @@ PledgeGuard can verify matched secrets against provider APIs to determine if the
 | `--plugin-dir <dir>` | Load `.wasm` plugin detectors (repeatable) |
 | `--show-all` | Include likely false positives (hidden by default) |
 | `--verify` | Call provider APIs to check if secrets are active |
+| `--verify-detectors <ids>` | Force verification for specific detectors (comma-separated) |
+| `--no-verify-detectors <ids>` | Disable verification for specific detectors (comma-separated) |
+| `--verify-cache` | Enable verification caching to avoid re-checking known secrets |
 | `--baseline <path>` | Suppress findings matching a baseline file |
 | `--save-baseline <path>` | Save current findings as a baseline file |
 | `--config <path>` | Load custom detector rules from a TOML config file |
@@ -1122,20 +1161,21 @@ Custom detectors can be loaded from `.wasm` modules at runtime via `--plugin-dir
 
 ## Platforms Not Yet Supported (Roadmap)
 
-The following are supported by competitors (TruffleHog, Gitleaks) but not yet by PledgeGuard:
+The following are supported by competitors (TruffleHog, Gitleaks, Betterleaks, GitGuardian) but not yet by PledgeGuard:
 
 | Feature | Competitor | Status |
 |---|---|---|
-| **AWS STS verification** | TruffleHog | Planned — requires AWS SDK signing |
-| **Azure AD verification** | TruffleHog | Planned — requires OAuth2 flow |
-| **GCP IAM verification** | TruffleHog | Planned — requires Google Cloud auth |
-| **Shopify verification** | TruffleHog | Planned |
-| **Postman verification** | TruffleHog | Planned |
-| **Snowflake verification** | TruffleHog | Planned |
-| **`--only-verified` flag** | TruffleHog | Planned — show only verified results |
-| **Confluence scanning** | TruffleHog | Under consideration |
-| **Slack-as-source scanning** | TruffleHog | Under consideration |
-| **Syslog scanning** | TruffleHog | Under consideration |
+| **Hugging Face scanning** | TruffleHog, Betterleaks | Planned — models, datasets, Spaces |
+| **SharePoint scanning** | TruffleHog, GitGuardian | Under consideration |
+| **Microsoft Teams scanning** | TruffleHog, GitGuardian | Under consideration |
+| **PyPI package scanning** | GitGuardian | Under consideration |
 | **Incremental/PR-scoped history** | TruffleHog/Gitleaks | Planned — `--since-commit` flag |
-| **CEL-based rule validation** | Betterleaks | Under consideration |
+| **Expr-based contextual filtering** | Betterleaks | Under consideration |
+| **BPE tokenization FP filter** | Betterleaks | Under consideration |
+| **Custom verifier config** | TruffleHog, Betterleaks | Planned — user-defined verification endpoints in TOML |
+| **Private key verification (Driftwood)** | TruffleHog | Planned — verify against GitHub/TLS certs |
+| **HTML decoding** | TruffleHog | Planned — decode HTML from Confluence/Teams before scanning |
+| **AI coding tool hooks** | GitGuardian | Under consideration — Cursor/Claude Code/Copilot integration |
 | **Python/Go/Ruby AST refinement** | — | Planned — currently JS/TS only |
+
+> **See [BENCHMARK.md](BENCHMARK.md) for a full competitive comparison.**

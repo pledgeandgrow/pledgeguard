@@ -1,10 +1,12 @@
 # PledgeGuard — Future Providers Roadmap
 
-This document lists all secret providers that PledgeGuard **could** support in the future, based on a comprehensive comparison with competitors (TruffleHog 700+ detectors, Gitleaks 150+ rules). Providers are organized by category and marked with status:
+This document lists all secret providers that PledgeGuard **could** support in the future, based on a comprehensive comparison with competitors (TruffleHog 800+ detectors, Gitleaks ~150 rules, Betterleaks ~150 rules, GitGuardian 500+ detectors, Trivy ~70 rules). Providers are organized by category and marked with status:
 
 - **Supported** — already implemented as a detector and/or verifier
 - **Detector only** — we detect the secret but don't verify it live
 - **Future** — not yet implemented; listed for roadmap planning
+
+> **See [BENCHMARK.md](BENCHMARK.md) for a full competitive feature comparison.**
 
 ---
 
@@ -15,7 +17,7 @@ This document lists all secret providers that PledgeGuard **could** support in t
 | Provider / Token Type | Detector | Verifier | Notes |
 |---|---|---|---|
 | AWS Access Key ID (AKIA/ASIA/...) | **Supported** | Future | Verification requires STS GetCallerIdentity with signed requests |
-| AWS Secret Access Key | **Supported** | Future | Paired with Access Key ID; needs AWS SigV4 signing |
+| AWS Secret Access Key | **Supported** | **Supported** | Verified via AWS STS GetCallerIdentity with SigV4 signing |
 | AWS Session Token | **Supported** | Future | Needs STS API with temporary credentials |
 | AWS MWS Auth Token | **Supported** | Future | Amazon Marketplace Web Service |
 | AWS Amazon Bedrock API Key (long-lived) | **Supported** | Future | ABSK prefix, 109+ chars |
@@ -29,7 +31,7 @@ This document lists all secret providers that PledgeGuard **could** support in t
 | Azure Storage Connection String | **Supported** | Future | Could verify by listing blobs |
 | Azure SAS Token | **Supported** | Future | |
 | Azure Client Secret | **Supported** | Future | Needs Azure AD OAuth2 token endpoint |
-| Azure AD Client Secret | **Supported** | Future | Entra ID, Q~ marker pattern |
+| Azure AD Client Secret | **Supported** | **Supported** | Entra ID, Q~ marker pattern; verified via OAuth2 client credentials flow |
 | Azure Batch Key | **Supported** | Future | BatchAccountKey= assignment |
 | Azure Function Key | **Supported** | Future | FUNCTIONS_KEY/function_key/code= assignment |
 | Azure DevOps PAT | **Supported** | Future | 52-char alphanumeric near devops/vsts context |
@@ -42,7 +44,7 @@ This document lists all secret providers that PledgeGuard **could** support in t
 | Google API Key (AIza) | **Supported** | **Supported** | |
 | Google OAuth Access Token (ya29) | **Supported** | **Supported** | |
 | Google Service Account JSON | **Supported** | Future | Verification: exchange key for OAuth2 token |
-| GCP Service Account Key | **Supported** | Future | private_key field with PEM block |
+| GCP Service Account Key | **Supported** | **Supported** | private_key field with PEM block; verified via JWT-signed OAuth2 token exchange |
 | GCP OAuth Client ID | **Supported** | N/A | xxx-32chars.apps.googleusercontent.com, Medium severity |
 
 ### Other Cloud Providers
@@ -80,14 +82,14 @@ This document lists all secret providers that PledgeGuard **could** support in t
 | GitLab PAT (glpat-) | **Supported** | **Supported** | |
 | GitLab Pipeline Trigger Token | **Supported** | Future | |
 | GitLab Runner Registration Token | **Supported** | Future | |
-| Bitbucket App Password | **Supported** | Future | |
+| Bitbucket App Password | **Supported** | **Supported** | Verified via `GET /2.0/user` with Basic auth |
 | Bitbucket Client ID | **Supported** | Future | |
-| Bitbucket Client Secret | **Supported** | Future | |
+| Bitbucket Client Secret | **Supported** | **Supported** | Verified via `GET /2.0/user` with Basic auth |
 | Bitbucket Data Center Token | **Supported** | Future | |
 | CircleCI API Token | **Supported** | **Supported** | |
 | Travis CI Token | **Supported** | Future | |
 | DroneCI Access Token | **Supported** | Future | |
-| Buildkite Token | **Supported** | Future | bk[cuor]_ prefix |
+| Buildkite Token | **Supported** | **Supported** | bk[cuor]_ prefix; verified via `GET /v2/user` |
 | TeamCity Token | **Supported** | Future | |
 | Jenkins API Token | **Supported** | Future | |
 | GoCD Token | **Supported** | Future | |
@@ -95,11 +97,11 @@ This document lists all secret providers that PledgeGuard **could** support in t
 | Spinnaker Token | **Supported** | Future | |
 | Harness API Key | **Supported** | Future | |
 | Codecov Access Token | **Supported** | Future | |
-| SonarQube Token | **Supported** | Future | squ_ prefix |
-| Snyk API Key | **Supported** | Future | |
+| SonarQube Token | **Supported** | **Supported** | squ_ prefix; verified via `GET /api/user_tokens/search` |
+| Snyk API Key | **Supported** | **Supported** | Verified via `GET /v1/user/me` (UUID format validation) |
 | Artifactory API Key | **Supported** | Future | AKC prefix |
 | Artifactory Reference Token | **Supported** | Future | cmV prefix |
-| Terraform Cloud Token | **Supported** | Future | atlasv1. suffix |
+| Terraform Cloud Token | **Supported** | **Supported** | atlasv1. suffix; verified via `GET /api/v2/account/details` |
 | Pivotal Tracker Token | **Supported** | Future | |
 | Clojars API Token | **Supported** | Future | CLOJARS_ prefix |
 
@@ -110,7 +112,7 @@ This document lists all secret providers that PledgeGuard **could** support in t
 | Provider / Token Type | Detector | Verifier | Notes |
 |---|---|---|---|
 | Slack Token (xox) | **Supported** | **Supported** | |
-| Slack Webhook URL | **Supported** | Future | TruffleHog verifies by sending malformed JSON |
+| Slack Webhook URL | **Supported** | **Supported** | Verified by sending malformed JSON to webhook URL |
 | Discord Bot Token | **Supported** | **Supported** | |
 | Discord Webhook URL | **Supported** | Future | |
 | Discord Client ID | **Supported** | Future | 18-digit assignment |
@@ -150,8 +152,8 @@ This document lists all secret providers that PledgeGuard **could** support in t
 | Shopify Private App Token (shppa_) | **Supported** | Future | |
 | PayPal OAuth Token | **Supported** | Future | |
 | PayPal Client Secret | **Supported** | Future | 80-char assignment |
-| Square Token | **Supported** | Future | sq0atp- prefix |
-| Square App Token | **Supported** | Future | sq0csp- prefix |
+| Square Token | **Supported** | **Supported** | sq0atp- prefix; verified via `GET /v2/locations` |
+| Square App Token | **Supported** | **Supported** | sq0csp- prefix; verified via `GET /v2/locations` |
 | Coinbase Access Token | **Supported** | Future | |
 | RazorPay Key | **Supported** | Future | rzp_ prefix |
 | Paystack Token | **Supported** | Future | sk_live_/sk_test_ prefix |
@@ -221,7 +223,7 @@ This document lists all secret providers that PledgeGuard **could** support in t
 | MessageBird Token | **Supported** | Future | |
 | Vonage/Nexmo API Key | **Supported** | Future | |
 | Plivo Token | **Supported** | Future | |
-| Postman API Key | **Supported** | Future | PMAK- prefix |
+| Postman API Key | **Supported** | **Supported** | PMAK- prefix; verified via `GET /me` with `X-Api-Key` header |
 | PubNub Publish/Subscription Key | **Supported** | Future | sub-c- prefix |
 | Pusher Channel Key | **Supported** | Future | |
 | PushBullet API Key | **Supported** | Future | |
@@ -298,7 +300,7 @@ This document lists all secret providers that PledgeGuard **could** support in t
 | Firebase Token | **Supported** | Future | |
 | Firebase Cloud Messaging Key | **Supported** | Future | AAAA prefix |
 | KubeConfig | **Supported** | Future | client_key_data |
-| HashiCorp Vault Token | **Supported** | Future | hvs./hvb./s. prefixes |
+| HashiCorp Vault Token | **Supported** | **Supported** | Verified via `GET /v1/auth/token/lookup-self` |
 | 1Password Secret Key | **Supported** | Future | a3- format |
 | 1Password Service Account Token | **Supported** | Future | ops_ prefix |
 | Doppler Token | **Supported** | Future | dp.pt. prefix |
@@ -329,7 +331,7 @@ This document lists all secret providers that PledgeGuard **could** support in t
 
 | Provider / Token Type | Detector | Verifier | Notes |
 |---|---|---|---|
-| Twitch Client Secret | **Supported** | Future | |
+| Twitch Client Secret | **Supported** | **Supported** | Verified via `GET /helix/users` with bearer |
 | Twitter/X Bearer Token | **Supported** | Future | |
 | Facebook App Secret | **Supported** | Future | |
 | Facebook Access Token | **Supported** | Future | EAAD prefix |
@@ -343,7 +345,7 @@ This document lists all secret providers that PledgeGuard **could** support in t
 | Docker Hub Token | **Supported** | **Supported** | |
 | Spotify Key | **Supported** | Future | |
 | YouTube API Key | **Supported** | Future | AIza prefix |
-| Twitch Access Token | **Supported** | Future | |
+| Twitch Access Token | **Supported** | **Supported** | Verified via `GET /helix/users` with bearer |
 | Flickr Access Token | **Supported** | Future | |
 | Dropbox API Secret | **Supported** | Future | |
 | Dropbox Long-Lived Token | **Supported** | Future | sl. prefix |
@@ -363,10 +365,10 @@ This document lists all secret providers that PledgeGuard **could** support in t
 
 | Provider / Token Type | Detector | Verifier | Notes |
 |---|---|---|---|
-| PostgreSQL Connection String | **Supported** | Future | TruffleHog verifies by connecting |
-| MySQL Connection String | **Supported** | Future | TruffleHog verifies by connecting |
-| MongoDB Connection String | **Supported** | Future | TruffleHog verifies by connecting |
-| Redis Connection String | **Supported** | Future | TruffleHog verifies by connecting |
+| PostgreSQL Connection String | **Supported** | **Supported** | Verified by connection attempt |
+| MySQL Connection String | **Supported** | **Supported** | Verified by connection attempt |
+| MongoDB Connection String | **Supported** | **Supported** | Verified by connection attempt |
+| Redis Connection String | **Supported** | **Supported** | Verified by connection attempt |
 | JDBC Connection String | **Supported** | Future | MySQL/PostgreSQL/SQL Server |
 | SQL Server Connection String | **Supported** | Future | |
 | Elasticsearch Connection | **Supported** | Future | |
@@ -386,10 +388,10 @@ This document lists all secret providers that PledgeGuard **could** support in t
 
 | Provider / Token Type | Detector | Verifier | Notes |
 |---|---|---|---|
-| PEM Private Key | **Supported** | Future | TruffleHog verifies by testing against GitHub/GitLab/Driftwood |
+| PEM Private Key | **Supported** | **Supported** | PEM structure validation (no network call) |
 | Age Secret Key | **Supported** | Future | AGE-SECRET-KEY-1 prefix |
 | Kubernetes Secret Manifest | **Supported** | Future | YAML with base64 data |
-| HashiCorp Vault Token | **Supported** | Future | hvs./hvb./s. prefixes |
+| HashiCorp Vault Token | **Supported** | **Supported** | Verified via `GET /v1/auth/token/lookup-self` |
 | HashiCorp Terraform Token | **Supported** | Future | |
 | Ansible Vault Password | **Supported** | Future | |
 | Docker Registry Token | **Supported** | Future | |
@@ -1021,25 +1023,29 @@ This document lists all secret providers that PledgeGuard **could** support in t
 
 ## Scanning Sources (Future)
 
-Beyond the current scanning sources (working tree, stdin, git history, Docker, GitHub/GitLab API, S3, GCS, archives), the following sources are supported by competitors:
+Beyond the current scanning sources (working tree, stdin, git history, Docker, GitHub/GitLab API, S3, GCS, Azure Blob, Alibaba OSS, AWS Secrets Manager, Confluence, Slack, Jira, Postman, Gerrit, Buildkite, Artifactory, CircleCI, Travis CI, Jenkins, DroneCI, syslog TCP, Helm charts, Terraform state, Kubernetes secrets, archives), the following sources are supported by competitors:
 
 | Source | Competitor | Priority | Notes |
 |---|---|---|---|
-| **Azure Blob Storage** | TruffleHog | High | Similar to S3/GCS scanning |
-| **Alibaba OSS** | — | Medium | Growing cloud provider |
-| **Confluence** | TruffleHog | Medium | Wiki/documentation scanning |
-| **Slack (as source)** | TruffleHog | Medium | Scan Slack messages for secrets |
-| **Jira** | TruffleHog | Medium | Scan Jira issues/comments |
-| **Syslog streams** | TruffleHog | Low | Real-time log scanning |
-| **Postman** | TruffleHog | Low | Scan Postman collections |
-| **Gerrit** | TruffleHog | Low | Code review platform |
-| **Buildkite** | TruffleHog | Low | CI/CD artifact scanning |
-| **Artifactory** | TruffleHog | Low | Repository scanning |
-| **Helm Charts** | — | Low | Kubernetes manifest scanning |
-| **Terraform State Files** | — | Medium | Often contain plaintext secrets |
-| **Kubernetes Secrets** | Gitleaks | Medium | YAML manifests with base64 data |
-| **AWS Secrets Manager** | — | Low | Could scan for exposed secrets |
-| **Vault Tokens in Logs** | — | Low | Detect leaked Vault tokens |
+| ~~**Azure Blob Storage**~~ | TruffleHog | ~~High~~ | ✅ Done |
+| ~~**Alibaba OSS**~~ | — | ~~Medium~~ | ✅ Done |
+| ~~**Confluence**~~ | TruffleHog | ~~Medium~~ | ✅ Done |
+| ~~**Slack (as source)**~~ | TruffleHog | ~~Medium~~ | ✅ Done |
+| ~~**Jira**~~ | TruffleHog | ~~Medium~~ | ✅ Done |
+| ~~**Syslog streams**~~ | TruffleHog | ~~Low~~ | ✅ Done |
+| ~~**Postman**~~ | TruffleHog | ~~Low~~ | ✅ Done |
+| ~~**Gerrit**~~ | TruffleHog | ~~Low~~ | ✅ Done |
+| ~~**Buildkite**~~ | TruffleHog | ~~Low~~ | ✅ Done |
+| ~~**Artifactory**~~ | TruffleHog | ~~Low~~ | ✅ Done |
+| **Hugging Face** | TruffleHog, Betterleaks | High | Models, datasets, Spaces |
+| **SharePoint** | TruffleHog, GitGuardian | Medium | Document scanning |
+| **Microsoft Teams** | TruffleHog, GitGuardian | Medium | Chat scanning |
+| **PyPI packages** | GitGuardian | Low | Package download + scan |
+| ~~**Helm Charts**~~ | — | ~~Low~~ | ✅ Done — Kubernetes manifest scanning |
+| ~~**Terraform State Files**~~ | — | ~~Medium~~ | ✅ Done — scan .tfstate for plaintext secrets |
+| ~~**Kubernetes Secrets**~~ | Gitleaks | ~~Medium~~ | ✅ Done — YAML manifests with base64 data |
+| ~~**AWS Secrets Manager**~~ | — | ~~Low~~ | ✅ Done — scan stored secrets |
+| ~~**Vault Tokens in Logs**~~ | — | ~~Low~~ | ✅ Done — detect leaked Vault tokens in syslog |
 
 ---
 
@@ -1047,16 +1053,18 @@ Beyond the current scanning sources (working tree, stdin, git history, Docker, G
 
 | Feature | Competitor | Priority | Notes |
 |---|---|---|---|
-| **AWS STS verification** | TruffleHog | High | SigV4 signed GetCallerIdentity |
-| **Azure AD verification** | TruffleHog | High | OAuth2 client_credentials flow |
-| **GCP IAM verification** | TruffleHog | High | Exchange service account key for token |
-| **Private key verification** | TruffleHog | Medium | Test against GitHub/GitLab/Driftwood |
-| **Database connection verification** | TruffleHog | Medium | Attempt connect + ping |
-| **Slack webhook verification** | TruffleHog | Low | Send malformed JSON, check for `invalid_payload` |
-| **`--verify-detectors` flag** | TruffleHog | Medium | Per-detector verification override |
-| **`--no-verify-detectors` flag** | TruffleHog | Medium | Disable verification per detector |
-| **Verification caching** | — | Medium | Cache results to avoid repeated API calls |
-| **Rate-limit aware verification** | — | Medium | Backoff on 429 responses |
+| ~~**AWS STS verification**~~ | TruffleHog | ~~High~~ | ✅ Done — SigV4 signed GetCallerIdentity |
+| ~~**Azure AD verification**~~ | TruffleHog | ~~High~~ | ✅ Done — OAuth2 client_credentials flow |
+| ~~**GCP IAM verification**~~ | TruffleHog | ~~High~~ | ✅ Done — JWT-signed OAuth2 token exchange |
+| ~~**Private key verification**~~ | TruffleHog | ~~Medium~~ | ✅ Done — PEM structure validation |
+| ~~**Database connection verification**~~ | TruffleHog | ~~Medium~~ | ✅ Done — PostgreSQL/MySQL/MongoDB/Redis |
+| ~~**Slack webhook verification**~~ | TruffleHog | ~~Low~~ | ✅ Done — malformed JSON, check for `invalid_payload` |
+| ~~**`--verify-detectors` flag**~~ | TruffleHog | ~~Medium~~ | ✅ Done — per-detector verification override |
+| ~~**`--no-verify-detectors` flag**~~ | TruffleHog | ~~Medium~~ | ✅ Done — disable verification per detector |
+| ~~**Verification caching**~~ | — | ~~Medium~~ | ✅ Done — cache results to avoid repeated API calls |
+| ~~**Rate-limit aware verification**~~ | — | ~~Medium~~ | ✅ Done — backoff on 429 responses |
+| **Custom verifier config** | TruffleHog, Betterleaks | Medium | User-defined verification endpoints in TOML |
+| **Private key verification (Driftwood)** | TruffleHog | Medium | Verify against GitHub/TLS certs |
 
 ---
 
@@ -1064,9 +1072,9 @@ Beyond the current scanning sources (working tree, stdin, git history, Docker, G
 
 | Metric | Current | Future (Total Potential) |
 |---|---|---|
-| **Detectors** | 708 | 700+ |
-| **Verification providers** | 34 | 150+ |
-| **Scanning sources** | 10 | 25+ |
+| **Detectors** | 708 | 800+ |
+| **Verification providers** | 48 | 150+ |
+| **Scanning sources** | 28 | 35+ |
 | **Output formats** | 6 | 6 (competitive) |
 
 ---
@@ -1074,16 +1082,16 @@ Beyond the current scanning sources (working tree, stdin, git history, Docker, G
 ## Priority Recommendations
 
 ### High Priority (Close gap with competitors)
-1. **AWS STS verification** — most requested cloud provider
-2. **Azure AD verification** — second largest cloud provider
-3. **GCP IAM verification** — third largest cloud provider
+1. ~~**AWS STS verification**~~ ✅ Done — verified via SigV4 GetCallerIdentity
+2. ~~**Azure AD verification**~~ ✅ Done — verified via OAuth2 client credentials
+3. ~~**GCP IAM verification**~~ ✅ Done — verified via JWT-signed OAuth2 token exchange
 4. **PostHog detector + verifier** — popular product analytics
 5. **Sentry detector + verifier** — widely used error tracking
 6. **HubSpot detector + verifier** — major CRM
 7. **Algolia detector + verifier** — popular search service
 8. **Databricks detector + verifier** — data platform
-9. **Terraform Cloud token** — IaC platform
-10. **HashiCorp Vault token** — secrets management irony
+9. ~~**Terraform Cloud token**~~ ✅ Done — verified via `GET /api/v2/account/details`
+10. ~~**HashiCorp Vault token**~~ ✅ Done — verified via `GET /v1/auth/token/lookup-self`
 11. **Alibaba Cloud Secret Key** — detector only, needs verifier
 12. **Tencent Cloud Secret Key** — detector only, needs verifier
 13. **IBM Cloud User Key** — major enterprise cloud
@@ -1096,9 +1104,22 @@ Beyond the current scanning sources (working tree, stdin, git history, Docker, G
 20. **Fastly API key** — CDN/edge
 21. **Scaleway key** — European cloud
 22. **Vultr API key** — cloud provider
-23. **Snyk API key** — security scanning
-24. **Postman API key** — API development
+23. ~~**Snyk API key**~~ ✅ Done — verified via `GET /v1/user/me`
+24. ~~**Postman API key**~~ ✅ Done — verified via `GET /me` with `X-Api-Key`
 25. **Segment API key** — analytics pipeline
+26. **Pulumi token** — IaC platform (detector + verifier added)
+27. **Square token** — payments (detector + verifier added)
+28. **Twitch token** — streaming (detector + verifier added)
+29. **Bitbucket token** — VCS (detector + verifier added)
+30. **Buildkite token** — CI/CD (detector + verifier added)
+31. **SonarQube token** — code quality (detector + verifier added)
+32. **Expand verification to 100+ providers** — highest impact gap vs TruffleHog (800+)
+33. **Add Hugging Face scanning** — growing AI/ML ecosystem
+34. **Publish GitHub Action** — critical for CI/CD adoption
+35. **Add HTML decoder** — improve Confluence/Teams/Jira scan results
+36. **Add custom verifier config** — let users define verification endpoints in TOML
+37. **Add SharePoint + MS Teams sources** — enterprise coverage
+38. **Private key verification (Driftwood-style)** — verify against GitHub/TLS certs
 
 ### Low Priority (Long tail)
 - All remaining providers from the lists above

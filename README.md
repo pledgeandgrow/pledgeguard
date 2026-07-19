@@ -9,17 +9,22 @@ Rust-native secret scanner — a TruffleHog/Gitleaks alternative.
 ## Status
 
 **v0.2.0 — comprehensive feature set.** PledgeGuard is a working secret
-scanner with 708 built-in detectors, 34 live verification providers, git history
+scanner with 708 built-in detectors, 48 live verification providers, git history
 scanning, WASM plugins, MCP server, 6 output formats (Table/JSON/SARIF/CSV/JUnit/Template),
 baseline/allowlist mode, pre-commit hook installer, AST-based false-positive
 refinement for JS/TS, custom TOML rules with entropy/allowlists/path filters,
 inline comment suppression, recursive base64 decoding, composite/proximity rules,
-Docker image scanning, GitHub/GitLab API scanning, S3/GCS bucket scanning, and
+Docker image scanning, GitHub/GitLab API scanning, S3/GCS/Azure Blob/Alibaba OSS
+bucket scanning, AWS Secrets Manager, Confluence/Slack/Jira/Postman/Gerrit/Buildkite/
+Artifactory/CircleCI/TravisCI/Jenkins/DroneCI source scanning, syslog TCP stream
+scanning, Helm chart/Terraform state/Kubernetes secret scanning, and
 archive (zip/tar) scanning.
 
 > **Full list of supported detectors, verifiers, and platforms:** see **[SUPPORT.md](docs/SUPPORT.md)**
 >
 > **Future providers roadmap (competitor comparison):** see **[PROVIDERS-FUTURE.md](docs/PROVIDERS-FUTURE.md)**
+>
+> **Competitive benchmark vs TruffleHog/Gitleaks/Betterleaks/GitGuardian/Trivy:** see **[BENCHMARK.md](docs/BENCHMARK.md)**
 
 It is functional and tested but **not yet production-hardened** — detector
 regexes may need tuning for precision/recall on large codebases, and it has
@@ -229,12 +234,16 @@ Findings are never dropped, only flagged; the CLI hides them by default and
 ### Live provider verification
 
 `--verify` calls provider APIs to check whether a matched secret is still active.
-34 providers are supported: GitHub, GitLab, Slack, Stripe, npm, DigitalOcean,
+48 providers are supported: GitHub, GitLab, Slack, Stripe, npm, DigitalOcean,
 Telegram, Twilio, OpenAI, Anthropic, PyPI, Docker Hub, SendGrid, Mailgun,
 Mailchimp, Opsgenie, PagerDuty, Google API, Google OAuth, HuggingFace, Shopify,
 Heroku, Vercel, Datadog, Cloudflare, Linear, Okta, Auth0, Supabase, CircleCI,
-Discord, Atlassian, New Relic, and Notion. Use `--only-verified` to show only
-findings confirmed as Active. See **[SUPPORT.md](docs/SUPPORT.md)** for the full list.
+Discord, Atlassian, New Relic, Notion, AWS STS, Azure AD, GCP IAM, Private Key
+(PEM), DB Connection, Slack Webhook, Vault Token, Bitbucket, SonarQube, Snyk,
+Twitch, Pulumi, Square, Postman, Buildkite, and Terraform Cloud. Use
+`--only-verified` to show only findings confirmed as Active. Use
+`--verify-detectors` / `--no-verify-detectors` for granular per-detector control.
+See **[SUPPORT.md](docs/SUPPORT.md)** for the full list.
 
 ### Baseline / allowlist mode
 
@@ -324,10 +333,11 @@ install-pre-commit options:
 
 - **AST refinement is JS/TS only** — Python, Go, Ruby, etc. use the lexical heuristic.
 - **Git history scans use lexical-only filtering** — only added-line text is available, not the full file.
-- **Live verification covers 34 providers** — see [SUPPORT.md](docs/SUPPORT.md) for the full list. AWS keys, PEM keys, JWTs, and connection strings cannot be verified.
-- **Docker/GitHub/GitLab/S3/GCS scanning via library API** — not yet wired to CLI subcommands.
+- **Live verification covers 48 providers** — see [SUPPORT.md](docs/SUPPORT.md) for the full list. JWTs and some connection strings cannot be verified.
+- **Docker/GitHub/GitLab scanning via library API** — not yet wired to CLI `scan-source` subcommand (S3, GCS, Azure Blob, Alibaba OSS, Confluence, Slack, Jira, Postman, Gerrit, Buildkite, Artifactory, AWS Secrets Manager, CircleCI, Travis CI, Jenkins, DroneCI are available via CLI).
 - **Baseline files contain raw secret values** — treat as sensitive.
 - **Early-stage / unaudited** — detector regexes may need tuning; limited real-world testing.
+- **See [BENCHMARK.md](docs/BENCHMARK.md) for a detailed comparison against TruffleHog, Gitleaks, Betterleaks, GitGuardian, and Trivy.**
 
 ## Sponsors
 
