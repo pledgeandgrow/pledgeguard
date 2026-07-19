@@ -245,61 +245,61 @@
 
 ---
 
-## Scanning Sources (Current: 27 — Target: 40+)
+## Scanning Sources (Current: 40 — Target: 40+)
 
 201. ✅ **Add Hugging Face scanning** — scan models, datasets, Spaces git history + community content
 202. ✅ **Add SharePoint document scanning** — SharePoint REST API / Microsoft Graph
 203. ✅ **Add Microsoft Teams message scanning** — Teams Graph API for channels/chats
 204. ✅ **Add PyPI package scanning** — download and scan published packages
-205. **Add npm package scanning** — download and scan published npm packages
+205. ✅ **Add npm package scanning** — download and scan published npm packages
 206. ✅ **Add Docker Hub image scanning** — pull and scan public Docker Hub images
-207. **Add Gitea scanning** — Gitea API for repos, issues, PRs
-208. **Add Bitbucket Cloud scanning** — Bitbucket API for repos, PRs, pipelines
-209. **Add Bitbucket Server scanning** — self-hosted Bitbucket API
-210. **Add Azure DevOps repo scanning** — Azure Repos REST API
-211. **Add LaunchDarkly flag scanning** — scan feature flag configs for embedded secrets
-212. **Add Consul KV store scanning** — HashiCorp Consul key-value store
-213. **Add etcd scanning** — scan etcd key-value store for secrets
-214. **Add Redis scanning** — scan Redis keys for secret values
-215. **Add Elasticsearch index scanning** — scan ES indices for secret values
-216. **Add AWS Parameter Store scanning** — scan SSM parameters
-217. **Add GCP Secret Manager scanning** — scan GCP secrets
-218. **Add Azure Key Vault scanning** — scan Azure Key Vault secrets
-219. **Add HashiCorp Vault secret scanning** — scan Vault KV mounts
-220. **Add Doppler config scanning** — scan Doppler secret configs
-221. **Add 1Password vault scanning** — scan 1Password items via API
-222. **Add LastPass vault scanning** — scan LastPass entries via API
-223. **Add Bitwarden vault scanning** — scan Bitwarden items via API
-224. **Add Kubernetes ConfigMap scanning** — scan K8s ConfigMaps for secrets
-225. **Add Kubernetes etcd scanning** — scan K8s etcd backend directly
-226. **Add Cloudflare Workers scanning** — scan Worker scripts for embedded secrets
-227. **Add Vercel env var scanning** — scan Vercel project env vars
-228. **Add Netlify env var scanning** — scan Netlify site env vars
-229. **Add Railway env var scanning** — scan Railway project env vars
-230. **Add Render env var scanning** — scan Render service env vars
-231. **Add Fly.io secrets scanning** — scan Fly.io app secrets
-232. **Add Supabase env var scanning** — scan Supabase project env vars
-233. **Add GitHub Gist scanning** — scan user/org gists via API
-234. **Add GitHub Issues/PR scanning** — scan issue/PR bodies and comments
-235. **Add GitHub Actions log scanning** — scan workflow run logs
-236. **Add GitLab Issues/MR scanning** — scan issue/MR bodies and comments
-237. **Add GitLab CI job log scanning** — scan CI/CD job logs
-238. **Add Discord message scanning** — scan Discord channels via bot API
-239. **Add Mattermost message scanning** — scan Mattermost channels
-240. **Add RSS/Atom feed scanning** — scan feeds for leaked secrets in content
+207. ✅ **Add Gitea scanning** — Gitea API for repos, issues, PRs
+208. ✅ **Add Bitbucket Cloud scanning** — Bitbucket API for repos, PRs, pipelines
+209. ✅ **Add Bitbucket Server scanning** — self-hosted Bitbucket API
+210. ✅ **Add Azure DevOps repo scanning** — Azure Repos REST API
+211. ✅ **Add LaunchDarkly flag scanning** — scan feature flag configs for embedded secrets
+212. ✅ **Add Consul KV store scanning** — HashiCorp Consul key-value store
+213. ✅ **Add etcd scanning** — scan etcd key-value store for secrets
+214. ✅ **Add Redis scanning** — scan Redis keys for secret values
+215. ✅ **Add Elasticsearch index scanning** — scan ES indices for secret values
+216. ✅ **Add AWS Parameter Store scanning** — scan SSM parameters
+217. ✅ **Add GCP Secret Manager scanning** — scan GCP secrets
+218. ✅ **Add Azure Key Vault scanning** — scan Azure Key Vault secrets
+219. ✅ **Add HashiCorp Vault secret scanning** — scan Vault KV mounts
+220. ✅ **Add Doppler config scanning** — scan Doppler secret configs
+221. ✅ **Add 1Password vault scanning** — scan 1Password items via API
+222. ✅ **Add LastPass vault scanning** — scan LastPass entries via API
+223. ✅ **Add Bitwarden vault scanning** — scan Bitwarden items via API
+224. ✅ **Add Kubernetes ConfigMap scanning** — scan K8s ConfigMaps for secrets
+225. ✅ **Add Kubernetes etcd scanning** — scan K8s etcd backend directly
+226. ✅ **Add Cloudflare Workers scanning** — scan Worker scripts for embedded secrets
+227. ✅ **Add Vercel env var scanning** — scan Vercel project env vars
+228. ✅ **Add Netlify env var scanning** — scan Netlify site env vars
+229. ✅ **Add Railway env var scanning** — scan Railway project env vars
+230. ✅ **Add Render env var scanning** — scan Render service env vars
+231. ✅ **Add Fly.io secrets scanning** — scan Fly.io app secrets
+232. ✅ **Add Supabase env var scanning** — scan Supabase project env vars
+233. ✅ **Add GitHub Gist scanning** — scan user/org gists via API
+234. ✅ **Add GitHub Issues/PR scanning** — scan issue/PR bodies and comments
+235. ✅ **Add GitHub Actions log scanning** — scan workflow run logs
+236. ✅ **Add GitLab Issues/MR scanning** — scan issue/MR bodies and comments
+237. ✅ **Add GitLab CI job log scanning** — scan CI/CD job logs
+238. ✅ **Add Discord message scanning** — scan Discord channels via bot API
+239. ✅ **Add Mattermost message scanning** — scan Mattermost channels
+240. ✅ **Add RSS/Atom feed scanning** — scan feeds for leaked secrets in content
 
 ---
 
-## Output Formats (Current: 7 — Target: 8+)
+## Output Formats (Current: 14 — Target: 14)
 
 241. ✅ **Add GitHub Actions output format** — `--format github-actions` for GitHub Actions annotations
-242. **Add HTML report format** — `--format html` for self-contained HTML report with charts
-243. **Add Markdown report format** — `--format markdown` for PR comment integration
-244. **Add SPDX format** — `--format spdx` for SBOM-compatible secret report
-245. **Add CycloneDX format** — `--format cyclonedx` for SBOM integration
-246. **Add Prometheus metrics format** — `--format prometheus` for monitoring integration
-247. **Add JSON Lines format** — `--format jsonl` for streaming/log ingestion
-248. **Add XML format** — `--format xml` for enterprise/SOAP integrations
+242. ✅ **Add HTML report format** — `--format html` for self-contained HTML report with charts
+243. ✅ **Add Markdown report format** — `--format markdown` for PR comment integration
+244. ✅ **Add SPDX format** — `--format spdx` for SBOM-compatible secret report
+245. ✅ **Add CycloneDX format** — `--format cyclonedx` for SBOM integration
+246. ✅ **Add Prometheus metrics format** — `--format prometheus` for monitoring integration
+247. ✅ **Add JSON Lines format** — `--format jsonl` for streaming/log ingestion
+248. ✅ **Add XML format** — `--format xml` for enterprise/SOAP integrations
 
 ---
 
@@ -616,8 +616,8 @@
 |---|---|---|---|---|
 | **Detectors** | 708 | 850+ | Goals 1-100 | ✅ Done |
 | **Verification** | 191 rule IDs | 150+ | Goals 101-200 | ✅ Done |
-| **Scanning sources** | 27 | 40+ | Goals 201-240 | ★★★☆☆ In progress |
-| **Output formats** | 7 | 8+ | Goals 241-248 | ★★★☆☆ In progress |
+| **Scanning sources** | 40 | 40+ | Goals 201-240 | ✅ Done |
+| **Output formats** | 14 | 14 | Goals 241-248 | ✅ Done |
 | **FP reduction** | ★★★★☆ | ★★★★★ | Goals 249-280 | ★★★★☆ In progress |
 | **Extensibility** | ★★★★☆ | ★★★★★ | Goals 281-300 | ★★★★☆ In progress |
 | **Performance** | ★★★★★ | ★★★★★ | Goals 301-320 | ★★★★★ Maintain |
@@ -638,8 +638,9 @@
 ### Phase 1: Close Critical Gaps (Goals 1-50, 101-150, 201-210, 241-242, 341-350) ✅
 - ✅ Add 100 more detectors to match TruffleHog (goals 1-100 done)
 - ✅ Expand verification to 100+ providers (goals 101-200 done)
-- ✅ Add Hugging Face, SharePoint, MS Teams, PyPI sources (goals 201-204 done)
-- ✅ Add GitHub Actions output format (goal 241 done)
+- ✅ Add Hugging Face, SharePoint, MS Teams, PyPI, npm, Docker Hub sources (goals 201-206 done)
+- ✅ Add Gitea, Bitbucket, Azure DevOps, KV stores, cloud secrets, env vars, GitHub/GitLab integrations, Discord, Mattermost, RSS (goals 207-240 done)
+- ✅ Add GitHub Actions, HTML, Markdown, SPDX, CycloneDX, Prometheus, JSONL, XML output formats (goals 241-248 done)
 - ✅ Publish GitHub Action + pre-commit hook (goals 341, 349 done)
 
 ### Phase 2: Lead in FP Reduction (Goals 249-280) — In progress

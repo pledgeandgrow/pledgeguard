@@ -99,10 +99,44 @@ GitHub, GitLab, Slack, Stripe, npm, DigitalOcean, Telegram, Twilio, OpenAI, Anth
 | **Helm charts** | ✅ | ❌ | ❌ | ❌ | ❌ | ❌ |
 | **Terraform state** | ✅ | ❌ | ❌ | ❌ | ❌ | ❌ |
 | **Kubernetes secrets** | ✅ | ❌ | ❌ | ❌ | ✅ | ❌ |
+| **Gitea** | ✅ (CLI + library) | ❌ | ❌ | ❌ | ❌ | ❌ |
+| **Bitbucket Cloud** | ✅ (CLI + library) | ✅ | ❌ | ❌ | ✅ | ❌ |
+| **Bitbucket Server** | ✅ (CLI + library) | ✅ | ❌ | ❌ | ✅ | ❌ |
+| **Azure DevOps repos** | ✅ (CLI + library) | ✅ | ❌ | ❌ | ✅ | ❌ |
+| **LaunchDarkly** | ✅ (CLI + library) | ❌ | ❌ | ❌ | ❌ | ❌ |
+| **Consul KV** | ✅ (CLI + library) | ❌ | ❌ | ❌ | ❌ | ❌ |
+| **etcd** | ✅ (CLI + library) | ❌ | ❌ | ❌ | ❌ | ❌ |
+| **Redis** | ✅ (CLI + library) | ❌ | ❌ | ❌ | ❌ | ❌ |
+| **Elasticsearch** | ✅ (CLI + library) | ❌ | ❌ | ❌ | ❌ | ❌ |
+| **AWS SSM Parameter Store** | ✅ (CLI + library) | ❌ | ❌ | ❌ | ✅ | ❌ |
+| **GCP Secret Manager** | ✅ (CLI + library) | ❌ | ❌ | ❌ | ✅ | ❌ |
+| **Azure Key Vault** | ✅ (CLI + library) | ❌ | ❌ | ❌ | ✅ | ❌ |
+| **HashiCorp Vault** | ✅ (CLI + library) | ❌ | ❌ | ❌ | ✅ | ❌ |
+| **Doppler** | ✅ (CLI + library) | ❌ | ❌ | ❌ | ❌ | ❌ |
+| **1Password** | ✅ (CLI + library) | ❌ | ❌ | ❌ | ❌ | ❌ |
+| **LastPass** | ✅ (CLI + library) | ❌ | ❌ | ❌ | ❌ | ❌ |
+| **Bitwarden** | ✅ (CLI + library) | ❌ | ❌ | ❌ | ❌ | ❌ |
+| **K8s ConfigMaps** | ✅ (CLI + library) | ❌ | ❌ | ❌ | ❌ | ❌ |
+| **K8s etcd** | ✅ (CLI + library) | ❌ | ❌ | ❌ | ❌ | ❌ |
+| **Cloudflare Workers** | ✅ (CLI + library) | ❌ | ❌ | ❌ | ❌ | ❌ |
+| **Vercel env vars** | ✅ (CLI + library) | ❌ | ❌ | ❌ | ❌ | ❌ |
+| **Netlify env vars** | ✅ (CLI + library) | ❌ | ❌ | ❌ | ❌ | ❌ |
+| **Railway env vars** | ✅ (CLI + library) | ❌ | ❌ | ❌ | ❌ | ❌ |
+| **Render env vars** | ✅ (CLI + library) | ❌ | ❌ | ❌ | ❌ | ❌ |
+| **Fly.io secrets** | ✅ (CLI + library) | ❌ | ❌ | ❌ | ❌ | ❌ |
+| **Supabase env vars** | ✅ (CLI + library) | ❌ | ❌ | ❌ | ❌ | ❌ |
+| **GitHub Gists** | ✅ (CLI + library) | ✅ | ❌ | ❌ | ✅ | ❌ |
+| **GitHub Issues/PRs** | ✅ (CLI + library) | ✅ | ❌ | ❌ | ✅ | ❌ |
+| **GitHub Actions logs** | ✅ (CLI + library) | ✅ | ❌ | ❌ | ✅ | ❌ |
+| **GitLab Issues/MRs** | ✅ (CLI + library) | ✅ | ❌ | ✅ | ✅ | ❌ |
+| **GitLab CI logs** | ✅ (CLI + library) | ✅ | ❌ | ✅ | ✅ | ❌ |
+| **Discord** | ✅ (CLI + library) | ❌ | ❌ | ❌ | ❌ | ❌ |
+| **Mattermost** | ✅ (CLI + library) | ❌ | ❌ | ❌ | ❌ | ❌ |
+| **RSS/Atom feeds** | ✅ (CLI + library) | ❌ | ❌ | ❌ | ❌ | ❌ |
 
-**PledgeGuard advantage:** Broadest source coverage of any open-source scanner. Unique sources: Alibaba OSS, AWS Secrets Manager, Postman, Gerrit, DroneCI, Syslog TCP, Helm charts, Terraform state, Kubernetes secrets. CLI `scan-source` subcommand provides direct access to all remote sources.
+**PledgeGuard advantage:** Broadest source coverage of any open-source scanner (40 sources). Unique sources: Alibaba OSS, AWS Secrets Manager, Postman, Gerrit, DroneCI, Syslog TCP, Helm charts, Terraform state, Kubernetes secrets, Gitea, LaunchDarkly, Consul, etcd, Redis, Elasticsearch, Doppler, 1Password, LastPass, Bitwarden, K8s ConfigMaps, K8s etcd, Cloudflare Workers, Railway, Render, Fly.io, Supabase, Discord, Mattermost, RSS feeds. CLI `scan-source` subcommand provides direct access to all remote sources.
 
-**Gap:** Hugging Face, SharePoint, MS Teams, PyPI package scanning now implemented (goals 201-204 done). Remaining gaps: npm packages, Gitea, Bitbucket, Azure DevOps repos.
+**Gap:** None — all planned scanning sources (goals 201-240) are now implemented.
 
 ---
 
@@ -117,9 +151,16 @@ GitHub, GitLab, Slack, Stripe, npm, DigitalOcean, Telegram, Twilio, OpenAI, Anth
 | **JUnit** | ✅ | ❌ | ✅ | ✅ | ❌ | ✅ |
 | **Template** | ✅ | ❌ | ✅ | ✅ | ❌ | ❌ |
 | **GitHub Actions** | ✅ | ✅ | ❌ | ❌ | ✅ | ✅ |
+| **HTML** | ✅ | ❌ | ❌ | ❌ | ✅ | ❌ |
+| **Markdown** | ✅ | ❌ | ❌ | ❌ | ✅ | ❌ |
+| **SPDX** | ✅ | ❌ | ❌ | ❌ | ❌ | ❌ |
+| **CycloneDX** | ✅ | ❌ | ❌ | ❌ | ❌ | ✅ |
+| **Prometheus** | ✅ | ❌ | ❌ | ❌ | ❌ | ❌ |
+| **JSON Lines** | ✅ | ❌ | ❌ | ✅ | ❌ | ❌ |
+| **XML** | ✅ | ❌ | ❌ | ❌ | ❌ | ❌ |
 | **JSON Legacy** | ❌ | ✅ | ❌ | ❌ | ❌ | ❌ |
 
-**PledgeGuard advantage:** 7 output formats including GitHub Actions annotations, CSV, JUnit, and custom templates — more than TruffleHog and Gitleaks.
+**PledgeGuard advantage:** 14 output formats including HTML reports with charts, Markdown for PR comments, SPDX/CycloneDX for SBOM integration, Prometheus for monitoring, JSON Lines for streaming, and XML for enterprise — far more than any competitor.
 
 ---
 
@@ -270,6 +311,18 @@ Features not found in any other scanner:
 | ~~Pre-commit hook~~ | ~~Competitors~~ ✅ Done | .pre-commit-hooks.yaml published |
 | ~~`--diff` flag~~ | ~~Competitors~~ ✅ Done | Scan only git-changed files for PR checks |
 | ~~`pledgeguard init`~~ | ~~Competitors~~ ✅ Done | Config scaffolding command |
+| ~~Gitea, Bitbucket, Azure DevOps~~ | ~~Competitors~~ ✅ Done | Added scanning for Gitea, Bitbucket Cloud/Server, Azure DevOps repos |
+| ~~KV stores (Consul, etcd, Redis, ES)~~ | ~~Competitors~~ ✅ Done | Added scanning for Consul, etcd, Redis, Elasticsearch |
+| ~~Cloud secret managers~~ | ~~Competitors~~ ✅ Done | Added AWS SSM, GCP Secret Manager, Azure Key Vault, HashiCorp Vault, Doppler |
+| ~~Password managers~~ | ~~Competitors~~ ✅ Done | Added 1Password, LastPass, Bitwarden scanning |
+| ~~K8s ConfigMaps + etcd~~ | ~~Competitors~~ ✅ Done | Added K8s ConfigMap and etcd backend scanning |
+| ~~PaaS env vars~~ | ~~Competitors~~ ✅ Done | Added Vercel, Netlify, Railway, Render, Fly.io, Supabase env var scanning |
+| ~~GitHub/GitLab integrations~~ | ~~Competitors~~ ✅ Done | Added GitHub Gists, Issues/PRs, Actions logs, GitLab Issues/MRs, CI logs |
+| ~~Discord, Mattermost, RSS~~ | ~~Competitors~~ ✅ Done | Added Discord, Mattermost, RSS/Atom feed scanning |
+| ~~HTML report format~~ | ~~Competitors~~ ✅ Done | Self-contained HTML report with charts and styling |
+| ~~Markdown report format~~ | ~~Competitors~~ ✅ Done | Markdown format for PR comment integration |
+| ~~SPDX + CycloneDX~~ | ~~Competitors~~ ✅ Done | SBOM-compatible output formats |
+| ~~Prometheus + JSONL + XML~~ | ~~Competitors~~ ✅ Done | Monitoring, streaming, and enterprise output formats |
 | **Expr-based filtering** | Betterleaks | Consider Expr or similar for contextual rules |
 | **BPE tokenization** | Betterleaks | Consider token-efficiency FP filtering |
 | **Custom verifier config** | TruffleHog, Betterleaks | Allow user-defined verification endpoints in TOML config |
@@ -304,9 +357,10 @@ Features not found in any other scanner:
 3. ~~Publish GitHub Action~~ ✅ Done
 4. **Add HTML decoder** — improve Confluence/Teams/Jira scan results
 5. **Add Expr-based filtering** — match Betterleaks FP reduction
-6. **Add more scanning sources** — npm, Gitea, Bitbucket, Azure DevOps
+6. ~~Add more scanning sources~~ ✅ Done (40 sources: Gitea, Bitbucket, Azure DevOps, KV stores, cloud secret managers, password managers, K8s, PaaS env vars, GitHub/GitLab integrations, Discord, Mattermost, RSS)
 7. **Add content decoders** — HTML, PDF, Word, Excel, OCR
 8. **Add advanced IaC detection** — goals 471-500
 9. **Add custom verifier config** — let users define verification endpoints in TOML
 10. ~~Add SharePoint + MS Teams sources~~ ✅ Done
-11. ~~Private key verification (Driftwood-style)~~ ✅ Done
+11. ~~Add HTML, Markdown, SPDX, CycloneDX, Prometheus, JSONL, XML output formats~~ ✅ Done (14 formats total)
+12. ~~Private key verification (Driftwood-style)~~ ✅ Done

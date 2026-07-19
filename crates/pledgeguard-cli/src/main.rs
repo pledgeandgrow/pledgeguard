@@ -424,6 +424,13 @@ enum OutputFormat {
     Junit,
     GithubActions,
     Template,
+    Html,
+    Markdown,
+    Spdx,
+    Cyclonedx,
+    Prometheus,
+    Jsonl,
+    Xml,
 }
 
 #[derive(Copy, Clone, ValueEnum)]
@@ -531,6 +538,40 @@ enum ScanSourceType {
     TravisCi,
     Jenkins,
     Droneci,
+    Gitea,
+    BitbucketCloud,
+    BitbucketServer,
+    AzureDevOps,
+    Launchdarkly,
+    Consul,
+    Etcd,
+    Redis,
+    Elasticsearch,
+    AwsSsm,
+    GcpSecretManager,
+    AzureKeyVault,
+    Vault,
+    Doppler,
+    Onepassword,
+    Lastpass,
+    Bitwarden,
+    K8sConfigmap,
+    K8sEtcd,
+    CloudflareWorkers,
+    Vercel,
+    Netlify,
+    Railway,
+    Render,
+    FlyIo,
+    SupabaseEnv,
+    GithubGists,
+    GithubIssues,
+    GithubActionsLogs,
+    GitlabIssues,
+    GitlabCiLogs,
+    Discord,
+    Mattermost,
+    RssFeeds,
 }
 
 fn main() -> ExitCode {
@@ -890,6 +931,297 @@ fn main() -> ExitCode {
                         max_builds: 50,
                     };
                     pledgeguard_core::scan_droneci_builds(&config, &detectors).unwrap_or_default()
+                }
+                ScanSourceType::Gitea => {
+                    let config = pledgeguard_core::GiteaScanConfig {
+                        base_url: target.unwrap_or_default(),
+                        api_token: token,
+                        owner: target2,
+                        repo: None,
+                        max_repos: 50,
+                    };
+                    pledgeguard_core::scan_gitea(&config, &detectors).unwrap_or_default()
+                }
+                ScanSourceType::BitbucketCloud => {
+                    let config = pledgeguard_core::BitbucketCloudScanConfig {
+                        username: target.unwrap_or_default(),
+                        app_password: token,
+                        workspace: target2.unwrap_or_default(),
+                        repo: None,
+                        max_repos: 50,
+                    };
+                    pledgeguard_core::scan_bitbucket_cloud(&config, &detectors).unwrap_or_default()
+                }
+                ScanSourceType::BitbucketServer => {
+                    let config = pledgeguard_core::BitbucketServerScanConfig {
+                        base_url: target.unwrap_or_default(),
+                        api_token: token,
+                        project_key: target2.unwrap_or_default(),
+                        repo_slug: None,
+                        max_repos: 50,
+                    };
+                    pledgeguard_core::scan_bitbucket_server(&config, &detectors).unwrap_or_default()
+                }
+                ScanSourceType::AzureDevOps => {
+                    let config = pledgeguard_core::AzureDevOpsScanConfig {
+                        organization: target.unwrap_or_default(),
+                        pat: token,
+                        project: target2,
+                        max_repos: 50,
+                    };
+                    pledgeguard_core::scan_azure_devops(&config, &detectors).unwrap_or_default()
+                }
+                ScanSourceType::Launchdarkly => {
+                    let config = pledgeguard_core::LaunchDarklyScanConfig {
+                        api_key: token,
+                        project_key: target.unwrap_or_default(),
+                        max_flags: 100,
+                    };
+                    pledgeguard_core::scan_launchdarkly(&config, &detectors).unwrap_or_default()
+                }
+                ScanSourceType::Consul => {
+                    let config = pledgeguard_core::ConsulScanConfig {
+                        base_url: target.unwrap_or_default(),
+                        token: Some(token),
+                        prefix: target2,
+                    };
+                    pledgeguard_core::scan_consul(&config, &detectors).unwrap_or_default()
+                }
+                ScanSourceType::Etcd => {
+                    let config = pledgeguard_core::EtcdScanConfig {
+                        base_url: target.unwrap_or_default(),
+                        prefix: target2,
+                    };
+                    pledgeguard_core::scan_etcd(&config, &detectors).unwrap_or_default()
+                }
+                ScanSourceType::Redis => {
+                    let config = pledgeguard_core::RedisScanConfig {
+                        host: target.unwrap_or_default(),
+                        port: target2.and_then(|p| p.parse().ok()).unwrap_or(6379),
+                        password: Some(token),
+                        db: 0,
+                        max_keys: 1000,
+                    };
+                    pledgeguard_core::scan_redis(&config, &detectors).unwrap_or_default()
+                }
+                ScanSourceType::Elasticsearch => {
+                    let config = pledgeguard_core::ElasticsearchScanConfig {
+                        base_url: target.unwrap_or_default(),
+                        api_key: Some(token),
+                        index_pattern: target2.unwrap_or_else(|| "*".to_string()),
+                        max_docs: 500,
+                    };
+                    pledgeguard_core::scan_elasticsearch(&config, &detectors).unwrap_or_default()
+                }
+                ScanSourceType::AwsSsm => {
+                    let parts: Vec<&str> = target.as_deref().unwrap_or("").split(':').collect();
+                    let config = pledgeguard_core::AwsSsmScanConfig {
+                        region: parts.get(1).unwrap_or(&"us-east-1").to_string(),
+                        access_key_id: parts.first().unwrap_or(&"").to_string(),
+                        secret_access_key: token,
+                        path_prefix: target2,
+                        max_params: 100,
+                    };
+                    pledgeguard_core::scan_aws_ssm(&config, &detectors).unwrap_or_default()
+                }
+                ScanSourceType::GcpSecretManager => {
+                    let config = pledgeguard_core::GcpSecretManagerScanConfig {
+                        oauth_token: token,
+                        project_id: target.unwrap_or_default(),
+                        max_secrets: 50,
+                    };
+                    pledgeguard_core::scan_gcp_secret_manager(&config, &detectors).unwrap_or_default()
+                }
+                ScanSourceType::AzureKeyVault => {
+                    let config = pledgeguard_core::AzureKeyVaultScanConfig {
+                        vault_url: target.unwrap_or_default(),
+                        access_token: token,
+                        max_secrets: 50,
+                    };
+                    pledgeguard_core::scan_azure_key_vault(&config, &detectors).unwrap_or_default()
+                }
+                ScanSourceType::Vault => {
+                    let config = pledgeguard_core::VaultScanConfig {
+                        base_url: target.unwrap_or_default(),
+                        token,
+                        mount_path: target2.unwrap_or_else(|| "secret".to_string()),
+                        max_paths: 100,
+                    };
+                    pledgeguard_core::scan_vault(&config, &detectors).unwrap_or_default()
+                }
+                ScanSourceType::Doppler => {
+                    let config = pledgeguard_core::DopplerScanConfig {
+                        api_key: token,
+                        project: target,
+                        config_name: target2,
+                    };
+                    pledgeguard_core::scan_doppler(&config, &detectors).unwrap_or_default()
+                }
+                ScanSourceType::Onepassword => {
+                    let config = pledgeguard_core::OnePasswordScanConfig {
+                        api_token: token,
+                        vault_id: target,
+                        max_items: 100,
+                    };
+                    pledgeguard_core::scan_1password(&config, &detectors).unwrap_or_default()
+                }
+                ScanSourceType::Lastpass => {
+                    let config = pledgeguard_core::LastPassScanConfig {
+                        api_key: token,
+                        account_id: target.unwrap_or_default(),
+                    };
+                    pledgeguard_core::scan_lastpass(&config, &detectors).unwrap_or_default()
+                }
+                ScanSourceType::Bitwarden => {
+                    let config = pledgeguard_core::BitwardenScanConfig {
+                        base_url: target.unwrap_or_else(|| "https://vault.bitwarden.com".to_string()),
+                        access_token: token,
+                        max_items: 200,
+                    };
+                    pledgeguard_core::scan_bitwarden(&config, &detectors).unwrap_or_default()
+                }
+                ScanSourceType::K8sConfigmap => {
+                    let config = pledgeguard_core::K8sConfigMapScanConfig {
+                        kubeconfig_path: None,
+                        namespace: target,
+                        max_configmaps: 50,
+                    };
+                    pledgeguard_core::scan_k8s_configmaps(&config, &detectors).unwrap_or_default()
+                }
+                ScanSourceType::K8sEtcd => {
+                    let config = pledgeguard_core::K8sEtcdScanConfig {
+                        etcd_endpoint: target.unwrap_or_default(),
+                        ca_cert: None,
+                        client_cert: None,
+                        client_key: None,
+                        max_keys: 1000,
+                    };
+                    pledgeguard_core::scan_k8s_etcd(&config, &detectors).unwrap_or_default()
+                }
+                ScanSourceType::CloudflareWorkers => {
+                    let config = pledgeguard_core::CloudflareWorkersScanConfig {
+                        api_token: token,
+                        account_id: target.unwrap_or_default(),
+                        max_workers: 50,
+                    };
+                    pledgeguard_core::scan_cloudflare_workers(&config, &detectors).unwrap_or_default()
+                }
+                ScanSourceType::Vercel => {
+                    let config = pledgeguard_core::VercelScanConfig {
+                        api_token: token,
+                        project_id: target,
+                        max_projects: 20,
+                    };
+                    pledgeguard_core::scan_vercel(&config, &detectors).unwrap_or_default()
+                }
+                ScanSourceType::Netlify => {
+                    let config = pledgeguard_core::NetlifyScanConfig {
+                        api_token: token,
+                        site_id: target,
+                        max_sites: 30,
+                    };
+                    pledgeguard_core::scan_netlify(&config, &detectors).unwrap_or_default()
+                }
+                ScanSourceType::Railway => {
+                    let config = pledgeguard_core::RailwayScanConfig {
+                        api_token: token,
+                        project_id: target,
+                    };
+                    pledgeguard_core::scan_railway(&config, &detectors).unwrap_or_default()
+                }
+                ScanSourceType::Render => {
+                    let config = pledgeguard_core::RenderScanConfig {
+                        api_key: token,
+                        service_id: target,
+                        max_services: 25,
+                    };
+                    pledgeguard_core::scan_render(&config, &detectors).unwrap_or_default()
+                }
+                ScanSourceType::FlyIo => {
+                    let config = pledgeguard_core::FlyIoScanConfig {
+                        api_token: token,
+                        app_name: target,
+                        max_apps: 15,
+                    };
+                    pledgeguard_core::scan_fly_io(&config, &detectors).unwrap_or_default()
+                }
+                ScanSourceType::SupabaseEnv => {
+                    let config = pledgeguard_core::SupabaseEnvScanConfig {
+                        access_token: token,
+                        project_id: target,
+                        max_projects: 10,
+                    };
+                    pledgeguard_core::scan_supabase_env(&config, &detectors).unwrap_or_default()
+                }
+                ScanSourceType::GithubGists => {
+                    let config = pledgeguard_core::GitHubGistScanConfig {
+                        api_token: token,
+                        username: target,
+                        max_gists: 30,
+                    };
+                    pledgeguard_core::scan_github_gists(&config, &detectors).unwrap_or_default()
+                }
+                ScanSourceType::GithubIssues => {
+                    let parts: Vec<&str> = target.as_deref().unwrap_or("").split('/').collect();
+                    let config = pledgeguard_core::GitHubIssuesScanConfig {
+                        api_token: token,
+                        owner: parts.first().unwrap_or(&"").to_string(),
+                        repo: parts.get(1).unwrap_or(&"").to_string(),
+                        max_items: 50,
+                    };
+                    pledgeguard_core::scan_github_issues(&config, &detectors).unwrap_or_default()
+                }
+                ScanSourceType::GithubActionsLogs => {
+                    let parts: Vec<&str> = target.as_deref().unwrap_or("").split('/').collect();
+                    let config = pledgeguard_core::GitHubActionsLogScanConfig {
+                        api_token: token,
+                        owner: parts.first().unwrap_or(&"").to_string(),
+                        repo: parts.get(1).unwrap_or(&"").to_string(),
+                        max_runs: 20,
+                    };
+                    pledgeguard_core::scan_github_actions_logs(&config, &detectors).unwrap_or_default()
+                }
+                ScanSourceType::GitlabIssues => {
+                    let config = pledgeguard_core::GitLabIssuesScanConfig {
+                        base_url: target.unwrap_or_else(|| "https://gitlab.com".to_string()),
+                        api_token: token,
+                        project_id: target2,
+                        max_items: 50,
+                    };
+                    pledgeguard_core::scan_gitlab_issues(&config, &detectors).unwrap_or_default()
+                }
+                ScanSourceType::GitlabCiLogs => {
+                    let config = pledgeguard_core::GitLabCiLogScanConfig {
+                        base_url: target.unwrap_or_else(|| "https://gitlab.com".to_string()),
+                        api_token: token,
+                        project_id: target2.unwrap_or_default(),
+                        max_jobs: 50,
+                    };
+                    pledgeguard_core::scan_gitlab_ci_logs(&config, &detectors).unwrap_or_default()
+                }
+                ScanSourceType::Discord => {
+                    let config = pledgeguard_core::DiscordScanConfig {
+                        bot_token: token,
+                        channel_ids: target.unwrap_or_default().split(',').map(String::from).collect(),
+                        max_messages: 100,
+                    };
+                    pledgeguard_core::scan_discord(&config, &detectors).unwrap_or_default()
+                }
+                ScanSourceType::Mattermost => {
+                    let config = pledgeguard_core::MattermostScanConfig {
+                        base_url: target.unwrap_or_default(),
+                        api_token: token,
+                        channel_id: target2,
+                        max_posts: 100,
+                    };
+                    pledgeguard_core::scan_mattermost(&config, &detectors).unwrap_or_default()
+                }
+                ScanSourceType::RssFeeds => {
+                    let config = pledgeguard_core::RssFeedScanConfig {
+                        feed_urls: target.unwrap_or_default().split(',').map(String::from).collect(),
+                        max_items_per_feed: 50,
+                    };
+                    pledgeguard_core::scan_rss_feeds(&config, &detectors).unwrap_or_default()
                 }
             };
 
@@ -1307,6 +1639,13 @@ fn report(findings: Vec<Finding>, opts: ReportOptions) -> ExitCode {
         OutputFormat::Junit => pledgeguard_core::to_junit(&display),
         OutputFormat::GithubActions => pledgeguard_core::to_github_actions(&display),
         OutputFormat::Template => pledgeguard_core::to_template(&display, None),
+        OutputFormat::Html => pledgeguard_core::to_html(&display),
+        OutputFormat::Markdown => pledgeguard_core::to_markdown(&display),
+        OutputFormat::Spdx => pledgeguard_core::to_spdx(&display),
+        OutputFormat::Cyclonedx => pledgeguard_core::to_cyclonedx(&display),
+        OutputFormat::Prometheus => pledgeguard_core::to_prometheus(&display),
+        OutputFormat::Jsonl => pledgeguard_core::to_jsonl(&display),
+        OutputFormat::Xml => pledgeguard_core::to_xml(&display),
     };
 
     let mut output = output;

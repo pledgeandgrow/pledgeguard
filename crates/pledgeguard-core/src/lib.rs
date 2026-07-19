@@ -49,9 +49,11 @@ pub mod sarif;
 pub mod file_scan;
 pub mod scanner;
 pub mod source_scan;
+pub mod source_scan2;
 pub mod stream_scan;
 pub mod template;
 pub mod verify;
+pub mod output_formats;
 
 pub use baseline::{
     Baseline, BaselineEntry, filter as baseline_filter, from_findings as baseline_from_findings,
@@ -115,4 +117,31 @@ pub use enterprise::{
     DiffFinding, DiffStatus, DiffSummary, FindingState, FindingTracker, Permission,
     RbacConfig, Role, Suppression, TrackedFinding, WebhookConfig, WebhookType,
     diff_scans, diff_summary, generate_compliance_report, send_webhook,
+};
+pub use source_scan2::{
+    scan_gitea, scan_bitbucket_cloud, scan_bitbucket_server, scan_azure_devops,
+    scan_launchdarkly, scan_consul, scan_etcd, scan_redis, scan_elasticsearch,
+    scan_aws_ssm, scan_gcp_secret_manager, scan_azure_key_vault, scan_vault,
+    scan_doppler, scan_1password, scan_lastpass, scan_bitwarden,
+    scan_k8s_configmaps, scan_k8s_etcd, scan_cloudflare_workers,
+    scan_vercel, scan_netlify, scan_railway, scan_render, scan_fly_io,
+    scan_supabase_env, scan_github_gists, scan_github_issues,
+    scan_github_actions_logs, scan_gitlab_issues, scan_gitlab_ci_logs,
+    scan_discord, scan_mattermost, scan_rss_feeds,
+    GiteaScanConfig, BitbucketCloudScanConfig, BitbucketServerScanConfig,
+    AzureDevOpsScanConfig, LaunchDarklyScanConfig, ConsulScanConfig,
+    EtcdScanConfig, RedisScanConfig, ElasticsearchScanConfig,
+    AwsSsmScanConfig, GcpSecretManagerScanConfig, AzureKeyVaultScanConfig,
+    VaultScanConfig, DopplerScanConfig, OnePasswordScanConfig,
+    LastPassScanConfig, BitwardenScanConfig, K8sConfigMapScanConfig,
+    K8sEtcdScanConfig, CloudflareWorkersScanConfig, VercelScanConfig,
+    NetlifyScanConfig, RailwayScanConfig, RenderScanConfig, FlyIoScanConfig,
+    SupabaseEnvScanConfig, GitHubGistScanConfig, GitHubIssuesScanConfig,
+    GitHubActionsLogScanConfig, GitLabIssuesScanConfig, GitLabCiLogScanConfig,
+    DiscordScanConfig, MattermostScanConfig, RssFeedScanConfig,
+    SourceScanError2,
+};
+pub use output_formats::{
+    to_html, to_markdown, to_spdx, to_cyclonedx,
+    to_prometheus, to_jsonl, to_xml,
 };
