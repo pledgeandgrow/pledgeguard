@@ -6,7 +6,7 @@ This document lists all detectors, verification providers, output formats, scann
 
 ## Built-in Detectors
 
-PledgeGuard ships with **330 regex-based detectors** covering major cloud providers, SaaS platforms, CI/CD systems, and generic secret patterns. Each detector has a prefilter (Aho-Corasick) for fast scanning and a regex for precise matching.
+PledgeGuard ships with **416 regex-based detectors** covering major cloud providers, SaaS platforms, CI/CD systems, and generic secret patterns. Each detector has a prefilter (Aho-Corasick) for fast scanning and a regex for precise matching.
 
 ### Cloud Providers
 
@@ -412,6 +412,104 @@ PledgeGuard ships with **330 regex-based detectors** covering major cloud provid
 | `bitfinex-api-key` | Bitfinex API Key | High |
 | `bittrex-access-key` | Bittrex Access Key | High |
 | `bittrex-secret-key` | Bittrex Secret Key | High |
+
+### Communication & Messaging (TruffleHog)
+
+| Rule ID | Description | Severity |
+|---|---|---|
+| `twilio-api-key` | Twilio API Key (SK prefix) | High |
+| `line-messaging-api-token` | Line Messaging API Token | High |
+| `line-notify-token` | Line Notify Token | High |
+| `mattermost-personal-token` | Mattermost Personal Token | High |
+| `wechat-app-key` | WeChat App Key/Secret | High |
+| `kakaotalk-api-key` | KakaoTalk API Key | Medium |
+| `liveagent-api-key` | LiveAgent API Key | Medium |
+| `front-api-key` | Front API Key (front_ prefix) | High |
+| `ringcentral-api-key` | RingCentral API Key | High |
+| `telesign-api-key` | TeleSign API Key | High |
+| `teamviewer-api-token` | TeamViewer API Token | High |
+| `cometchat-api-key` | CometChat API Key | Medium |
+| `mesibo-api-key` | Mesibo API Key | High |
+| `bulbul-api-key` | Bulbul API Key | Medium |
+| `tyntec-api-key` | Tyntec API Key | Medium |
+| `kaleyra-api-key` | Kaleyra API Key | Medium |
+| `onbuka-api-key` | Onbuka API Key | Medium |
+| `clicksend-api-key` | ClickSend SMS API Key | High |
+| `clockwork-sms-api-key` | Clockwork SMS API Key | High |
+| `sms-api-key` | Generic SMS API Key | Medium |
+| `bombbomb-api-key` | BombBomb API Key | Medium |
+| `dfuse-api-key` | DFuse API Key (server_ prefix) | Medium |
+| `apifonica-api-key` | ApiFonica API Key | Medium |
+| `mandrill-api-key` | Mandrill API Key (Mailchimp transactional) | High |
+| `sparkpost-api-key` | SparkPost API Key | High |
+| `mailerlite-api-key` | MailerLite API Key | High |
+| `convertkit-api-key` | ConvertKit API Key/Secret | High |
+| `omnisend-api-key` | Omnisend API Key | Medium |
+| `customerio-api-key` | Customer.io API Key | High |
+| `moosend-api-key` | Moosend API Key | Medium |
+| `dotdigital-api-key` | Dotdigital API Key | Medium |
+| `dyspatch-api-key` | Dyspatch API Key | Medium |
+| `postageapp-api-key` | PostageApp API Key | Medium |
+| `nicereply-api-key` | Nicereply API Key | Medium |
+| `autopilot-api-key` | AutoPilot API Key | Medium |
+| `airship-api-key` | Airship (Urban Airship) API Key | High |
+
+### CRM & Sales (TruffleHog)
+
+| Rule ID | Description | Severity |
+|---|---|---|
+| `freshworks-api-key` | Freshworks/Freshdesk API Key | High |
+| `close-crm-api-key` | Close CRM API Key | High |
+| `copper-crm-api-key` | Copper CRM API Key | Medium |
+| `streak-crm-api-key` | Streak CRM API Key | Medium |
+| `groovehq-api-key` | GrooveHQ API Key | Medium |
+| `getgist-api-key` | GetGist API Key | Medium |
+| `autoklose-api-key` | Autoklose API Key | Medium |
+| `salesflare-api-key` | Salesflare API Key | Medium |
+| `salesblink-api-key` | SalesBlink API Key | Medium |
+| `salescookie-api-key` | Salescookie API Key | Medium |
+| `metrilo-api-key` | Metrilo API Key | Medium |
+| `revampcrm-api-key` | RevampCRM API Key | Medium |
+| `karmacrm-api-key` | KarmaCRM API Key | Medium |
+| `lessannoyingcrm-api-key` | Less Annoying CRM API Key | Medium |
+| `nethunt-crm-api-key` | NetHunt CRM API Key | Medium |
+| `nimble-crm-api-key` | Nimble CRM API Key | Medium |
+| `apptivo-crm-api-key` | Apptivo CRM API Key | Medium |
+| `capsule-crm-api-key` | Capsule CRM API Key | Medium |
+| `insightly-crm-api-key` | Insightly CRM API Key | Medium |
+| `kylas-crm-api-key` | Kylas CRM API Key | Medium |
+| `onepagecrm-api-key` | OnePageCRM API Key | Medium |
+| `prospectcrm-api-key` | Prospect CRM API Key | Medium |
+| `reallysimplesystems-crm-api-key` | Really Simple Systems CRM API Key | Medium |
+| `centralstation-crm-api-key` | Central Station CRM API Key | Medium |
+| `teamgate-crm-api-key` | Teamgate CRM API Key | Medium |
+| `axonaut-api-key` | Axonaut API Key | Medium |
+| `flowflu-api-key` | FlowFlu API Key | Medium |
+| `clientary-api-key` | Clientary API Key | Medium |
+| `clinchpad-api-key` | Clinchpad API Key | Medium |
+| `companyhub-api-key` | CompanyHub API Key | Medium |
+| `campayn-api-key` | Campayn API Key | Medium |
+| `hiveage-api-key` | Hiveage API Key | Medium |
+| `billomat-api-key` | Billomat API Key | Medium |
+| `alegra-api-key` | Alegra API Key | Medium |
+| `loyverse-api-key` | Loyverse API Key | Medium |
+| `commercejs-api-key` | CommerceJS API Key (pk_ prefix) | Medium |
+| `snipcart-api-key` | Snipcart API Key (SNIP_ prefix) | High |
+| `partnerstack-api-key` | PartnerStack API Key | Medium |
+| `vouchery-api-key` | Vouchery API Key | Medium |
+| `monday-api-key` | Monday.com API Key | High |
+| `smartsheets-api-key` | Smartsheets API Key | High |
+| `wrike-api-key` | Wrike API Key | High |
+| `apollo-io-api-key` | Apollo.io API Key | High |
+| `uplead-api-key` | UpLead API Key | Medium |
+| `rocketreach-api-key` | RocketReach API Key | Medium |
+| `clearbit-api-key` | Clearbit API Key (cb_ prefix) | High |
+| `brandfetch-api-key` | Brandfetch API Key | Medium |
+| `leadfeeder-api-key` | Leadfeeder API Key | Medium |
+| `getemail-api-key` | GetEmail API Key | Medium |
+| `getemails-api-key` | GetEmails API Key | Medium |
+| `skrappio-api-key` | Skrappio API Key | Medium |
+| `powrbot-api-key` | Powrbot API Key | Medium |
 
 ### Cryptographic Keys & Tokens
 

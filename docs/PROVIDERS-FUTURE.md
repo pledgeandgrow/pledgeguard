@@ -501,42 +501,42 @@ This document lists all secret providers that PledgeGuard **could** support in t
 
 | Provider / Token Type | Detector | Verifier | Notes |
 |---|---|---|---|
-| Twilio API Key | Future | Future | TruffleHog supports |
-| Line Messaging API Token | Future | Future | TruffleHog supports |
-| Line Notify Token | Future | Future | TruffleHog supports |
-| Mattermost Personal Token | Future | Future | TruffleHog supports |
-| WeChat App Key | Future | Future | TruffleHog (not yet implemented) |
-| KakaoTalk API Key | Future | Future | TruffleHog (not yet implemented) |
-| LiveAgent API Key | Future | Future | TruffleHog supports |
-| Front API Key | Future | Future | TruffleHog supports |
-| RingCentral API Key | Future | Future | TruffleHog supports |
-| TeleSign API Key | Future | Future | TruffleHog (not yet implemented) |
-| TeamViewer API Key | Future | Future | TruffleHog (not yet implemented) |
-| CometChat API Key | Future | Future | TruffleHog (not yet implemented) |
-| Mesibo API Key | Future | Future | TruffleHog supports |
-| Bulbul API Key | Future | Future | TruffleHog supports |
-| Tyntec API Key | Future | Future | TruffleHog supports |
-| Kaleyra API Key | Future | Future | TruffleHog (not yet implemented) |
-| Onbuka API Key | Future | Future | TruffleHog (not yet implemented) |
-| ClickSend SMS API Key | Future | Future | TruffleHog supports |
-| Clockwork SMS API Key | Future | Future | TruffleHog supports |
-| SMS API Key | Future | Future | TruffleHog (not yet implemented) |
-| BombBomb API Key | Future | Future | TruffleHog supports |
-| DFuse API Key | Future | Future | TruffleHog supports |
-| ApiFonica API Key | Future | Future | TruffleHog supports |
-| Mandrill API Key | Future | Future | TruffleHog supports (Mailchimp transactional) |
-| SparkPost API Key | Future | Future | TruffleHog supports |
-| MailerLite API Key | Future | Future | TruffleHog supports |
-| ConvertKit API Key | Future | Future | TruffleHog supports |
-| Omnisend API Key | Future | Future | TruffleHog supports |
-| Customer.io API Key | Future | Future | TruffleHog supports |
-| Moosend API Key | Future | Future | TruffleHog supports |
-| Dotdigital API Key | Future | Future | TruffleHog supports |
-| Dyspatch API Key | Future | Future | TruffleHog supports |
-| PostageApp API Key | Future | Future | TruffleHog supports |
-| Nicereply API Key | Future | Future | TruffleHog supports |
-| AutoPilot API Key | Future | Future | TruffleHog supports |
-| Airship API Key | Future | Future | TruffleHog supports |
+| Twilio API Key | **Supported** | Future | TruffleHog supports |
+| Line Messaging API Token | **Supported** | Future | TruffleHog supports |
+| Line Notify Token | **Supported** | Future | TruffleHog supports |
+| Mattermost Personal Token | **Supported** | Future | TruffleHog supports |
+| WeChat App Key | **Supported** | Future | TruffleHog (not yet implemented) |
+| KakaoTalk API Key | **Supported** | Future | TruffleHog (not yet implemented) |
+| LiveAgent API Key | **Supported** | Future | TruffleHog supports |
+| Front API Key | **Supported** | Future | TruffleHog supports |
+| RingCentral API Key | **Supported** | Future | TruffleHog supports |
+| TeleSign API Key | **Supported** | Future | TruffleHog (not yet implemented) |
+| TeamViewer API Key | **Supported** | Future | TruffleHog (not yet implemented) |
+| CometChat API Key | **Supported** | Future | TruffleHog (not yet implemented) |
+| Mesibo API Key | **Supported** | Future | TruffleHog supports |
+| Bulbul API Key | **Supported** | Future | TruffleHog supports |
+| Tyntec API Key | **Supported** | Future | TruffleHog supports |
+| Kaleyra API Key | **Supported** | Future | TruffleHog (not yet implemented) |
+| Onbuka API Key | **Supported** | Future | TruffleHog (not yet implemented) |
+| ClickSend SMS API Key | **Supported** | Future | TruffleHog supports |
+| Clockwork SMS API Key | **Supported** | Future | TruffleHog supports |
+| SMS API Key | **Supported** | Future | TruffleHog (not yet implemented) |
+| BombBomb API Key | **Supported** | Future | TruffleHog supports |
+| DFuse API Key | **Supported** | Future | TruffleHog supports |
+| ApiFonica API Key | **Supported** | Future | TruffleHog supports |
+| Mandrill API Key | **Supported** | Future | TruffleHog supports (Mailchimp transactional) |
+| SparkPost API Key | **Supported** | Future | TruffleHog supports |
+| MailerLite API Key | **Supported** | Future | TruffleHog supports |
+| ConvertKit API Key | **Supported** | Future | TruffleHog supports |
+| Omnisend API Key | **Supported** | Future | TruffleHog supports |
+| Customer.io API Key | **Supported** | Future | TruffleHog supports |
+| Moosend API Key | **Supported** | Future | TruffleHog supports |
+| Dotdigital API Key | **Supported** | Future | TruffleHog supports |
+| Dyspatch API Key | **Supported** | Future | TruffleHog supports |
+| PostageApp API Key | **Supported** | Future | TruffleHog supports |
+| Nicereply API Key | **Supported** | Future | TruffleHog supports |
+| AutoPilot API Key | **Supported** | Future | TruffleHog supports |
+| Airship API Key | **Supported** | Future | TruffleHog supports |
 
 ---
 
@@ -544,59 +544,59 @@ This document lists all secret providers that PledgeGuard **could** support in t
 
 | Provider / Token Type | Detector | Verifier | Notes |
 |---|---|---|---|
-| Freshworks API Key | Future | Future | TruffleHog supports |
-| Close CRM API Key | Future | Future | TruffleHog supports |
-| Copper CRM API Key | Future | Future | TruffleHog supports |
-| Streak CRM API Key | Future | Future | TruffleHog supports |
-| GrooveHQ API Key | Future | Future | TruffleHog supports |
-| GetGist API Key | Future | Future | TruffleHog supports |
-| Autoklose API Key | Future | Future | TruffleHog supports |
-| Salesflare API Key | Future | Future | TruffleHog supports |
-| SalesBlink API Key | Future | Future | TruffleHog supports |
-| Salescookie API Key | Future | Future | TruffleHog supports |
-| Metrilo API Key | Future | Future | TruffleHog supports |
-| RevampCRM API Key | Future | Future | TruffleHog supports |
-| KarmaCRM API Key | Future | Future | TruffleHog supports |
-| Less Annoying CRM API Key | Future | Future | TruffleHog supports |
-| NetHunt CRM API Key | Future | Future | TruffleHog supports |
-| Nimble CRM API Key | Future | Future | TruffleHog supports |
-| Apptivo CRM API Key | Future | Future | TruffleHog supports |
-| Capsule CRM API Key | Future | Future | TruffleHog supports |
-| Insightly CRM API Key | Future | Future | TruffleHog supports |
-| Kylas CRM API Key | Future | Future | TruffleHog supports |
-| OnePageCRM API Key | Future | Future | TruffleHog supports |
-| Prospect CRM API Key | Future | Future | TruffleHog supports |
-| Really Simple Systems CRM API Key | Future | Future | TruffleHog supports |
-| Central Station CRM API Key | Future | Future | TruffleHog supports |
-| Teamgate CRM API Key | Future | Future | TruffleHog supports |
-| Axonaut API Key | Future | Future | TruffleHog supports |
-| FlowFlu API Key | Future | Future | TruffleHog supports |
-| Clientary API Key | Future | Future | TruffleHog supports |
-| Clinchpad API Key | Future | Future | TruffleHog supports |
-| CompanyHub API Key | Future | Future | TruffleHog supports |
-| Campayn API Key | Future | Future | TruffleHog supports |
-| Hiveage API Key | Future | Future | TruffleHog supports |
-| Billomat API Key | Future | Future | TruffleHog supports |
-| Alegra API Key | Future | Future | TruffleHog supports |
-| Loyverse API Key | Future | Future | TruffleHog supports |
-| CommerceJS API Key | Future | Future | TruffleHog supports |
-| Snipcart API Key | Future | Future | TruffleHog supports |
-| PartnerStack API Key | Future | Future | TruffleHog supports |
-| Vouchery API Key | Future | Future | TruffleHog supports |
-| Monday.com API Key | Future | Future | TruffleHog supports |
-| Smartsheets API Key | Future | Future | TruffleHog supports |
-| Wrike API Key | Future | Future | TruffleHog supports |
-| Apollo.io API Key | Future | Future | TruffleHog supports |
-| UpLead API Key | Future | Future | TruffleHog supports |
-| RocketReach API Key | Future | Future | TruffleHog supports |
-| Clearbit API Key | Future | Future | TruffleHog supports |
-| Brandfetch API Key | Future | Future | TruffleHog supports |
-| Leadfeeder API Key | Future | Future | TruffleHog supports |
-| GetEmail API Key | Future | Future | TruffleHog supports |
-| GetEmails API Key | Future | Future | TruffleHog supports |
-| Skrappio API Key | Future | Future | TruffleHog supports |
+| Freshworks API Key | **Supported** | Future | TruffleHog supports |
+| Close CRM API Key | **Supported** | Future | TruffleHog supports |
+| Copper CRM API Key | **Supported** | Future | TruffleHog supports |
+| Streak CRM API Key | **Supported** | Future | TruffleHog supports |
+| GrooveHQ API Key | **Supported** | Future | TruffleHog supports |
+| GetGist API Key | **Supported** | Future | TruffleHog supports |
+| Autoklose API Key | **Supported** | Future | TruffleHog supports |
+| Salesflare API Key | **Supported** | Future | TruffleHog supports |
+| SalesBlink API Key | **Supported** | Future | TruffleHog supports |
+| Salescookie API Key | **Supported** | Future | TruffleHog supports |
+| Metrilo API Key | **Supported** | Future | TruffleHog supports |
+| RevampCRM API Key | **Supported** | Future | TruffleHog supports |
+| KarmaCRM API Key | **Supported** | Future | TruffleHog supports |
+| Less Annoying CRM API Key | **Supported** | Future | TruffleHog supports |
+| NetHunt CRM API Key | **Supported** | Future | TruffleHog supports |
+| Nimble CRM API Key | **Supported** | Future | TruffleHog supports |
+| Apptivo CRM API Key | **Supported** | Future | TruffleHog supports |
+| Capsule CRM API Key | **Supported** | Future | TruffleHog supports |
+| Insightly CRM API Key | **Supported** | Future | TruffleHog supports |
+| Kylas CRM API Key | **Supported** | Future | TruffleHog supports |
+| OnePageCRM API Key | **Supported** | Future | TruffleHog supports |
+| Prospect CRM API Key | **Supported** | Future | TruffleHog supports |
+| Really Simple Systems CRM API Key | **Supported** | Future | TruffleHog supports |
+| Central Station CRM API Key | **Supported** | Future | TruffleHog supports |
+| Teamgate CRM API Key | **Supported** | Future | TruffleHog supports |
+| Axonaut API Key | **Supported** | Future | TruffleHog supports |
+| FlowFlu API Key | **Supported** | Future | TruffleHog supports |
+| Clientary API Key | **Supported** | Future | TruffleHog supports |
+| Clinchpad API Key | **Supported** | Future | TruffleHog supports |
+| CompanyHub API Key | **Supported** | Future | TruffleHog supports |
+| Campayn API Key | **Supported** | Future | TruffleHog supports |
+| Hiveage API Key | **Supported** | Future | TruffleHog supports |
+| Billomat API Key | **Supported** | Future | TruffleHog supports |
+| Alegra API Key | **Supported** | Future | TruffleHog supports |
+| Loyverse API Key | **Supported** | Future | TruffleHog supports |
+| CommerceJS API Key | **Supported** | Future | TruffleHog supports |
+| Snipcart API Key | **Supported** | Future | TruffleHog supports |
+| PartnerStack API Key | **Supported** | Future | TruffleHog supports |
+| Vouchery API Key | **Supported** | Future | TruffleHog supports |
+| Monday.com API Key | **Supported** | Future | TruffleHog supports |
+| Smartsheets API Key | **Supported** | Future | TruffleHog supports |
+| Wrike API Key | **Supported** | Future | TruffleHog supports |
+| Apollo.io API Key | **Supported** | Future | TruffleHog supports |
+| UpLead API Key | **Supported** | Future | TruffleHog supports |
+| RocketReach API Key | **Supported** | Future | TruffleHog supports |
+| Clearbit API Key | **Supported** | Future | TruffleHog supports |
+| Brandfetch API Key | **Supported** | Future | TruffleHog supports |
+| Leadfeeder API Key | **Supported** | Future | TruffleHog supports |
+| GetEmail API Key | **Supported** | Future | TruffleHog supports |
+| GetEmails API Key | **Supported** | Future | TruffleHog supports |
+| Skrappio API Key | **Supported** | Future | TruffleHog supports |
 | Prospect.io API Key | Future | Future | TruffleHog supports (deprecated) |
-| Powrbot API Key | Future | Future | TruffleHog supports |
+| Powrbot API Key | **Supported** | Future | TruffleHog supports |
 
 ---
 
@@ -1064,7 +1064,7 @@ Beyond the current scanning sources (working tree, stdin, git history, Docker, G
 
 | Metric | Current | Future (Total Potential) |
 |---|---|---|
-| **Detectors** | 330 | 700+ |
+| **Detectors** | 416 | 700+ |
 | **Verification providers** | 34 | 150+ |
 | **Scanning sources** | 10 | 25+ |
 | **Output formats** | 6 | 6 (competitive) |

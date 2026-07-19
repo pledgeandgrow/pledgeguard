@@ -9,7 +9,7 @@ Rust-native secret scanner — a TruffleHog/Gitleaks alternative.
 ## Status
 
 **v0.2.0 — comprehensive feature set.** PledgeGuard is a working secret
-scanner with 330 built-in detectors, 34 live verification providers, git history
+scanner with 416 built-in detectors, 34 live verification providers, git history
 scanning, WASM plugins, MCP server, 6 output formats (Table/JSON/SARIF/CSV/JUnit/Template),
 baseline/allowlist mode, pre-commit hook installer, AST-based false-positive
 refinement for JS/TS, custom TOML rules with entropy/allowlists/path filters,
@@ -88,7 +88,7 @@ to be inside a git working tree.
 
 ## Built-in detectors
 
-330 detectors covering AWS (Access Key, Secret, Session Token, MWS, Bedrock,
+416 detectors covering AWS (Access Key, Secret, Session Token, MWS, Bedrock,
 Account ID), Azure (Storage, SAS, Client Secret, AD/Entra ID, Batch, Function,
 DevOps PAT, Cosmos DB), Google Cloud (API Key, OAuth, Service Account, Client ID,
 Gemini/PaLM), Alibaba, Tencent, DigitalOcean, IBM Cloud, Oracle Cloud, Scaleway,
@@ -134,6 +134,19 @@ OAuth), Algolia Admin, Lokalise, Bitcoin (WIF), Ethereum, Solana, Infura, Alchem
 Moralis, QuickNode, Bitfinex, Bittrex (Access, Secret),
 Curl Authentication String, URI with Embedded Credentials, Generic OAuth Client
 Secret, .env File Secrets, Firebase Web Config,
+Twilio, Line (Messaging, Notify), Mattermost, WeChat, KakaoTalk, LiveAgent, Front,
+RingCentral, TeleSign, TeamViewer, CometChat, Mesibo, Bulbul, Tyntec, Kaleyra,
+Onbuka, ClickSend, Clockwork SMS, BombBomb, DFuse, ApiFonica, Mandrill, SparkPost,
+MailerLite, ConvertKit, Omnisend, Customer.io, Moosend, Dotdigital, Dyspatch,
+PostageApp, Nicereply, AutoPilot, Airship,
+Freshworks, Close CRM, Copper CRM, Streak CRM, GrooveHQ, GetGist, Autoklose,
+Salesflare, SalesBlink, Salescookie, Metrilo, RevampCRM, KarmaCRM, Less Annoying CRM,
+NetHunt CRM, Nimble CRM, Apptivo CRM, Capsule CRM, Insightly CRM, Kylas CRM,
+OnePageCRM, Prospect CRM, Really Simple Systems CRM, Central Station CRM, Teamgate,
+Axonaut, FlowFlu, Clientary, Clinchpad, CompanyHub, Campayn, Hiveage, Billomat,
+Alegra, Loyverse, CommerceJS, Snipcart, PartnerStack, Vouchery, Monday.com,
+Smartsheets, Wrike, Apollo.io, UpLead, RocketReach, Clearbit, Brandfetch,
+Leadfeeder, GetEmail, GetEmails, Skrappio, Powrbot,
 Auth0, Okta, Vercel, Netlify, Supabase, CircleCI, Heroku, Travis CI, DroneCI,
 Buildkite, TeamCity, Jenkins, GoCD, ArgoCD, Spinnaker, Harness, Codecov,
 SonarQube, Snyk, Artifactory, Terraform Cloud, Pivotal Tracker, Clojars, Linear,
